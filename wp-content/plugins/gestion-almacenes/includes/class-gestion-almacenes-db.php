@@ -1,0 +1,370 @@
+<?php
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+class Gestion_Almacenes_DB {
+
+    public function __construct() {
+        // Aquí podrías añadir hooks si esta clase necesitara interactuar con WordPress directamente en el constructor.
+        // Para la creación de tabla, se llama directamente en el hook de activación.
+    }
+
+    // Función a ejecutar en la activación del plugin
+    public function activar_plugin() {
+        $this->crear_tablas_plugin();
+        // Aquí podrías añadir otras tareas de activación si las tuvieras.
+    }
+
+    // Función para crear las tablas del plugin
+    public function crear_tablas_plugin() { // Renombramos esta función
+        global $wpdb;
+        $charset_collate = $wpdb->get_charset_collate();
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); // Incluimos dbDelta aquí
+
+        // Tabla de Almacenes
+        $table_name_warehouses = $wpdb->prefix . 'gab_warehouses';
+
+        // Asegúrate de que la tabla no exista antes de intentar crearla
+        // *** CORRECCIÓN AQUÍ: Usar $table_name_warehouses en lugar de $table_name ***
+        if ($wpdb->get_var("SHOW TABLES LIKE '$table_name_warehouses'") != $table_name_warehouses) {
+            error_log('[DEBUG GESTION ALMACENES DB] Intentando crear tabla de almacenes...');
+            // *** CORRECCIÓN AQUÍ: Usar $table_name_warehouses en lugar de $table_name en la consulta SQL ***
+            $sql_warehouses = "CREATE TABLE $table_name_warehouses (
+                id mediumint(9) NOT NULL AUTO_INCREMENT,
+                name tinytext NOT NULL,
+                slug tinytext NOT NULL,
+                address text NOT NULL,
+                comuna tinytext NOT NULL,
+                ciudad tinytext NOT NULL,
+                region tinytext NOT NULL,
+                pais tinytext NOT NULL,
+                email tinytext NOT NULL,
+                telefono tinytext NOT NULL,
+                PRIMARY KEY  (id)
+            ) $charset_collate;";
+
+            dbDelta($sql_warehouses);
+
+            if ($wpdb->last_error) {
+                error_log('[DEBUG GESTION ALMACENES DB] Error al crear la tabla de almacenes: ' . $wpdb->last_error);
+            } else {
+                error_log('[DEBUG GESTION ALMACENES DB] Tabla de almacenes creada o actualizada correctamente.');
+            }
+
+        } else {
+            error_log('[DEBUG GESTION ALMACENES DB] La tabla de almacenes ya existe. No se intentó crear.');
+        }
+
+
+        // *** Nueva Tabla de Stock por Almacén ***
+        $table_name_stock = $wpdb->prefix . 'gab_warehouse_product_stock';
+
+         // Asegúrate de que la tabla no exista antes de intentar crearla
+        if ($wpdb->get_var("SHOW TABLES LIKE '$table_name_stock'") != $table_name_stock) {
+            error_log('[DEBUG GESTION ALMACENES DB] Intentando crear tabla de stock por almacén...');
+            $sql_stock = "CREATE TABLE $table_name_stock (
+                id mediumint(9) NOT NULL AUTO_INCREMENT,
+                product_id bigint(20) UNSIGNED NOT NULL,
+                warehouse_id mediumint(9) NOT NULL,
+                stock int(11) NOT NULL DEFAULT 0,
+                PRIMARY KEY  (id),
+                UNIQUE KEY product_warehouse (product_id, warehouse_id) -- Asegura que un producto solo tenga un registro por almacén
+            ) $charset_collate;";
+
+            dbDelta($sql_stock);
+
+            if ($wpdb->last_error) {
+                error_log('[DEBUG GESTION ALMACENES DB] Error al crear la tabla de stock: ' . $wpdb->last_error);
+            } else {
+                error_log('[DEBUG GESTION ALMACENES DB] Tabla de stock creada o actualizada correctamente.');
+            }
+
+        } else {
+            error_log('[DEBUG GESTION ALMACENES DB] La tabla de stock ya existe. No se intentó crear.');
+        }
+
+    }
+
+    // Función para insertar un nuevo almacén (trasladada de gab_procesar_agregar_almacen)
+    public function insertar_almacen($data) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'gab_warehouses';
+
+        $insert_result = $wpdb->insert($table_name, $data);
+
+        if ($insert_result === false) {
+            error_log('[DEBUG GESTION ALMACENES DB] Error en $wpdb->insert: ' . $wpdb->last_error);
+        } else {
+            error_log('[DEBUG GESTION ALMACENES DB] Inserción exitosa. Filas afectadas: ' . $insert_result);
+        }
+
+        return $insert_result; // Devuelve el resultado de la inserción
+    }
+
+    // Función para obtener todos los almacenes de la base de datos
+    public function obtener_almacenes() {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'gab_warehouses';
+
+        // Obtener todos los registros de la tabla de almacenes
+        // $wpdb->get_results devuelve un array de objetos o null si no hay resultados
+        $almacenes = $wpdb->get_results("SELECT * FROM $table_name");
+
+        if ($almacenes === null) {
+            error_log('[DEBUG GESTION ALMACENES DB] No se encontraron almacenes en la base de datos.');
+        } else {
+            error_log('[DEBUG GESTION ALMACENES DB] Se encontraron ' . count($almacenes) . ' almacenes.');
+        }
+
+
+        return $almacenes;
+    }
+
+    public function save_product_warehouse_stock($product_id, $warehouse_id, $stock) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'gab_warehouse_product_stock';
+
+        $existing_stock = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT id FROM $table_name WHERE product_id = %d AND warehouse_id = %d",
+                $product_id,
+                $warehouse_id
+            )
+        );
+
+        $data = array(
+            'product_id' => $product_id,
+            'warehouse_id' => $warehouse_id,
+            'stock' => max(0, intval($stock)), // Asegura que el stock no sea negativo
+        );
+
+        $format = array('%d', '%d', '%d');
+
+        if ($existing_stock) {
+            // Actualizar registro existente
+            $where = array('id' => $existing_stock->id);
+            $where_format = array('%d');
+            $result = $wpdb->update($table_name, $data, $where, $format, $where_format);
+            if ($result === false) {
+                error_log('[DEBUG GESTION ALMACENES DB] Error al actualizar stock: ' . $wpdb->last_error);
+            } else {
+                error_log('[DEBUG GESTION ALMACENES DB] Stock actualizado para Producto ID ' . $product_id . ' en Almacén ID ' . $warehouse_id . '. Filas afectadas: ' . $result);
+            }
+             return $result !== false; // Retorna true si la actualización fue exitosa (0 filas afectadas también es un éxito)
+
+        } else {
+            // Insertar nuevo registro
+            $result = $wpdb->insert($table_name, $data, $format);
+            if ($result === false) {
+                error_log('[DEBUG GESTION ALMACENES DB] Error al insertar stock: ' . $wpdb->last_error);
+            } else {
+                error_log('[DEBUG GESTION ALMACENES DB] Stock insertado para Producto ID ' . $product_id . ' en Almacén ID ' . $warehouse_id . '. Filas afectadas: ' . $result);
+            }
+            return $result !== false; // Retorna true si la inserción fue exitosa
+        }
+    }
+
+    /**
+     * Obtiene el stock de un producto para todos los almacenes.
+     * Retorna un array asociativo [warehouse_id => stock].
+     */
+    public function get_product_warehouse_stock($product_id) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'gab_warehouse_product_stock';
+
+        $stock_data = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT warehouse_id, stock FROM $table_name WHERE product_id = %d",
+                $product_id
+            ),
+            OBJECT_K // Devuelve un array de objetos, con warehouse_id como clave
+        );
+
+        $formatted_stock = array();
+        if ($stock_data) {
+            foreach ($stock_data as $warehouse_id => $item) {
+                $formatted_stock[$warehouse_id] = $item->stock;
+            }
+        }
+        error_log('[DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID ' . $product_id . ': ' . print_r($formatted_stock, true));
+
+        return $formatted_stock;
+    }
+
+    /**
+     * Elimina el stock de un producto para un almacén específico.
+     */
+    public function delete_product_warehouse_stock($product_id, $warehouse_id) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'gab_warehouse_product_stock';
+
+        $result = $wpdb->delete(
+            $table_name,
+            array(
+                'product_id' => $product_id,
+                'warehouse_id' => $warehouse_id
+            ),
+            array('%d', '%d')
+        );
+
+        if ($result === false) {
+            error_log('[DEBUG GESTION ALMACENES DB] Error al eliminar stock: ' . $wpdb->last_error);
+        } else {
+            error_log('[DEBUG GESTION ALMACENES DB] Stock eliminado para Producto ID ' . $product_id . ' en Almacén ID ' . $warehouse_id . '. Filas afectadas: ' . $result);
+        }
+
+        return $result !== false;
+    }
+
+
+
+    /**
+     * Anthropic
+     * Obtiene información de un almacén específico por ID
+     */
+    public function obtener_almacen_por_id($warehouse_id) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'gab_warehouses';
+
+        $almacen = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT * FROM $table_name WHERE id = %d",
+                $warehouse_id
+            )
+        );
+
+        return $almacen;
+    }
+
+    /**
+     * Obtiene el stock disponible de un producto en un almacén específico
+     */
+    public function get_product_stock_in_warehouse($product_id, $warehouse_id) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'gab_warehouse_product_stock';
+
+        $stock = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT stock FROM $table_name WHERE product_id = %d AND warehouse_id = %d",
+                $product_id,
+                $warehouse_id
+            )
+        );
+
+        return $stock !== null ? intval($stock) : 0;
+    }
+
+    /**
+     * Obtiene todos los productos con su stock por almacén
+     */
+    public function get_all_products_warehouse_stock() {
+        global $wpdb;
+        $table_name_stock = $wpdb->prefix . 'gab_warehouse_product_stock';
+        $table_name_warehouses = $wpdb->prefix . 'gab_warehouses';
+
+        $results = $wpdb->get_results("
+            SELECT s.product_id, s.warehouse_id, s.stock, w.name as warehouse_name
+            FROM $table_name_stock s
+            LEFT JOIN $table_name_warehouses w ON s.warehouse_id = w.id
+            ORDER BY s.product_id, s.warehouse_id
+        ");
+
+        return $results;
+    }
+
+    /**
+     * Verifica si hay suficiente stock en un almacén específico
+     */
+    public function check_warehouse_stock_availability($product_id, $warehouse_id, $required_quantity) {
+        $current_stock = $this->get_product_stock_in_warehouse($product_id, $warehouse_id);
+        return $current_stock >= $required_quantity;
+    }
+
+    /**
+     * Obtiene productos con bajo stock en todos los almacenes
+     */
+    public function get_low_stock_products($threshold = 5) {
+        global $wpdb;
+        $table_name_stock = $wpdb->prefix . 'gab_warehouse_product_stock';
+        $table_name_warehouses = $wpdb->prefix . 'gab_warehouses';
+
+        $results = $wpdb->get_results(
+            $wpdb->prepare("
+                SELECT s.product_id, s.warehouse_id, s.stock, w.name as warehouse_name
+                FROM $table_name_stock s
+                LEFT JOIN $table_name_warehouses w ON s.warehouse_id = w.id
+                WHERE s.stock <= %d AND s.stock > 0
+                ORDER BY s.stock ASC, s.product_id
+            ", $threshold)
+        );
+
+        return $results;
+    }
+
+    /**
+     * Transferir stock entre almacenes
+     */
+    public function transfer_stock_between_warehouses($product_id, $from_warehouse_id, $to_warehouse_id, $quantity) {
+        global $wpdb;
+
+        // Verificar stock disponible en almacén origen
+        $from_stock = $this->get_product_stock_in_warehouse($product_id, $from_warehouse_id);
+        
+        if ($from_stock < $quantity) {
+            return false; // No hay suficiente stock para transferir
+        }
+
+        // Iniciar transacción
+        $wpdb->query('START TRANSACTION');
+
+        try {
+            // Reducir stock del almacén origen
+            $new_from_stock = $from_stock - $quantity;
+            $result1 = $this->save_product_warehouse_stock($product_id, $from_warehouse_id, $new_from_stock);
+
+            // Aumentar stock del almacén destino
+            $to_stock = $this->get_product_stock_in_warehouse($product_id, $to_warehouse_id);
+            $new_to_stock = $to_stock + $quantity;
+            $result2 = $this->save_product_warehouse_stock($product_id, $to_warehouse_id, $new_to_stock);
+
+            if ($result1 && $result2) {
+                $wpdb->query('COMMIT');
+                error_log('[DEBUG GESTION ALMACENES DB] Transferencia exitosa - Producto: ' . $product_id . ', De: ' . $from_warehouse_id . ', A: ' . $to_warehouse_id . ', Cantidad: ' . $quantity);
+                return true;
+            } else {
+                $wpdb->query('ROLLBACK');
+                return false;
+            }
+
+        } catch (Exception $e) {
+            $wpdb->query('ROLLBACK');
+            error_log('[DEBUG GESTION ALMACENES DB] Error en transferencia: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Obtener almacenes con stock disponible para un producto
+     */
+    public function get_warehouses_with_stock($product_id, $min_stock = 1) {
+        global $wpdb;
+        $table_name_stock = $wpdb->prefix . 'gab_warehouse_product_stock';
+        $table_name_warehouses = $wpdb->prefix . 'gab_warehouses';
+
+        $results = $wpdb->get_results(
+            $wpdb->prepare("
+                SELECT w.*, s.stock
+                FROM $table_name_warehouses w
+                INNER JOIN $table_name_stock s ON w.id = s.warehouse_id
+                WHERE s.product_id = %d AND s.stock >= %d
+                ORDER BY s.stock DESC
+            ", $product_id, $min_stock)
+        );
+
+        return $results;
+    }
+
+    
+}
