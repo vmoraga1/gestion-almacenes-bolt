@@ -26,6 +26,7 @@ require_once GESTION_ALMACENES_PLUGIN_DIR . 'admin/class-gestion-almacenes-admin
 require_once GESTION_ALMACENES_PLUGIN_DIR . 'woocommerce/class-gestion-almacenes-woocommerce.php';
 require_once GESTION_ALMACENES_PLUGIN_DIR . 'admin/views/page-nuevo-almacen.php';
 require_once GESTION_ALMACENES_PLUGIN_DIR . 'admin/views/page-almacenes-list.php';
+require_once GESTION_ALMACENES_PLUGIN_DIR . 'includes/class-gestion-almacenes-transfer-controller.php';
 
 // Instanciar clases principales (esto las "activa" y engancha sus hooks)
 $gestion_almacenes_db = new Gestion_Almacenes_DB();
@@ -46,6 +47,8 @@ function gestion_almacenes_init() {
     // Asegúrate de que las clases se instancian solo una vez si usas este hook
     // o puedes instanciarlas directamente como arriba y asegurarte de que sus constructores solo añaden hooks una vez.
     // Para este ejemplo simple, las instancias directas al principio son suficientes.
+    global $gestion_almacenes_db;
+    $gestion_almacenes_db->crear_tablas_transferencias();
 
     // Aquí podrías cargar archivos de idioma si los tuvieras
     load_plugin_textdomain( 'gestion-almacenes', false, GESTION_ALMACENES_PLUGIN_DIR . '/languages/' );

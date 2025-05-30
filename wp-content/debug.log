@@ -63,3 +63,40 @@
 [30-May-2025 03:57:02 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
 [30-May-2025 03:57:44 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
 [30-May-2025 03:59:48 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 04:50:19 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 04:50:40 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 04:50:42 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 04:51:04 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 04:51:12 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 04:51:21 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 05:18:17 UTC] [DEBUG GESTION ALMACENES DB] Creando tabla de transferencias...
+[30-May-2025 05:18:17 UTC] [DEBUG GESTION ALMACENES DB] Tabla de transferencias creada correctamente.
+[30-May-2025 05:18:17 UTC] [DEBUG GESTION ALMACENES DB] Creando tabla de items de transferencias...
+[30-May-2025 05:18:17 UTC] [DEBUG GESTION ALMACENES DB] Tabla de items de transferencias creada correctamente.
+[30-May-2025 05:18:17 UTC] [DEBUG GESTION ALMACENES DB] Creando tabla de discrepancias...
+[30-May-2025 05:18:17 UTC] [DEBUG GESTION ALMACENES DB] Tabla de discrepancias creada correctamente.
+[30-May-2025 05:18:17 UTC] [DEBUG GESTION ALMACENES DB] Creando tabla de almacén de mermas...
+[30-May-2025 05:18:18 UTC] [DEBUG GESTION ALMACENES DB] Tabla de almacén de mermas creada correctamente.
+[30-May-2025 05:18:18 UTC] [DEBUG GESTION ALMACENES DB] Creando tabla de historial de mermas...
+[30-May-2025 05:18:18 UTC] [DEBUG GESTION ALMACENES DB] Tabla de historial de mermas creada correctamente.
+[30-May-2025 05:18:20 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 05:18:49 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 05:20:43 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 05:20:49 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 05:21:02 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 05:21:46 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 05:22:22 UTC] [DEBUG GESTION ALMACENES DB] La tabla de almacenes ya existe. No se intentó crear.
+[30-May-2025 05:22:22 UTC] [DEBUG GESTION ALMACENES DB] La tabla de stock ya existe. No se intentó crear.
+[30-May-2025 05:22:51 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 05:23:16 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 05:24:00 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 05:38:43 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 05:38:51 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 06:05:05 UTC] Automatic updates starting...
+[30-May-2025 06:05:06 UTC] Automatic updates complete.
+[30-May-2025 06:05:07 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 06:05:17 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 06:06:48 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 06:17:34 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 06:18:33 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[30-May-2025 06:20:00 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.

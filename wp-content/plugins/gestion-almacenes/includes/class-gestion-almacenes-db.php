@@ -85,6 +85,171 @@ class Gestion_Almacenes_DB {
             error_log('[DEBUG GESTION ALMACENES DB] La tabla de stock ya existe. No se intentó crear.');
         }
 
+        $this->crear_tablas_transferencias();
+    }
+
+    public function crear_tablas_transferencias() {
+        global $wpdb;
+        $charset_collate = $wpdb->get_charset_collate();
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+
+        // Tabla principal de transferencias
+        $table_transfers = $wpdb->prefix . 'gab_stock_transfers';
+        
+        if ($wpdb->get_var("SHOW TABLES LIKE '$table_transfers'") != $table_transfers) {
+            error_log('[DEBUG GESTION ALMACENES DB] Creando tabla de transferencias...');
+            
+            $sql_transfers = "CREATE TABLE $table_transfers (
+                id mediumint(9) NOT NULL AUTO_INCREMENT,
+                source_warehouse_id mediumint(9) NOT NULL,
+                target_warehouse_id mediumint(9) NOT NULL,
+                status enum('draft','completed','cancelled') NOT NULL DEFAULT 'draft',
+                notes text,
+                created_by bigint(20) UNSIGNED NOT NULL,
+                created_at datetime NOT NULL,
+                updated_at datetime DEFAULT NULL,
+                validated_by bigint(20) UNSIGNED DEFAULT NULL,
+                validated_at datetime DEFAULT NULL,
+                PRIMARY KEY (id),
+                KEY source_warehouse_id (source_warehouse_id),
+                KEY target_warehouse_id (target_warehouse_id),
+                KEY status (status),
+                KEY created_by (created_by)
+            ) $charset_collate;";
+
+            dbDelta($sql_transfers);
+            
+            if ($wpdb->last_error) {
+                error_log('[DEBUG GESTION ALMACENES DB] Error al crear tabla de transferencias: ' . $wpdb->last_error);
+            } else {
+                error_log('[DEBUG GESTION ALMACENES DB] Tabla de transferencias creada correctamente.');
+            }
+        }
+
+        // Tabla de items de transferencias
+        $table_transfer_items = $wpdb->prefix . 'gab_stock_transfer_items';
+        
+        if ($wpdb->get_var("SHOW TABLES LIKE '$table_transfer_items'") != $table_transfer_items) {
+            error_log('[DEBUG GESTION ALMACENES DB] Creando tabla de items de transferencias...');
+            
+            $sql_transfer_items = "CREATE TABLE $table_transfer_items (
+                id mediumint(9) NOT NULL AUTO_INCREMENT,
+                transfer_id mediumint(9) NOT NULL,
+                product_id bigint(20) UNSIGNED NOT NULL,
+                requested_qty int(11) NOT NULL,
+                received_qty int(11) DEFAULT NULL,
+                discrepancy_qty int(11) DEFAULT NULL,
+                discrepancy_type enum('shortage','excess') DEFAULT NULL,
+                notes text,
+                PRIMARY KEY (id),
+                KEY transfer_id (transfer_id),
+                KEY product_id (product_id)
+            ) $charset_collate;";
+
+            dbDelta($sql_transfer_items);
+            
+            if ($wpdb->last_error) {
+                error_log('[DEBUG GESTION ALMACENES DB] Error al crear tabla de items: ' . $wpdb->last_error);
+            } else {
+                error_log('[DEBUG GESTION ALMACENES DB] Tabla de items de transferencias creada correctamente.');
+            }
+        }
+
+        // Tabla de discrepancias
+        $table_discrepancies = $wpdb->prefix . 'gab_stock_discrepancies';
+        
+        if ($wpdb->get_var("SHOW TABLES LIKE '$table_discrepancies'") != $table_discrepancies) {
+            error_log('[DEBUG GESTION ALMACENES DB] Creando tabla de discrepancias...');
+            
+            $sql_discrepancies = "CREATE TABLE $table_discrepancies (
+                id mediumint(9) NOT NULL AUTO_INCREMENT,
+                transfer_id mediumint(9) NOT NULL,
+                product_id bigint(20) UNSIGNED NOT NULL,
+                warehouse_id mediumint(9) NOT NULL,
+                quantity int(11) NOT NULL,
+                discrepancy_type enum('shortage','excess') NOT NULL,
+                reason text,
+                status enum('pending','resolved') NOT NULL DEFAULT 'pending',
+                resolution_type enum('adjust_source','adjust_target','loss','damage') DEFAULT NULL,
+                resolution_notes text,
+                resolved_by bigint(20) UNSIGNED DEFAULT NULL,
+                resolved_at datetime DEFAULT NULL,
+                created_at datetime NOT NULL,
+                PRIMARY KEY (id),
+                KEY transfer_id (transfer_id),
+                KEY product_id (product_id),
+                KEY warehouse_id (warehouse_id),
+                KEY status (status)
+            ) $charset_collate;";
+
+            dbDelta($sql_discrepancies);
+            
+            if ($wpdb->last_error) {
+                error_log('[DEBUG GESTION ALMACENES DB] Error al crear tabla de discrepancias: ' . $wpdb->last_error);
+            } else {
+                error_log('[DEBUG GESTION ALMACENES DB] Tabla de discrepancias creada correctamente.');
+            }
+        }
+
+        // Tabla de almacén de mermas
+        $table_waste_store = $wpdb->prefix . 'gab_waste_store';
+        
+        if ($wpdb->get_var("SHOW TABLES LIKE '$table_waste_store'") != $table_waste_store) {
+            error_log('[DEBUG GESTION ALMACENES DB] Creando tabla de almacén de mermas...');
+            
+            $sql_waste_store = "CREATE TABLE $table_waste_store (
+                id mediumint(9) NOT NULL AUTO_INCREMENT,
+                product_id bigint(20) UNSIGNED NOT NULL,
+                quantity int(11) NOT NULL,
+                type enum('loss','damage') NOT NULL,
+                notes text,
+                created_by bigint(20) UNSIGNED NOT NULL,
+                created_at datetime NOT NULL,
+                PRIMARY KEY (id),
+                KEY product_id (product_id),
+                KEY type (type),
+                KEY created_by (created_by)
+            ) $charset_collate;";
+
+            dbDelta($sql_waste_store);
+            
+            if ($wpdb->last_error) {
+                error_log('[DEBUG GESTION ALMACENES DB] Error al crear tabla de mermas: ' . $wpdb->last_error);
+            } else {
+                error_log('[DEBUG GESTION ALMACENES DB] Tabla de almacén de mermas creada correctamente.');
+            }
+        }
+
+        // Tabla de historial de mermas
+        $table_waste_history = $wpdb->prefix . 'gab_waste_store_history';
+        
+        if ($wpdb->get_var("SHOW TABLES LIKE '$table_waste_history'") != $table_waste_history) {
+            error_log('[DEBUG GESTION ALMACENES DB] Creando tabla de historial de mermas...');
+            
+            $sql_waste_history = "CREATE TABLE $table_waste_history (
+                id mediumint(9) NOT NULL AUTO_INCREMENT,
+                product_id bigint(20) UNSIGNED NOT NULL,
+                quantity int(11) NOT NULL,
+                type enum('loss','damage') NOT NULL,
+                notes text,
+                discrepancy_id mediumint(9) DEFAULT NULL,
+                created_by bigint(20) UNSIGNED NOT NULL,
+                created_at datetime NOT NULL,
+                PRIMARY KEY (id),
+                KEY product_id (product_id),
+                KEY type (type),
+                KEY discrepancy_id (discrepancy_id),
+                KEY created_by (created_by)
+            ) $charset_collate;";
+
+            dbDelta($sql_waste_history);
+            
+            if ($wpdb->last_error) {
+                error_log('[DEBUG GESTION ALMACENES DB] Error al crear tabla de historial de mermas: ' . $wpdb->last_error);
+            } else {
+                error_log('[DEBUG GESTION ALMACENES DB] Tabla de historial de mermas creada correctamente.');
+            }
+        }
     }
 
     // Función para insertar un nuevo almacén (trasladada de gab_procesar_agregar_almacen)
