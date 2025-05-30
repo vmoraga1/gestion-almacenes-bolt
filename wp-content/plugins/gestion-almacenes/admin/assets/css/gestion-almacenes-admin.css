@@ -1,0 +1,363 @@
+/**
+ * Estilos CSS para administración de Gestión de Almacenes
+ * Versión: 1.0.0
+ */
+
+/* === Estilos Generales === */
+.gab-admin-page {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+.gab-section-header {
+    border-bottom: 2px solid #0073aa;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.gab-section-header h2 {
+    color: #0073aa;
+    margin: 0;
+}
+
+/* === Formularios === */
+.gab-form-section {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border-left: 4px solid #0073aa;
+}
+
+.gab-form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.gab-form-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.gab-form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.gab-form-group select,
+.gab-form-group input[type="number"],
+.gab-form-group input[type="text"] {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.gab-form-group select:focus,
+.gab-form-group input:focus {
+    border-color: #0073aa;
+    box-shadow: 0 0 0 1px #0073aa;
+    outline: none;
+}
+
+/* === Información de Stock === */
+.gab-stock-info {
+    background: #f0f6fc;
+    border: 1px solid #c3dcf3;
+    border-radius: 6px;
+    padding: 15px;
+    margin: 15px 0;
+    font-size: 14px;
+}
+
+.gab-stock-info.success {
+    background: #f0f6fc;
+    border-color: #00a32a;
+    color: #00a32a;
+}
+
+.gab-stock-info.warning {
+    background: #fcf8e3;
+    border-color: #f0b849;
+    color: #996f00;
+}
+
+.gab-stock-info.error {
+    background: #fcf0f1;
+    border-color: #d63638;
+    color: #d63638;
+}
+
+/* === Botones === */
+.gab-button-primary {
+    background: #0073aa;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.gab-button-primary:hover {
+    background: #005a87;
+}
+
+.gab-button-secondary {
+    background: #f6f7f7;
+    border: 1px solid #ddd;
+    color: #333;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.gab-button-secondary:hover {
+    background: #e6e7e8;
+    border-color: #999;
+}
+
+.gab-button-danger {
+    background: #d63638;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.2s;
+}
+
+.gab-button-danger:hover {
+    background: #b32d2e;
+}
+
+/* === Selector de Almacén (Frontend) === */
+.gab-warehouse-selector {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+}
+
+.gab-warehouse-selector label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.gab-warehouse-selector select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    background: white;
+}
+
+#warehouse-info {
+    margin-top: 15px;
+    padding: 12px;
+    background: #f0f6fc;
+    border: 1px solid #c3dcf3;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* === Tablas === */
+.gab-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.gab-table th {
+    background: #f1f1f1;
+    color: #333;
+    font-weight: 600;
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+}
+
+.gab-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+.gab-table tr:hover {
+    background: #f9f9f9;
+}
+
+.gab-table .actions {
+    white-space: nowrap;
+}
+
+.gab-table .actions a {
+    margin-right: 8px;
+    text-decoration: none;
+    color: #0073aa;
+    font-size: 13px;
+}
+
+.gab-table .actions a:hover {
+    color: #005a87;
+}
+
+/* === Badges y Estados === */
+.gab-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.gab-badge.stock-high {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.gab-badge.stock-medium {
+    background: #fff3cd;
+    color: #664d03;
+}
+
+.gab-badge.stock-low {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.gab-badge.stock-out {
+    background: #e2e3e5;
+    color: #41464b;
+}
+
+/* === Cards de Estadísticas === */
+.gab-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.gab-stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #0073aa;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.gab-stat-card .stat-number {
+    font-size: 32px;
+    font-weight: 700;
+    color: #0073aa;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.gab-stat-card .stat-label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+/* === Spinner personalizado === */
+.gab-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #0073aa;
+    border-radius: 50%;
+    animation: gab-spin 1s linear infinite;
+    margin-right: 8px;
+}
+
+@keyframes gab-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .gab-form-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .gab-form-group {
+        min-width: auto;
+    }
+    
+    .gab-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .gab-table {
+        font-size: 13px;
+    }
+    
+    .gab-table th,
+    .gab-table td {
+        padding: 8px 10px;
+    }
+}
+
+/* === Mensajes de estado === */
+.gab-message {
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin: 15px 0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.gab-message.success {
+    background: #d1e7dd;
+    color: #0f5132;
+    border: 1px solid #badbcc;
+}
+
+.gab-message.error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c2c7;
+}
+
+.gab-message.warning {
+    background: #fff3cd;
+    color: #664d03;
+    border: 1px solid #ffecb5;
+}
+
+.gab-message.info {
+    background: #cff4fc;
+    color: #055160;
+    border: 1px solid #b6effb;
+}

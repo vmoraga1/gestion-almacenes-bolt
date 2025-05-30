@@ -24,7 +24,7 @@ if ( ! defined( 'GESTION_ALMACENES_PLUGIN_URL' ) ) {
 require_once GESTION_ALMACENES_PLUGIN_DIR . 'includes/class-gestion-almacenes-db.php';
 require_once GESTION_ALMACENES_PLUGIN_DIR . 'admin/class-gestion-almacenes-admin.php';
 require_once GESTION_ALMACENES_PLUGIN_DIR . 'woocommerce/class-gestion-almacenes-woocommerce.php';
-require_once GESTION_ALMACENES_PLUGIN_DIR . 'admin/views/page-nuevo-almacen.php'; // Mantenemos la inclusión directa por ahora si la vista es solo una función. Si tiene lógica, mejor una clase.
+require_once GESTION_ALMACENES_PLUGIN_DIR . 'admin/views/page-nuevo-almacen.php';
 
 // Instanciar clases principales (esto las "activa" y engancha sus hooks)
 $gestion_almacenes_db = new Gestion_Almacenes_DB();

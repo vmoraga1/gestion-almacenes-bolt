@@ -9,85 +9,102 @@ class Gestion_Almacenes_Admin {
     public function __construct() {
         add_action('admin_menu', array($this, 'registrar_menu_almacenes'));
         add_action('admin_post_gab_add_warehouse', array($this, 'procesar_agregar_almacen'));
-        // Nuevos hooks para reportes y transferencias
+        // Hooks para reportes y transferencias
         add_action('admin_menu', array($this, 'registrar_menu_stock_report'));
         add_action('wp_ajax_get_warehouse_stock', array($this, 'ajax_get_warehouse_stock'));
-        
         // Hook para agregar estilos CSS en admin
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
     }
 
     public function registrar_menu_almacenes() {
-    // Menú Principal de Almacenes
-    add_menu_page(
-        __('Warehouses', 'gestion-almacenes'),
-        __('Warehouses', 'gestion-almacenes'),
-        'manage_options',
-        'gab-warehouse-management',
-        array($this, 'contenido_pagina_almacenes'),
-        'dashicons-store',
-        25
-    );
+        // Menú Principal de Almacenes
+        add_menu_page(
+            __('Warehouses', 'gestion-almacenes'),
+            __('Warehouses', 'gestion-almacenes'),
+            'manage_options',
+            'gab-warehouse-management',
+            array($this, 'contenido_pagina_almacenes'),
+            'dashicons-store',
+            25
+        );
 
-    // Submenú para Agregar Nuevo Almacén
-    add_submenu_page(
-        'gab-warehouse-management',
-        __('Agregar Nuevo Almacén', 'gestion-almacenes'),
-        __('Agregar Nuevo', 'gestion-almacenes'),
-        'manage_options',
-        'gab-add-new-warehouse',
-        'gab_mostrar_formulario_nuevo_almacen'
-    );
-    
-    // Submenú para Reporte de Stock
-    add_submenu_page(
-        'gab-warehouse-management', 
-        __('Reporte de Stock', 'gestion-almacenes'),
-        __('Reporte de Stock', 'gestion-almacenes'),
-        'manage_options',
-        'gab-stock-report', 
-        array($this, 'mostrar_reporte_stock')
-    );
+        // Submenú para Agregar Nuevo Almacén
+        add_submenu_page(
+            'gab-warehouse-management',
+            __('Agregar Nuevo Almacén', 'gestion-almacenes'),
+            __('Agregar Nuevo', 'gestion-almacenes'),
+            'manage_options',
+            'gab-add-new-warehouse',
+            'gab_mostrar_formulario_nuevo_almacen'
+        );
+        
+        // Submenú para Reporte de Stock
+        add_submenu_page(
+            'gab-warehouse-management', 
+            __('Reporte de Stock', 'gestion-almacenes'),
+            __('Reporte de Stock', 'gestion-almacenes'),
+            'manage_options',
+            'gab-stock-report', 
+            array($this, 'mostrar_reporte_stock')
+        );
 
-    // Submenú para Transferencias
-    add_submenu_page(
-        'gab-warehouse-management', 
-        __('Transferir Stock', 'gestion-almacenes'),
-        __('Transferir Stock', 'gestion-almacenes'),
-        'manage_options',
-        'gab-transfer-stock', 
-        array($this, 'mostrar_transferir_stock')
-    );
-    
-    // Submenú para Configuración
-    add_submenu_page(
-        'gab-warehouse-management', 
-        __('Configuración', 'gestion-almacenes'),
-        __('Configuración', 'gestion-almacenes'),
-        'manage_options',
-        'gab-warehouse-settings', 
-        array($this, 'mostrar_configuracion')
-    );
-        $this->registrar_menu_stock_report();
+        // Submenú para Transferencias
+        add_submenu_page(
+            'gab-warehouse-management', 
+            __('Transferir Stock', 'gestion-almacenes'),
+            __('Transferir Stock', 'gestion-almacenes'),
+            'manage_options',
+            'gab-transfer-stock', 
+            array($this, 'mostrar_transferir_stock')
+        );
+        
+        // Submenú para Configuración
+        add_submenu_page(
+            'gab-warehouse-management', 
+            __('Configuración', 'gestion-almacenes'),
+            __('Configuración', 'gestion-almacenes'),
+            'manage_options',
+            'gab-warehouse-settings', 
+            array($this, 'mostrar_configuracion')
+        );
     }
 
     public function enqueue_admin_scripts($hook) {
-        // Solo en páginas relevantes
-        if (strpos($hook, 'gab-stock-report') === false && strpos($hook, 'gab-transfer-stock') === false) {
+        // Solo en páginas relevantes del plugin
+        if (strpos($hook, 'gab-stock-report') === false && 
+            strpos($hook, 'gab-transfer-stock') === false && 
+            strpos($hook, 'gab-warehouse-management') === false &&
+            strpos($hook, 'gab-add-new-warehouse') === false) {
             return;
         }
 
+        // Enqueue CSS
+        wp_enqueue_style(
+            'gestion-almacenes-admin-css',
+            GESTION_ALMACENES_PLUGIN_URL . 'admin/assets/css/gestion-almacenes-admin.css',
+            array(),
+            '1.0.0'
+        );
+
+        // Enqueue JavaScript
         wp_enqueue_script(
             'gestion-almacenes-admin-js',
-            plugin_dir_url(__FILE__) . 'assets/js/gestion-almacenes-admin.js',
+            GESTION_ALMACENES_PLUGIN_URL . 'admin/assets/js/gestion-almacenes-admin.js',
             array('jquery'),
-            '1.0',
+            '1.0.0',
             true
         );
 
+        // Localizar script con datos AJAX
         wp_localize_script('gestion-almacenes-admin-js', 'gestionAlmacenesAjax', array(
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce'    => wp_create_nonce('get_warehouse_stock_nonce'),
+            'messages' => array(
+                'confirm_delete' => __('¿Está seguro de que desea eliminar este elemento?', 'gestion-almacenes'),
+                'transfer_confirm' => __('¿Confirma la transferencia?', 'gestion-almacenes'),
+                'error_connection' => __('Error de conexión', 'gestion-almacenes'),
+                'stock_updated' => __('Stock actualizado correctamente', 'gestion-almacenes')
+            )
         ));
     }
 
