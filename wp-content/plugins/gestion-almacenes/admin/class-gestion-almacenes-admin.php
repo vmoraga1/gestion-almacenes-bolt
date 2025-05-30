@@ -9,8 +9,6 @@ class Gestion_Almacenes_Admin {
     public function __construct() {
         add_action('admin_menu', array($this, 'registrar_menu_almacenes'));
         add_action('admin_post_gab_add_warehouse', array($this, 'procesar_agregar_almacen'));
-        // Hooks para reportes y transferencias
-        add_action('admin_menu', array($this, 'registrar_menu_stock_report'));
         add_action('wp_ajax_get_warehouse_stock', array($this, 'ajax_get_warehouse_stock'));
         // Hook para agregar estilos CSS en admin
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
@@ -74,7 +72,8 @@ class Gestion_Almacenes_Admin {
         if (strpos($hook, 'gab-stock-report') === false && 
             strpos($hook, 'gab-transfer-stock') === false && 
             strpos($hook, 'gab-warehouse-management') === false &&
-            strpos($hook, 'gab-add-new-warehouse') === false) {
+            strpos($hook, 'gab-add-new-warehouse') === false &&
+            strpos($hook, 'gab-warehouse-settings') === false) {
             return;
         }
 
@@ -110,58 +109,11 @@ class Gestion_Almacenes_Admin {
 
 
     public function contenido_pagina_almacenes() {
-        echo '<div class="wrap"><h1>' . esc_html(__('Manage Warehouses', 'gestion-almacenes')) . '</h1>';
-
-        if (isset($_GET['status'])) {
-            if ($_GET['status'] === 'success') {
-                echo '<div class="notice notice-success is-dismissible"><p>' . esc_html(__('Almacén guardado correctamente.', 'gestion-almacenes')) . '</p></div>';
-            } elseif ($_GET['status'] === 'error') {
-                $message = __('Ocurrió un error al guardar el almacén.', 'gestion-almacenes');
-                if (!empty($_GET['message'])) {
-                    $error_code = sanitize_key($_GET['message']);
-                    if ($error_code === 'nombre_vacio') {
-                        $message = __('Error: El nombre del almacén no puede estar vacío.', 'gestion-almacenes');
-                    } elseif ($error_code === 'error_db') {
-                        $message = __('Error de base de datos al guardar el almacén.', 'gestion-almacenes');
-                    }
-                }
-                echo '<div class="notice notice-error is-dismissible"><p>' . esc_html($message) . '</p></div>';
-            }
-        }
-
-        $add_new_url = admin_url('admin.php?page=gab-add-new-warehouse');
-        echo '<p><a href="' . esc_url($add_new_url) . '" class="button button-primary">' . esc_html(__('Agregar Nuevo Almacén', 'gestion-almacenes')) . '</a></p>';
-
-        global $gestion_almacenes_db;
-        $almacenes = $gestion_almacenes_db->obtener_almacenes();
-
-        if ($almacenes) {
-            echo '<table class="wp-list-table widefat fixed striped"><thead><tr>';
-            $columns = ['ID', 'Nombre', 'Dirección', 'Comuna', 'Ciudad', 'Región', 'País', 'Email', 'Teléfono', 'Acciones'];
-            foreach ($columns as $col) {
-                echo '<th>' . esc_html__($col, 'gestion-almacenes') . '</th>';
-            }
-            echo '</tr></thead><tbody>';
-            foreach ($almacenes as $almacen) {
-                echo '<tr>';
-                echo '<td>' . esc_html($almacen->id) . '</td>';
-                echo '<td>' . esc_html($almacen->name) . '</td>';
-                echo '<td>' . esc_html($almacen->address) . '</td>';
-                echo '<td>' . esc_html($almacen->comuna) . '</td>';
-                echo '<td>' . esc_html($almacen->ciudad) . '</td>';
-                echo '<td>' . esc_html($almacen->region) . '</td>';
-                echo '<td>' . esc_html($almacen->pais) . '</td>';
-                echo '<td>' . esc_html($almacen->email) . '</td>';
-                echo '<td>' . esc_html($almacen->telefono) . '</td>';
-                echo '<td>' . esc_html__('Editar | Eliminar', 'gestion-almacenes') . '</td>';
-                echo '</tr>';
-            }
-            echo '</tbody></table>';
-        } else {
-            echo '<p>' . esc_html__('No hay almacenes registrados aún.', 'gestion-almacenes') . '</p>';
-        }
-
-        echo '</div>';
+        // Cargar la vista desde el archivo separado
+        require_once GESTION_ALMACENES_PLUGIN_DIR . 'admin/views/page-almacenes-list.php';
+        
+        // Llamar a la función de la vista
+        gab_mostrar_listado_almacenes();
     }
 
     public function procesar_agregar_almacen() {
@@ -198,31 +150,481 @@ class Gestion_Almacenes_Admin {
         exit;
     }
 
-    public function registrar_menu_stock_report() {
-        add_submenu_page(
-            'gab-warehouse-management',
-            __('Reporte de Stock', 'gestion-almacenes'),
-            __('Reporte de Stock', 'gestion-almacenes'),
-            'manage_options',
-            'gab-stock-report',
-            array($this, 'mostrar_reporte_stock')
-        );
-
-        add_submenu_page(
-            'gab-warehouse-management',
-            __('Transferir Stock', 'gestion-almacenes'),
-            __('Transferir Stock', 'gestion-almacenes'),
-            'manage_options',
-            'gab-transfer-stock',
-            array($this, 'mostrar_transferir_stock')
-        );
-    }
+    
 
     public function mostrar_reporte_stock() {
         global $gestion_almacenes_db;
-        echo '<div class="wrap"><h1>' . esc_html__('Reporte de Stock por Almacén', 'gestion-almacenes') . '</h1>';
+        
+        echo '<div class="wrap gab-admin-page">';
+        echo '<div class="gab-section-header">';
+        echo '<h1>' . esc_html__('Reporte de Stock por Almacén', 'gestion-almacenes') . '</h1>';
+        echo '<p>' . esc_html__('Visualiza el estado del inventario en todos los almacenes.', 'gestion-almacenes') . '</p>';
+        echo '</div>';
 
-        // Aquí puedes insertar la lógica del reporte de stock general si lo deseas.
+        // Obtener datos
+        $almacenes = $gestion_almacenes_db->obtener_almacenes();
+        $productos_stock = $gestion_almacenes_db->get_all_products_warehouse_stock();
+        $threshold = get_option('gab_low_stock_threshold', 5);
+        
+        // Obtener filtros
+        $warehouse_filters = isset($_GET['warehouse_filter']) ? (array) $_GET['warehouse_filter'] : array();
+        $status_filters = isset($_GET['status_filter']) ? (array) $_GET['status_filter'] : array();
+        
+        // Limpiar filtros
+        $warehouse_filters = array_map('intval', $warehouse_filters);
+        $status_filters = array_map('sanitize_text_field', $status_filters);
+
+        // Determinar qué almacenes mostrar en las columnas
+        $almacenes_a_mostrar = array();
+        if (!empty($warehouse_filters)) {
+            // Si hay filtros seleccionados, solo mostrar esos almacenes
+            foreach ($almacenes as $almacen) {
+                if (in_array($almacen->id, $warehouse_filters)) {
+                    $almacenes_a_mostrar[] = $almacen;
+                }
+            }
+        } else {
+            // Si no hay filtros, mostrar todos los almacenes
+            $almacenes_a_mostrar = $almacenes;
+        }
+
+        // Procesar datos por producto
+        $productos_agrupados = $this->agrupar_productos_por_almacen($productos_stock, $almacenes);
+        
+        // Aplicar filtros
+        $productos_filtrados = $this->aplicar_filtros_reportes($productos_agrupados, $warehouse_filters, $status_filters, $threshold);
+
+        // Estadísticas generales (usando almacenes filtrados)
+        $this->mostrar_estadisticas_stock_agrupadas($productos_filtrados, $almacenes_a_mostrar, $threshold);
+
+        // Formulario de filtros con checkboxes
+        echo '<div class="gab-form-section">';
+        echo '<form method="get" action="" id="gab-report-filters">';
+        echo '<input type="hidden" name="page" value="gab-stock-report">';
+        
+        echo '<div class="gab-form-row">';
+        
+        // Filtros por almacén (checkboxes)
+        echo '<div class="gab-form-group">';
+        echo '<label><strong>' . esc_html__('Filtrar por Almacenes', 'gestion-almacenes') . '</strong></label>';
+        echo '<div class="filter-checkbox-container">';
+        
+        if ($almacenes) {
+            foreach ($almacenes as $almacen) {
+                $checked = in_array($almacen->id, $warehouse_filters) ? 'checked' : '';
+                echo '<label>';
+                echo '<input type="checkbox" name="warehouse_filter[]" value="' . esc_attr($almacen->id) . '" ' . $checked . '>';
+                echo esc_html($almacen->name) . ' (' . esc_html($almacen->ciudad) . ')';
+                echo '</label>';
+            }
+        }
+        
+        echo '</div>';
+        echo '<small class="description">' . esc_html__('Selecciona almacenes específicos para mostrar solo esas columnas.', 'gestion-almacenes') . '</small>';
+        echo '</div>';
+
+        // Filtros por estado (checkboxes)
+        echo '<div class="gab-form-group">';
+        echo '<label><strong>' . esc_html__('Filtrar por Estado de Stock', 'gestion-almacenes') . '</strong></label>';
+        echo '<div class="filter-checkbox-container">';
+        
+        $estados = array(
+            'high' => __('Stock alto', 'gestion-almacenes'),
+            'medium' => __('Stock medio', 'gestion-almacenes'),
+            'low' => __('Stock bajo', 'gestion-almacenes'),
+            'out' => __('Sin stock', 'gestion-almacenes')
+        );
+        
+        foreach ($estados as $key => $label) {
+            $checked = in_array($key, $status_filters) ? 'checked' : '';
+            echo '<label>';
+            echo '<input type="checkbox" name="status_filter[]" value="' . esc_attr($key) . '" ' . $checked . '>';
+            echo '<span class="gab-badge stock-' . esc_attr($key) . '" style="margin-right: 5px;">' . esc_html($label) . '</span>';
+            echo '</label>';
+        }
+        
+        echo '</div>';
+        echo '<small class="description">' . esc_html__('Filtra productos por su estado de stock.', 'gestion-almacenes') . '</small>';
+        echo '</div>';
+
+        echo '</div>'; // fin gab-form-row
+
+        // Botones de acción
+        echo '<div class="gab-form-row">';
+        echo '<div class="gab-form-group">';
+        echo '<input type="submit" class="button button-primary" value="' . esc_attr__('Aplicar Filtros', 'gestion-almacenes') . '">';
+        echo ' <a href="' . esc_url(admin_url('admin.php?page=gab-stock-report')) . '" class="button button-secondary">' . esc_html__('Limpiar Filtros', 'gestion-almacenes') . '</a>';
+        echo ' <button type="button" id="export_report" class="button button-secondary">' . esc_html__('Exportar CSV', 'gestion-almacenes') . '</button>';
+        echo '</div>';
+        echo '</div>';
+
+        echo '</form>';
+        echo '</div>'; // fin gab-form-section
+
+        // Información sobre filtros activos
+        if (!empty($warehouse_filters) || !empty($status_filters)) {
+            echo '<div class="gab-message info" style="margin-bottom: 20px;">';
+            echo '<p><strong>' . esc_html__('Filtros activos:', 'gestion-almacenes') . '</strong> ';
+            
+            $filtros_activos = array();
+            
+            if (!empty($warehouse_filters)) {
+                $nombres_almacenes = array();
+                foreach ($almacenes_a_mostrar as $almacen) {
+                    $nombres_almacenes[] = $almacen->name;
+                }
+                $filtros_activos[] = sprintf(
+                    esc_html__('Almacenes: %s', 'gestion-almacenes'),
+                    implode(', ', $nombres_almacenes)
+                );
+            }
+            
+            if (!empty($status_filters)) {
+                $nombres_estados = array();
+                foreach ($status_filters as $status) {
+                    if (isset($estados[$status])) {
+                        $nombres_estados[] = $estados[$status];
+                    }
+                }
+                $filtros_activos[] = sprintf(
+                    esc_html__('Estados: %s', 'gestion-almacenes'),
+                    implode(', ', $nombres_estados)
+                );
+            }
+            
+            echo implode(' | ', $filtros_activos);
+            echo '</p>';
+            echo '</div>';
+        }
+
+        // Tabla de reporte con columnas filtradas por almacén
+        if (!empty($productos_filtrados)) {
+            echo '<div class="gab-table-container">';
+            echo '<table class="gab-table wp-list-table widefat fixed striped" id="stock-report-table">';
+            echo '<thead>';
+            echo '<tr>';
+            echo '<th style="min-width: 200px;">' . esc_html__('Producto', 'gestion-almacenes') . '</th>';
+            echo '<th style="width: 80px;">' . esc_html__('SKU', 'gestion-almacenes') . '</th>';
+            
+            // Columnas dinámicas SOLO por almacenes seleccionados
+            if ($almacenes_a_mostrar) {
+                foreach ($almacenes_a_mostrar as $almacen) {
+                    echo '<th style="width: 100px; text-align: center;">';
+                    echo esc_html($almacen->name);
+                    echo '<br><small style="font-weight: normal;">' . esc_html($almacen->ciudad) . '</small>';
+                    echo '</th>';
+                }
+            }
+            
+            echo '<th style="width: 80px;">' . esc_html__('Total', 'gestion-almacenes') . '</th>';
+            echo '<th style="width: 100px;">' . esc_html__('Estado', 'gestion-almacenes') . '</th>';
+            echo '<th style="width: 120px;">' . esc_html__('Acciones', 'gestion-almacenes') . '</th>';
+            echo '</tr>';
+            echo '</thead>';
+            echo '<tbody>';
+
+            foreach ($productos_filtrados as $product_id => $producto_data) {
+                $product = wc_get_product($product_id);
+                if (!$product) continue;
+
+                echo '<tr>';
+                
+                // Producto
+                echo '<td>';
+                echo '<strong>' . esc_html($product->get_name()) . '</strong>';
+                if ($product->get_type() === 'variation') {
+                    echo '<br><small>' . esc_html($product->get_formatted_variation_attributes(true)) . '</small>';
+                }
+                echo '</td>';
+
+                // SKU
+                echo '<td>' . esc_html($product->get_sku() ?: '-') . '</td>';
+
+                // Columnas de stock SOLO por almacenes seleccionados
+                $total_stock_filtrado = 0;
+                if ($almacenes_a_mostrar) {
+                    foreach ($almacenes_a_mostrar as $almacen) {
+                        $stock = isset($producto_data['almacenes'][$almacen->id]) ? $producto_data['almacenes'][$almacen->id] : 0;
+                        $total_stock_filtrado += $stock;
+                        
+                        echo '<td style="text-align: center;">';
+                        if ($stock > 0) {
+                            $status_class = $this->obtener_clase_estado_stock($stock, $threshold);
+                            echo '<span class="' . esc_attr($status_class) . '">' . esc_html($stock) . '</span>';
+                        } else {
+                            echo '<span style="color: #999;">0</span>';
+                        }
+                        echo '</td>';
+                    }
+                }
+
+                // Total (solo de almacenes mostrados)
+                echo '<td style="text-align: center;">';
+                echo '<strong>' . esc_html($total_stock_filtrado) . '</strong>';
+                echo '</td>';
+
+                // Estado general (basado en almacenes mostrados)
+                echo '<td style="text-align: center;">';
+                $producto_data_filtrado = array(
+                    'almacenes' => array(),
+                    'total_stock' => $total_stock_filtrado
+                );
+                
+                // Solo incluir almacenes mostrados para el cálculo del estado
+                foreach ($almacenes_a_mostrar as $almacen) {
+                    if (isset($producto_data['almacenes'][$almacen->id])) {
+                        $producto_data_filtrado['almacenes'][$almacen->id] = $producto_data['almacenes'][$almacen->id];
+                    }
+                }
+                
+                echo $this->obtener_badge_estado_general($producto_data_filtrado, $threshold);
+                echo '</td>';
+
+                // Acciones
+                echo '<td>';
+                echo '<a href="' . esc_url(admin_url('post.php?post=' . $product_id . '&action=edit')) . '" ';
+                echo 'class="button button-small" title="' . esc_attr__('Editar producto', 'gestion-almacenes') . '">';
+                echo '<span class="dashicons dashicons-edit"></span>';
+                echo '</a> ';
+                
+                echo '<a href="' . esc_url(add_query_arg(array(
+                    'page' => 'gab-transfer-stock',
+                    'product_id' => $product_id
+                ), admin_url('admin.php'))) . '" ';
+                echo 'class="button button-small" title="' . esc_attr__('Transferir stock', 'gestion-almacenes') . '">';
+                echo '<span class="dashicons dashicons-randomize"></span>';
+                echo '</a>';
+                echo '</td>';
+
+                echo '</tr>';
+            }
+
+            echo '</tbody>';
+            echo '</table>';
+            echo '</div>';
+
+            // Resumen de la tabla
+            $total_items = count($productos_filtrados);
+            $total_almacenes_mostrados = count($almacenes_a_mostrar);
+            
+            echo '<p class="description">';
+            echo sprintf(
+                esc_html__('Mostrando %d producto(s) en %d almacén(es).', 'gestion-almacenes'), 
+                $total_items, 
+                $total_almacenes_mostrados
+            );
+            echo '</p>';
+
+        } else {
+            echo '<div class="gab-message info">';
+            echo '<h3>' . esc_html__('No se encontraron productos', 'gestion-almacenes') . '</h3>';
+            echo '<p>' . esc_html__('No hay productos que coincidan con los filtros seleccionados.', 'gestion-almacenes') . '</p>';
+            echo '</div>';
+        }
+
+        echo '</div>'; // fin wrap
+    }
+
+    /**
+     * Agrupar productos por almacén
+     */
+    private function agrupar_productos_por_almacen($productos_stock, $almacenes) {
+        $productos_agrupados = array();
+        
+        if ($productos_stock) {
+            foreach ($productos_stock as $item) {
+                $product_id = $item->product_id;
+                
+                if (!isset($productos_agrupados[$product_id])) {
+                    $productos_agrupados[$product_id] = array(
+                        'almacenes' => array(),
+                        'total_stock' => 0
+                    );
+                }
+                
+                $productos_agrupados[$product_id]['almacenes'][$item->warehouse_id] = intval($item->stock);
+                $productos_agrupados[$product_id]['total_stock'] += intval($item->stock);
+            }
+        }
+        
+        return $productos_agrupados;
+    }
+
+    /**
+     * Aplicar filtros a los productos agrupados
+     */
+    private function aplicar_filtros_reportes($productos_agrupados, $warehouse_filters, $status_filters, $threshold) {
+        $productos_filtrados = array();
+        
+        foreach ($productos_agrupados as $product_id => $producto_data) {
+            $incluir_producto = true;
+            
+            // Filtro por almacenes
+            if (!empty($warehouse_filters)) {
+                $tiene_stock_en_almacenes_filtrados = false;
+                foreach ($warehouse_filters as $warehouse_id) {
+                    if (isset($producto_data['almacenes'][$warehouse_id]) && $producto_data['almacenes'][$warehouse_id] > 0) {
+                        $tiene_stock_en_almacenes_filtrados = true;
+                        break;
+                    }
+                }
+                if (!$tiene_stock_en_almacenes_filtrados) {
+                    $incluir_producto = false;
+                }
+            }
+            
+            // Filtro por estado
+            if (!empty($status_filters) && $incluir_producto) {
+                $cumple_estado = false;
+                
+                foreach ($status_filters as $status) {
+                    $estado_producto = $this->determinar_estado_producto($producto_data, $threshold);
+                    if (in_array($status, $estado_producto)) {
+                        $cumple_estado = true;
+                        break;
+                    }
+                }
+                
+                if (!$cumple_estado) {
+                    $incluir_producto = false;
+                }
+            }
+            
+            if ($incluir_producto) {
+                $productos_filtrados[$product_id] = $producto_data;
+            }
+        }
+        
+        return $productos_filtrados;
+    }
+
+    /**
+     * Determinar estados de un producto
+     */
+    private function determinar_estado_producto($producto_data, $threshold) {
+        $estados = array();
+        
+        foreach ($producto_data['almacenes'] as $warehouse_id => $stock) {
+            if ($stock == 0) {
+                $estados[] = 'out';
+            } elseif ($stock <= $threshold) {
+                $estados[] = 'low';
+            } elseif ($stock <= ($threshold * 2)) {
+                $estados[] = 'medium';
+            } else {
+                $estados[] = 'high';
+            }
+        }
+        
+        return array_unique($estados);
+    }
+
+    /**
+     * Obtener clase CSS para estado de stock
+     */
+    private function obtener_clase_estado_stock($stock, $threshold) {
+        if ($stock == 0) {
+            return 'gab-badge stock-out';
+        } elseif ($stock <= $threshold) {
+            return 'gab-badge stock-low';
+        } elseif ($stock <= ($threshold * 2)) {
+            return 'gab-badge stock-medium';
+        } else {
+            return 'gab-badge stock-high';
+        }
+    }
+
+    /**
+     * Obtener badge de estado general
+     */
+    private function obtener_badge_estado_general($producto_data, $threshold) {
+        $total_stock = $producto_data['total_stock'];
+        
+        if ($total_stock == 0) {
+            return '<span class="gab-badge stock-out">' . esc_html__('Sin stock', 'gestion-almacenes') . '</span>';
+        }
+        
+        $tiene_stock_bajo = false;
+        $tiene_stock_alto = false;
+        
+        foreach ($producto_data['almacenes'] as $stock) {
+            if ($stock > 0 && $stock <= $threshold) {
+                $tiene_stock_bajo = true;
+            } elseif ($stock > ($threshold * 2)) {
+                $tiene_stock_alto = true;
+            }
+        }
+        
+        if ($tiene_stock_bajo) {
+            return '<span class="gab-badge stock-low">' . esc_html__('Stock bajo', 'gestion-almacenes') . '</span>';
+        } elseif ($tiene_stock_alto) {
+            return '<span class="gab-badge stock-high">' . esc_html__('Stock alto', 'gestion-almacenes') . '</span>';
+        } else {
+            return '<span class="gab-badge stock-medium">' . esc_html__('Stock medio', 'gestion-almacenes') . '</span>';
+        }
+    }
+
+    /**
+     * Mostrar estadísticas de stock agrupadas
+     */
+    private function mostrar_estadisticas_stock_agrupadas($productos_filtrados, $almacenes_mostrados, $threshold) {
+        $total_productos = count($productos_filtrados);
+        $total_stock = 0;
+        $productos_sin_stock = 0;
+        $productos_stock_bajo = 0;
+        $total_almacenes_mostrados = count($almacenes_mostrados);
+
+        foreach ($productos_filtrados as $producto_data) {
+            // Calcular solo el stock de los almacenes que se están mostrando
+            $stock_producto_filtrado = 0;
+            $tiene_stock_bajo_en_mostrados = false;
+            
+            foreach ($almacenes_mostrados as $almacen) {
+                if (isset($producto_data['almacenes'][$almacen->id])) {
+                    $stock_almacen = $producto_data['almacenes'][$almacen->id];
+                    $stock_producto_filtrado += $stock_almacen;
+                    
+                    if ($stock_almacen > 0 && $stock_almacen <= $threshold) {
+                        $tiene_stock_bajo_en_mostrados = true;
+                    }
+                }
+            }
+            
+            $total_stock += $stock_producto_filtrado;
+            
+            if ($stock_producto_filtrado == 0) {
+                $productos_sin_stock++;
+            } elseif ($tiene_stock_bajo_en_mostrados) {
+                $productos_stock_bajo++;
+            }
+        }
+
+        echo '<div class="gab-stats-grid">';
+        
+        echo '<div class="gab-stat-card">';
+        echo '<span class="stat-number">' . $total_almacenes_mostrados . '</span>';
+        echo '<span class="stat-label">' . esc_html__('Almacenes Mostrados', 'gestion-almacenes') . '</span>';
+        echo '</div>';
+
+        echo '<div class="gab-stat-card">';
+        echo '<span class="stat-number">' . $total_productos . '</span>';
+        echo '<span class="stat-label">' . esc_html__('Productos', 'gestion-almacenes') . '</span>';
+        echo '</div>';
+
+        echo '<div class="gab-stat-card">';
+        echo '<span class="stat-number">' . $total_stock . '</span>';
+        echo '<span class="stat-label">' . esc_html__('Stock Total', 'gestion-almacenes') . '</span>';
+        echo '</div>';
+
+        echo '<div class="gab-stat-card">';
+        echo '<span class="stat-number" style="color: #d63638;">' . $productos_stock_bajo . '</span>';
+        echo '<span class="stat-label">' . esc_html__('Stock Bajo', 'gestion-almacenes') . '</span>';
+        echo '</div>';
+
+        echo '<div class="gab-stat-card">';
+        echo '<span class="stat-number" style="color: #999;">' . $productos_sin_stock . '</span>';
+        echo '<span class="stat-label">' . esc_html__('Sin Stock', 'gestion-almacenes') . '</span>';
+        echo '</div>';
 
         echo '</div>';
     }
@@ -230,26 +632,183 @@ class Gestion_Almacenes_Admin {
     public function mostrar_transferir_stock() {
         global $gestion_almacenes_db;
 
-        echo '<div class="wrap"><h1>' . esc_html__('Transferir Stock entre Almacenes', 'gestion-almacenes') . '</h1>';
+        echo '<div class="wrap gab-admin-page">';
+        echo '<div class="gab-section-header">';
+        echo '<h1>' . esc_html__('Transferir Stock entre Almacenes', 'gestion-almacenes') . '</h1>';
+        echo '<p>' . esc_html__('Transfiere productos de un almacén a otro de forma segura.', 'gestion-almacenes') . '</p>';
+        echo '</div>';
 
+        // Procesar transferencia si se envió el formulario
         if (isset($_POST['transfer_stock']) && wp_verify_nonce($_POST['transfer_nonce'], 'transfer_stock_nonce')) {
             $product_id = intval($_POST['product_id']);
             $from_warehouse = intval($_POST['from_warehouse']);
             $to_warehouse = intval($_POST['to_warehouse']);
             $quantity = intval($_POST['quantity']);
 
-            if ($product_id && $from_warehouse && $to_warehouse && $quantity > 0) {
+            if ($product_id && $from_warehouse && $to_warehouse && $quantity > 0 && $from_warehouse !== $to_warehouse) {
                 $result = $gestion_almacenes_db->transfer_stock_between_warehouses($product_id, $from_warehouse, $to_warehouse, $quantity);
 
                 if ($result) {
-                    echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('Transferencia realizada con éxito.', 'gestion-almacenes') . '</p></div>';
+                    echo '<div class="notice notice-success is-dismissible">';
+                    echo '<p>' . esc_html__('Transferencia realizada con éxito.', 'gestion-almacenes') . '</p>';
+                    echo '</div>';
                 } else {
-                    echo '<div class="notice notice-error is-dismissible"><p>' . esc_html__('Error al realizar la transferencia. Verifica que haya suficiente stock.', 'gestion-almacenes') . '</p></div>';
+                    echo '<div class="notice notice-error is-dismissible">';
+                    echo '<p>' . esc_html__('Error al realizar la transferencia. Verifica que haya suficiente stock.', 'gestion-almacenes') . '</p>';
+                    echo '</div>';
                 }
+            } else {
+                echo '<div class="notice notice-error is-dismissible">';
+                echo '<p>' . esc_html__('Datos inválidos. Verifica todos los campos.', 'gestion-almacenes') . '</p>';
+                echo '</div>';
             }
         }
 
-        // Aquí podrías agregar el formulario si aún no lo tienes como vista separada.
+        // Obtener datos necesarios
+        $almacenes = $gestion_almacenes_db->obtener_almacenes();
+        $productos_wc = $this->obtener_productos_woocommerce();
+
+        if (!$almacenes || count($almacenes) < 2) {
+            echo '<div class="gab-message warning">';
+            echo '<h3>' . esc_html__('Insuficientes almacenes', 'gestion-almacenes') . '</h3>';
+            echo '<p>' . esc_html__('Necesitas al menos 2 almacenes para realizar transferencias.', 'gestion-almacenes') . '</p>';
+            echo '<a href="' . esc_url(admin_url('admin.php?page=gab-add-new-warehouse')) . '" class="button button-primary">';
+            echo esc_html__('Agregar Almacén', 'gestion-almacenes');
+            echo '</a>';
+            echo '</div>';
+            echo '</div>';
+            return;
+        }
+
+        if (!$productos_wc || count($productos_wc) === 0) {
+            echo '<div class="gab-message warning">';
+            echo '<h3>' . esc_html__('No hay productos', 'gestion-almacenes') . '</h3>';
+            echo '<p>' . esc_html__('No se encontraron productos de WooCommerce con stock en almacenes.', 'gestion-almacenes') . '</p>';
+            echo '</div>';
+            echo '</div>';
+            return;
+        }
+
+        // Formulario de transferencia
+        echo '<div class="gab-form-section">';
+        echo '<form method="post" action="" id="gab-transfer-form">';
+        wp_nonce_field('transfer_stock_nonce', 'transfer_nonce');
+
+        echo '<div class="gab-form-row">';
+        
+        // Selector de producto
+        echo '<div class="gab-form-group">';
+        echo '<label for="product_id">' . esc_html__('Seleccionar Producto', 'gestion-almacenes') . '</label>';
+        echo '<select name="product_id" id="product_id" required>';
+        echo '<option value="">' . esc_html__('Selecciona un producto...', 'gestion-almacenes') . '</option>';
+        
+        foreach ($productos_wc as $producto) {
+            echo '<option value="' . esc_attr($producto->ID) . '">';
+            echo esc_html($producto->post_title) . ' (ID: ' . esc_html($producto->ID) . ')';
+            echo '</option>';
+        }
+        
+        echo '</select>';
+        echo '</div>';
+
+        // Almacén origen
+        echo '<div class="gab-form-group">';
+        echo '<label for="from_warehouse">' . esc_html__('Almacén Origen', 'gestion-almacenes') . '</label>';
+        echo '<select name="from_warehouse" id="from_warehouse" required>';
+        echo '<option value="">' . esc_html__('Selecciona almacén origen...', 'gestion-almacenes') . '</option>';
+        
+        foreach ($almacenes as $almacen) {
+            echo '<option value="' . esc_attr($almacen->id) . '">';
+            echo esc_html($almacen->name) . ' - ' . esc_html($almacen->ciudad);
+            echo '</option>';
+        }
+        
+        echo '</select>';
+        echo '</div>';
+
+        echo '</div>'; // fin gab-form-row
+
+        echo '<div class="gab-form-row">';
+
+        // Almacén destino
+        echo '<div class="gab-form-group">';
+        echo '<label for="to_warehouse">' . esc_html__('Almacén Destino', 'gestion-almacenes') . '</label>';
+        echo '<select name="to_warehouse" id="to_warehouse" required>';
+        echo '<option value="">' . esc_html__('Selecciona almacén destino...', 'gestion-almacenes') . '</option>';
+        
+        foreach ($almacenes as $almacen) {
+            echo '<option value="' . esc_attr($almacen->id) . '">';
+            echo esc_html($almacen->name) . ' - ' . esc_html($almacen->ciudad);
+            echo '</option>';
+        }
+        
+        echo '</select>';
+        echo '</div>';
+
+        // Cantidad
+        echo '<div class="gab-form-group">';
+        echo '<label for="quantity">' . esc_html__('Cantidad a Transferir', 'gestion-almacenes') . '</label>';
+        echo '<input type="number" name="quantity" id="quantity" min="1" required>';
+        echo '</div>';
+
+        echo '</div>'; // fin gab-form-row
+
+        // Información de stock
+        echo '<div id="stock_info" class="gab-stock-info">';
+        echo esc_html__('Selecciona un producto y almacén origen para ver el stock disponible.', 'gestion-almacenes');
+        echo '</div>';
+
+        // Botón de transferencia
+        echo '<div class="gab-form-row">';
+        echo '<div class="gab-form-group">';
+        echo '<input type="submit" name="transfer_stock" class="button button-primary gab-button-primary" ';
+        echo 'value="' . esc_attr__('Realizar Transferencia', 'gestion-almacenes') . '">';
+        echo '</div>';
+        echo '</div>';
+
+        echo '</form>';
+        echo '</div>'; // fin gab-form-section
+
+        // Historial reciente de transferencias (opcional)
+        echo '<div class="gab-section-header" style="margin-top: 40px;">';
+        echo '<h2>' . esc_html__('Transferencias Recientes', 'gestion-almacenes') . '</h2>';
+        echo '</div>';
+
+        $this->mostrar_transferencias_recientes();
+
+        echo '</div>'; // fin wrap
+    }
+
+    /**
+     * Función auxiliar para obtener productos de WooCommerce
+     */
+    private function obtener_productos_woocommerce() {
+        if (!class_exists('WooCommerce')) {
+            return array();
+        }
+
+        $args = array(
+            'post_type' => 'product',
+            'post_status' => 'publish',
+            'posts_per_page' => -1,
+            'meta_query' => array(
+                array(
+                    'key' => '_manage_stock',
+                    'value' => 'yes',
+                    'compare' => '='
+                )
+            )
+        );
+
+        return get_posts($args);
+    }
+
+    /**
+     * Mostrar historial de transferencias recientes
+     */
+    private function mostrar_transferencias_recientes() {
+        echo '<div class="gab-message info">';
+        echo '<p>' . esc_html__('El historial de transferencias esta en desarrollo aún', 'gestion-almacenes') . '</p>';
         echo '</div>';
     }
 
@@ -380,8 +939,8 @@ public function mostrar_configuracion() {
     echo '<tr><td>' . esc_html(__('Productos con Stock Bajo', 'gestion-almacenes')) . '</td><td>' . (is_array($productos_stock_bajo) ? count($productos_stock_bajo) : 0) . '</td></tr>';
     
     echo '<tr><td>' . esc_html(__('Versión del Plugin', 'gestion-almacenes')) . '</td><td>1.0.0</td></tr>';
-    echo '<tr><td>' . esc_html(__('Versión de WordPress', 'gestion-almacenes')) . '</td><td>' . get_bloginfo('version') . '</td></tr>';
-    echo '<tr><td>' . esc_html(__('Versión de WooCommerce', 'gestion-almacenes')) . '</td><td>' . (defined('WC_VERSION') ? WC_VERSION : 'No instalado') . '</td></tr>';
+    //echo '<tr><td>' . esc_html(__('Versión de WordPress', 'gestion-almacenes')) . '</td><td>' . get_bloginfo('version') . '</td></tr>';
+    //echo '<tr><td>' . esc_html(__('Versión de WooCommerce', 'gestion-almacenes')) . '</td><td>' . (defined('WC_VERSION') ? WC_VERSION : 'No instalado') . '</td></tr>';
     
     echo '</tbody>';
     echo '</table>';

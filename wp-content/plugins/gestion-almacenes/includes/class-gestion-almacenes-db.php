@@ -221,7 +221,6 @@ class Gestion_Almacenes_DB {
 
 
     /**
-     * Anthropic
      * Obtiene información de un almacén específico por ID
      */
     public function obtener_almacen_por_id($warehouse_id) {

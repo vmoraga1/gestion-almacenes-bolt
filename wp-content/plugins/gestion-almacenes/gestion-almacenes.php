@@ -25,6 +25,7 @@ require_once GESTION_ALMACENES_PLUGIN_DIR . 'includes/class-gestion-almacenes-db
 require_once GESTION_ALMACENES_PLUGIN_DIR . 'admin/class-gestion-almacenes-admin.php';
 require_once GESTION_ALMACENES_PLUGIN_DIR . 'woocommerce/class-gestion-almacenes-woocommerce.php';
 require_once GESTION_ALMACENES_PLUGIN_DIR . 'admin/views/page-nuevo-almacen.php';
+require_once GESTION_ALMACENES_PLUGIN_DIR . 'admin/views/page-almacenes-list.php';
 
 // Instanciar clases principales (esto las "activa" y engancha sus hooks)
 $gestion_almacenes_db = new Gestion_Almacenes_DB();

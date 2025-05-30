@@ -361,3 +361,119 @@
     color: #055160;
     border: 1px solid #b6effb;
 }
+
+/* Checkboxes de filtros */
+.gab-form-group input[type="checkbox"] {
+    margin-right: 8px !important;
+}
+
+.gab-form-group label {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.gab-form-group label:hover {
+    background-color: #f0f6fc;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+/* Tabla de reportes con scroll horizontal */
+#stock-report-table {
+    min-width: 800px;
+}
+
+#stock-report-table th,
+#stock-report-table td {
+    white-space: nowrap;
+    padding: 8px 12px;
+}
+
+#stock-report-table th:first-child,
+#stock-report-table td:first-child {
+    position: sticky;
+    left: 0;
+    background: white;
+    z-index: 10;
+    box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+}
+
+#stock-report-table thead th:first-child {
+    background: #f1f1f1;
+}
+
+/* Estados de stock inline */
+.gab-table .gab-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* Números de stock con colores */
+.stock-number-high {
+    color: #0f5132;
+    font-weight: bold;
+}
+
+.stock-number-medium {
+    color: #664d03;
+    font-weight: bold;
+}
+
+.stock-number-low {
+    color: #721c24;
+    font-weight: bold;
+}
+
+.stock-number-out {
+    color: #999;
+}
+
+/* Contenedor con scroll horizontal */
+.gab-table-container {
+    overflow-x: auto;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+/* Mejoras para filtros */
+.filter-checkbox-container {
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 4px;
+    background: white;
+}
+
+.filter-checkbox-container label {
+    display: block;
+    margin-bottom: 5px;
+    padding: 3px;
+    border-radius: 3px;
+}
+
+.filter-checkbox-container label:hover {
+    background-color: #f0f6fc;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .gab-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    #stock-report-table {
+        font-size: 12px;
+    }
+    
+    #stock-report-table th,
+    #stock-report-table td {
+        padding: 6px 8px;
+    }
+    
+    .filter-checkbox-container {
+        max-height: 120px;
+    }
+}

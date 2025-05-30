@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 // Esta función se llama directamente desde la clase Gestion_Almacenes_Admin
 function gab_mostrar_formulario_nuevo_almacen() {
     ?>
-    <div class="wrap">;
+    <div class="wrap">
         <h1><?php echo esc_html(__('Agregar Nuevo Almacén', 'gestion-almacenes')); ?></h1>
 
         <?php
