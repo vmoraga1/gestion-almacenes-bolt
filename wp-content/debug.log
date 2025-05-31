@@ -100,3 +100,1860 @@
 [30-May-2025 06:17:34 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
 [30-May-2025 06:18:33 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
 [30-May-2025 06:20:00 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 00:35:21 UTC] Automatic updates starting...
+[31-May-2025 00:35:21 UTC] Automatic updates complete.
+[31-May-2025 02:56:13 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 02:56:29 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 02:56:29 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 02:56:40 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 02:56:51 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 03:04:03 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 03:04:03 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 03:05:02 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 68: Array
+(
+)
+
+[31-May-2025 03:05:03 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 69: Array
+(
+)
+
+[31-May-2025 03:05:03 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+)
+
+[31-May-2025 03:05:04 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 71: Array
+(
+)
+
+[31-May-2025 03:05:05 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 72: Array
+(
+)
+
+[31-May-2025 03:05:05 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 73: Array
+(
+)
+
+[31-May-2025 03:05:06 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 74: Array
+(
+)
+
+[31-May-2025 03:05:07 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+)
+
+[31-May-2025 03:05:08 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 76: Array
+(
+)
+
+[31-May-2025 03:05:08 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+)
+
+[31-May-2025 03:05:09 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+)
+
+[31-May-2025 03:05:10 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+)
+
+[31-May-2025 03:05:10 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 69: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 69: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 71: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 71: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 72: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 72: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 73: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 73: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 74: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 74: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 76: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 76: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 68: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 68: Array
+(
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 03:05:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 03:19:31 UTC] PHP Parse error:  syntax error, unexpected end of file in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\admin\class-gestion-almacenes-admin.php on line 2325
+[31-May-2025 03:21:32 UTC] PHP Parse error:  syntax error, unexpected end of file in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\admin\class-gestion-almacenes-admin.php on line 2347
+[31-May-2025 03:41:16 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 03:41:26 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 03:41:48 UTC] PHP Notice:  Undefined index: source_warehouse_id in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\includes\class-gestion-almacenes-transfer-controller.php on line 470
+[31-May-2025 03:41:48 UTC] PHP Stack trace:
+[31-May-2025 03:41:48 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:0
+[31-May-2025 03:41:48 UTC] PHP   2. do_action($hook_name = 'wp_ajax_gab_update_transfer') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:192
+[31-May-2025 03:41:48 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[31-May-2025 03:41:48 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[31-May-2025 03:41:48 UTC] PHP   5. Gestion_Almacenes_Transfer_Controller->ajax_update_transfer('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[31-May-2025 03:41:48 UTC] PHP Notice:  Undefined index: target_warehouse_id in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\includes\class-gestion-almacenes-transfer-controller.php on line 471
+[31-May-2025 03:41:48 UTC] PHP Stack trace:
+[31-May-2025 03:41:48 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:0
+[31-May-2025 03:41:48 UTC] PHP   2. do_action($hook_name = 'wp_ajax_gab_update_transfer') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:192
+[31-May-2025 03:41:48 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[31-May-2025 03:41:48 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[31-May-2025 03:41:48 UTC] PHP   5. Gestion_Almacenes_Transfer_Controller->ajax_update_transfer('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[31-May-2025 04:19:23 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 04:19:33 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 04:19:42 UTC] [DEBUG] POST data: Array
+(
+    [action] => gab_update_transfer
+    [transfer_id] => 1
+    [source_warehouse_id] => 1
+    [target_warehouse_id] => 4
+    [notes] => 
+    [items] => Array
+        (
+            [1] => Array
+                (
+                    [product_id] => 62
+                    [quantity] => 8
+                )
+
+        )
+
+    [nonce] => 6284bc3b6c
+)
+
+[31-May-2025 04:19:42 UTC] [DEBUG] Items field: Array
+(
+    [1] => Array
+        (
+            [product_id] => 62
+            [quantity] => 8
+        )
+
+)
+
+[31-May-2025 04:19:42 UTC] [DEBUG] Processed items: Array
+(
+    [0] => Array
+        (
+            [product_id] => 62
+            [quantity] => 8
+        )
+
+)
+
+[31-May-2025 04:20:05 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 04:22:20 UTC] [DEBUG] POST data: Array
+(
+    [action] => gab_update_transfer
+    [transfer_id] => 1
+    [source_warehouse_id] => 1
+    [target_warehouse_id] => 4
+    [notes] => 
+    [items] => Array
+        (
+            [2] => Array
+                (
+                    [product_id] => 62
+                    [quantity] => 5
+                )
+
+        )
+
+    [nonce] => 6284bc3b6c
+)
+
+[31-May-2025 04:22:20 UTC] [DEBUG] Items field: Array
+(
+    [2] => Array
+        (
+            [product_id] => 62
+            [quantity] => 5
+        )
+
+)
+
+[31-May-2025 04:22:20 UTC] [DEBUG] Processed items: Array
+(
+    [0] => Array
+        (
+            [product_id] => 62
+            [quantity] => 5
+        )
+
+)
+
+[31-May-2025 04:23:50 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 69: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 69: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 71: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 71: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 72: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 72: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 73: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 73: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 74: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 74: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 76: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 76: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 68: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 68: Array
+(
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 04:24:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 04:24:34 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 04:24:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+)
+
+[31-May-2025 04:24:59 UTC] [DEBUG GESTION ALMACENES DB] Stock insertado para Producto ID 70 en Almacén ID 1. Filas afectadas: 1
+[31-May-2025 04:24:59 UTC] [DEBUG GESTION ALMACENES DB] Stock insertado para Producto ID 70 en Almacén ID 2. Filas afectadas: 1
+[31-May-2025 04:24:59 UTC] [DEBUG GESTION ALMACENES DB] Stock insertado para Producto ID 70 en Almacén ID 3. Filas afectadas: 1
+[31-May-2025 04:24:59 UTC] [DEBUG GESTION ALMACENES DB] Stock insertado para Producto ID 70 en Almacén ID 4. Filas afectadas: 1
+[31-May-2025 04:24:59 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 10
+    [2] => 10
+    [3] => 10
+    [4] => 10
+)
+
+[31-May-2025 04:24:59 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 10
+    [2] => 10
+    [3] => 10
+    [4] => 10
+)
+
+[31-May-2025 04:25:01 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 04:25:01 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 10
+    [2] => 10
+    [3] => 10
+    [4] => 10
+)
+
+[31-May-2025 04:25:22 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 04:25:38 UTC] [DEBUG] POST data: Array
+(
+    [action] => gab_update_transfer
+    [transfer_id] => 1
+    [source_warehouse_id] => 1
+    [target_warehouse_id] => 4
+    [notes] => 
+    [items] => Array
+        (
+            [3] => Array
+                (
+                    [product_id] => 62
+                    [quantity] => 5
+                )
+
+            [new_1] => Array
+                (
+                    [product_id] => 70
+                    [quantity] => 5
+                )
+
+        )
+
+    [nonce] => 6284bc3b6c
+)
+
+[31-May-2025 04:25:38 UTC] [DEBUG] Items field: Array
+(
+    [3] => Array
+        (
+            [product_id] => 62
+            [quantity] => 5
+        )
+
+    [new_1] => Array
+        (
+            [product_id] => 70
+            [quantity] => 5
+        )
+
+)
+
+[31-May-2025 04:25:38 UTC] [DEBUG] Processed items: Array
+(
+    [0] => Array
+        (
+            [product_id] => 62
+            [quantity] => 5
+        )
+
+    [1] => Array
+        (
+            [product_id] => 70
+            [quantity] => 5
+        )
+
+)
+
+[31-May-2025 04:25:48 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 04:25:52 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 04:26:00 UTC] [DEBUG] POST data: Array
+(
+    [action] => gab_update_transfer
+    [transfer_id] => 1
+    [source_warehouse_id] => 1
+    [target_warehouse_id] => 4
+    [notes] => 
+    [items] => Array
+        (
+            [5] => Array
+                (
+                    [product_id] => 70
+                    [quantity] => 5
+                )
+
+        )
+
+    [nonce] => 6284bc3b6c
+)
+
+[31-May-2025 04:26:00 UTC] [DEBUG] Items field: Array
+(
+    [5] => Array
+        (
+            [product_id] => 70
+            [quantity] => 5
+        )
+
+)
+
+[31-May-2025 04:26:00 UTC] [DEBUG] Processed items: Array
+(
+    [0] => Array
+        (
+            [product_id] => 70
+            [quantity] => 5
+        )
+
+)
+
+[31-May-2025 04:26:06 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 04:45:17 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 04:45:35 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 04:45:59 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 04:46:15 UTC] [DEBUG] POST data: Array
+(
+    [action] => gab_update_transfer
+    [transfer_id] => 1
+    [source_warehouse_id] => 1
+    [target_warehouse_id] => 4
+    [notes] => 
+    [items] => Array
+        (
+            [6] => Array
+                (
+                    [product_id] => 70
+                    [quantity] => 5
+                )
+
+            [new_1] => Array
+                (
+                    [product_id] => 62
+                    [quantity] => 5
+                )
+
+        )
+
+    [nonce] => 6284bc3b6c
+)
+
+[31-May-2025 04:46:15 UTC] [DEBUG] Items field: Array
+(
+    [6] => Array
+        (
+            [product_id] => 70
+            [quantity] => 5
+        )
+
+    [new_1] => Array
+        (
+            [product_id] => 62
+            [quantity] => 5
+        )
+
+)
+
+[31-May-2025 04:46:15 UTC] [DEBUG] Processed items: Array
+(
+    [0] => Array
+        (
+            [product_id] => 70
+            [quantity] => 5
+        )
+
+    [1] => Array
+        (
+            [product_id] => 62
+            [quantity] => 5
+        )
+
+)
+
+[31-May-2025 04:46:40 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 05:00:46 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Gestion_Almacenes_DB::get_warehouses() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\includes\class-gestion-almacenes-transfer-controller.php:553
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Gestion_Almacenes_Transfer_Controller->render_view_transfer_page('')
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('admin_page_gab-...')
+#4 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\includes\class-gestion-almacenes-transfer-controller.php on line 553
+[31-May-2025 05:01:14 UTC] [DEBUG GESTION ALMACENES DB] La tabla de almacenes ya existe. No se intentó crear.
+[31-May-2025 05:01:14 UTC] [DEBUG GESTION ALMACENES DB] La tabla de stock ya existe. No se intentó crear.
+[31-May-2025 05:01:28 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Gestion_Almacenes_DB::get_warehouses() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\includes\class-gestion-almacenes-transfer-controller.php:553
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Gestion_Almacenes_Transfer_Controller->render_view_transfer_page('')
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('admin_page_gab-...')
+#4 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\includes\class-gestion-almacenes-transfer-controller.php on line 553
+[31-May-2025 05:27:17 UTC] WordPress database error Table 'bolt.wp_gab_warehouse_stock' doesn't exist for query SELECT quantity FROM wp_gab_warehouse_stock WHERE warehouse_id = 1 AND product_id = 62 made by do_action('admin_page_gab-view-transfer'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Transfer_Controller->render_view_transfer_page, Gestion_Almacenes_DB->get_warehouse_stock
+[31-May-2025 05:27:17 UTC] WordPress database error Table 'bolt.wp_gab_warehouse_stock' doesn't exist for query SELECT quantity FROM wp_gab_warehouse_stock WHERE warehouse_id = 4 AND product_id = 62 made by do_action('admin_page_gab-view-transfer'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Transfer_Controller->render_view_transfer_page, Gestion_Almacenes_DB->get_warehouse_stock
+[31-May-2025 05:27:17 UTC] WordPress database error Table 'bolt.wp_gab_warehouse_stock' doesn't exist for query SELECT quantity FROM wp_gab_warehouse_stock WHERE warehouse_id = 1 AND product_id = 70 made by do_action('admin_page_gab-view-transfer'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Transfer_Controller->render_view_transfer_page, Gestion_Almacenes_DB->get_warehouse_stock
+[31-May-2025 05:27:17 UTC] WordPress database error Table 'bolt.wp_gab_warehouse_stock' doesn't exist for query SELECT quantity FROM wp_gab_warehouse_stock WHERE warehouse_id = 4 AND product_id = 70 made by do_action('admin_page_gab-view-transfer'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Transfer_Controller->render_view_transfer_page, Gestion_Almacenes_DB->get_warehouse_stock
+[31-May-2025 05:27:57 UTC] [DEBUG GESTION ALMACENES DB] La tabla de almacenes ya existe. No se intentó crear.
+[31-May-2025 05:27:57 UTC] [DEBUG GESTION ALMACENES DB] La tabla de stock ya existe. No se intentó crear.
+[31-May-2025 05:27:57 UTC] [DEBUG GESTION ALMACENES DB] Intentando crear tabla de stock...
+[31-May-2025 05:27:57 UTC] [DEBUG GESTION ALMACENES DB] Tabla de stock creada correctamente.
+[31-May-2025 05:28:03 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 05:44:03 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 05:44:17 UTC] [DEBUG] POST data: Array
+(
+    [action] => gab_update_transfer
+    [transfer_id] => 1
+    [source_warehouse_id] => 1
+    [target_warehouse_id] => 4
+    [notes] => 
+    [items] => Array
+        (
+            [7] => Array
+                (
+                    [product_id] => 70
+                    [quantity] => 8
+                )
+
+            [8] => Array
+                (
+                    [product_id] => 62
+                    [quantity] => 8
+                )
+
+        )
+
+    [nonce] => 6284bc3b6c
+)
+
+[31-May-2025 05:44:17 UTC] [DEBUG] Items field: Array
+(
+    [7] => Array
+        (
+            [product_id] => 70
+            [quantity] => 8
+        )
+
+    [8] => Array
+        (
+            [product_id] => 62
+            [quantity] => 8
+        )
+
+)
+
+[31-May-2025 05:44:17 UTC] [DEBUG] Processed items: Array
+(
+    [0] => Array
+        (
+            [product_id] => 70
+            [quantity] => 8
+        )
+
+    [1] => Array
+        (
+            [product_id] => 62
+            [quantity] => 8
+        )
+
+)
+
+[31-May-2025 05:45:21 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 05:45:52 UTC] [DEBUG] POST data: Array
+(
+    [action] => gab_update_transfer
+    [transfer_id] => 1
+    [source_warehouse_id] => 1
+    [target_warehouse_id] => 4
+    [notes] => 
+    [items] => Array
+        (
+            [9] => Array
+                (
+                    [product_id] => 70
+                    [quantity] => 2
+                )
+
+            [10] => Array
+                (
+                    [product_id] => 62
+                    [quantity] => 8
+                )
+
+        )
+
+    [nonce] => 6284bc3b6c
+)
+
+[31-May-2025 05:45:52 UTC] [DEBUG] Items field: Array
+(
+    [9] => Array
+        (
+            [product_id] => 70
+            [quantity] => 2
+        )
+
+    [10] => Array
+        (
+            [product_id] => 62
+            [quantity] => 8
+        )
+
+)
+
+[31-May-2025 05:45:52 UTC] [DEBUG] Processed items: Array
+(
+    [0] => Array
+        (
+            [product_id] => 70
+            [quantity] => 2
+        )
+
+    [1] => Array
+        (
+            [product_id] => 62
+            [quantity] => 8
+        )
+
+)
+
+[31-May-2025 05:56:37 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 05:56:42 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 06:06:48 UTC] Automatic updates starting...
+[31-May-2025 06:06:48 UTC] Automatic updates complete.
+[31-May-2025 06:52:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:33 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 06:52:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:36 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:37 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:43 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:52:43 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[31-May-2025 06:55:20 UTC] PHP Warning:  call_user_func_array() expects parameter 1 to be a valid callback, function 'gab_populate_initial_warehouse_stock' not found or invalid function name in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php on line 324
+[31-May-2025 06:55:20 UTC] PHP Stack trace:
+[31-May-2025 06:55:20 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[31-May-2025 06:55:20 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:240
+[31-May-2025 06:55:20 UTC] PHP   3. do_action($hook_name = 'admin_notices') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-header.php:313
+[31-May-2025 06:55:20 UTC] PHP   4. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[31-May-2025 06:55:20 UTC] PHP   5. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[31-May-2025 06:56:00 UTC] PHP Warning:  call_user_func_array() expects parameter 1 to be a valid callback, function 'gab_populate_initial_warehouse_stock' not found or invalid function name in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php on line 324
+[31-May-2025 06:56:00 UTC] PHP Stack trace:
+[31-May-2025 06:56:00 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[31-May-2025 06:56:00 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:240
+[31-May-2025 06:56:00 UTC] PHP   3. do_action($hook_name = 'admin_notices') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-header.php:313
+[31-May-2025 06:56:00 UTC] PHP   4. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[31-May-2025 06:56:00 UTC] PHP   5. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[31-May-2025 06:56:00 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 06:56:09 UTC] PHP Warning:  call_user_func_array() expects parameter 1 to be a valid callback, function 'gab_populate_initial_warehouse_stock' not found or invalid function name in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php on line 324
+[31-May-2025 06:56:09 UTC] PHP Stack trace:
+[31-May-2025 06:56:09 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[31-May-2025 06:56:09 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:240
+[31-May-2025 06:56:09 UTC] PHP   3. do_action($hook_name = 'admin_notices') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-header.php:313
+[31-May-2025 06:56:09 UTC] PHP   4. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[31-May-2025 06:56:09 UTC] PHP   5. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[31-May-2025 06:56:18 UTC] PHP Warning:  call_user_func_array() expects parameter 1 to be a valid callback, function 'gab_populate_initial_warehouse_stock' not found or invalid function name in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php on line 324
+[31-May-2025 06:56:18 UTC] PHP Stack trace:
+[31-May-2025 06:56:18 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[31-May-2025 06:56:18 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:240
+[31-May-2025 06:56:18 UTC] PHP   3. do_action($hook_name = 'admin_notices') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-header.php:313
+[31-May-2025 06:56:18 UTC] PHP   4. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[31-May-2025 06:56:18 UTC] PHP   5. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[31-May-2025 06:56:18 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 06:56:31 UTC] [DEBUG] POST data: Array
+(
+    [action] => gab_update_transfer
+    [transfer_id] => 1
+    [source_warehouse_id] => 1
+    [target_warehouse_id] => 4
+    [notes] => 
+    [items] => Array
+        (
+            [11] => Array
+                (
+                    [product_id] => 70
+                    [quantity] => 3
+                )
+
+            [12] => Array
+                (
+                    [product_id] => 62
+                    [quantity] => 5
+                )
+
+        )
+
+    [nonce] => 6284bc3b6c
+)
+
+[31-May-2025 06:56:31 UTC] [DEBUG] Items field: Array
+(
+    [11] => Array
+        (
+            [product_id] => 70
+            [quantity] => 3
+        )
+
+    [12] => Array
+        (
+            [product_id] => 62
+            [quantity] => 5
+        )
+
+)
+
+[31-May-2025 06:56:31 UTC] [DEBUG] Processed items: Array
+(
+    [0] => Array
+        (
+            [product_id] => 70
+            [quantity] => 3
+        )
+
+    [1] => Array
+        (
+            [product_id] => 62
+            [quantity] => 5
+        )
+
+)
+
+[31-May-2025 06:56:35 UTC] PHP Warning:  call_user_func_array() expects parameter 1 to be a valid callback, function 'gab_populate_initial_warehouse_stock' not found or invalid function name in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php on line 324
+[31-May-2025 06:56:35 UTC] PHP Stack trace:
+[31-May-2025 06:56:35 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[31-May-2025 06:56:35 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:240
+[31-May-2025 06:56:35 UTC] PHP   3. do_action($hook_name = 'admin_notices') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-header.php:313
+[31-May-2025 06:56:35 UTC] PHP   4. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[31-May-2025 06:56:35 UTC] PHP   5. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[31-May-2025 06:57:00 UTC] PHP Warning:  call_user_func_array() expects parameter 1 to be a valid callback, function 'gab_populate_initial_warehouse_stock' not found or invalid function name in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php on line 324
+[31-May-2025 06:57:00 UTC] PHP Stack trace:
+[31-May-2025 06:57:00 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[31-May-2025 06:57:00 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:240
+[31-May-2025 06:57:00 UTC] PHP   3. do_action($hook_name = 'admin_notices') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-header.php:313
+[31-May-2025 06:57:00 UTC] PHP   4. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[31-May-2025 06:57:00 UTC] PHP   5. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[31-May-2025 06:57:00 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 06:57:12 UTC] [DEBUG] POST data: Array
+(
+    [action] => gab_update_transfer
+    [transfer_id] => 1
+    [source_warehouse_id] => 2
+    [target_warehouse_id] => 4
+    [notes] => 
+    [items] => Array
+        (
+            [13] => Array
+                (
+                    [product_id] => 70
+                    [quantity] => 3
+                )
+
+            [14] => Array
+                (
+                    [product_id] => 62
+                    [quantity] => 5
+                )
+
+        )
+
+    [nonce] => 6284bc3b6c
+)
+
+[31-May-2025 06:57:12 UTC] [DEBUG] Items field: Array
+(
+    [13] => Array
+        (
+            [product_id] => 70
+            [quantity] => 3
+        )
+
+    [14] => Array
+        (
+            [product_id] => 62
+            [quantity] => 5
+        )
+
+)
+
+[31-May-2025 06:57:12 UTC] [DEBUG] Processed items: Array
+(
+    [0] => Array
+        (
+            [product_id] => 70
+            [quantity] => 3
+        )
+
+    [1] => Array
+        (
+            [product_id] => 62
+            [quantity] => 5
+        )
+
+)
+
+[31-May-2025 06:57:15 UTC] PHP Warning:  call_user_func_array() expects parameter 1 to be a valid callback, function 'gab_populate_initial_warehouse_stock' not found or invalid function name in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php on line 324
+[31-May-2025 06:57:15 UTC] PHP Stack trace:
+[31-May-2025 06:57:15 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[31-May-2025 06:57:15 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:240
+[31-May-2025 06:57:15 UTC] PHP   3. do_action($hook_name = 'admin_notices') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-header.php:313
+[31-May-2025 06:57:15 UTC] PHP   4. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[31-May-2025 06:57:15 UTC] PHP   5. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[31-May-2025 07:00:18 UTC] WordPress database error Unknown column 'updated_at' in 'field list' for query UPDATE `wp_gab_warehouse_product_stock` SET `stock` = 0, `updated_at` = '2025-05-31 09:00:18' WHERE `warehouse_id` = 2 AND `product_id` = 62 made by do_action('wp_ajax_gab_complete_transfer'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Transfer_Controller->ajax_complete_transfer, Gestion_Almacenes_DB->update_warehouse_stock
+[31-May-2025 07:00:18 UTC] [GESTION ALMACENES] Error al completar transferencia: Error al actualizar el stock: Unknown column 'updated_at' in 'field list'
+[31-May-2025 07:00:46 UTC] WordPress database error Unknown column 'updated_at' in 'field list' for query UPDATE `wp_gab_warehouse_product_stock` SET `stock` = 0, `updated_at` = '2025-05-31 09:00:46' WHERE `warehouse_id` = 2 AND `product_id` = 62 made by do_action('wp_ajax_gab_complete_transfer'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Transfer_Controller->ajax_complete_transfer, Gestion_Almacenes_DB->update_warehouse_stock
+[31-May-2025 07:00:46 UTC] [GESTION ALMACENES] Error al completar transferencia: Error al actualizar el stock: Unknown column 'updated_at' in 'field list'
+[31-May-2025 07:01:02 UTC] WordPress database error Unknown column 'updated_at' in 'field list' for query UPDATE `wp_gab_warehouse_product_stock` SET `stock` = 0, `updated_at` = '2025-05-31 09:01:02' WHERE `warehouse_id` = 2 AND `product_id` = 62 made by do_action('wp_ajax_gab_complete_transfer'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Transfer_Controller->ajax_complete_transfer, Gestion_Almacenes_DB->update_warehouse_stock
+[31-May-2025 07:01:02 UTC] [GESTION ALMACENES] Error al completar transferencia: Error al actualizar el stock: Unknown column 'updated_at' in 'field list'
+[31-May-2025 07:18:45 UTC] WordPress database error Unknown column 'transferred_qty' in 'field list' for query UPDATE `wp_gab_stock_transfer_items` SET `transferred_qty` = 5 WHERE `transfer_id` = 1 AND `product_id` = 62 made by do_action('wp_ajax_gab_complete_transfer'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Transfer_Controller->ajax_complete_transfer
+[31-May-2025 07:18:45 UTC] WordPress database error Unknown column 'transferred_qty' in 'field list' for query UPDATE `wp_gab_stock_transfer_items` SET `transferred_qty` = 3 WHERE `transfer_id` = 1 AND `product_id` = 70 made by do_action('wp_ajax_gab_complete_transfer'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Transfer_Controller->ajax_complete_transfer
+[31-May-2025 07:18:45 UTC] WordPress database error Unknown column 'completed_by' in 'field list' for query UPDATE `wp_gab_stock_transfers` SET `status` = 'completed', `completed_by` = 1, `completed_at` = '2025-05-31 09:18:45', `updated_at` = '2025-05-31 09:18:45' WHERE `id` = 1 made by do_action('wp_ajax_gab_complete_transfer'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Transfer_Controller->ajax_complete_transfer
+[31-May-2025 07:28:28 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 07:29:08 UTC] [DEBUG] POST data: Array
+(
+    [action] => gab_update_transfer
+    [transfer_id] => 1
+    [source_warehouse_id] => 4
+    [target_warehouse_id] => 2
+    [notes] => 
+    [items] => Array
+        (
+            [15] => Array
+                (
+                    [product_id] => 70
+                    [quantity] => 3
+                )
+
+        )
+
+    [nonce] => 6284bc3b6c
+)
+
+[31-May-2025 07:29:08 UTC] [DEBUG] Items field: Array
+(
+    [15] => Array
+        (
+            [product_id] => 70
+            [quantity] => 3
+        )
+
+)
+
+[31-May-2025 07:29:08 UTC] [DEBUG] Processed items: Array
+(
+    [0] => Array
+        (
+            [product_id] => 70
+            [quantity] => 3
+        )
+
+)
+
+[31-May-2025 07:29:20 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[31-May-2025 07:29:52 UTC] [DEBUG] POST data: Array
+(
+    [action] => gab_update_transfer
+    [transfer_id] => 1
+    [source_warehouse_id] => 4
+    [target_warehouse_id] => 2
+    [notes] => 
+    [items] => Array
+        (
+            [17] => Array
+                (
+                    [product_id] => 70
+                    [quantity] => 3
+                )
+
+            [new_1] => Array
+                (
+                    [product_id] => 62
+                    [quantity] => 5
+                )
+
+        )
+
+    [nonce] => 6284bc3b6c
+)
+
+[31-May-2025 07:29:52 UTC] [DEBUG] Items field: Array
+(
+    [17] => Array
+        (
+            [product_id] => 70
+            [quantity] => 3
+        )
+
+    [new_1] => Array
+        (
+            [product_id] => 62
+            [quantity] => 5
+        )
+
+)
+
+[31-May-2025 07:29:52 UTC] [DEBUG] Processed items: Array
+(
+    [0] => Array
+        (
+            [product_id] => 70
+            [quantity] => 3
+        )
+
+    [1] => Array
+        (
+            [product_id] => 62
+            [quantity] => 5
+        )
+
+)
+

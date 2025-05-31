@@ -223,4 +223,9 @@ jQuery(document).ready(function ($) {
         $('.notice.is-dismissible').fadeOut();
     }, 5000);
 
+    // Cuando construyas el array products, asegúrate de que tenga esta estructura:
+var products = [];
+
+
+
 });

@@ -66,11 +66,14 @@ class Gestion_Almacenes_DB {
             error_log('[DEBUG GESTION ALMACENES DB] Intentando crear tabla de stock por almacén...');
             $sql_stock = "CREATE TABLE $table_name_stock (
                 id mediumint(9) NOT NULL AUTO_INCREMENT,
-                product_id bigint(20) UNSIGNED NOT NULL,
                 warehouse_id mediumint(9) NOT NULL,
+                product_id bigint(20) UNSIGNED NOT NULL,
                 stock int(11) NOT NULL DEFAULT 0,
+                updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 PRIMARY KEY  (id),
-                UNIQUE KEY product_warehouse (product_id, warehouse_id) -- Asegura que un producto solo tenga un registro por almacén
+                UNIQUE KEY product_warehouse (product_id, warehouse_id), -- Asegura que un producto solo tenga un registro por almacén
+                KEY idx_warehouse (warehouse_id),
+                KEY idx_product (product_id)
             ) $charset_collate;";
 
             dbDelta($sql_stock);
@@ -84,6 +87,88 @@ class Gestion_Almacenes_DB {
         } else {
             error_log('[DEBUG GESTION ALMACENES DB] La tabla de stock ya existe. No se intentó crear.');
         }
+
+        $table_name_stock = $wpdb->prefix . 'gab_warehouse_stock';
+            if ($wpdb->get_var("SHOW TABLES LIKE '$table_name_stock'") != $table_name_stock) {
+                error_log('[DEBUG GESTION ALMACENES DB] Intentando crear tabla de stock...');
+                
+                $sql_stock = "CREATE TABLE $table_name_stock (
+                    id mediumint(9) NOT NULL AUTO_INCREMENT,
+                    warehouse_id mediumint(9) NOT NULL,
+                    product_id mediumint(9) NOT NULL,
+                    quantity int NOT NULL DEFAULT 0,
+                    updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    PRIMARY KEY (id),
+                    UNIQUE KEY warehouse_product (warehouse_id, product_id),
+                    KEY idx_warehouse (warehouse_id),
+                    KEY idx_product (product_id)
+                ) $charset_collate;";
+                
+                dbDelta($sql_stock);
+                
+                if ($wpdb->last_error) {
+                    error_log('[DEBUG GESTION ALMACENES DB] Error al crear la tabla de stock: ' . $wpdb->last_error);
+                } else {
+                    error_log('[DEBUG GESTION ALMACENES DB] Tabla de stock creada correctamente.');
+                }
+            }
+
+            // Tabla de transferencias de stock
+            $table_name_transfers = $wpdb->prefix . 'gab_stock_transfers';
+            if ($wpdb->get_var("SHOW TABLES LIKE '$table_name_transfers'") != $table_name_transfers) {
+                error_log('[DEBUG GESTION ALMACENES DB] Intentando crear tabla de transferencias...');
+                
+                $sql_transfers = "CREATE TABLE $table_name_transfers (
+                    id mediumint(9) NOT NULL AUTO_INCREMENT,
+                    source_warehouse_id mediumint(9) NOT NULL,
+                    target_warehouse_id mediumint(9) NOT NULL,
+                    status varchar(20) DEFAULT 'pending',
+                    notes text,
+                    created_by mediumint(9) NOT NULL,
+                    created_at datetime DEFAULT CURRENT_TIMESTAMP,
+                    completed_by mediumint(9),
+                    completed_at datetime,
+                    updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    PRIMARY KEY (id),
+                    KEY idx_source (source_warehouse_id),
+                    KEY idx_target (target_warehouse_id),
+                    KEY idx_status (status),
+                    KEY idx_created (created_at)
+                ) $charset_collate;";
+                
+                dbDelta($sql_transfers);
+                
+                if ($wpdb->last_error) {
+                    error_log('[DEBUG GESTION ALMACENES DB] Error al crear la tabla de transferencias: ' . $wpdb->last_error);
+                } else {
+                    error_log('[DEBUG GESTION ALMACENES DB] Tabla de transferencias creada correctamente.');
+                }
+            }
+
+            // Tabla de items de transferencia
+            $table_name_transfer_items = $wpdb->prefix . 'gab_stock_transfer_items';
+            if ($wpdb->get_var("SHOW TABLES LIKE '$table_name_transfer_items'") != $table_name_transfer_items) {
+                error_log('[DEBUG GESTION ALMACENES DB] Intentando crear tabla de items de transferencia...');
+                
+                $sql_transfer_items = "CREATE TABLE $table_name_transfer_items (
+                    id mediumint(9) NOT NULL AUTO_INCREMENT,
+                    transfer_id mediumint(9) NOT NULL,
+                    product_id mediumint(9) NOT NULL,
+                    requested_qty int NOT NULL,
+                    transferred_qty int,
+                    PRIMARY KEY (id),
+                    KEY idx_transfer (transfer_id),
+                    KEY idx_product (product_id)
+                ) $charset_collate;";
+                
+                dbDelta($sql_transfer_items);
+                
+                if ($wpdb->last_error) {
+                    error_log('[DEBUG GESTION ALMACENES DB] Error al crear la tabla de items: ' . $wpdb->last_error);
+                } else {
+                    error_log('[DEBUG GESTION ALMACENES DB] Tabla de items creada correctamente.');
+                }
+            }
 
         $this->crear_tablas_transferencias();
     }
@@ -420,6 +505,8 @@ class Gestion_Almacenes_DB {
         return $stock !== null ? intval($stock) : 0;
     }
 
+    
+
     /**
      * Obtiene todos los productos con su stock por almacén
      */
@@ -530,5 +617,309 @@ class Gestion_Almacenes_DB {
         return $results;
     }
 
-    
+    public function get_transfer($transfer_id) {
+        global $wpdb;
+        $transfer_table = $wpdb->prefix . 'gab_stock_transfers';
+        $items_table = $wpdb->prefix . 'gab_stock_transfer_items';
+
+        // Obtener la cabecera
+        $transfer = $wpdb->get_row(
+            $wpdb->prepare("SELECT * FROM $transfer_table WHERE id = %d", $transfer_id)
+        );
+
+        if (!$transfer) return null;
+
+        // Obtener los items asociados
+        $items = $wpdb->get_results(
+            $wpdb->prepare("SELECT * FROM $items_table WHERE transfer_id = %d", $transfer_id)
+        );
+
+        $transfer->items = $items;
+
+        return $transfer;
+    }
+
+    public function update_transfer($transfer_id, $data) {
+        global $wpdb;
+        $transfers_table = $wpdb->prefix . 'gab_stock_transfers';
+        $items_table = $wpdb->prefix . 'gab_stock_transfer_items';
+
+        // Actualizar cabecera
+        $updated = $wpdb->update(
+            $transfers_table,
+            [
+                'source_warehouse_id' => $data['source_warehouse_id'],
+                'target_warehouse_id' => $data['target_warehouse_id'],
+                'notes'               => $data['notes'],
+                'updated_at'          => current_time('mysql')
+            ],
+            ['id' => $transfer_id],
+            ['%d', '%d', '%s', '%s'],
+            ['%d']
+        );
+
+        // Si hubo error, retorna false
+        if ($updated === false) {
+            error_log('[GESTION ALMACENES DB] Error al actualizar transferencia ID ' . $transfer_id . ': ' . $wpdb->last_error);
+            return false;
+        }
+
+        // Eliminar los items anteriores
+        $wpdb->delete($items_table, ['transfer_id' => $transfer_id]);
+
+        // Insertar los nuevos items
+        foreach ($data['items'] as $item) {
+            $wpdb->insert($items_table, [
+                'transfer_id'   => $transfer_id,
+                'product_id'    => $item['product_id'],
+                'requested_qty' => $item['quantity'],
+            ]);
+        }
+
+        return true;
+    }
+
+    public function delete_transfer($transfer_id) {
+        global $wpdb;
+        $transfers_table = $wpdb->prefix . 'gab_stock_transfers';
+        $items_table = $wpdb->prefix . 'gab_stock_transfer_items';
+
+        // Eliminar primero los items
+        $wpdb->delete($items_table, ['transfer_id' => $transfer_id]);
+
+        // Luego la cabecera
+        $deleted = $wpdb->delete($transfers_table, ['id' => $transfer_id]);
+
+        return $deleted !== false;
+    }
+
+    // Actualizar stock
+    public function update_warehouse_stock($warehouse_id, $product_id, $quantity_change) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'gab_warehouse_product_stock';
+        
+        // Verificar si ya existe un registro
+        $existing = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM $table_name WHERE warehouse_id = %d AND product_id = %d",
+            $warehouse_id,
+            $product_id
+        ));
+        
+        if ($existing) {
+            // Actualizar el stock existente
+            $new_stock = max(0, $existing->stock + $quantity_change);
+            
+            $result = $wpdb->update(
+                $table_name,
+                [
+                    'stock' => $new_stock,
+                    'updated_at' => current_time('mysql')
+                ],
+                [
+                    'warehouse_id' => $warehouse_id,
+                    'product_id' => $product_id
+                ],
+                ['%d', '%s'],
+                ['%d', '%d']
+            );
+            
+            if ($result === false) {
+                throw new Exception('Error al actualizar el stock: ' . $wpdb->last_error);
+            }
+        } else {
+            // Crear nuevo registro si es positivo
+            if ($quantity_change > 0) {
+                $result = $wpdb->insert(
+                    $table_name,
+                    [
+                        'warehouse_id' => $warehouse_id,
+                        'product_id' => $product_id,
+                        'stock' => $quantity_change,
+                        'quantity' => 0, // Por compatibilidad con la estructura
+                        'updated_at' => current_time('mysql')
+                    ],
+                    ['%d', '%d', '%d', '%d', '%s']
+                );
+                
+                if ($result === false) {
+                    throw new Exception('Error al crear registro de stock: ' . $wpdb->last_error);
+                }
+            }
+        }
+        
+        return true;
+    }
+
+    /**
+     * Establecer el stock de un producto en un almacén (valor absoluto)
+     */
+    public function set_warehouse_stock($warehouse_id, $product_id, $stock_value) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'gab_warehouse_product_stock';
+        
+        // Verificar si ya existe un registro
+        $existing = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM $table_name WHERE warehouse_id = %d AND product_id = %d",
+            $warehouse_id,
+            $product_id
+        ));
+        
+        if ($existing) {
+            // Actualizar el stock existente
+            $result = $wpdb->update(
+                $table_name,
+                [
+                    'stock' => max(0, $stock_value),
+                    'updated_at' => current_time('mysql')
+                ],
+                [
+                    'warehouse_id' => $warehouse_id,
+                    'product_id' => $product_id
+                ],
+                ['%d', '%s'],
+                ['%d', '%d']
+            );
+        } else {
+            // Crear nuevo registro
+            $result = $wpdb->insert(
+                $table_name,
+                [
+                    'warehouse_id' => $warehouse_id,
+                    'product_id' => $product_id,
+                    'stock' => max(0, $stock_value),
+                    'quantity' => 0,
+                    'updated_at' => current_time('mysql')
+                ],
+                ['%d', '%d', '%d', '%d', '%s']
+            );
+        }
+        
+        return $result !== false;
+    }
+
+    /**
+    * Obtener todos los almacenes
+    */
+    public function get_warehouses() {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'gab_warehouses';
+        
+        $warehouses = $wpdb->get_results(
+            "SELECT * FROM $table_name ORDER BY name ASC"
+        );
+        
+        return $warehouses;
+    }
+
+    /**
+     * Obtener un almacén por ID
+     */
+    public function get_warehouse($warehouse_id) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'gab_warehouses';
+        
+        return $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM $table_name WHERE id = %d",
+            $warehouse_id
+        ));
+    }
+
+    /**
+    * Obtener el stock de un producto en un almacén específico
+    */
+    public function get_warehouse_stock($warehouse_id, $product_id) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'gab_warehouse_product_stock';
+        
+        $stock = $wpdb->get_var($wpdb->prepare(
+            "SELECT stock FROM $table_name WHERE warehouse_id = %d AND product_id = %d",
+            $warehouse_id,
+            $product_id
+        ));
+        
+        return $stock !== null ? intval($stock) : 0;
+    }
+
+    /**
+     * Obtener todas las transferencias con información adicional
+     */
+    public function get_transfers($args = []) {
+        global $wpdb;
+        $transfers_table = $wpdb->prefix . 'gab_stock_transfers';
+        $warehouses_table = $wpdb->prefix . 'gab_warehouses';
+        
+        // Construir la consulta base
+        $query = "SELECT 
+                    t.*,
+                    sw.name as source_warehouse_name,
+                    tw.name as target_warehouse_name,
+                    u.display_name as created_by_name
+                FROM $transfers_table t
+                LEFT JOIN $warehouses_table sw ON t.source_warehouse_id = sw.id
+                LEFT JOIN $warehouses_table tw ON t.target_warehouse_id = tw.id
+                LEFT JOIN {$wpdb->users} u ON t.created_by = u.ID";
+        
+        // Agregar filtros si se proporcionan
+        $where = [];
+        $values = [];
+        
+        if (!empty($args['status'])) {
+            $where[] = "t.status = %s";
+            $values[] = $args['status'];
+        }
+        
+        if (!empty($args['warehouse_id'])) {
+            $where[] = "(t.source_warehouse_id = %d OR t.target_warehouse_id = %d)";
+            $values[] = $args['warehouse_id'];
+            $values[] = $args['warehouse_id'];
+        }
+        
+        if (!empty($where)) {
+            $query .= " WHERE " . implode(' AND ', $where);
+        }
+        
+        // Ordenar por fecha de creación descendente
+        $query .= " ORDER BY t.created_at DESC";
+        
+        // Aplicar límite si se proporciona
+        if (!empty($args['limit'])) {
+            $query .= $wpdb->prepare(" LIMIT %d", $args['limit']);
+        }
+        
+        // Ejecutar la consulta
+        if (!empty($values)) {
+            $query = $wpdb->prepare($query, $values);
+        }
+        
+        return $wpdb->get_results($query);
+    }
+
+    /**
+     * Contar transferencias según criterios
+     */
+    public function count_transfers($args = []) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'gab_stock_transfers';
+        
+        $query = "SELECT COUNT(*) FROM $table_name WHERE 1=1";
+        $values = [];
+        
+        if (!empty($args['status'])) {
+            $query .= " AND status = %s";
+            $values[] = $args['status'];
+        }
+        
+        if (!empty($args['warehouse_id'])) {
+            $query .= " AND (source_warehouse_id = %d OR target_warehouse_id = %d)";
+            $values[] = $args['warehouse_id'];
+            $values[] = $args['warehouse_id'];
+        }
+        
+        if (!empty($values)) {
+            $query = $wpdb->prepare($query, $values);
+        }
+        
+        return intval($wpdb->get_var($query));
+    }
+        
 }

@@ -82,6 +82,26 @@ class Gestion_Almacenes_Admin {
             array($this, 'mostrar_lista_transferencias')
         );
 
+        // Editar Transferencia (página oculta, solo accesible por URL)
+        add_submenu_page(
+            null,
+            __('Editar Transferencia', 'gestion-almacenes'),
+            __('Editar Transferencia', 'gestion-almacenes'),
+            'manage_options',
+            'gab-edit-transfer',
+            array($this, 'mostrar_editar_transferencia')
+        );
+        
+        // Página para ver transferencias
+        add_submenu_page(
+            null,
+            __('Ver Transferencia', 'gestion-almacenes'),
+            __('Ver Transferencia', 'gestion-almacenes'),
+            'manage_options',
+            'gab-view-transfer',
+            [$this->transfer_controller, 'render_view_transfer_page']
+        );
+
         // Gestión de Discrepancias
         add_submenu_page(
             'gab-warehouse-management',
@@ -131,6 +151,7 @@ class Gestion_Almacenes_Admin {
             'gab-warehouse-settings', 
             array($this, 'mostrar_configuracion')
         );
+
     }
 
     public function enqueue_admin_scripts($hook) {
@@ -1598,6 +1619,627 @@ class Gestion_Almacenes_Admin {
         echo '</div>';
     }
 
+
+    // Página para editar transferencias
+    public function mostrar_editar_transferencia() {
+        global $gestion_almacenes_db;
+        
+        // Obtener ID de transferencia
+        $transfer_id = isset($_GET['transfer_id']) ? intval($_GET['transfer_id']) : 0;
+        
+        if (!$transfer_id) {
+            echo '<div class="wrap gab-admin-page">';
+            echo '<div class="gab-message error">';
+            echo '<h3>' . esc_html__('Error', 'gestion-almacenes') . '</h3>';
+            echo '<p>' . esc_html__('ID de transferencia no válido.', 'gestion-almacenes') . '</p>';
+            echo '<a href="' . esc_url(admin_url('admin.php?page=gab-transfer-list')) . '" class="button button-primary">';
+            echo esc_html__('Volver a Lista de Transferencias', 'gestion-almacenes');
+            echo '</a>';
+            echo '</div>';
+            echo '</div>';
+            return;
+        }
+        
+        // Obtener transferencia
+        $transfer = $this->transfer_controller->get_transfer($transfer_id);
+        
+        if (!$transfer) {
+            echo '<div class="wrap gab-admin-page">';
+            echo '<div class="gab-message error">';
+            echo '<h3>' . esc_html__('Transferencia no encontrada', 'gestion-almacenes') . '</h3>';
+            echo '<p>' . esc_html__('La transferencia solicitada no existe o ha sido eliminada.', 'gestion-almacenes') . '</p>';
+            echo '<a href="' . esc_url(admin_url('admin.php?page=gab-transfer-list')) . '" class="button button-primary">';
+            echo esc_html__('Volver a Lista de Transferencias', 'gestion-almacenes');
+            echo '</a>';
+            echo '</div>';
+            echo '</div>';
+            return;
+        }
+        
+        // Solo permitir editar transferencias en estado 'draft'
+        if ($transfer->status !== 'draft') {
+            echo '<div class="wrap gab-admin-page">';
+            echo '<div class="gab-message warning">';
+            echo '<h3>' . esc_html__('No se puede editar', 'gestion-almacenes') . '</h3>';
+            echo '<p>' . esc_html__('Solo se pueden editar transferencias en estado borrador.', 'gestion-almacenes') . '</p>';
+            echo '<a href="' . esc_url(admin_url('admin.php?page=gab-view-transfer&transfer_id=' . $transfer_id)) . '" class="button button-primary">';
+            echo esc_html__('Ver Transferencia', 'gestion-almacenes');
+            echo '</a>';
+            echo ' <a href="' . esc_url(admin_url('admin.php?page=gab-transfer-list')) . '" class="button button-secondary">';
+            echo esc_html__('Volver a Lista', 'gestion-almacenes');
+            echo '</a>';
+            echo '</div>';
+            echo '</div>';
+            return;
+        }
+
+        $almacenes = $gestion_almacenes_db->obtener_almacenes();
+
+        ?>
+        <div class="wrap gab-admin-page">
+            <div class="gab-section-header">
+                <h1><?php echo esc_html__('Editar Transferencia', 'gestion-almacenes') . ' #' . str_pad($transfer->id, 4, '0', STR_PAD_LEFT); ?></h1>
+                <p><?php esc_html_e('Modifica los datos de la transferencia en estado borrador.', 'gestion-almacenes'); ?></p>
+            </div>
+
+            <!-- Información de la transferencia -->
+            <div class="gab-form-section" style="background: #f0f6fc; border-left: 4px solid #0073aa;">
+                <h3><?php esc_html_e('Información de la Transferencia', 'gestion-almacenes'); ?></h3>
+                <div class="gab-form-row">
+                    <div class="gab-form-group">
+                        <strong><?php esc_html_e('ID:', 'gestion-almacenes'); ?></strong> 
+                        #<?php echo str_pad($transfer->id, 4, '0', STR_PAD_LEFT); ?>
+                    </div>
+                    <div class="gab-form-group">
+                        <strong><?php esc_html_e('Estado:', 'gestion-almacenes'); ?></strong> 
+                        <span class="gab-badge stock-medium"><?php esc_html_e('Borrador', 'gestion-almacenes'); ?></span>
+                    </div>
+                    <div class="gab-form-group">
+                        <strong><?php esc_html_e('Creado:', 'gestion-almacenes'); ?></strong> 
+                        <?php echo esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($transfer->created_at))); ?>
+                    </div>
+                </div>
+            </div>
+
+            <form id="gab-edit-transfer-form" data-transfer-id="<?php echo esc_attr($transfer->id); ?>">
+                <?php wp_nonce_field('gab_transfer_nonce', 'nonce'); ?>
+                
+                <div class="gab-form-section">
+                    <h3><?php esc_html_e('Almacenes', 'gestion-almacenes'); ?></h3>
+                    
+                    <div class="gab-form-row">
+                        <div class="gab-form-group">
+                            <label for="source_warehouse"><?php esc_html_e('Almacén Origen', 'gestion-almacenes'); ?></label>
+                            <select name="source_warehouse" id="source_warehouse" required>
+                                <option value=""><?php esc_html_e('Seleccionar almacén origen...', 'gestion-almacenes'); ?></option>
+                                <?php foreach ($almacenes as $almacen): ?>
+                                    <option value="<?php echo esc_attr($almacen->id); ?>" <?php selected($almacen->id, $transfer->source_warehouse_id); ?>>
+                                        <?php echo esc_html($almacen->name . ' - ' . $almacen->ciudad); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
+                        <div class="gab-form-group">
+                            <label for="target_warehouse"><?php esc_html_e('Almacén Destino', 'gestion-almacenes'); ?></label>
+                            <select name="target_warehouse" id="target_warehouse" required>
+                                <option value=""><?php esc_html_e('Seleccionar almacén destino...', 'gestion-almacenes'); ?></option>
+                                <?php foreach ($almacenes as $almacen): ?>
+                                    <option value="<?php echo esc_attr($almacen->id); ?>" <?php selected($almacen->id, $transfer->target_warehouse_id); ?>>
+                                        <?php echo esc_html($almacen->name . ' - ' . $almacen->ciudad); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gab-form-section">
+                    <h3><?php esc_html_e('Productos a Transferir', 'gestion-almacenes'); ?></h3>
+                    
+                    <table class="wp-list-table widefat fixed striped" id="products-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;"><?php esc_html_e('SKU', 'gestion-almacenes'); ?></th>
+                                <th><?php esc_html_e('Producto', 'gestion-almacenes'); ?></th>
+                                <th style="width: 120px;"><?php esc_html_e('Stock Disponible', 'gestion-almacenes'); ?></th>
+                                <th style="width: 120px;"><?php esc_html_e('Cantidad', 'gestion-almacenes'); ?></th>
+                                <th style="width: 80px;"><?php esc_html_e('Acciones', 'gestion-almacenes'); ?></th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-tbody">
+                            <?php if ($transfer->items && count($transfer->items) > 0): ?>
+                                <?php foreach ($transfer->items as $index => $item): 
+                                    $product = wc_get_product($item->product_id);
+                                    if ($product):
+                                        $current_stock = $gestion_almacenes_db->get_product_stock_in_warehouse($item->product_id, $transfer->source_warehouse_id);
+                                ?>
+                                    <tr data-product-id="<?php echo esc_attr($item->product_id); ?>" data-item-id="<?php echo esc_attr($item->id); ?>">
+                                        <td><?php echo esc_html($product->get_sku() ?: ''); ?></td>
+                                        <td><strong><?php echo esc_html($product->get_name()); ?></strong></td>
+                                        <td class="available-stock" style="text-align: center;">
+                                            <strong style="color: #0073aa;"><?php echo esc_html($current_stock); ?></strong>
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <input type="number" name="products[<?php echo esc_attr($item->id); ?>][quantity]" 
+                                                min="1" max="<?php echo esc_attr($current_stock); ?>" 
+                                                value="<?php echo esc_attr($item->requested_qty); ?>" required
+                                                class="demanded-stock-input" style="width: 80px; text-align: center;">
+                                            <input type="hidden" name="products[<?php echo esc_attr($item->id); ?>][product_id]" 
+                                                value="<?php echo esc_attr($item->product_id); ?>">
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <button type="button" class="button button-small remove-product" 
+                                                    title="<?php esc_attr_e('Eliminar producto', 'gestion-almacenes'); ?>">
+                                                <span class="dashicons dashicons-trash"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php 
+                                    endif;
+                                endforeach; ?>
+                            <?php endif; ?>
+                            
+                            <tr id="add-product-row">
+                                <td colspan="5" style="text-align: center; padding: 15px; background-color: #f0f6fc;">
+                                    <button type="button" id="add-product-btn" class="button button-secondary">
+                                        <span class="dashicons dashicons-plus-alt" style="vertical-align: middle; margin-right: 5px;"></span>
+                                        <?php esc_html_e('Agregar Producto', 'gestion-almacenes'); ?>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="gab-form-section">
+                    <h3><?php esc_html_e('Notas', 'gestion-almacenes'); ?></h3>
+                    <textarea name="notes" id="notes" rows="4" style="width: 100%;" 
+                            placeholder="<?php esc_attr_e('Agregar notas o comentarios sobre esta transferencia...', 'gestion-almacenes'); ?>"><?php echo esc_textarea($transfer->notes); ?></textarea>
+                </div>
+
+                <div class="gab-form-row">
+                    <div class="gab-form-group">
+                        <input type="submit" class="button button-primary gab-button-primary" 
+                            value="<?php esc_attr_e('Actualizar Transferencia', 'gestion-almacenes'); ?>" id="submit-transfer">
+                        <a href="<?php echo esc_url(admin_url('admin.php?page=gab-transfer-list')); ?>" 
+                        class="button button-secondary"><?php esc_html_e('Cancelar', 'gestion-almacenes'); ?></a>
+                        <button type="button" id="delete-transfer" class="button button-danger" style="margin-left: 20px;">
+                            <span class="dashicons dashicons-trash" style="vertical-align: middle;"></span>
+                            <?php esc_html_e('Eliminar Transferencia', 'gestion-almacenes'); ?>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Modal para búsqueda de productos (igual que en nueva transferencia) -->
+            <div id="product-search-modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2><?php esc_html_e('Buscar Productos', 'gestion-almacenes'); ?></h2>
+                    <input type="text" id="product-search" placeholder="<?php esc_attr_e('Escriba para buscar productos...', 'gestion-almacenes'); ?>">
+                    <div id="search-results"></div>
+                </div>
+            </div>
+            
+            <!-- Modal de confirmación para eliminar -->
+            <div id="delete-confirm-modal" class="modal" style="display: none;">
+                <div class="modal-content" style="max-width: 500px;">
+                    <span class="close">&times;</span>
+                    <h2 style="color: #d63638;"><?php esc_html_e('Confirmar Eliminación', 'gestion-almacenes'); ?></h2>
+                    <p><?php esc_html_e('¿Estás seguro de que deseas eliminar esta transferencia?', 'gestion-almacenes'); ?></p>
+                    <p><strong><?php esc_html_e('Esta acción no se puede deshacer.', 'gestion-almacenes'); ?></strong></p>
+                    <div style="text-align: right; margin-top: 20px;">
+                        <button type="button" id="confirm-delete" class="button button-danger">
+                            <?php esc_html_e('Sí, Eliminar', 'gestion-almacenes'); ?>
+                        </button>
+                        <button type="button" class="button button-secondary close" style="margin-left: 10px;">
+                            <?php esc_html_e('Cancelar', 'gestion-almacenes'); ?>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <style>
+        /* Estilos para editar transferencia */
+        .button-danger {
+            background: #d63638 !important;
+            border-color: #d63638 !important;
+            color: white !important;
+        }
+        
+        .button-danger:hover {
+            background: #b32d2e !important;
+            border-color: #b32d2e !important;
+        }
+        
+        /* Modal styles (reutilizar los mismos de nueva transferencia) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            position: relative;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 10px;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 18px;
+            padding-right: 40px;
+        }
+
+        #product-search {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        #search-results {
+            max-height: calc(80vh - 150px);
+            overflow-y: auto;
+            margin-top: 10px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            background: white;
+        }
+
+        .search-result-item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+            font-size: 14px;
+        }
+
+        .search-result-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .searching, .no-results {
+            padding: 10px;
+            color: #666;
+            font-style: italic;
+            text-align: center;
+        }
+        </style>
+
+        <script>
+        jQuery(document).ready(function($) {
+            let productCount = <?php echo count($transfer->items); ?>;
+            const MAX_PRODUCTS = 60;
+            const transferId = <?php echo $transfer->id; ?>;
+            
+            // Función para abrir el modal de productos
+            function openProductModal() {
+                $('#product-search-modal').show();
+                $('#product-search').val('').focus();
+                $('#search-results').empty();
+            }
+            
+            // Función para cerrar modales
+            function closeModal() {
+                $('.modal').hide();
+                $('#product-search').val('');
+                $('#search-results').empty();
+            }
+            
+            // Event handlers para abrir modal de productos
+            $(document).on('click', '#add-product-btn', function(e) {
+                e.preventDefault();
+                const sourceWarehouse = $('#source_warehouse').val();
+                if (!sourceWarehouse) {
+                    alert('<?php esc_html_e('Primero selecciona el almacén origen', 'gestion-almacenes'); ?>');
+                    $('#source_warehouse').focus();
+                    return;
+                }
+                openProductModal();
+            });
+
+            // Cerrar modales
+            $(document).on('click', '.close', function() {
+                closeModal();
+            });
+            
+            $(document).on('click', '.modal', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+            
+            $(document).on('click', '.modal-content', function(e) {
+                e.stopPropagation();
+            });
+            
+            // Búsqueda de productos (igual que en nueva transferencia)
+            let searchTimeout;
+            $(document).on('input', '#product-search', function() {
+                clearTimeout(searchTimeout);
+                const query = $(this).val();
+                
+                if (query.length < 2) {
+                    $('#search-results').empty();
+                    return;
+                }
+
+                searchTimeout = setTimeout(function() {
+                    $('#search-results').html('<div class="searching"><?php esc_html_e('Buscando...', 'gestion-almacenes'); ?></div>');
+                    
+                    $.ajax({
+                        url: ajaxurl,
+                        type: 'POST',
+                        data: {
+                            action: 'gab_search_products_transfer',
+                            term: query,
+                            nonce: '<?php echo wp_create_nonce('gab_transfer_nonce'); ?>'
+                        },
+                        success: function(response) {
+                            $('#search-results').empty();
+                            
+                            if (response.success && response.data && response.data.products) {
+                                if (response.data.products.length > 0) {
+                                    response.data.products.forEach(function(product) {
+                                        const isAdded = $(`tr[data-product-id="${product.id}"]`).length > 0;
+                                        if (!isAdded) {
+                                            $('#search-results').append(`
+                                                <div class="search-result-item" data-product-id="${product.id}" data-product-name="${product.name}" data-product-sku="${product.sku || ''}">
+                                                    ${product.sku ? `[${product.sku}] ` : ''}${product.name}
+                                                </div>
+                                            `);
+                                        }
+                                    });
+                                    
+                                    if ($('#search-results').children().length === 0) {
+                                        $('#search-results').append('<div class="no-results"><?php esc_html_e('Todos los productos coincidentes ya están en la lista.', 'gestion-almacenes'); ?></div>');
+                                    }
+                                } else {
+                                    $('#search-results').append('<div class="no-results"><?php esc_html_e('No se encontraron productos', 'gestion-almacenes'); ?></div>');
+                                }
+                            }
+                        }
+                    });
+                }, 500);
+            });
+
+            // Seleccionar producto del modal
+            $(document).on('click', '.search-result-item', function() {
+                const productId = $(this).data('product-id');
+                const productName = $(this).data('product-name');
+                const productSku = $(this).data('product-sku');
+                const sourceWarehouse = $('#source_warehouse').val();
+                
+                addProductToTransfer(productId, productName, productSku, sourceWarehouse);
+                closeModal();
+            });
+            
+            // Función para agregar producto a la tabla
+            function addProductToTransfer(productId, productName, productSku, sourceWarehouse) {
+                if (productCount >= MAX_PRODUCTS) {
+                    alert('<?php esc_html_e('Número máximo de productos alcanzado', 'gestion-almacenes'); ?>');
+                    return;
+                }
+
+                if ($(`tr[data-product-id="${productId}"]`).length > 0) {
+                    alert('<?php esc_html_e('Este producto ya está en la lista.', 'gestion-almacenes'); ?>');
+                    return;
+                }
+
+                const row = `
+                    <tr data-product-id="${productId}">
+                        <td>${productSku || ''}</td>
+                        <td><strong>${productName}</strong></td>
+                        <td class="available-stock" style="text-align: center;">
+                            <span class="loading"><?php esc_html_e('Cargando...', 'gestion-almacenes'); ?></span>
+                        </td>
+                        <td style="text-align: center;">
+                            <input type="number" name="products[new_${productCount}][quantity]" 
+                                min="1" value="1" required class="demanded-stock-input" 
+                                style="width: 80px; text-align: center;" disabled>
+                            <input type="hidden" name="products[new_${productCount}][product_id]" value="${productId}">
+                        </td>
+                        <td style="text-align: center;">
+                            <button type="button" class="button button-small remove-product">
+                                <span class="dashicons dashicons-trash"></span>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                
+                $('#add-product-row').before(row);
+                
+                // Obtener stock disponible
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'gab_get_warehouse_stock_transfer',
+                        product_id: productId,
+                        warehouse_id: sourceWarehouse,
+                        nonce: '<?php echo wp_create_nonce('gab_transfer_nonce'); ?>'
+                    },
+                    success: function(response) {
+                        const row = $(`tr[data-product-id="${productId}"]`);
+                        if (response.success) {
+                            const stock = parseInt(response.data.stock);
+                            if (stock <= 0) {
+                                row.remove();
+                                alert('<?php esc_html_e('No hay stock disponible para este producto', 'gestion-almacenes'); ?>');
+                            } else {
+                                row.find('.available-stock').html(`<strong style="color: #0073aa;">${stock}</strong>`);
+                                const input = row.find('.demanded-stock-input');
+                                input.prop('disabled', false).attr('max', stock);
+                            }
+                        }
+                    }
+                });
+
+                productCount++;
+            }
+
+            // Eliminar producto
+            $(document).on('click', '.remove-product', function() {
+                $(this).closest('tr').remove();
+            });
+
+            // Validar almacenes diferentes
+            $('#target_warehouse').on('change', function() {
+                const sourceWarehouse = $('#source_warehouse').val();
+                const targetWarehouse = $(this).val();
+                
+                if (sourceWarehouse && targetWarehouse && sourceWarehouse === targetWarehouse) {
+                    alert('<?php esc_html_e('Los almacenes origen y destino deben ser diferentes', 'gestion-almacenes'); ?>');
+                    $(this).val('');
+                }
+            });
+
+            // Validar cantidades
+            $(document).on('change', '.demanded-stock-input', function() {
+                const input = $(this);
+                const max = parseInt(input.attr('max'), 10);
+                const value = parseInt(input.val(), 10);
+                
+                if (value > max) {
+                    alert('<?php esc_html_e('La cantidad no puede exceder el stock disponible', 'gestion-almacenes'); ?>');
+                    input.val(max);
+                } else if (value < 1) {
+                    alert('<?php esc_html_e('La cantidad debe ser al menos 1', 'gestion-almacenes'); ?>');
+                    input.val(1);
+                }
+            });
+
+            // Eliminar transferencia
+            $('#delete-transfer').on('click', function() {
+                $('#delete-confirm-modal').show();
+            });
+
+            $('#confirm-delete').on('click', function() {
+                if (confirm('<?php esc_html_e('¿Estás completamente seguro? Esta acción eliminará permanentemente la transferencia.', 'gestion-almacenes'); ?>')) {
+                    $.ajax({
+                        url: ajaxurl,
+                        type: 'POST',
+                        data: {
+                            action: 'gab_delete_transfer',
+                            transfer_id: transferId,
+                            nonce: '<?php echo wp_create_nonce('gab_transfer_nonce'); ?>'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                alert(response.data.message);
+                                window.location.href = '<?php echo admin_url('admin.php?page=gab-transfer-list'); ?>';
+                            } else {
+                                alert(response.data.message || '<?php esc_html_e('Error al eliminar la transferencia', 'gestion-almacenes'); ?>');
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Enviar formulario de actualización
+            $('#gab-edit-transfer-form').on('submit', function(e) {
+                e.preventDefault();
+                
+                const sourceWarehouse = $('#source_warehouse').val();
+                const targetWarehouse = $('#target_warehouse').val();
+                
+                if (!sourceWarehouse || !targetWarehouse) {
+                    alert('<?php esc_html_e('Debes seleccionar ambos almacenes', 'gestion-almacenes'); ?>');
+                    return;
+                }
+                
+                if ($('#products-tbody tr[data-product-id]').length === 0) {
+                    alert('<?php esc_html_e('Debes tener al menos un producto', 'gestion-almacenes'); ?>');
+                    return;
+                }
+
+                const $submitBtn = $('#submit-transfer');
+                const originalText = $submitBtn.val();
+                $submitBtn.prop('disabled', true).val('<?php esc_attr_e('Actualizando...', 'gestion-almacenes'); ?>');
+
+                // Recopilar datos de productos
+                const products = {};
+                $('.demanded-stock-input').each(function() {
+                    const name = $(this).attr('name');
+                    const match = name.match(/products\[([^\]]+)\]\[quantity\]/);
+                    if (match) {
+                        const itemKey = match[1];
+                        const row = $(this).closest('tr');
+                        products[itemKey] = {
+                            product_id: row.data('product-id'),
+                            quantity: parseInt($(this).val(), 10)
+                        };
+                    }
+                });
+
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'gab_update_transfer',
+                        transfer_id: transferId,
+                        source_warehouse_id: sourceWarehouse,
+                        target_warehouse_id: targetWarehouse,
+                        notes: $('#notes').val(),
+                        items: products,
+                        nonce: '<?php echo wp_create_nonce('gab_transfer_nonce'); ?>'
+                    },
+                    success: function(response) {
+                        $submitBtn.prop('disabled', false).val(originalText);
+                        if (response.success) {
+                            alert('<?php esc_html_e('Transferencia actualizada correctamente.', 'gestion-almacenes'); ?>');
+                            window.location.href = '<?php echo admin_url('admin.php?page=gab-view-transfer&transfer_id=' . $transfer->id); ?>';
+                        } else {
+                            alert(response.data.message || '<?php esc_html_e('Hubo un problema al actualizar la transferencia.', 'gestion-almacenes'); ?>');
+                        }
+                    },
+                    error: function() {
+                        $submitBtn.prop('disabled', false).val(originalText);
+                        alert('<?php esc_html_e('Error inesperado en la solicitud.', 'gestion-almacenes'); ?>');
+                    }
+                });
+            });
+        });
+        </script>
+        <?php
+    }
 
 
 /**

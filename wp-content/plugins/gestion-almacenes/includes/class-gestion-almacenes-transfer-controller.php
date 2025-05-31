@@ -17,6 +17,10 @@ class Gestion_Almacenes_Transfer_Controller {
         add_action('wp_ajax_gab_get_transfer_list', array($this, 'ajax_get_transfer_list'));
         add_action('wp_ajax_gab_search_products_transfer', array($this, 'ajax_search_products'));
         add_action('wp_ajax_gab_get_warehouse_stock_transfer', array($this, 'ajax_get_warehouse_stock'));
+        add_action('wp_ajax_gab_update_transfer', array($this, 'ajax_update_transfer'));
+        add_action('wp_ajax_gab_delete_transfer', array($this, 'ajax_delete_transfer'));
+        add_action('wp_ajax_gab_complete_transfer', [$this, 'ajax_complete_transfer']);
+
     }
 
     /**
@@ -452,4 +456,558 @@ class Gestion_Almacenes_Transfer_Controller {
         
         wp_send_json_success(array('stock' => $stock));
     }
+
+    
+    //AJAX: Actualizar transferencia
+    public function ajax_update_transfer() {
+        check_ajax_referer('gab_transfer_nonce', 'nonce');
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(['message' => 'No tienes permisos suficientes.']);
+        }
+
+        // Debugging: Ver qué datos están llegando
+        error_log('[DEBUG] POST data: ' . print_r($_POST, true));
+
+        $transfer_id = intval($_POST['transfer_id']);
+        $source_warehouse_id = intval($_POST['source_warehouse_id']);
+        $target_warehouse_id = intval($_POST['target_warehouse_id']);
+        $notes = sanitize_text_field($_POST['notes']);
+
+        $items = [];
+
+        // Debugging: Ver específicamente el campo items
+        error_log('[DEBUG] Items field: ' . print_r($_POST['items'], true));
+
+        if (!empty($_POST['items']) && is_array($_POST['items'])) {
+            foreach ($_POST['items'] as $item) {
+                $items[] = [
+                    'product_id' => intval($item['product_id']),
+                    'quantity' => intval($item['quantity']),
+                ];
+            }
+        }
+
+        // Debugging: Ver el array procesado
+        error_log('[DEBUG] Processed items: ' . print_r($items, true));
+
+        if (empty($items)) {
+            wp_send_json_error(['message' => 'Debes incluir al menos un producto.']);
+        }
+
+        $result = $this->db->update_transfer($transfer_id, [
+            'source_warehouse_id' => $source_warehouse_id,
+            'target_warehouse_id' => $target_warehouse_id,
+            'notes' => $notes,
+            'items' => $items,
+        ]);
+
+        if ($result) {
+            wp_send_json_success(['message' => 'Transferencia actualizada con éxito.']);
+        } else {
+            wp_send_json_error(['message' => 'No se pudo actualizar la transferencia.']);
+        }
+    }
+
+    //AJAX: Eliminar transferencia
+    public function ajax_delete_transfer() {
+        check_ajax_referer('gab_transfer_nonce', 'nonce');
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(['message' => 'No tienes permisos suficientes.']);
+        }
+
+        $transfer_id = intval($_POST['transfer_id']);
+
+        $result = $this->db->delete_transfer($transfer_id);
+
+        if ($result) {
+            wp_send_json_success(['message' => 'Transferencia eliminada con éxito.']);
+        } else {
+            wp_send_json_error(['message' => 'No se pudo eliminar la transferencia.']);
+        }
+    }
+
+    // Página ver transferencias
+    public function render_view_transfer_page() {
+        // Verificar permisos
+        if (!current_user_can('manage_options')) {
+            wp_die(__('No tienes permisos suficientes para acceder a esta página.', 'gestion-almacenes'));
+        }
+
+        // Obtener ID de la transferencia
+        $transfer_id = isset($_GET['transfer_id']) ? intval($_GET['transfer_id']) : 0;
+        
+        if (!$transfer_id) {
+            wp_die(__('ID de transferencia inválido.', 'gestion-almacenes'));
+        }
+
+        // Obtener datos de la transferencia
+        $transfer = $this->db->get_transfer($transfer_id);
+        
+        if (!$transfer) {
+            wp_die(__('Transferencia no encontrada.', 'gestion-almacenes'));
+        }
+
+        // Obtener almacenes
+        $warehouses = $this->db->get_warehouses();
+        $warehouses_by_id = [];
+        foreach ($warehouses as $warehouse) {
+            $warehouses_by_id[$warehouse->id] = $warehouse;
+        }
+
+        // Obtener información de productos
+        $products_info = [];
+        if (!empty($transfer->items)) {
+            foreach ($transfer->items as $item) {
+                $product = wc_get_product($item->product_id);
+                if ($product) {
+                    $products_info[$item->product_id] = $product;
+                }
+            }
+        }
+
+    ?>
+    <div class="wrap">
+        <h1>
+            <?php esc_html_e('Detalles de Transferencia', 'gestion-almacenes'); ?>
+            <a href="<?php echo admin_url('admin.php?page=gab-stock-transfers'); ?>" class="page-title-action">
+                <?php esc_html_e('Volver al listado', 'gestion-almacenes'); ?>
+            </a>
+        </h1>
+
+        <div class="gab-transfer-view">
+            <!-- Información general de la transferencia -->
+            <div class="gab-card">
+                <h2><?php esc_html_e('Información General', 'gestion-almacenes'); ?></h2>
+                <table class="gab-info-table">
+                    <tr>
+                        <th><?php esc_html_e('ID de Transferencia:', 'gestion-almacenes'); ?></th>
+                        <td>#<?php echo esc_html($transfer->id); ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Estado:', 'gestion-almacenes'); ?></th>
+                        <td>
+                            <span class="gab-status gab-status-<?php echo esc_attr($transfer->status); ?>">
+                                <?php echo esc_html($this->get_status_label($transfer->status)); ?>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Almacén de Origen:', 'gestion-almacenes'); ?></th>
+                        <td>
+                            <?php 
+                            $source = $warehouses_by_id[$transfer->source_warehouse_id] ?? null;
+                            echo $source ? esc_html($source->name) : __('(Almacén eliminado)', 'gestion-almacenes');
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Almacén de Destino:', 'gestion-almacenes'); ?></th>
+                        <td>
+                            <?php 
+                            $target = $warehouses_by_id[$transfer->target_warehouse_id] ?? null;
+                            echo $target ? esc_html($target->name) : __('(Almacén eliminado)', 'gestion-almacenes');
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Creado por:', 'gestion-almacenes'); ?></th>
+                        <td>
+                            <?php 
+                            $user = get_user_by('id', $transfer->created_by);
+                            echo $user ? esc_html($user->display_name) : __('Usuario desconocido', 'gestion-almacenes');
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Fecha de Creación:', 'gestion-almacenes'); ?></th>
+                        <td><?php echo esc_html(wp_date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($transfer->created_at))); ?></td>
+                    </tr>
+                    <?php if ($transfer->status === 'completed' && $transfer->completed_by): ?>
+                    <tr>
+                        <th><?php esc_html_e('Completado por:', 'gestion-almacenes'); ?></th>
+                        <td>
+                            <?php 
+                            $completed_user = get_user_by('id', $transfer->completed_by);
+                            echo $completed_user ? esc_html($completed_user->display_name) : __('Usuario desconocido', 'gestion-almacenes');
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Fecha de Completado:', 'gestion-almacenes'); ?></th>
+                        <td><?php echo esc_html(wp_date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($transfer->completed_at))); ?></td>
+                    </tr>
+                    <?php endif; ?>
+                    <?php if (!empty($transfer->notes)): ?>
+                    <tr>
+                        <th><?php esc_html_e('Notas:', 'gestion-almacenes'); ?></th>
+                        <td><?php echo esc_html($transfer->notes); ?></td>
+                    </tr>
+                    <?php endif; ?>
+                </table>
+            </div>
+
+            <!-- Productos de la transferencia -->
+            <div class="gab-card">
+                <h2><?php esc_html_e('Productos', 'gestion-almacenes'); ?></h2>
+                <table class="wp-list-table widefat fixed striped">
+                    <thead>
+                        <tr>
+                            <th><?php esc_html_e('Producto', 'gestion-almacenes'); ?></th>
+                            <th><?php esc_html_e('SKU', 'gestion-almacenes'); ?></th>
+                            <th><?php esc_html_e('Cantidad Solicitada', 'gestion-almacenes'); ?></th>
+                            <?php if ($transfer->status === 'completed'): ?>
+                            <th><?php esc_html_e('Cantidad Transferida', 'gestion-almacenes'); ?></th>
+                            <?php endif; ?>
+                            <th><?php esc_html_e('Stock Actual (Origen)', 'gestion-almacenes'); ?></th>
+                            <th><?php esc_html_e('Stock Actual (Destino)', 'gestion-almacenes'); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($transfer->items as $item): ?>
+                        <tr>
+                            <td>
+                                <?php 
+                                $product = $products_info[$item->product_id] ?? null;
+                                if ($product) {
+                                    echo esc_html($product->get_name());
+                                } else {
+                                    echo __('(Producto eliminado)', 'gestion-almacenes');
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <?php 
+                                echo $product ? esc_html($product->get_sku()) : '-';
+                                ?>
+                            </td>
+                            <td><?php echo esc_html($item->requested_qty); ?></td>
+                            <?php if ($transfer->status === 'completed'): ?>
+                            <td><?php echo esc_html($item->transferred_qty ?? $item->requested_qty); ?></td>
+                            <?php endif; ?>
+                            <td>
+                                <?php 
+                                if ($product && $source) {
+                                    $source_stock = $this->db->get_warehouse_stock($transfer->source_warehouse_id, $item->product_id);
+                                    echo esc_html($source_stock ?? 0);
+                                } else {
+                                    echo '-';
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <?php 
+                                if ($product && $target) {
+                                    $target_stock = $this->db->get_warehouse_stock($transfer->target_warehouse_id, $item->product_id);
+                                    echo esc_html($target_stock ?? 0);
+                                } else {
+                                    echo '-';
+                                }
+                                ?>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Acciones -->
+            <div class="gab-card">
+                <h2><?php esc_html_e('Acciones', 'gestion-almacenes'); ?></h2>
+                <div class="gab-actions">
+                    <?php if (in_array(strtolower($transfer->status), ['pending', 'draft'])): ?>
+                        <a href="<?php echo admin_url('admin.php?page=gab-edit-transfer&transfer_id=' . $transfer->id); ?>" 
+                        class="button button-primary">
+                            <?php esc_html_e('Editar Transferencia', 'gestion-almacenes'); ?>
+                        </a>
+                        <button class="button button-secondary" id="complete-transfer">
+                            <?php esc_html_e('Completar Transferencia', 'gestion-almacenes'); ?>
+                        </button>
+                        <button class="button button-link-delete" id="delete-transfer">
+                            <?php esc_html_e('Eliminar Transferencia', 'gestion-almacenes'); ?>
+                        </button>
+                    <?php elseif ($transfer->status === 'completed'): ?>
+                        <p class="description">
+                            <?php esc_html_e('Esta transferencia ya ha sido completada y no puede ser modificada.', 'gestion-almacenes'); ?>
+                        </p>
+                    <?php else: ?>
+                        <p class="description">
+                            <?php 
+                            printf(
+                                esc_html__('Estado actual: %s', 'gestion-almacenes'), 
+                                esc_html($this->get_status_label($transfer->status))
+                            ); 
+                            ?>
+                        </p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estilos CSS -->
+        <style>
+        .gab-transfer-view {
+            max-width: 1200px;
+            margin-top: 20px;
+        }
+        
+        .gab-card {
+            background: #fff;
+            border: 1px solid #ccd0d4;
+            box-shadow: 0 1px 1px rgba(0,0,0,.04);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+        
+        .gab-card h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .gab-info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .gab-info-table th {
+            text-align: left;
+            padding: 10px;
+            width: 200px;
+            font-weight: 600;
+            vertical-align: top;
+        }
+        
+        .gab-info-table td {
+            padding: 10px;
+        }
+        
+        .gab-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .gab-status-draft {
+            background: #6c757d;
+            color: #fff;
+        }
+
+        .gab-status-pending {
+            background: #f0ad4e;
+            color: #fff;
+        }
+        
+        .gab-status-completed {
+            background: #5cb85c;
+            color: #fff;
+        }
+        
+        .gab-status-cancelled {
+            background: #d9534f;
+            color: #fff;
+        }
+        
+        .gab-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .gab-actions .button-link-delete {
+            color: #d63638;
+        }
+        
+        .gab-actions .button-link-delete:hover {
+            color: #b32d2e;
+        }
+        </style>
+
+        <!-- JavaScript para las acciones -->
+        <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            // Completar transferencia
+            $('#complete-transfer').on('click', function() {
+                if (!confirm('<?php esc_html_e('¿Estás seguro de que deseas completar esta transferencia? Esta acción actualizará los inventarios y no se puede deshacer.', 'gestion-almacenes'); ?>')) {
+                    return;
+                }
+                
+                var $button = $(this);
+                $button.prop('disabled', true).text('<?php esc_html_e('Procesando...', 'gestion-almacenes'); ?>');
+                
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'gab_complete_transfer',
+                        transfer_id: <?php echo $transfer->id; ?>,
+                        nonce: '<?php echo wp_create_nonce('gab_transfer_nonce'); ?>'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.data.message);
+                            location.reload();
+                        } else {
+                            alert(response.data.message);
+                            $button.prop('disabled', false).text('<?php esc_html_e('Completar Transferencia', 'gestion-almacenes'); ?>');
+                        }
+                    },
+                    error: function() {
+                        alert('<?php esc_html_e('Error al procesar la solicitud.', 'gestion-almacenes'); ?>');
+                        $button.prop('disabled', false).text('<?php esc_html_e('Completar Transferencia', 'gestion-almacenes'); ?>');
+                    }
+                });
+            });
+            
+            // Eliminar transferencia
+            $('#delete-transfer').on('click', function() {
+                if (!confirm('<?php esc_html_e('¿Estás seguro de que deseas eliminar esta transferencia? Esta acción no se puede deshacer.', 'gestion-almacenes'); ?>')) {
+                    return;
+                }
+                
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'POST',
+                    data: {
+                        action: 'gab_delete_transfer',
+                        transfer_id: <?php echo $transfer->id; ?>,
+                        nonce: '<?php echo wp_create_nonce('gab_transfer_nonce'); ?>'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.data.message);
+                            window.location.href = '<?php echo admin_url('admin.php?page=gab-stock-transfers'); ?>';
+                        } else {
+                            alert(response.data.message);
+                        }
+                    },
+                    error: function() {
+                        alert('<?php esc_html_e('Error al procesar la solicitud.', 'gestion-almacenes'); ?>');
+                    }
+                });
+            });
+        });
+        </script>
+        <?php
+    }
+
+    // Método auxiliar para obtener las etiquetas de estado
+    private function get_status_label($status) {
+        $labels = [
+            'draft' => __('Borrador', 'gestion-almacenes'),
+            'pending' => __('Pendiente', 'gestion-almacenes'),
+            'completed' => __('Completada', 'gestion-almacenes'),
+            'cancelled' => __('Cancelada', 'gestion-almacenes'),
+        ];
+        
+        return $labels[strtolower($status)] ?? $status;
+    }
+
+    // Ajax para completar la transferencia
+    public function ajax_complete_transfer() {
+        check_ajax_referer('gab_transfer_nonce', 'nonce');
+        
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(['message' => 'No tienes permisos suficientes.']);
+        }
+        
+        $transfer_id = intval($_POST['transfer_id']);
+        
+        // Obtener la transferencia
+        $transfer = $this->db->get_transfer($transfer_id);
+        
+        if (!$transfer) {
+            wp_send_json_error(['message' => 'Transferencia no encontrada.']);
+        }
+        
+        if (!in_array(strtolower($transfer->status), ['pending', 'draft'])) {
+            wp_send_json_error(['message' => 'Esta transferencia ya no está pendiente.']);
+        }
+        
+        // Verificar que hay suficiente stock en el almacén de origen
+        $stock_errors = [];
+        foreach ($transfer->items as $item) {
+            $current_stock = $this->db->get_warehouse_stock($transfer->source_warehouse_id, $item->product_id);
+            if ($current_stock < $item->requested_qty) {
+                $product = wc_get_product($item->product_id);
+                $product_name = $product ? $product->get_name() : 'ID: ' . $item->product_id;
+                $stock_errors[] = sprintf(
+                    __('Stock insuficiente para %s. Disponible: %d, Solicitado: %d', 'gestion-almacenes'),
+                    $product_name,
+                    $current_stock,
+                    $item->requested_qty
+                );
+            }
+        }
+        
+        if (!empty($stock_errors)) {
+            wp_send_json_error([
+                'message' => __('No se puede completar la transferencia:', 'gestion-almacenes') . "\n" . implode("\n", $stock_errors)
+            ]);
+        }
+        
+        // Procesar la transferencia
+        global $wpdb;
+        $wpdb->query('START TRANSACTION');
+        
+        try {
+            // Actualizar el stock para cada producto
+            foreach ($transfer->items as $item) {
+                // Reducir stock del almacén de origen
+                $this->db->update_warehouse_stock(
+                    $transfer->source_warehouse_id,
+                    $item->product_id,
+                    -$item->requested_qty
+                );
+                
+                // Aumentar stock del almacén de destino
+                $this->db->update_warehouse_stock(
+                    $transfer->target_warehouse_id,
+                    $item->product_id,
+                    $item->requested_qty
+                );
+                
+                // Actualizar la cantidad transferida en el item
+                $wpdb->update(
+                    $wpdb->prefix . 'gab_stock_transfer_items',
+                    ['transferred_qty' => $item->requested_qty],
+                    [
+                        'transfer_id' => $transfer_id,
+                        'product_id' => $item->product_id
+                    ],
+                    ['%d'],
+                    ['%d', '%d']
+                );
+            }
+            
+            // Actualizar el estado de la transferencia
+            $wpdb->update(
+                $wpdb->prefix . 'gab_stock_transfers',
+                [
+                    'status' => 'completed',
+                    'completed_by' => get_current_user_id(),
+                    'completed_at' => current_time('mysql'),
+                    'updated_at' => current_time('mysql')
+                ],
+                ['id' => $transfer_id],
+                ['%s', '%d', '%s', '%s'],
+                ['%d']
+            );
+            
+            $wpdb->query('COMMIT');
+            
+            wp_send_json_success(['message' => __('Transferencia completada exitosamente.', 'gestion-almacenes')]);
+            
+        } catch (Exception $e) {
+            $wpdb->query('ROLLBACK');
+            error_log('[GESTION ALMACENES] Error al completar transferencia: ' . $e->getMessage());
+            wp_send_json_error(['message' => __('Error al procesar la transferencia. Por favor, intenta nuevamente.', 'gestion-almacenes')]);
+        }
+    }
+
 }
