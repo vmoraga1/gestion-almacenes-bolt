@@ -1957,3 +1957,178 @@ Stack trace:
 
 )
 
+[31-May-2025 20:50:16 UTC] Automatic updates starting...
+[31-May-2025 20:50:18 UTC] Automatic updates complete.
+[01-Jun-2025 06:06:37 UTC] Automatic updates starting...
+[01-Jun-2025 06:06:38 UTC] Automatic updates complete.
+[03-Jun-2025 00:53:11 UTC] Automatic updates starting...
+[03-Jun-2025 00:53:13 UTC] Automatic updates complete.
+[03-Jun-2025 00:53:48 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[03-Jun-2025 00:53:56 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 69: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 69: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 10
+    [2] => 10
+    [3] => 10
+    [4] => 10
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 10
+    [2] => 10
+    [3] => 10
+    [4] => 10
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 71: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 71: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 72: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 72: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 73: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 73: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 74: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 74: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 76: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 76: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 68: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 68: Array
+(
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[03-Jun-2025 00:54:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 20
+)
+
+[03-Jun-2025 00:54:33 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[03-Jun-2025 00:54:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 10
+    [2] => 10
+    [3] => 10
+    [4] => 10
+)
+
+[03-Jun-2025 00:54:58 UTC] [DEBUG GESTION ALMACENES DB] Stock actualizado para Producto ID 70 en Almacén ID 1. Filas afectadas: 0
+[03-Jun-2025 00:54:58 UTC] [DEBUG GESTION ALMACENES DB] Stock actualizado para Producto ID 70 en Almacén ID 2. Filas afectadas: 0
+[03-Jun-2025 00:54:58 UTC] [DEBUG GESTION ALMACENES DB] Stock actualizado para Producto ID 70 en Almacén ID 3. Filas afectadas: 0
+[03-Jun-2025 00:54:58 UTC] [DEBUG GESTION ALMACENES DB] Stock actualizado para Producto ID 70 en Almacén ID 4. Filas afectadas: 0
+[03-Jun-2025 00:54:58 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 10
+    [2] => 10
+    [3] => 10
+    [4] => 10
+)
+
+[03-Jun-2025 00:54:58 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 10
+    [2] => 10
+    [3] => 10
+    [4] => 10
+)
+
+[03-Jun-2025 00:54:59 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
+[03-Jun-2025 00:54:59 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 10
+    [2] => 10
+    [3] => 10
+    [4] => 10
+)
+
+[03-Jun-2025 00:55:04 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 4 almacenes.
