@@ -746,7 +746,8 @@ class Gestion_Almacenes_DB {
                 }
             }
         }
-        
+        do_action('gab_warehouse_stock_updated', $product_id, $warehouse_id);
+
         return true;
     }
 
@@ -757,6 +758,9 @@ class Gestion_Almacenes_DB {
         global $wpdb;
         $table_name = $wpdb->prefix . 'gab_warehouse_product_stock';
         
+        // Asegurar que el valor es positivo
+        $stock_value = max(0, intval($stock_value));
+        
         // Verificar si ya existe un registro
         $existing = $wpdb->get_row($wpdb->prepare(
             "SELECT * FROM $table_name WHERE warehouse_id = %d AND product_id = %d",
@@ -766,35 +770,59 @@ class Gestion_Almacenes_DB {
         
         if ($existing) {
             // Actualizar el stock existente
+            $data = ['stock' => $stock_value];
+            $format = ['%d'];
+            
+            // Solo agregar updated_at si la columna existe
+            if (property_exists($existing, 'updated_at')) {
+                $data['updated_at'] = current_time('mysql');
+                $format[] = '%s';
+            }
+            
             $result = $wpdb->update(
                 $table_name,
-                [
-                    'stock' => max(0, $stock_value),
-                    'updated_at' => current_time('mysql')
-                ],
+                $data,
                 [
                     'warehouse_id' => $warehouse_id,
                     'product_id' => $product_id
                 ],
-                ['%d', '%s'],
+                $format,
                 ['%d', '%d']
             );
+            
+            if ($result === false) {
+                error_log('[GAB] Error al actualizar stock: ' . $wpdb->last_error);
+                return false;
+            }
         } else {
-            // Crear nuevo registro
-            $result = $wpdb->insert(
-                $table_name,
-                [
-                    'warehouse_id' => $warehouse_id,
-                    'product_id' => $product_id,
-                    'stock' => max(0, $stock_value),
-                    'quantity' => 0,
-                    'updated_at' => current_time('mysql')
-                ],
-                ['%d', '%d', '%d', '%d', '%s']
-            );
+            // Crear nuevo registro - solo incluir columnas que existen
+            $data = [
+                'warehouse_id' => $warehouse_id,
+                'product_id' => $product_id,
+                'stock' => $stock_value
+            ];
+            $format = ['%d', '%d', '%d'];
+            
+            // Verificar qué columnas existen en la tabla
+            $columns = $wpdb->get_col("SHOW COLUMNS FROM $table_name");
+            
+            if (in_array('updated_at', $columns)) {
+                $data['updated_at'] = current_time('mysql');
+                $format[] = '%s';
+            }
+            
+            $result = $wpdb->insert($table_name, $data, $format);
+            
+            if ($result === false) {
+                error_log('[GAB] Error al insertar stock: ' . $wpdb->last_error);
+                return false;
+            }
         }
         
-        return $result !== false;
+        // Disparar acción para sincronizar
+        do_action('gab_warehouse_stock_updated', $product_id, $warehouse_id);
+        
+        return true;
     }
 
     /**

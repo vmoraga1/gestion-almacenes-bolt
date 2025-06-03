@@ -16,6 +16,8 @@ class Gestion_Almacenes_Admin {
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
         // Inicializar controlador de transferencias
         $this->transfer_controller = new Gestion_Almacenes_Transfer_Controller();
+        // Agregar hook para AJAX de actualización de stock
+        add_action('wp_ajax_gab_update_warehouse_stock', [$this, 'ajax_update_warehouse_stock']);
     }
 
     public function registrar_menu_almacenes() {
@@ -51,7 +53,6 @@ class Gestion_Almacenes_Admin {
         );
 
         // NUEVOS SUBMENÚS PARA TRANSFERENCIAS
-        
         // Separador visual (submenú deshabilitado)
         add_submenu_page(
             'gab-warehouse-management',
@@ -100,6 +101,15 @@ class Gestion_Almacenes_Admin {
             'manage_options',
             'gab-view-transfer',
             [$this->transfer_controller, 'render_view_transfer_page']
+        );
+
+        add_submenu_page(
+            null,
+            __('Imprimir Transferencia', 'gestion-almacenes'),
+            __('Imprimir Transferencia', 'gestion-almacenes'),
+            'manage_options',
+            'gab-print-transfer',
+            [$this->transfer_controller, 'render_print_transfer_page']
         );
 
         // Gestión de Discrepancias
@@ -192,6 +202,62 @@ class Gestion_Almacenes_Admin {
                 'stock_updated' => __('Stock actualizado correctamente', 'gestion-almacenes')
             )
         ));
+    }
+
+    public function ajax_update_warehouse_stock() {
+        // Verificar nonce
+        if (!check_ajax_referer('gab_update_stock', 'nonce', false)) {
+            wp_send_json_error(['message' => __('Error de seguridad', 'gestion-almacenes')]);
+            return;
+        }
+        
+        if (!current_user_can('manage_woocommerce')) {
+            wp_send_json_error(['message' => __('Sin permisos suficientes', 'gestion-almacenes')]);
+            return;
+        }
+        
+        $warehouse_id = isset($_POST['warehouse_id']) ? intval($_POST['warehouse_id']) : 0;
+        $product_id = isset($_POST['product_id']) ? intval($_POST['product_id']) : 0;
+        $new_stock = isset($_POST['stock']) ? intval($_POST['stock']) : 0;
+        
+        if (!$warehouse_id || !$product_id || $new_stock < 0) {
+            wp_send_json_error(['message' => __('Datos inválidos', 'gestion-almacenes')]);
+            return;
+        }
+        
+        try {
+            global $gestion_almacenes_db;
+            
+            // Actualizar stock del almacén
+            $result = $gestion_almacenes_db->set_warehouse_stock($warehouse_id, $product_id, $new_stock);
+            
+            if (!$result) {
+                throw new Exception(__('No se pudo actualizar el stock en la base de datos', 'gestion-almacenes'));
+            }
+            
+            // Obtener stock total de todos los almacenes
+            $total_stock = 0;
+            $warehouses = $gestion_almacenes_db->get_warehouses();
+            $warehouse_stocks = [];
+            
+            foreach ($warehouses as $warehouse) {
+                $stock = $gestion_almacenes_db->get_warehouse_stock($warehouse->id, $product_id);
+                $total_stock += $stock;
+                $warehouse_stocks[$warehouse->id] = [
+                    'name' => $warehouse->name,
+                    'stock' => $stock
+                ];
+            }
+            
+            wp_send_json_success([
+                'message' => __('Stock actualizado correctamente', 'gestion-almacenes'),
+                'new_total' => $total_stock,
+                'warehouse_stocks' => $warehouse_stocks
+            ]);
+            
+        } catch (Exception $e) {
+            wp_send_json_error(['message' => $e->getMessage()]);
+        }
     }
 
 
@@ -2245,113 +2311,296 @@ class Gestion_Almacenes_Admin {
 /**
  * Página de configuración del plugin
 */
-public function mostrar_configuracion() {
-    echo '<div class="wrap">';
-    echo '<h1>' . esc_html(__('Configuración de Gestión de Almacenes', 'gestion-almacenes')) . '</h1>';
-    
-    // Procesar configuración si se envió el formulario
-    if (isset($_POST['save_settings']) && wp_verify_nonce($_POST['settings_nonce'], 'save_settings_nonce')) {
-        $default_warehouse = intval($_POST['default_warehouse']);
-        $low_stock_threshold = intval($_POST['low_stock_threshold']);
-        $auto_select_warehouse = isset($_POST['auto_select_warehouse']) ? 1 : 0;
+    public function mostrar_configuracion() {
+        // Variable para mostrar mensaje de éxito
+        $saved = false;
+        $error_message = '';
         
-        update_option('gab_default_warehouse', $default_warehouse);
-        update_option('gab_low_stock_threshold', $low_stock_threshold);
-        update_option('gab_auto_select_warehouse', $auto_select_warehouse);
-        
-        echo '<div class="notice notice-success is-dismissible"><p>' . esc_html(__('Configuración guardada correctamente.', 'gestion-almacenes')) . '</p></div>';
-    }
-    
-    global $gestion_almacenes_db;
-    $almacenes = $gestion_almacenes_db->obtener_almacenes();
-    
-    $default_warehouse = get_option('gab_default_warehouse', '');
-    $low_stock_threshold = get_option('gab_low_stock_threshold', 5);
-    $auto_select_warehouse = get_option('gab_auto_select_warehouse', 0);
-    
-    echo '<form method="post" action="">';
-    wp_nonce_field('save_settings_nonce', 'settings_nonce');
-    
-    echo '<table class="form-table">';
-    
-    // Almacén por defecto
-    echo '<tr>';
-    echo '<th scope="row"><label for="default_warehouse">' . esc_html(__('Almacén por Defecto', 'gestion-almacenes')) . '</label></th>';
-    echo '<td>';
-    echo '<select name="default_warehouse" id="default_warehouse">';
-    echo '<option value="">' . esc_html(__('Ninguno', 'gestion-almacenes')) . '</option>';
-    if ($almacenes) {
-        foreach ($almacenes as $almacen) {
-            $selected = ($default_warehouse == $almacen->id) ? 'selected' : '';
-            echo '<option value="' . esc_attr($almacen->id) . '" ' . $selected . '>' . esc_html($almacen->name) . '</option>';
-        }
-    }
-    echo '</select>';
-    echo '<p class="description">' . esc_html(__('Almacén que se seleccionará automáticamente en los productos.', 'gestion-almacenes')) . '</p>';
-    echo '</td>';
-    echo '</tr>';
-    
-    // Umbral de stock bajo
-    echo '<tr>';
-    echo '<th scope="row"><label for="low_stock_threshold">' . esc_html(__('Umbral de Stock Bajo', 'gestion-almacenes')) . '</label></th>';
-    echo '<td>';
-    echo '<input type="number" name="low_stock_threshold" id="low_stock_threshold" value="' . esc_attr($low_stock_threshold) . '" min="1" class="small-text">';
-    echo '<p class="description">' . esc_html(__('Cantidad por debajo de la cual se considera stock bajo.', 'gestion-almacenes')) . '</p>';
-    echo '</td>';
-    echo '</tr>';
-    
-    // Selección automática de almacén
-    echo '<tr>';
-    echo '<th scope="row">' . esc_html(__('Selección Automática', 'gestion-almacenes')) . '</th>';
-    echo '<td>';
-    echo '<fieldset>';
-    echo '<label>';
-    echo '<input type="checkbox" name="auto_select_warehouse" value="1" ' . checked($auto_select_warehouse, 1, false) . '>';
-    echo esc_html(__('Seleccionar automáticamente el almacén con más stock disponible', 'gestion-almacenes'));
-    echo '</label>';
-    echo '<p class="description">' . esc_html(__('Si está activado, se seleccionará automáticamente el almacén con mayor stock disponible para el producto.', 'gestion-almacenes')) . '</p>';
-    echo '</fieldset>';
-    echo '</td>';
-    echo '</tr>';
-    
-    echo '</table>';
-    
-    echo '<p class="submit">';
-    echo '<input type="submit" name="save_settings" class="button-primary" value="' . esc_attr(__('Guardar Configuración', 'gestion-almacenes')) . '">';
-    echo '</p>';
-    echo '</form>';
-    
-    // Información del sistema
-    echo '<h2>' . esc_html(__('Información del Sistema', 'gestion-almacenes')) . '</h2>';
-    echo '<table class="widefat">';
-    echo '<thead><tr><th>' . esc_html(__('Configuración', 'gestion-almacenes')) . '</th><th>' . esc_html(__('Valor', 'gestion-almacenes')) . '</th></tr></thead>';
-    echo '<tbody>';
-    
-    echo '<tr><td>' . esc_html(__('Total de Almacenes', 'gestion-almacenes')) . '</td><td>' . (is_array($almacenes) ? count($almacenes) : 0) . '</td></tr>';
-    
-    $productos_con_stock = $gestion_almacenes_db->get_all_products_warehouse_stock();
-    $productos_unicos = array();
-    if ($productos_con_stock) {
-        foreach ($productos_con_stock as $item) {
-            if (!in_array($item->product_id, $productos_unicos)) {
-                $productos_unicos[] = $item->product_id;
+        // Procesar configuración si se envió el formulario
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form_submitted'])) {
+            // Verificar nonce
+            if (!isset($_POST['settings_nonce']) || !wp_verify_nonce($_POST['settings_nonce'], 'save_settings_nonce')) {
+                $error_message = 'Error de seguridad. Por favor, intenta de nuevo.';
+            } else {
+                // Guardar configuración del sistema
+                $default_warehouse = isset($_POST['default_warehouse']) ? intval($_POST['default_warehouse']) : '';
+                $low_stock_threshold = isset($_POST['low_stock_threshold']) ? intval($_POST['low_stock_threshold']) : 5;
+                $auto_select_warehouse = isset($_POST['auto_select_warehouse']) ? 1 : 0;
+                
+                update_option('gab_default_warehouse', $default_warehouse);
+                update_option('gab_low_stock_threshold', $low_stock_threshold);
+                update_option('gab_auto_select_warehouse', $auto_select_warehouse);
+                
+                // Guardar datos de la empresa
+                update_option('gab_company_name', sanitize_text_field($_POST['company_name'] ?? ''));
+                update_option('gab_company_rut', sanitize_text_field($_POST['company_rut'] ?? ''));
+                update_option('gab_company_address', sanitize_textarea_field($_POST['company_address'] ?? ''));
+                update_option('gab_company_phone', sanitize_text_field($_POST['company_phone'] ?? ''));
+                update_option('gab_company_email', sanitize_email($_POST['company_email'] ?? ''));
+                update_option('gab_manage_wc_stock', isset($_POST['manage_wc_stock']) ? 'yes' : 'no');
+                update_option('gab_auto_sync_stock', isset($_POST['auto_sync_stock']) ? 'yes' : 'no');
+                update_option('gab_default_sales_warehouse', sanitize_text_field($_POST['default_sales_warehouse'] ?? ''));
+                
+                $saved = true;
             }
         }
+
+        // Obtener valores actuales
+        $company_name = get_option('gab_company_name', get_bloginfo('name'));
+        $company_address = get_option('gab_company_address', '');
+        $company_phone = get_option('gab_company_phone', '');
+        $company_email = get_option('gab_company_email', get_bloginfo('admin_email'));
+        $company_rut = get_option('gab_company_rut', '');
+        
+        global $gestion_almacenes_db;
+        $almacenes = $gestion_almacenes_db->obtener_almacenes();
+        
+        $default_warehouse = get_option('gab_default_warehouse', '');
+        $low_stock_threshold = get_option('gab_low_stock_threshold', 5);
+        $auto_select_warehouse = get_option('gab_auto_select_warehouse', 0);
+        
+        // Estadísticas del sistema
+        $productos_con_stock = $gestion_almacenes_db->get_all_products_warehouse_stock();
+        $productos_unicos = array();
+        if ($productos_con_stock) {
+            foreach ($productos_con_stock as $item) {
+                if (!in_array($item->product_id, $productos_unicos)) {
+                    $productos_unicos[] = $item->product_id;
+                }
+            }
+        }
+        $productos_stock_bajo = $gestion_almacenes_db->get_low_stock_products($low_stock_threshold);
+        ?>
+        
+        <div class="wrap">
+            <h1><?php esc_html_e('Configuración de Gestión de Almacenes', 'gestion-almacenes'); ?></h1>
+            
+            <?php if ($saved): ?>
+                <div class="notice notice-success is-dismissible">
+                    <p><?php esc_html_e('Configuración guardada correctamente.', 'gestion-almacenes'); ?></p>
+                </div>
+            <?php endif; ?>
+            
+            <?php if ($error_message): ?>
+                <div class="notice notice-error is-dismissible">
+                    <p><?php echo esc_html($error_message); ?></p>
+                </div>
+            <?php endif; ?>
+            
+            <form method="post" action="">
+                <?php wp_nonce_field('save_settings_nonce', 'settings_nonce'); ?>
+                <input type="hidden" name="form_submitted" value="1" />
+                
+                <!-- Información de la Empresa -->
+                <h2><?php esc_html_e('Información de la Empresa', 'gestion-almacenes'); ?></h2>
+                <p><?php esc_html_e('Esta información aparecerá en los documentos impresos de transferencias.', 'gestion-almacenes'); ?></p>
+                
+                <table class="form-table">
+                    <tr>
+                        <th scope="row">
+                            <label for="company_name"><?php esc_html_e('Nombre de la Empresa', 'gestion-almacenes'); ?></label>
+                        </th>
+                        <td>
+                            <input type="text" name="company_name" id="company_name" 
+                                value="<?php echo esc_attr($company_name); ?>" class="regular-text" />
+                            <p class="description">
+                                <?php esc_html_e('Nombre que aparecerá en los documentos.', 'gestion-almacenes'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="company_rut"><?php esc_html_e('RUT/ID Fiscal', 'gestion-almacenes'); ?></label>
+                        </th>
+                        <td>
+                            <input type="text" name="company_rut" id="company_rut" 
+                                value="<?php echo esc_attr($company_rut); ?>" class="regular-text" />
+                            <p class="description">
+                                <?php esc_html_e('Identificación fiscal de la empresa.', 'gestion-almacenes'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="company_address"><?php esc_html_e('Dirección', 'gestion-almacenes'); ?></label>
+                        </th>
+                        <td>
+                            <textarea name="company_address" id="company_address" rows="3" cols="50" 
+                                    class="large-text"><?php echo esc_textarea($company_address); ?></textarea>
+                            <p class="description">
+                                <?php esc_html_e('Dirección completa de la empresa.', 'gestion-almacenes'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="company_phone"><?php esc_html_e('Teléfono', 'gestion-almacenes'); ?></label>
+                        </th>
+                        <td>
+                            <input type="text" name="company_phone" id="company_phone" 
+                                value="<?php echo esc_attr($company_phone); ?>" class="regular-text" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="company_email"><?php esc_html_e('Email', 'gestion-almacenes'); ?></label>
+                        </th>
+                        <td>
+                            <input type="email" name="company_email" id="company_email" 
+                                value="<?php echo esc_attr($company_email); ?>" class="regular-text" />
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- Control de Stock de WooCommerce -->
+                <h2><?php esc_html_e('Control de Stock', 'gestion-almacenes'); ?></h2>
+                <p><?php esc_html_e('Configure cómo el plugin gestiona el stock de WooCommerce.', 'gestion-almacenes'); ?></p>
+
+                <table class="form-table">
+                    <tr>
+                        <th scope="row"><?php esc_html_e('Gestionar Stock de WooCommerce', 'gestion-almacenes'); ?></th>
+                        <td>
+                            <fieldset>
+                                <label>
+                                    <input type="checkbox" name="manage_wc_stock" value="1" 
+                                        <?php checked(get_option('gab_manage_wc_stock', 'yes'), 'yes'); ?>>
+                                    <?php esc_html_e('Permitir que el plugin controle el stock de WooCommerce', 'gestion-almacenes'); ?>
+                                </label>
+                                <p class="description">
+                                    <?php esc_html_e('Cuando está activado, el stock de WooCommerce será la suma de todos los almacenes y no se podrá editar directamente.', 'gestion-almacenes'); ?>
+                                </p>
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php esc_html_e('Sincronización Automática', 'gestion-almacenes'); ?></th>
+                        <td>
+                            <fieldset>
+                                <label>
+                                    <input type="checkbox" name="auto_sync_stock" value="1" 
+                                        <?php checked(get_option('gab_auto_sync_stock', 'yes'), 'yes'); ?>>
+                                    <?php esc_html_e('Sincronizar automáticamente el stock cuando se realicen cambios', 'gestion-almacenes'); ?>
+                                </label>
+                                <p class="description">
+                                    <?php esc_html_e('Actualiza el stock de WooCommerce inmediatamente cuando se modifique el stock en cualquier almacén.', 'gestion-almacenes'); ?>
+                                </p>
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php esc_html_e('Almacén Predeterminado para Ventas', 'gestion-almacenes'); ?></th>
+                        <td>
+                            <select name="default_sales_warehouse" id="default_sales_warehouse">
+                                <option value=""><?php esc_html_e('Automático (menor stock primero)', 'gestion-almacenes'); ?></option>
+                                <?php 
+                                $default_sales_warehouse = get_option('gab_default_sales_warehouse', '');
+                                if ($almacenes): 
+                                    foreach ($almacenes as $almacen): ?>
+                                        <option value="<?php echo esc_attr($almacen->id); ?>" 
+                                                <?php selected($default_sales_warehouse, $almacen->id); ?>>
+                                            <?php echo esc_html($almacen->name); ?>
+                                        </option>
+                                    <?php endforeach;
+                                endif; ?>
+                            </select>
+                            <p class="description">
+                                <?php esc_html_e('De qué almacén se descontará el stock cuando se realice una venta.', 'gestion-almacenes'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- Configuración del Sistema -->
+                <h2><?php esc_html_e('Configuración del Sistema', 'gestion-almacenes'); ?></h2>
+                
+                <table class="form-table">
+                    <tr>
+                        <th scope="row">
+                            <label for="default_warehouse"><?php esc_html_e('Almacén por Defecto', 'gestion-almacenes'); ?></label>
+                        </th>
+                        <td>
+                            <select name="default_warehouse" id="default_warehouse">
+                                <option value=""><?php esc_html_e('Ninguno', 'gestion-almacenes'); ?></option>
+                                <?php if ($almacenes): ?>
+                                    <?php foreach ($almacenes as $almacen): ?>
+                                        <option value="<?php echo esc_attr($almacen->id); ?>" 
+                                                <?php selected($default_warehouse, $almacen->id); ?>>
+                                            <?php echo esc_html($almacen->name); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                            <p class="description">
+                                <?php esc_html_e('Almacén que se seleccionará automáticamente en los productos.', 'gestion-almacenes'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="low_stock_threshold"><?php esc_html_e('Umbral de Stock Bajo', 'gestion-almacenes'); ?></label>
+                        </th>
+                        <td>
+                            <input type="number" name="low_stock_threshold" id="low_stock_threshold" 
+                                value="<?php echo esc_attr($low_stock_threshold); ?>" min="1" class="small-text">
+                            <p class="description">
+                                <?php esc_html_e('Cantidad por debajo de la cual se considera stock bajo.', 'gestion-almacenes'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php esc_html_e('Selección Automática', 'gestion-almacenes'); ?></th>
+                        <td>
+                            <fieldset>
+                                <label>
+                                    <input type="checkbox" name="auto_select_warehouse" value="1" 
+                                        <?php checked($auto_select_warehouse, 1); ?>>
+                                    <?php esc_html_e('Seleccionar automáticamente el almacén con más stock disponible', 'gestion-almacenes'); ?>
+                                </label>
+                                <p class="description">
+                                    <?php esc_html_e('Si está activado, se seleccionará automáticamente el almacén con mayor stock disponible para el producto.', 'gestion-almacenes'); ?>
+                                </p>
+                            </fieldset>
+                        </td>
+                    </tr>
+                </table>
+                
+                <p class="submit">
+                    <input type="submit" name="save_settings" class="button-primary" 
+                        value="<?php esc_attr_e('Guardar Configuración', 'gestion-almacenes'); ?>">
+                </p>
+            </form>
+            
+            <!-- Información del Sistema -->
+            <h2><?php esc_html_e('Información del Sistema', 'gestion-almacenes'); ?></h2>
+            <table class="widefat">
+                <thead>
+                    <tr>
+                        <th><?php esc_html_e('Configuración', 'gestion-almacenes'); ?></th>
+                        <th><?php esc_html_e('Valor', 'gestion-almacenes'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><?php esc_html_e('Total de Almacenes', 'gestion-almacenes'); ?></td>
+                        <td><?php echo is_array($almacenes) ? count($almacenes) : 0; ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php esc_html_e('Productos con Stock Asignado', 'gestion-almacenes'); ?></td>
+                        <td><?php echo count($productos_unicos); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php esc_html_e('Productos con Stock Bajo', 'gestion-almacenes'); ?></td>
+                        <td><?php echo is_array($productos_stock_bajo) ? count($productos_stock_bajo) : 0; ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php esc_html_e('Versión del Plugin', 'gestion-almacenes'); ?></td>
+                        <td>1.0.0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <?php
     }
-    echo '<tr><td>' . esc_html(__('Productos con Stock Asignado', 'gestion-almacenes')) . '</td><td>' . count($productos_unicos) . '</td></tr>';
-    
-    $productos_stock_bajo = $gestion_almacenes_db->get_low_stock_products($low_stock_threshold);
-    echo '<tr><td>' . esc_html(__('Productos con Stock Bajo', 'gestion-almacenes')) . '</td><td>' . (is_array($productos_stock_bajo) ? count($productos_stock_bajo) : 0) . '</td></tr>';
-    
-    echo '<tr><td>' . esc_html(__('Versión del Plugin', 'gestion-almacenes')) . '</td><td>1.0.0</td></tr>';
-    //echo '<tr><td>' . esc_html(__('Versión de WordPress', 'gestion-almacenes')) . '</td><td>' . get_bloginfo('version') . '</td></tr>';
-    //echo '<tr><td>' . esc_html(__('Versión de WooCommerce', 'gestion-almacenes')) . '</td><td>' . (defined('WC_VERSION') ? WC_VERSION : 'No instalado') . '</td></tr>';
-    
-    echo '</tbody>';
-    echo '</table>';
-    
-    echo '</div>';
-}
 
 
 }

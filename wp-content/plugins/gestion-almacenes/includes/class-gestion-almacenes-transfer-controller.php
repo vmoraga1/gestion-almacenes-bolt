@@ -13,10 +13,10 @@ class Gestion_Almacenes_Transfer_Controller {
         $this->db = $gestion_almacenes_db;
         
         // Registrar hooks AJAX
-        add_action('wp_ajax_gab_create_transfer', array($this, 'ajax_create_transfer'));
-        add_action('wp_ajax_gab_get_transfer_list', array($this, 'ajax_get_transfer_list'));
         add_action('wp_ajax_gab_search_products_transfer', array($this, 'ajax_search_products'));
         add_action('wp_ajax_gab_get_warehouse_stock_transfer', array($this, 'ajax_get_warehouse_stock'));
+        add_action('wp_ajax_gab_create_transfer', array($this, 'ajax_create_transfer'));
+        add_action('wp_ajax_gab_get_transfer_list', array($this, 'ajax_get_transfer_list'));
         add_action('wp_ajax_gab_update_transfer', array($this, 'ajax_update_transfer'));
         add_action('wp_ajax_gab_delete_transfer', array($this, 'ajax_delete_transfer'));
         add_action('wp_ajax_gab_complete_transfer', [$this, 'ajax_complete_transfer']);
@@ -214,6 +214,10 @@ class Gestion_Almacenes_Transfer_Controller {
         $result = $this->create_transfer($data);
         
         if ($result['success']) {
+            // Agregar las URLs al resultado existente
+            $result['redirect_url'] = admin_url('admin.php?page=gab-stock-transfers');
+            $result['print_url'] = admin_url('admin.php?page=gab-print-transfer&transfer_id=' . $result['transfer_id']);
+            
             wp_send_json_success($result);
         } else {
             wp_send_json_error($result);
@@ -568,10 +572,37 @@ class Gestion_Almacenes_Transfer_Controller {
         }
 
     ?>
+
+        <?php
+        // Obtener información de la empresa
+        $company_name = get_option('gab_company_name', get_bloginfo('name'));
+        $company_rut = get_option('gab_company_rut', '');
+        $company_address = get_option('gab_company_address', '');
+        $company_phone = get_option('gab_company_phone', '');
+        $company_email = get_option('gab_company_email', '');
+        ?>
+
     <div class="wrap">
+        <!-- Encabezado de empresa (solo visible en impresión) -->
+        <div class="gab-company-header">
+            <h2><?php echo esc_html($company_name); ?></h2>
+            <?php if ($company_rut): ?>
+                <p><strong><?php esc_html_e('RUT:', 'gestion-almacenes'); ?></strong> <?php echo esc_html($company_rut); ?></p>
+            <?php endif; ?>
+            <?php if ($company_address): ?>
+                <p><?php echo nl2br(esc_html($company_address)); ?></p>
+            <?php endif; ?>
+            <?php if ($company_phone): ?>
+                <p><strong><?php esc_html_e('Teléfono:', 'gestion-almacenes'); ?></strong> <?php echo esc_html($company_phone); ?></p>
+            <?php endif; ?>
+            <?php if ($company_email): ?>
+                <p><strong><?php esc_html_e('Email:', 'gestion-almacenes'); ?></strong> <?php echo esc_html($company_email); ?></p>
+            <?php endif; ?>
+        </div>
+
         <h1>
             <?php esc_html_e('Detalles de Transferencia', 'gestion-almacenes'); ?>
-            <a href="<?php echo admin_url('admin.php?page=gab-stock-transfers'); ?>" class="page-title-action">
+            <a href="<?php echo admin_url('admin.php?page=gab-transfer-list'); ?>" class="page-title-action">
                 <?php esc_html_e('Volver al listado', 'gestion-almacenes'); ?>
             </a>
         </h1>
@@ -597,7 +628,8 @@ class Gestion_Almacenes_Transfer_Controller {
                         <th><?php esc_html_e('Almacén de Origen:', 'gestion-almacenes'); ?></th>
                         <td>
                             <?php 
-                            $source = $warehouses_by_id[$transfer->source_warehouse_id] ?? null;
+                            // Versión compatible con PHP 5.6+
+                            $source = isset($warehouses_by_id[$transfer->source_warehouse_id]) ? $warehouses_by_id[$transfer->source_warehouse_id] : null;
                             echo $source ? esc_html($source->name) : __('(Almacén eliminado)', 'gestion-almacenes');
                             ?>
                         </td>
@@ -606,7 +638,8 @@ class Gestion_Almacenes_Transfer_Controller {
                         <th><?php esc_html_e('Almacén de Destino:', 'gestion-almacenes'); ?></th>
                         <td>
                             <?php 
-                            $target = $warehouses_by_id[$transfer->target_warehouse_id] ?? null;
+                            // Versión compatible con PHP 5.6+
+                            $target = isset($warehouses_by_id[$transfer->target_warehouse_id]) ? $warehouses_by_id[$transfer->target_warehouse_id] : null;
                             echo $target ? esc_html($target->name) : __('(Almacén eliminado)', 'gestion-almacenes');
                             ?>
                         </td>
@@ -669,7 +702,8 @@ class Gestion_Almacenes_Transfer_Controller {
                         <tr>
                             <td>
                                 <?php 
-                                $product = $products_info[$item->product_id] ?? null;
+                                // Versión compatible con PHP 5.6+
+                                $product = isset($products_info[$item->product_id]) ? $products_info[$item->product_id] : null;
                                 if ($product) {
                                     echo esc_html($product->get_name());
                                 } else {
@@ -684,13 +718,13 @@ class Gestion_Almacenes_Transfer_Controller {
                             </td>
                             <td><?php echo esc_html($item->requested_qty); ?></td>
                             <?php if ($transfer->status === 'completed'): ?>
-                            <td><?php echo esc_html($item->transferred_qty ?? $item->requested_qty); ?></td>
+                            <td><?php echo esc_html(isset($item->transferred_qty) ? $item->transferred_qty : $item->requested_qty); ?></td>
                             <?php endif; ?>
                             <td>
                                 <?php 
                                 if ($product && $source) {
                                     $source_stock = $this->db->get_warehouse_stock($transfer->source_warehouse_id, $item->product_id);
-                                    echo esc_html($source_stock ?? 0);
+                                    echo esc_html($source_stock !== null ? $source_stock : 0);
                                 } else {
                                     echo '-';
                                 }
@@ -700,7 +734,7 @@ class Gestion_Almacenes_Transfer_Controller {
                                 <?php 
                                 if ($product && $target) {
                                     $target_stock = $this->db->get_warehouse_stock($transfer->target_warehouse_id, $item->product_id);
-                                    echo esc_html($target_stock ?? 0);
+                                    echo esc_html($target_stock !== null ? $target_stock : 0);
                                 } else {
                                     echo '-';
                                 }
@@ -716,7 +750,14 @@ class Gestion_Almacenes_Transfer_Controller {
             <div class="gab-card">
                 <h2><?php esc_html_e('Acciones', 'gestion-almacenes'); ?></h2>
                 <div class="gab-actions">
+                    <!-- Botón de imprimir siempre visible -->
+                    <button class="button" onclick="window.print()">
+                        <span class="dashicons dashicons-printer" style="vertical-align: middle;"></span>
+                        <?php esc_html_e('Imprimir', 'gestion-almacenes'); ?>
+                    </button>
+                    
                     <?php if (in_array(strtolower($transfer->status), ['pending', 'draft'])): ?>
+                        <!-- Botones solo para transferencias pendientes -->
                         <a href="<?php echo admin_url('admin.php?page=gab-edit-transfer&transfer_id=' . $transfer->id); ?>" 
                         class="button button-primary">
                             <?php esc_html_e('Editar Transferencia', 'gestion-almacenes'); ?>
@@ -728,105 +769,306 @@ class Gestion_Almacenes_Transfer_Controller {
                             <?php esc_html_e('Eliminar Transferencia', 'gestion-almacenes'); ?>
                         </button>
                     <?php elseif ($transfer->status === 'completed'): ?>
-                        <p class="description">
+                        <span class="description" style="margin-left: 10px;">
                             <?php esc_html_e('Esta transferencia ya ha sido completada y no puede ser modificada.', 'gestion-almacenes'); ?>
-                        </p>
+                        </span>
                     <?php else: ?>
-                        <p class="description">
+                        <span class="description" style="margin-left: 10px;">
                             <?php 
                             printf(
                                 esc_html__('Estado actual: %s', 'gestion-almacenes'), 
                                 esc_html($this->get_status_label($transfer->status))
                             ); 
                             ?>
-                        </p>
+                        </span>
                     <?php endif; ?>
                 </div>
             </div>
+
+            <!-- Área de firmas (solo visible en impresión) -->
+            <div class="gab-signatures">
+                <div class="gab-signature-box">
+                    <div class="gab-signature-line"></div>
+                    <div class="gab-signature-label">
+                        <?php esc_html_e('Entregado por', 'gestion-almacenes'); ?><br>
+                        <?php esc_html_e('Nombre y Firma', 'gestion-almacenes'); ?>
+                    </div>
+                </div>
+                <div class="gab-signature-box">
+                    <div class="gab-signature-line"></div>
+                    <div class="gab-signature-label">
+                        <?php esc_html_e('Recibido por', 'gestion-almacenes'); ?><br>
+                        <?php esc_html_e('Nombre y Firma', 'gestion-almacenes'); ?>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pie de página para impresión -->
+            <div class="gab-print-footer">
+                <p><?php printf(
+                    __('Documento generado el %s a las %s', 'gestion-almacenes'),
+                    wp_date(get_option('date_format')),
+                    wp_date(get_option('time_format'))
+                ); ?></p>
+            </div>
         </div>
 
-        <!-- Estilos CSS -->
-        <style>
-        .gab-transfer-view {
-            max-width: 1200px;
-            margin-top: 20px;
-        }
-        
-        .gab-card {
-            background: #fff;
-            border: 1px solid #ccd0d4;
-            box-shadow: 0 1px 1px rgba(0,0,0,.04);
-            margin-bottom: 20px;
-            padding: 20px;
-        }
-        
-        .gab-card h2 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .gab-info-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .gab-info-table th {
-            text-align: left;
-            padding: 10px;
-            width: 200px;
-            font-weight: 600;
-            vertical-align: top;
-        }
-        
-        .gab-info-table td {
-            padding: 10px;
-        }
-        
-        .gab-status {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 3px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        
-        .gab-status-draft {
-            background: #6c757d;
-            color: #fff;
-        }
+<style>
+/* Estilos generales */
+.gab-transfer-view {
+    max-width: 1200px;
+    margin-top: 20px;
+}
 
-        .gab-status-pending {
-            background: #f0ad4e;
-            color: #fff;
-        }
-        
-        .gab-status-completed {
-            background: #5cb85c;
-            color: #fff;
-        }
-        
-        .gab-status-cancelled {
-            background: #d9534f;
-            color: #fff;
-        }
-        
-        .gab-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .gab-actions .button-link-delete {
-            color: #d63638;
-        }
-        
-        .gab-actions .button-link-delete:hover {
-            color: #b32d2e;
-        }
-        </style>
+.gab-card {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.gab-card h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.gab-info-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.gab-info-table th {
+    text-align: left;
+    padding: 10px;
+    width: 200px;
+    font-weight: 600;
+    vertical-align: top;
+}
+
+.gab-info-table td {
+    padding: 10px;
+}
+
+.gab-status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.gab-status-pending,
+.gab-status-draft {
+    background: #f0ad4e;
+    color: #fff;
+}
+
+.gab-status-completed {
+    background: #5cb85c;
+    color: #fff;
+}
+
+.gab-status-cancelled {
+    background: #d9534f;
+    color: #fff;
+}
+
+.gab-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.gab-actions .button-link-delete {
+    color: #d63638;
+}
+
+.gab-actions .button-link-delete:hover {
+    color: #b32d2e;
+}
+
+/* Información de empresa para impresión */
+.gab-company-header {
+    display: none;
+}
+
+/* Fuera del @media print, para mostrar solo en impresión */
+.gab-signatures,
+.gab-print-footer {
+    display: none;
+}
+
+/* Estilos para impresión */
+@media print {
+    @page {
+        size: letter;
+        margin: 15mm;
+    }
+    
+    body {
+        background: white;
+        font-size: 11pt;
+        margin: 0;
+        padding: 0;
+    }
+    
+    /* Ocultar elementos de WordPress */
+    #adminmenumain,
+    #adminmenuback,
+    #adminmenuwrap,
+    #wpadminbar,
+    #screen-meta,
+    #screen-meta-links,
+    #wpfooter,
+    .notice,
+    .no-print,
+    .gab-actions button,
+    .gab-actions a {
+        display: none !important;
+    }
+    
+    #wpcontent {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+    }
+    
+    .wrap {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    h1 {
+        font-size: 20pt;
+        margin-bottom: 10px;
+    }
+    
+    .page-title-action {
+        display: none !important;
+    }
+    
+    /* Mostrar información de empresa */
+    .gab-company-header {
+        display: block;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #000;
+    }
+    
+    .gab-company-header h2 {
+        font-size: 18pt;
+        margin: 0 0 10px 0;
+    }
+    
+    .gab-company-header p {
+        margin: 3px 0;
+        font-size: 10pt;
+    }
+    
+    /* Ajustar diseño de tarjetas */
+    .gab-card {
+        border: none;
+        box-shadow: none;
+        padding: 15px 0;
+        margin-bottom: 15px;
+        page-break-inside: avoid;
+    }
+    
+    .gab-card h2 {
+        font-size: 14pt;
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #000;
+    }
+    
+    /* Tabla de información */
+    .gab-info-table th {
+        width: 150px;
+        padding: 5px;
+        font-size: 10pt;
+    }
+    
+    .gab-info-table td {
+        padding: 5px;
+        font-size: 10pt;
+    }
+    
+    /* Estados */
+    .gab-status {
+        background: none !important;
+        color: #000 !important;
+        border: 1px solid #000;
+        padding: 2px 5px !important;
+    }
+    
+    /* Tabla de productos */
+    .wp-list-table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 10pt;
+    }
+    
+    .wp-list-table th,
+    .wp-list-table td {
+        border: 1px solid #000 !important;
+        padding: 5px !important;
+    }
+    
+    .wp-list-table th {
+        background-color: #f0f0f0 !important;
+        font-weight: bold;
+    }
+    
+    .wp-list-table tr:nth-child(even) {
+        background-color: transparent !important;
+    }
+    
+    /* Área de firmas */
+    .gab-signatures {
+        margin-top: 50px;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .gab-signature-box {
+        width: 45%;
+        text-align: center;
+    }
+    
+    .gab-signature-line {
+        border-bottom: 1px solid #000;
+        height: 40px;
+        margin-bottom: 5px;
+    }
+    
+    .gab-signature-label {
+        font-size: 10pt;
+    }
+
+    /* Mostrar firmas y pie de página en impresión */
+    .gab-signatures,
+    .gab-print-footer {
+        display: block !important;
+    }
+    
+    .gab-signatures {
+        margin-top: 50px;
+        display: flex !important;
+        justify-content: space-between;
+    }
+    
+    /* Pie de página */
+    .gab-print-footer {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 9pt;
+        color: #666;
+    }
+}
+</style>
 
         <!-- JavaScript para las acciones -->
         <script type="text/javascript">
@@ -851,7 +1093,16 @@ class Gestion_Almacenes_Transfer_Controller {
                     success: function(response) {
                         if (response.success) {
                             alert(response.data.message);
-                            location.reload();
+                            
+                            // Preguntar si desea imprimir el comprobante
+                            if (confirm('<?php esc_html_e("¿Desea imprimir el comprobante de transferencia completada?", "gestion-almacenes"); ?>')) {
+                                window.print();
+                            }
+                            
+                            // Recargar la página después de un momento
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1000);
                         } else {
                             alert(response.data.message);
                             $button.prop('disabled', false).text('<?php esc_html_e('Completar Transferencia', 'gestion-almacenes'); ?>');
@@ -1001,13 +1252,465 @@ class Gestion_Almacenes_Transfer_Controller {
             
             $wpdb->query('COMMIT');
             
-            wp_send_json_success(['message' => __('Transferencia completada exitosamente.', 'gestion-almacenes')]);
+            wp_send_json_success([
+                'message' => __('Transferencia completada exitosamente.', 'gestion-almacenes'),
+                'print_url' => admin_url('admin.php?page=gab-print-transfer&transfer_id=' . $transfer_id)
+            ]);
             
         } catch (Exception $e) {
             $wpdb->query('ROLLBACK');
             error_log('[GESTION ALMACENES] Error al completar transferencia: ' . $e->getMessage());
             wp_send_json_error(['message' => __('Error al procesar la transferencia. Por favor, intenta nuevamente.', 'gestion-almacenes')]);
         }
+    }
+
+    // Configuración de impresión para transferencias
+    public function render_print_transfer_page() {
+        // Salir inmediatamente del contexto de WordPress admin
+        ob_start();
+        
+        // Verificar permisos básicos
+        if (!current_user_can('manage_options')) {
+            die('Sin permisos');
+        }
+
+        // Obtener ID de la transferencia
+        $transfer_id = isset($_GET['transfer_id']) ? intval($_GET['transfer_id']) : 0;
+        
+        if (!$transfer_id) {
+            die('ID inválido');
+        }
+
+        // Limpiar cualquier output anterior
+        ob_end_clean();
+        
+        // Comenzar output limpio
+        header('Content-Type: text/html; charset=utf-8');
+
+        // Obtener datos de la transferencia
+        $transfer = $this->db->get_transfer($transfer_id);
+        
+        if (!$transfer) {
+            wp_die(__('Transferencia no encontrada.', 'gestion-almacenes'));
+        }
+
+        // Obtener almacenes
+        $warehouses = $this->db->get_warehouses();
+        $warehouses_by_id = [];
+        foreach ($warehouses as $warehouse) {
+            $warehouses_by_id[$warehouse->id] = $warehouse;
+        }
+
+        // Obtener información de productos
+        $products_info = [];
+        if (!empty($transfer->items)) {
+            foreach ($transfer->items as $item) {
+                $product = wc_get_product($item->product_id);
+                if ($product) {
+                    $products_info[$item->product_id] = $product;
+                }
+            }
+        }
+
+        // Información de la empresa (obtener de las opciones guardadas)
+        $company_info = [
+            'name' => get_option('gab_company_name', get_bloginfo('name')),
+            'rut' => get_option('gab_company_rut', ''),
+            'address' => get_option('gab_company_address', ''),
+            'phone' => get_option('gab_company_phone', ''),
+            'email' => get_option('gab_company_email', get_bloginfo('admin_email'))
+        ];
+
+        ?>
+        <!DOCTYPE html>
+        <html <?php language_attributes(); ?>>
+        <head>
+            <meta charset="<?php bloginfo('charset'); ?>">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title><?php printf(__('Transferencia #%d', 'gestion-almacenes'), $transfer->id); ?></title>
+            <style>
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }
+                
+                body {
+                    font-family: Arial, sans-serif;
+                    font-size: 14px;
+                    line-height: 1.5;
+                    color: #333;
+                    background: #fff;
+                }
+                
+                .print-container {
+                    max-width: 800px;
+                    margin: 0 auto;
+                    padding: 20px;
+                }
+                
+                .header {
+                    border-bottom: 2px solid #333;
+                    padding-bottom: 20px;
+                    margin-bottom: 20px;
+                }
+                
+                .company-info {
+                    margin-bottom: 20px;
+                }
+                
+                .company-name {
+                    font-size: 24px;
+                    font-weight: bold;
+                    margin-bottom: 5px;
+                }
+                
+                .transfer-title {
+                    font-size: 20px;
+                    font-weight: bold;
+                    text-align: center;
+                    margin: 20px 0;
+                    text-transform: uppercase;
+                }
+                
+                .info-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 20px;
+                    margin-bottom: 30px;
+                }
+                
+                .info-section {
+                    border: 1px solid #ddd;
+                    padding: 15px;
+                    border-radius: 5px;
+                }
+                
+                .info-section h3 {
+                    font-size: 16px;
+                    margin-bottom: 10px;
+                    color: #555;
+                    border-bottom: 1px solid #eee;
+                    padding-bottom: 5px;
+                }
+                
+                .info-row {
+                    margin-bottom: 5px;
+                }
+                
+                .info-label {
+                    font-weight: bold;
+                    display: inline-block;
+                    min-width: 120px;
+                }
+                
+                .products-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 30px;
+                }
+                
+                .products-table th,
+                .products-table td {
+                    border: 1px solid #ddd;
+                    padding: 10px;
+                    text-align: left;
+                }
+                
+                .products-table th {
+                    background-color: #f5f5f5;
+                    font-weight: bold;
+                }
+                
+                .products-table tr:nth-child(even) {
+                    background-color: #f9f9f9;
+                }
+                
+                .text-center {
+                    text-align: center;
+                }
+                
+                .text-right {
+                    text-align: right;
+                }
+                
+                .status-badge {
+                    display: inline-block;
+                    padding: 5px 10px;
+                    border-radius: 3px;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    font-size: 12px;
+                }
+                
+                .status-draft {
+                    background: #6c757d;
+                    color: #fff;
+                }
+                
+                .status-pending {
+                    background: #f0ad4e;
+                    color: #fff;
+                }
+                
+                .status-completed {
+                    background: #5cb85c;
+                    color: #fff;
+                }
+                
+                .notes-section {
+                    margin-top: 30px;
+                    padding: 15px;
+                    border: 1px solid #ddd;
+                    border-radius: 5px;
+                    background-color: #f9f9f9;
+                }
+                
+                .signatures {
+                    margin-top: 50px;
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 50px;
+                }
+                
+                .signature-box {
+                    text-align: center;
+                }
+                
+                .signature-line {
+                    border-bottom: 1px solid #333;
+                    margin-bottom: 5px;
+                    height: 40px;
+                }
+                
+                .signature-label {
+                    font-size: 12px;
+                    color: #666;
+                }
+                
+                .footer {
+                    margin-top: 50px;
+                    text-align: center;
+                    font-size: 12px;
+                    color: #666;
+                }
+                
+                @media print {
+                    body {
+                        margin: 0;
+                    }
+                    
+                    .print-container {
+                        max-width: 100%;
+                        padding: 0;
+                    }
+                    
+                    .no-print {
+                        display: none !important;
+                    }
+                    
+                    .signatures {
+                        page-break-inside: avoid;
+                    }
+                }
+                
+                .print-actions {
+                    margin-bottom: 20px;
+                    text-align: center;
+                }
+                
+                .print-actions button {
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    cursor: pointer;
+                    margin: 0 5px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="print-actions no-print">
+                <button onclick="window.print()" class="button button-primary">
+                    <?php esc_html_e('Imprimir', 'gestion-almacenes'); ?>
+                </button>
+                <button onclick="window.close()" class="button">
+                    <?php esc_html_e('Cerrar', 'gestion-almacenes'); ?>
+                </button>
+            </div>
+            
+            <div class="print-container">
+                <!-- Encabezado -->
+                <div class="header">
+                    <div class="company-info">
+                        <div class="company-name"><?php echo esc_html($company_info['name']); ?></div>
+                        <?php if ($company_info['rut']): ?>
+                            <div><strong><?php esc_html_e('RUT:', 'gestion-almacenes'); ?></strong> <?php echo esc_html($company_info['rut']); ?></div>
+                        <?php endif; ?>
+                        <?php if ($company_info['address']): ?>
+                            <div><?php echo nl2br(esc_html($company_info['address'])); ?></div>
+                        <?php endif; ?>
+                        <?php if ($company_info['phone']): ?>
+                            <div><strong><?php esc_html_e('Teléfono:', 'gestion-almacenes'); ?></strong> <?php echo esc_html($company_info['phone']); ?></div>
+                        <?php endif; ?>
+                        <?php if ($company_info['email']): ?>
+                            <div><strong><?php esc_html_e('Email:', 'gestion-almacenes'); ?></strong> <?php echo esc_html($company_info['email']); ?></div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                
+                <!-- Título -->
+                <h1 class="transfer-title">
+                    <?php 
+                    if (strtolower($transfer->status) === 'completed') {
+                        esc_html_e('Comprobante de Transferencia de Stock', 'gestion-almacenes');
+                    } else {
+                        esc_html_e('Orden de Transferencia de Stock', 'gestion-almacenes');
+                    }
+                    ?>
+                </h1>
+                
+                <!-- Información de la transferencia -->
+                <div class="info-grid">
+                    <div class="info-section">
+                        <h3><?php esc_html_e('Información de la Transferencia', 'gestion-almacenes'); ?></h3>
+                        <div class="info-row">
+                            <span class="info-label"><?php esc_html_e('Número:', 'gestion-almacenes'); ?></span>
+                            #<?php echo esc_html(str_pad($transfer->id, 5, '0', STR_PAD_LEFT)); ?>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label"><?php esc_html_e('Fecha:', 'gestion-almacenes'); ?></span>
+                            <?php echo esc_html(wp_date(get_option('date_format'), strtotime($transfer->created_at))); ?>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label"><?php esc_html_e('Estado:', 'gestion-almacenes'); ?></span>
+                            <span class="status-badge status-<?php echo esc_attr(strtolower($transfer->status)); ?>">
+                                <?php echo esc_html($this->get_status_label($transfer->status)); ?>
+                            </span>
+                        </div>
+                        <?php if ($transfer->status === 'completed' && $transfer->completed_at): ?>
+                        <div class="info-row">
+                            <span class="info-label"><?php esc_html_e('Completado:', 'gestion-almacenes'); ?></span>
+                            <?php echo esc_html(wp_date(get_option('date_format'), strtotime($transfer->completed_at))); ?>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    
+                    <div class="info-section">
+                        <h3><?php esc_html_e('Almacenes', 'gestion-almacenes'); ?></h3>
+                        <div class="info-row">
+                            <span class="info-label"><?php esc_html_e('Origen:', 'gestion-almacenes'); ?></span>
+                            <?php 
+                            $source = $warehouses_by_id[$transfer->source_warehouse_id] ?? null;
+                            echo $source ? esc_html($source->name) : __('(Almacén eliminado)', 'gestion-almacenes');
+                            ?>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label"><?php esc_html_e('Destino:', 'gestion-almacenes'); ?></span>
+                            <?php 
+                            $target = $warehouses_by_id[$transfer->target_warehouse_id] ?? null;
+                            echo $target ? esc_html($target->name) : __('(Almacén eliminado)', 'gestion-almacenes');
+                            ?>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label"><?php esc_html_e('Creado por:', 'gestion-almacenes'); ?></span>
+                            <?php 
+                            $user = get_user_by('id', $transfer->created_by);
+                            echo $user ? esc_html($user->display_name) : __('Usuario desconocido', 'gestion-almacenes');
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tabla de productos -->
+                <h3><?php esc_html_e('Detalle de Productos', 'gestion-almacenes'); ?></h3>
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th><?php esc_html_e('Código', 'gestion-almacenes'); ?></th>
+                            <th><?php esc_html_e('Producto', 'gestion-almacenes'); ?></th>
+                            <th class="text-center"><?php esc_html_e('Cantidad Solicitada', 'gestion-almacenes'); ?></th>
+                            <?php if ($transfer->status === 'completed'): ?>
+                            <th class="text-center"><?php esc_html_e('Cantidad Transferida', 'gestion-almacenes'); ?></th>
+                            <?php endif; ?>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        $total_items = 0;
+                        $total_transferred = 0;
+                        foreach ($transfer->items as $item): 
+                            $product = $products_info[$item->product_id] ?? null;
+                            $total_items += $item->requested_qty;
+                            if ($transfer->status === 'completed') {
+                                $total_transferred += ($item->transferred_qty ?? $item->requested_qty);
+                            }
+                        ?>
+                        <tr>
+                            <td><?php echo $product ? esc_html($product->get_sku()) : '-'; ?></td>
+                            <td>
+                                <?php 
+                                if ($product) {
+                                    echo esc_html($product->get_name());
+                                } else {
+                                    echo __('(Producto eliminado)', 'gestion-almacenes');
+                                }
+                                ?>
+                            </td>
+                            <td class="text-center"><?php echo esc_html($item->requested_qty); ?></td>
+                            <?php if ($transfer->status === 'completed'): ?>
+                            <td class="text-center"><?php echo esc_html($item->transferred_qty ?? $item->requested_qty); ?></td>
+                            <?php endif; ?>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="2" class="text-right"><?php esc_html_e('Total:', 'gestion-almacenes'); ?></th>
+                            <th class="text-center"><?php echo esc_html($total_items); ?></th>
+                            <?php if ($transfer->status === 'completed'): ?>
+                            <th class="text-center"><?php echo esc_html($total_transferred); ?></th>
+                            <?php endif; ?>
+                        </tr>
+                    </tfoot>
+                </table>
+                
+                <!-- Notas -->
+                <?php if (!empty($transfer->notes)): ?>
+                <div class="notes-section">
+                    <h3><?php esc_html_e('Notas:', 'gestion-almacenes'); ?></h3>
+                    <p><?php echo esc_html($transfer->notes); ?></p>
+                </div>
+                <?php endif; ?>
+                
+                <!-- Firmas -->
+                <div class="signatures">
+                    <div class="signature-box">
+                        <div class="signature-line"></div>
+                        <div class="signature-label">
+                            <?php esc_html_e('Entregado por', 'gestion-almacenes'); ?><br>
+                            <?php esc_html_e('(Nombre y Firma)', 'gestion-almacenes'); ?>
+                        </div>
+                    </div>
+                    <div class="signature-box">
+                        <div class="signature-line"></div>
+                        <div class="signature-label">
+                            <?php esc_html_e('Recibido por', 'gestion-almacenes'); ?><br>
+                            <?php esc_html_e('(Nombre y Firma)', 'gestion-almacenes'); ?>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pie de página -->
+                <div class="footer">
+                    <p><?php printf(__('Documento generado el %s a las %s', 'gestion-almacenes'), 
+                        wp_date(get_option('date_format')), 
+                        wp_date(get_option('time_format'))
+                    ); ?></p>
+                </div>
+            </div>
+        </body>
+        </html>
+        <?php
+        die(); // Usar die() en lugar de exit para mayor compatibilidad
     }
 
 }

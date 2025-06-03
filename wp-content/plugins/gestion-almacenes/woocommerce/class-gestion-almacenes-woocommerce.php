@@ -30,6 +30,11 @@ class Gestion_Almacenes_WooCommerce {
 
     // Función existente - mantener
     public function agregar_campos_almacen_producto() {
+        // Si el control de stock está activado, no mostrar esta tabla
+        if (get_option('gab_manage_wc_stock', 'yes') === 'yes') {
+            return; // No mostrar
+        }
+
         global $post;
         global $gestion_almacenes_db;
 
@@ -67,7 +72,7 @@ class Gestion_Almacenes_WooCommerce {
         echo '</div>';
     }
 
-    // Función existente - mantener
+    // Guardar campos almacén
     public function guardar_campos_almacen_producto($post_id) {
         global $gestion_almacenes_db;
 
