@@ -505,7 +505,170 @@ class Gestion_Almacenes_DB {
         return $stock !== null ? intval($stock) : 0;
     }
 
-    
+    /**
+     * Obtener todos los productos de WooCommerce con su información de stock en almacenes
+     * Incluye productos sin stock asignado
+     */
+    public function get_all_wc_products_with_warehouse_stock($warehouse_id = null) {
+        global $wpdb;
+        
+        // Obtener todos los productos de WooCommerce (simples y variables)
+        $products_query = "
+            SELECT DISTINCT 
+                p.ID as product_id,
+                p.post_title as product_name,
+                pm_sku.meta_value as sku,
+                pm_stock.meta_value as wc_stock,
+                pm_manage.meta_value as manage_stock,
+                p.post_status,
+                p.post_type
+            FROM {$wpdb->posts} p
+            LEFT JOIN {$wpdb->postmeta} pm_sku ON p.ID = pm_sku.post_id AND pm_sku.meta_key = '_sku'
+            LEFT JOIN {$wpdb->postmeta} pm_stock ON p.ID = pm_stock.post_id AND pm_stock.meta_key = '_stock'
+            LEFT JOIN {$wpdb->postmeta} pm_manage ON p.ID = pm_manage.post_id AND pm_manage.meta_key = '_manage_stock'
+            WHERE p.post_type IN ('product', 'product_variation')
+            AND p.post_status = 'publish'
+            ORDER BY p.post_title ASC
+        ";
+        
+        $all_products = $wpdb->get_results($products_query);
+        
+        // Tabla de stock de almacenes
+        $stock_table = $wpdb->prefix . 'gab_warehouse_product_stock';
+        
+        // Para cada producto, obtener su stock en almacenes
+        foreach ($all_products as &$product) {
+            // Inicializar array de stock por almacén
+            $product->warehouse_stock = array();
+            $product->total_warehouse_stock = 0;
+            
+            // Consultar stock en almacenes
+            $where_clause = "product_id = %d";
+            $params = array($product->product_id);
+            
+            if ($warehouse_id) {
+                $where_clause .= " AND warehouse_id = %d";
+                $params[] = $warehouse_id;
+            }
+            
+            $stock_query = $wpdb->prepare(
+                "SELECT warehouse_id, stock 
+                FROM $stock_table 
+                WHERE $where_clause",
+                $params
+            );
+            
+            $warehouse_stocks = $wpdb->get_results($stock_query);
+            
+            // Llenar información de stock
+            foreach ($warehouse_stocks as $ws) {
+                $product->warehouse_stock[$ws->warehouse_id] = intval($ws->stock);
+                $product->total_warehouse_stock += intval($ws->stock);
+            }
+            
+            // Manejar valores nulos
+            $product->wc_stock = $product->wc_stock !== null ? intval($product->wc_stock) : 0;
+            $product->manage_stock = $product->manage_stock === 'yes';
+            
+            // Para variaciones, obtener el nombre del producto padre
+            if ($product->post_type === 'product_variation') {
+                $parent_id = wp_get_post_parent_id($product->product_id);
+                if ($parent_id) {
+                    $parent_title = get_the_title($parent_id);
+                    
+                    // Obtener atributos de la variación
+                    $variation = wc_get_product($product->product_id);
+                    if ($variation) {
+                        $attributes = $variation->get_variation_attributes();
+                        $attr_string = implode(', ', $attributes);
+                        $product->product_name = $parent_title . ' - ' . $attr_string;
+                    }
+                }
+            }
+        }
+        
+        return $all_products;
+    }
+
+    /**
+     * Obtener productos para select/dropdown incluyendo los que no tienen stock
+     */
+    public function get_products_for_dropdown() {
+        global $wpdb;
+        
+        $query = "
+            SELECT DISTINCT
+                p.ID as id,
+                p.post_title as name,
+                pm_sku.meta_value as sku,
+                p.post_type
+            FROM {$wpdb->posts} p
+            LEFT JOIN {$wpdb->postmeta} pm_sku ON p.ID = pm_sku.post_id AND pm_sku.meta_key = '_sku'
+            WHERE p.post_type IN ('product', 'product_variation')
+            AND p.post_status = 'publish'
+            ORDER BY p.post_title ASC
+        ";
+        
+        $products = $wpdb->get_results($query);
+        
+        // Mejorar nombres de variaciones
+        foreach ($products as &$product) {
+            if ($product->post_type === 'product_variation') {
+                $parent_id = wp_get_post_parent_id($product->id);
+                if ($parent_id) {
+                    $parent_title = get_the_title($parent_id);
+                    $variation = wc_get_product($product->id);
+                    if ($variation) {
+                        $attributes = $variation->get_variation_attributes();
+                        $attr_string = implode(', ', $attributes);
+                        $product->name = $parent_title . ' - ' . $attr_string;
+                    }
+                }
+            }
+            
+            // Agregar SKU al nombre si existe
+            if (!empty($product->sku)) {
+                $product->display_name = $product->name . ' (SKU: ' . $product->sku . ')';
+            } else {
+                $product->display_name = $product->name;
+            }
+        }
+        
+        return $products;
+    }
+
+    /**
+     * Inicializar stock de almacén para un producto
+     * Crea registro con stock 0 si no existe
+     */
+    public function initialize_product_warehouse_stock($product_id, $warehouse_id, $stock = 0) {
+        global $wpdb;
+        $table = $wpdb->prefix . 'gab_warehouse_product_stock';
+        
+        // Verificar si ya existe
+        $exists = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM $table WHERE product_id = %d AND warehouse_id = %d",
+            $product_id,
+            $warehouse_id
+        ));
+        
+        if (!$exists) {
+            // Crear registro con stock inicial
+            $result = $wpdb->insert(
+                $table,
+                array(
+                    'product_id' => $product_id,
+                    'warehouse_id' => $warehouse_id,
+                    'stock' => $stock
+                ),
+                array('%d', '%d', '%d')
+            );
+            
+            return $result !== false;
+        }
+        
+        return true;
+    }
 
     /**
      * Obtiene todos los productos con su stock por almacén

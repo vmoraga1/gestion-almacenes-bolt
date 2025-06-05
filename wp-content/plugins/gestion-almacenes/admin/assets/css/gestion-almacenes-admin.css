@@ -682,3 +682,34 @@
         margin: 2% auto;
     }
 }
+
+/* Badge para productos sin asignar */
+.gab-badge.stock-unassigned {
+    background-color: #2271b1;
+    color: #fff;
+}
+
+/* Ajustar el contenedor de checkboxes para mejor visualización */
+.filter-checkbox-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.filter-checkbox-container label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.filter-checkbox-container input[type="checkbox"] {
+    margin: 0;
+}
+
+/* Mejorar la visualización de las estadísticas */
+.gab-stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
