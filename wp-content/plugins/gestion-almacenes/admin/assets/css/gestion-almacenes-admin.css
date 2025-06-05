@@ -477,3 +477,208 @@
         max-height: 120px;
     }
 }
+
+/* Modal mejorado */
+.gab-modal {
+    display: none;
+    position: fixed;
+    z-index: 999999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.gab-modal-content {
+    background-color: #fff;
+    margin: 30px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    width: 90%;
+    max-width: 700px;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.gab-modal-header {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gab-modal-header h2 {
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #23282d;
+}
+
+/* Botón de agregar nuevo */
+#add-warehouse-btn {
+    font-size: 14px;
+    padding: 8px 16px;
+    height: auto;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Botón de agregar nuevo */
+#btn-ver-reporte-de-stock {
+    font-size: 14px;
+    padding: 8px 16px;
+    height: auto;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Botón de agregar nuevo */
+#btn-transferir-stock {
+    font-size: 14px;
+    padding: 8px 16px;
+    height: auto;
+    display: inline-flex;
+    align-items: center;
+}
+
+#add-warehouse-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Campos requeridos */
+.gab-form-group label:after {
+    content: '';
+}
+
+.gab-form-group input[required] + label:after,
+.gab-form-group label:has(+ input[required]):after {
+    content: ' *';
+    color: #d63638;
+}
+
+/* Placeholder para teléfono */
+#warehouse_phone::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+/* Estados de validación */
+.gab-form-group input:invalid {
+    border-color: #d63638;
+}
+
+.gab-form-group input:valid {
+    border-color: #00a32a;
+}
+
+/* Responsive mejorado */
+@media screen and (max-width: 600px) {
+    .gab-modal-content {
+        margin: 10px;
+        width: calc(100% - 20px);
+    }
+    
+    .gab-form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .gab-form-group[style*="grid-column"] {
+        grid-column: 1 !important;
+    }
+}
+
+/* Form Styles */
+#edit-warehouse-form {
+    padding: 20px;
+}
+
+.gab-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.gab-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.gab-form-group label {
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #333;
+}
+
+.gab-form-group input,
+.gab-form-group select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.gab-form-group input:focus,
+.gab-form-group select:focus {
+    outline: none;
+    border-color: #0073aa;
+    box-shadow: 0 0 0 1px #0073aa;
+}
+
+.gab-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.gab-cancel-btn {
+    background: #f7f7f7;
+    border-color: #ccc;
+    color: #555;
+}
+
+.gab-cancel-btn:hover {
+    background: #fafafa;
+    border-color: #999;
+    color: #23282d;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .gab-form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .gab-modal-content {
+        width: 95%;
+        margin: 2% auto;
+    }
+}

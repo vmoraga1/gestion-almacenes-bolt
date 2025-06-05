@@ -43,6 +43,9 @@ class Gestion_Almacenes_Stock_Sync_Manager {
         // Hook para sincronizar al cargar el producto
         add_action('woocommerce_product_object_updated_props', [$this, 'sync_on_product_load'], 10, 2);
         add_action('woocommerce_admin_process_product_object', [$this, 'force_sync_stock']);
+
+        // CSS para columna Productos de la página woocommerce
+        add_action('admin_head', [$this, 'admin_custom_column_styles']);
     }
     
     /**
@@ -94,7 +97,7 @@ class Gestion_Almacenes_Stock_Sync_Manager {
                 }
             </style>
 
-            // Condicional ocultar tabla primaria
+            <!-- Condicional ocultar tabla primaria -->
             <?php if (get_option('gab_manage_wc_stock', 'yes') === 'yes'): ?>
             <style>
                 /* Ocultar la tabla antigua de stock por almacén */
@@ -486,48 +489,68 @@ class Gestion_Almacenes_Stock_Sync_Manager {
      */
     public function add_total_stock_column($columns) {
         $new_columns = [];
-        
+
         foreach ($columns as $key => $value) {
             $new_columns[$key] = $value;
-            
-            // Agregar después de la columna de stock
+
             if ($key === 'is_in_stock') {
                 $new_columns['gab_total_stock'] = __('Stock Total<br>(Almacenes)', 'gestion-almacenes');
             }
         }
-        
+
+        // Inyectar CSS para esta columna
+        add_action('admin_head', [$this, 'admin_custom_column_styles']);
+
         return $new_columns;
     }
-    
-    /**
-     * Mostrar el stock total en la columna
-     */
+
     public function display_total_stock_column($column, $post_id) {
         if ($column === 'gab_total_stock') {
             $product = wc_get_product($post_id);
-            
+
             if ($product && $product->get_manage_stock()) {
                 $total_stock = $this->get_total_warehouse_stock($post_id);
-                
+
                 echo '<span style="font-weight: bold;">' . esc_html($total_stock) . '</span>';
-                
-                // Mostrar desglose
+
                 $warehouses = $this->db->get_warehouses();
                 $breakdown = [];
-                
+
                 foreach ($warehouses as $warehouse) {
                     $stock = $this->db->get_warehouse_stock($warehouse->id, $post_id);
                     if ($stock > 0) {
                         $breakdown[] = esc_html($warehouse->name) . ': ' . $stock;
                     }
                 }
-                
+
                 if (!empty($breakdown)) {
                     echo '<br><small style="color: #666;">' . implode('<br>', $breakdown) . '</small>';
                 }
             } else {
                 echo '—';
             }
+        }
+    }
+
+    public function admin_custom_column_styles() {
+        $screen = get_current_screen();
+        if ($screen && $screen->id === 'edit-product') {
+            echo '<style>
+                .wp-list-table.widefat {
+                    table-layout: auto !important;
+                    overflow-x: auto;
+                    display: block;
+                }
+
+                .wp-list-table th.column-gab_total_stock,
+                .wp-list-table td.column-gab_total_stock {
+                    min-width: 120px;
+                    max-width: 160px;
+                    text-align: left;
+                    white-space: normal;
+                    word-wrap: break-word;
+                }
+            </style>';
         }
     }
     

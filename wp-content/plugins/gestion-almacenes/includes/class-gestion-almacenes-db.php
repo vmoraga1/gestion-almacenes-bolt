@@ -30,7 +30,7 @@ class Gestion_Almacenes_DB {
         // *** CORRECCIÓN AQUÍ: Usar $table_name_warehouses en lugar de $table_name ***
         if ($wpdb->get_var("SHOW TABLES LIKE '$table_name_warehouses'") != $table_name_warehouses) {
             error_log('[DEBUG GESTION ALMACENES DB] Intentando crear tabla de almacenes...');
-            // *** CORRECCIÓN AQUÍ: Usar $table_name_warehouses en lugar de $table_name en la consulta SQL ***
+
             $sql_warehouses = "CREATE TABLE $table_name_warehouses (
                 id mediumint(9) NOT NULL AUTO_INCREMENT,
                 name tinytext NOT NULL,

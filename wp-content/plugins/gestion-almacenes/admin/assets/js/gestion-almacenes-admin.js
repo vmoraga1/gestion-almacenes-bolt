@@ -223,9 +223,264 @@ jQuery(document).ready(function ($) {
         $('.notice.is-dismissible').fadeOut();
     }, 5000);
 
-    // Cuando construyas el array products, asegúrate de que tenga esta estructura:
-var products = [];
+    // al construir el array products, asegurarse de que tenga esta estructura:
+    //var products = [];
 
+    /**
+     * Funciones para el Modal de Crear/Editar Almacén
+     */
+    console.log('Inicializando modal de almacén');
 
+    // Variables del modal
+    var modal = $('#warehouse-modal');
+    var closeBtn = $('.gab-modal-close');
+    var cancelBtn = $('.gab-cancel-btn');
+    var warehouseForm = $('#warehouse-form');
+    var modalTitle = $('#modal-title');
+    var submitBtn = $('#submit-btn');
+    var formAction = $('#form_action');
+
+    // Verificar que el modal existe
+    if (modal.length > 0) {
+        console.log('Modal encontrado en el DOM');
+        
+        // Función para abrir el modal en modo crear
+        function openCreateModal() {
+            console.log('Abriendo modal en modo crear');
+            
+            // Configurar el modal para crear
+            modalTitle.text('Agregar Nuevo Almacén');
+            submitBtn.text('Crear Almacén');
+            formAction.val('create');
+            
+            // Limpiar el formulario
+            warehouseForm[0].reset();
+            $('#warehouse_id').val('');
+            
+            // Establecer valores por defecto
+            $('#warehouse_pais').val('Chile');
+            
+            // Mostrar el modal
+            modal.fadeIn(300);
+        }
+        
+        // Función para abrir el modal en modo editar
+        function openEditModal(warehouseId, rowData) {
+            console.log('Abriendo modal en modo editar para ID:', warehouseId);
+            
+            // Configurar el modal para editar
+            modalTitle.text('Editar Almacén');
+            submitBtn.text('Guardar Cambios');
+            formAction.val('edit');
+            
+            // Establecer el ID
+            $('#warehouse_id').val(warehouseId);
+            
+            // Llenar con datos básicos de la tabla si están disponibles
+            if (rowData) {
+                $('#warehouse_name').val(rowData.name || '');
+                $('#warehouse_email').val(rowData.email || '');
+            }
+            
+            // Mostrar el modal
+            modal.fadeIn(300);
+            
+            // Cargar datos completos vía AJAX
+            if (typeof gestionAlmacenesAjax !== 'undefined') {
+                $.ajax({
+                    url: gestionAlmacenesAjax.ajax_url,
+                    type: 'POST',
+                    data: {
+                        action: 'gab_get_warehouse',
+                        warehouse_id: warehouseId,
+                        nonce: gestionAlmacenesAjax.nonce
+                    },
+                    success: function(response) {
+                        console.log('Datos del almacén recibidos:', response);
+                        
+                        if (response.success && response.data) {
+                            $('#warehouse_name').val(response.data.name || '');
+                            $('#warehouse_address').val(response.data.address || '');
+                            $('#warehouse_comuna').val(response.data.comuna || '');
+                            $('#warehouse_ciudad').val(response.data.ciudad || '');
+                            $('#warehouse_region').val(response.data.region || '');
+                            $('#warehouse_pais').val(response.data.pais || 'Chile');
+                            $('#warehouse_phone').val(response.data.telefono || '');
+                            $('#warehouse_email').val(response.data.email || '');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error al obtener datos del almacén:', error);
+                    }
+                });
+            }
+        }
+        
+        // Manejar click en botón agregar nuevo
+        $('#add-warehouse-btn').on('click', function(e) {
+            e.preventDefault();
+            openCreateModal();
+        });
+        
+        // Manejar click en botón editar
+        $(document).on('click', '.edit-warehouse', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            var $button = $(this);
+            var warehouseId = $button.data('id');
+            
+            if (!warehouseId) {
+                console.error('No se encontró el ID del almacén');
+                return false;
+            }
+            
+            // Obtener datos básicos de la fila
+            var $row = $button.closest('tr');
+            var rowData = {
+                name: $row.find('td:eq(1) strong').first().text().trim(),
+                email: $row.find('a[href^="mailto:"]').text().trim()
+            };
+            
+            openEditModal(warehouseId, rowData);
+            return false;
+        });
+        
+        // Cerrar modal con X
+        closeBtn.on('click', function() {
+            console.log('Cerrando modal');
+            modal.fadeOut(300, function() {
+                warehouseForm[0].reset();
+            });
+        });
+        
+        // Cerrar modal con botón Cancelar
+        cancelBtn.on('click', function() {
+            console.log('Cancelando operación');
+            modal.fadeOut(300, function() {
+                warehouseForm[0].reset();
+            });
+        });
+        
+        // Cerrar modal al hacer click fuera
+        modal.on('click', function(e) {
+            if ($(e.target).is(modal)) {
+                modal.fadeOut(300, function() {
+                    warehouseForm[0].reset();
+                });
+            }
+        });
+        
+        // Prevenir cierre al hacer click dentro del modal
+        $('.gab-modal-content').on('click', function(e) {
+            e.stopPropagation();
+        });
+        
+        // Manejar envío del formulario
+        warehouseForm.on('submit', function(e) {
+            e.preventDefault();
+            
+            var isCreating = formAction.val() === 'create';
+            console.log(isCreating ? 'Creando nuevo almacén' : 'Actualizando almacén');
+            
+            // Recopilar datos del formulario
+            var formData = {
+                action: isCreating ? 'gab_create_warehouse' : 'gab_update_warehouse',
+                warehouse_id: $('#warehouse_id').val(),
+                warehouse_name: $('#warehouse_name').val(),
+                warehouse_address: $('#warehouse_address').val(),
+                warehouse_comuna: $('#warehouse_comuna').val(),
+                warehouse_ciudad: $('#warehouse_ciudad').val(),
+                warehouse_region: $('#warehouse_region').val(),
+                warehouse_pais: $('#warehouse_pais').val(),
+                warehouse_phone: $('#warehouse_phone').val(),
+                warehouse_email: $('#warehouse_email').val(),
+                nonce: gestionAlmacenesAjax.nonce
+            };
+            
+            // Validaciones
+            if (!formData.warehouse_name) {
+                alert('Por favor ingrese el nombre del almacén');
+                $('#warehouse_name').focus();
+                return false;
+            }
+            
+            if (!formData.warehouse_address) {
+                alert('Por favor ingrese la dirección del almacén');
+                $('#warehouse_address').focus();
+                return false;
+            }
+            
+            if (!formData.warehouse_email) {
+                alert('Por favor ingrese el email del almacén');
+                $('#warehouse_email').focus();
+                return false;
+            }
+            
+            // Validar email
+            if (!isValidEmail(formData.warehouse_email)) {
+                alert('Por favor ingrese un email válido');
+                $('#warehouse_email').focus();
+                return false;
+            }
+            
+            // Validar campos de ubicación
+            if (!formData.warehouse_comuna || !formData.warehouse_ciudad || !formData.warehouse_region || !formData.warehouse_pais) {
+                alert('Por favor complete todos los campos de ubicación');
+                return false;
+            }
+            
+            // Enviar datos vía AJAX
+            $.ajax({
+                url: gestionAlmacenesAjax.ajax_url,
+                type: 'POST',
+                data: formData,
+                beforeSend: function() {
+                    submitBtn.prop('disabled', true).text(isCreating ? 'Creando...' : 'Guardando...');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        var message = response.data.message || (isCreating ? 'Almacén creado correctamente' : 'Almacén actualizado correctamente');
+                        alert(message);
+                        modal.fadeOut(300, function() {
+                            location.reload();
+                        });
+                    } else {
+                        alert(response.data || 'Error al procesar la solicitud');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error AJAX:', status, error);
+                    alert('Error de conexión al servidor');
+                },
+                complete: function() {
+                    submitBtn.prop('disabled', false).text(isCreating ? 'Crear Almacén' : 'Guardar Cambios');
+                }
+            });
+            
+            return false;
+        });
+        
+        // Función auxiliar para validar email
+        function isValidEmail(email) {
+            var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+    }
+
+    // Función global de prueba
+    window.testModal = function(mode) {
+        if (modal.length > 0) {
+            if (mode === 'create') {
+                openCreateModal();
+            } else {
+                openEditModal(1, {name: 'Almacén de Prueba', email: 'test@example.com'});
+            }
+        } else {
+            console.log('Modal no encontrado');
+        }
+    };
+
+    console.log('Para probar el modal: testModal("create") o testModal("edit")');
 
 });

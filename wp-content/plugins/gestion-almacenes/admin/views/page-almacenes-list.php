@@ -1,7 +1,6 @@
 <?php
 /**
  * Vista mejorada para listado de almacenes
- * wp-content/plugins/gestion-almacenes/admin/views/page-almacenes-list.php
  */
 
 if (!defined('ABSPATH')) {
@@ -12,6 +11,18 @@ if (!defined('ABSPATH')) {
  * Función para mostrar el listado de almacenes con acciones CRUD
  */
 function gab_mostrar_listado_almacenes() {
+    // Para revisar la tabla (db) "gab_warehouses" activar:
+    /*global $wpdb;
+    $tabla = $wpdb->prefix . 'gab_warehouses';
+    $columnas = $wpdb->get_results("SHOW COLUMNS FROM $tabla");
+
+    echo '<div style="background: #f0f0f0; padding: 10px; margin: 10px 0;">';
+    echo '<h3>Estructura de la tabla de almacenes:</h3>';
+    echo '<pre>';
+    print_r($columnas);
+    echo '</pre>';
+    echo '</div>';*/
+
     global $gestion_almacenes_db;
     
     // Procesar acciones de eliminación
@@ -69,25 +80,28 @@ function gab_mostrar_listado_almacenes() {
         <div class="gab-form-section">
             <div class="gab-form-row">
                 <div class="gab-form-group">
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=gab-add-new-warehouse')); ?>" 
-                        class="button button-primary">
+                    <button type="button" id="add-warehouse-btn" class="button button-primary">
                         <span class="dashicons dashicons-plus-alt" style="vertical-align: middle; margin-right: 5px;"></span>
                         <?php esc_html_e('Agregar Nuevo Almacén', 'gestion-almacenes'); ?>
-                    </a>
+                    </button>
                 </div>
                 <div class="gab-form-group">
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=gab-stock-report')); ?>" 
-                        class="button button-secondary">
+                    <button 
+                        type="button" id="btn-ver-reporte-de-stock"
+                        class="button button-primary"
+                        onclick="window.location.href='<?php echo esc_url(admin_url('admin.php?page=gab-stock-report')); ?>'">
                         <span class="dashicons dashicons-chart-bar" style="vertical-align: middle; margin-right: 5px;"></span>
                         <?php esc_html_e('Ver Reporte de Stock', 'gestion-almacenes'); ?>
-                    </a>
+                    </button>
                 </div>
                 <div class="gab-form-group">
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=gab-transfer-stock')); ?>" 
-                        class="button button-secondary">
+                    <button 
+                        type="button" id="btn-transferir-stock"
+                        class="button button-primary"
+                        onclick="window.location.href='<?php echo esc_url(admin_url('admin.php?page=gab-new-transfer')); ?>'">
                         <span class="dashicons dashicons-randomize" style="vertical-align: middle; margin-right: 5px;"></span>
                         <?php esc_html_e('Transferir Stock', 'gestion-almacenes'); ?>
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -158,8 +172,8 @@ function gab_mostrar_listado_almacenes() {
                                 <?php endif; ?>
                             </td>
                             <td class="actions">
-                                <a href="<?php echo esc_url(gab_url_editar_almacen($almacen->id)); ?>" 
-                                    class="button button-small" 
+                                <a href="#" class="edit-warehouse button button-small" 
+                                    data-id="<?php echo esc_attr($almacen->id); ?>"
                                     title="<?php esc_attr_e('Editar almacén', 'gestion-almacenes'); ?>">
                                     <span class="dashicons dashicons-edit"></span>
                                 </a>
@@ -203,6 +217,68 @@ function gab_mostrar_listado_almacenes() {
                 </a>
             </div>
         <?php endif; ?>
+    </div>
+
+    <!-- Modal de Crear/Editar Almacén -->
+    <div id="warehouse-modal" class="gab-modal" style="display: none;">
+        <div class="gab-modal-content">
+            <div class="gab-modal-header">
+                <h2 id="modal-title">Editar Almacén</h2>
+                <span class="gab-modal-close">&times;</span>
+            </div>
+            
+            <form id="warehouse-form" method="post">
+                <input type="hidden" id="form_action" name="form_action" value="edit">
+                <input type="hidden" id="warehouse_id" name="warehouse_id" value="">
+                
+                <div class="gab-form-grid">
+                    <div class="gab-form-group" style="grid-column: 1 / -1;">
+                        <label for="warehouse_name">Nombre del Almacén *</label>
+                        <input type="text" id="warehouse_name" name="warehouse_name" required>
+                    </div>
+                    
+                    <div class="gab-form-group" style="grid-column: 1 / -1;">
+                        <label for="warehouse_address">Dirección *</label>
+                        <input type="text" id="warehouse_address" name="warehouse_address" required>
+                    </div>
+                    
+                    <div class="gab-form-group">
+                        <label for="warehouse_comuna">Comuna *</label>
+                        <input type="text" id="warehouse_comuna" name="warehouse_comuna" required>
+                    </div>
+                    
+                    <div class="gab-form-group">
+                        <label for="warehouse_ciudad">Ciudad *</label>
+                        <input type="text" id="warehouse_ciudad" name="warehouse_ciudad" required>
+                    </div>
+                    
+                    <div class="gab-form-group">
+                        <label for="warehouse_region">Región *</label>
+                        <input type="text" id="warehouse_region" name="warehouse_region" required>
+                    </div>
+                    
+                    <div class="gab-form-group">
+                        <label for="warehouse_pais">País *</label>
+                        <input type="text" id="warehouse_pais" name="warehouse_pais" value="Chile" required>
+                    </div>
+                    
+                    <div class="gab-form-group">
+                        <label for="warehouse_phone">Teléfono</label>
+                        <input type="tel" id="warehouse_phone" name="warehouse_phone" placeholder="+56 9 1234 5678">
+                    </div>
+                    
+                    <div class="gab-form-group">
+                        <label for="warehouse_email">Email *</label>
+                        <input type="email" id="warehouse_email" name="warehouse_email" required>
+                    </div>
+                </div>
+                
+                <div class="gab-form-actions">
+                    <button type="button" class="button gab-cancel-btn">Cancelar</button>
+                    <button type="submit" class="button button-primary" id="submit-btn">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <?php

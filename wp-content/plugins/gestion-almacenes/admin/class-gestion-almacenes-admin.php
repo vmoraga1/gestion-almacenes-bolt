@@ -10,7 +10,7 @@ class Gestion_Almacenes_Admin {
 
     public function __construct() {
         add_action('admin_menu', array($this, 'registrar_menu_almacenes'));
-        add_action('admin_post_gab_add_warehouse', array($this, 'procesar_agregar_almacen'));
+        //add_action('admin_post_gab_add_warehouse', array($this, 'procesar_agregar_almacen'));
         add_action('wp_ajax_get_warehouse_stock', array($this, 'ajax_get_warehouse_stock'));
         // Hook para agregar estilos CSS en admin
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
@@ -18,6 +18,7 @@ class Gestion_Almacenes_Admin {
         $this->transfer_controller = new Gestion_Almacenes_Transfer_Controller();
         // Agregar hook para AJAX de actualización de stock
         add_action('wp_ajax_gab_update_warehouse_stock', [$this, 'ajax_update_warehouse_stock']);
+        add_action('wp_ajax_gab_create_warehouse', array($this, 'ajax_create_warehouse'));
     }
 
     public function registrar_menu_almacenes() {
@@ -43,14 +44,14 @@ class Gestion_Almacenes_Admin {
         );
 
         // Submenú para Agregar Nuevo Almacén
-        add_submenu_page(
+        /*add_submenu_page(
             'gab-warehouse-management',
             __('Agregar Nuevo Almacén', 'gestion-almacenes'),
             __('Agregar Nuevo', 'gestion-almacenes'),
             'manage_options',
             'gab-add-new-warehouse',
             'gab_mostrar_formulario_nuevo_almacen'
-        );
+        );*/
 
         // NUEVOS SUBMENÚS PARA TRANSFERENCIAS
         // Separador visual (submenú deshabilitado)
@@ -204,6 +205,123 @@ class Gestion_Almacenes_Admin {
         ));
     }
 
+    /**
+     * Crear nuevo almacén vía AJAX
+     */
+    public function ajax_create_warehouse() {
+        // Verificar nonce
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'get_warehouse_stock_nonce')) {
+            wp_send_json_error('Nonce inválido');
+            wp_die();
+        }
+        
+        // Verificar permisos
+        if (!current_user_can('manage_woocommerce')) {
+            wp_send_json_error('No tienes permisos para realizar esta acción');
+            wp_die();
+        }
+        
+        // Validar y sanitizar datos
+        $name = isset($_POST['warehouse_name']) ? sanitize_text_field($_POST['warehouse_name']) : '';
+        $address = isset($_POST['warehouse_address']) ? sanitize_text_field($_POST['warehouse_address']) : '';
+        $comuna = isset($_POST['warehouse_comuna']) ? sanitize_text_field($_POST['warehouse_comuna']) : '';
+        $ciudad = isset($_POST['warehouse_ciudad']) ? sanitize_text_field($_POST['warehouse_ciudad']) : '';
+        $region = isset($_POST['warehouse_region']) ? sanitize_text_field($_POST['warehouse_region']) : '';
+        $pais = isset($_POST['warehouse_pais']) ? sanitize_text_field($_POST['warehouse_pais']) : '';
+        $email = isset($_POST['warehouse_email']) ? sanitize_email($_POST['warehouse_email']) : '';
+        $telefono = isset($_POST['warehouse_phone']) ? sanitize_text_field($_POST['warehouse_phone']) : '';
+        
+        // Validaciones
+        if (empty($name)) {
+            wp_send_json_error('El nombre del almacén es obligatorio');
+            wp_die();
+        }
+        
+        if (empty($address)) {
+            wp_send_json_error('La dirección del almacén es obligatoria');
+            wp_die();
+        }
+        
+        if (empty($comuna) || empty($ciudad) || empty($region) || empty($pais)) {
+            wp_send_json_error('Todos los campos de ubicación son obligatorios');
+            wp_die();
+        }
+        
+        if (empty($email)) {
+            wp_send_json_error('El email es obligatorio');
+            wp_die();
+        }
+        
+        // Validar email
+        if (!is_email($email)) {
+            wp_send_json_error('Email inválido');
+            wp_die();
+        }
+        
+        global $wpdb;
+        $tabla_almacenes = $wpdb->prefix . 'gab_warehouses';
+        
+        // Verificar si ya existe un almacén con el mismo nombre
+        $exists = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM $tabla_almacenes WHERE name = %s",
+            $name
+        ));
+        
+        if ($exists > 0) {
+            wp_send_json_error('Ya existe un almacén con ese nombre');
+            wp_die();
+        }
+        
+        // Generar slug
+        $slug = sanitize_title($name);
+        
+        // Asegurar que el slug sea único
+        $slug_exists = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM $tabla_almacenes WHERE slug = %s",
+            $slug
+        ));
+        
+        if ($slug_exists > 0) {
+            $slug = $slug . '-' . time();
+        }
+        
+        // Insertar nuevo almacén
+        $result = $wpdb->insert(
+            $tabla_almacenes,
+            array(
+                'name' => $name,
+                'slug' => $slug,
+                'address' => $address,
+                'comuna' => $comuna,
+                'ciudad' => $ciudad,
+                'region' => $region,
+                'pais' => $pais,
+                'email' => $email,
+                'telefono' => $telefono
+            ),
+            array('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')
+        );
+        
+        if ($result === false) {
+            wp_send_json_error('Error al crear el almacén: ' . $wpdb->last_error);
+            wp_die();
+        }
+        
+        $new_warehouse_id = $wpdb->insert_id;
+        
+        // Obtener el almacén recién creado
+        $new_warehouse = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM $tabla_almacenes WHERE id = %d",
+            $new_warehouse_id
+        ), ARRAY_A);
+        
+        wp_send_json_success(array(
+            'message' => 'Almacén creado correctamente',
+            'warehouse' => $new_warehouse,
+            'warehouse_id' => $new_warehouse_id
+        ));
+    }
+
     public function ajax_update_warehouse_stock() {
         // Verificar nonce
         if (!check_ajax_referer('gab_update_stock', 'nonce', false)) {
@@ -269,7 +387,7 @@ class Gestion_Almacenes_Admin {
         gab_mostrar_listado_almacenes();
     }
 
-    public function procesar_agregar_almacen() {
+    /*public function procesar_agregar_almacen() {
         if (!isset($_POST['gab_warehouse_nonce']) || !wp_verify_nonce($_POST['gab_warehouse_nonce'], 'gab_add_warehouse_nonce')) {
             wp_die(__('No tienes permiso para realizar esta acción.', 'gestion-almacenes'));
         }
@@ -301,7 +419,7 @@ class Gestion_Almacenes_Admin {
         }
 
         exit;
-    }
+    }*/
 
     
 
@@ -404,11 +522,9 @@ class Gestion_Almacenes_Admin {
 
         // Botones de acción
         echo '<div class="gab-form-row">';
-        echo '<div class="gab-form-group">';
         echo '<input type="submit" class="button button-primary" value="' . esc_attr__('Aplicar Filtros', 'gestion-almacenes') . '">';
         echo ' <a href="' . esc_url(admin_url('admin.php?page=gab-stock-report')) . '" class="button button-secondary">' . esc_html__('Limpiar Filtros', 'gestion-almacenes') . '</a>';
-        echo ' <button type="button" id="export_report" class="button button-secondary">' . esc_html__('Exportar CSV', 'gestion-almacenes') . '</button>';
-        echo '</div>';
+        //echo ' <button type="button" id="export_report" class="button button-secondary">' . esc_html__('Exportar CSV', 'gestion-almacenes') . '</button>';
         echo '</div>';
 
         echo '</form>';
@@ -2340,6 +2456,11 @@ class Gestion_Almacenes_Admin {
                 update_option('gab_manage_wc_stock', isset($_POST['manage_wc_stock']) ? 'yes' : 'no');
                 update_option('gab_auto_sync_stock', isset($_POST['auto_sync_stock']) ? 'yes' : 'no');
                 update_option('gab_default_sales_warehouse', sanitize_text_field($_POST['default_sales_warehouse'] ?? ''));
+
+                update_option('gab_stock_allocation_method', sanitize_text_field($_POST['stock_allocation_method'] ?? 'priority'));
+                update_option('gab_allow_partial_fulfillment', isset($_POST['allow_partial_fulfillment']) ? 'yes' : 'no');
+                update_option('gab_notify_low_stock_on_sale', isset($_POST['notify_low_stock_on_sale']) ? 'yes' : 'no');
+                update_option('gab_low_stock_email', sanitize_email($_POST['low_stock_email'] ?? ''));
                 
                 $saved = true;
             }
@@ -2505,6 +2626,71 @@ class Gestion_Almacenes_Admin {
                             </select>
                             <p class="description">
                                 <?php esc_html_e('De qué almacén se descontará el stock cuando se realice una venta.', 'gestion-almacenes'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- Gestión de Ventas -->
+                <h2><?php esc_html_e('Gestión de Ventas', 'gestion-almacenes'); ?></h2>
+                <p><?php esc_html_e('Configure cómo se maneja el stock cuando se realizan ventas.', 'gestion-almacenes'); ?></p>
+
+                <table class="form-table">
+                    <tr>
+                        <th scope="row"><?php esc_html_e('Método de Asignación de Stock', 'gestion-almacenes'); ?></th>
+                        <td>
+                            <?php $allocation_method = get_option('gab_stock_allocation_method', 'priority'); ?>
+                            <select name="stock_allocation_method" id="stock_allocation_method">
+                                <option value="priority" <?php selected($allocation_method, 'priority'); ?>>
+                                    <?php esc_html_e('Por prioridad (almacén predeterminado primero)', 'gestion-almacenes'); ?>
+                                </option>
+                                <option value="balanced" <?php selected($allocation_method, 'balanced'); ?>>
+                                    <?php esc_html_e('Balanceado (distribuir entre almacenes)', 'gestion-almacenes'); ?>
+                                </option>
+                                <option value="nearest" <?php selected($allocation_method, 'nearest'); ?>>
+                                    <?php esc_html_e('Más cercano (requiere configuración de zonas)', 'gestion-almacenes'); ?>
+                                </option>
+                            </select>
+                            <p class="description">
+                                <?php esc_html_e('Cómo se selecciona de qué almacén tomar el stock cuando se realiza una venta.', 'gestion-almacenes'); ?>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php esc_html_e('Permitir Ventas Parciales', 'gestion-almacenes'); ?></th>
+                        <td>
+                            <fieldset>
+                                <label>
+                                    <input type="checkbox" name="allow_partial_fulfillment" value="1" 
+                                        <?php checked(get_option('gab_allow_partial_fulfillment', 'no'), 'yes'); ?>>
+                                    <?php esc_html_e('Permitir completar pedidos tomando stock de múltiples almacenes', 'gestion-almacenes'); ?>
+                                </label>
+                                <p class="description">
+                                    <?php esc_html_e('Si está activado, se puede tomar stock de varios almacenes para completar un pedido.', 'gestion-almacenes'); ?>
+                                </p>
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php esc_html_e('Notificar Stock Bajo', 'gestion-almacenes'); ?></th>
+                        <td>
+                            <fieldset>
+                                <label>
+                                    <input type="checkbox" name="notify_low_stock_on_sale" value="1" 
+                                        <?php checked(get_option('gab_notify_low_stock_on_sale', 'yes'), 'yes'); ?>>
+                                    <?php esc_html_e('Enviar notificación cuando el stock de un almacén quede bajo después de una venta', 'gestion-almacenes'); ?>
+                                </label>
+                            </fieldset>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php esc_html_e('Email para Notificaciones', 'gestion-almacenes'); ?></th>
+                        <td>
+                            <input type="email" name="low_stock_email" id="low_stock_email" 
+                                value="<?php echo esc_attr(get_option('gab_low_stock_email', get_option('admin_email'))); ?>" 
+                                class="regular-text" />
+                            <p class="description">
+                                <?php esc_html_e('Email donde se enviarán las notificaciones de stock bajo.', 'gestion-almacenes'); ?>
                             </p>
                         </td>
                     </tr>

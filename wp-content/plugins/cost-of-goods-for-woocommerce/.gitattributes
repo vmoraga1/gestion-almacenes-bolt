@@ -1,0 +1,26 @@
+.wordpress-org/ export-ignore
+.gitignore export-ignore
+.github export-ignore
+README.md export-ignore
+composer.lock export-ignore
+# Analytics
+includes/analytics/README.md export-ignore
+includes/analytics/package.json export-ignore
+includes/analytics/package-lock.json export-ignore
+includes/analytics/package-lock.json export-ignore
+includes/analytics/pnpm-lock.yaml export-ignore
+includes/analytics/node_modules/
+includes/analytics/webpack.config.js
+includes/analytics/.prettierrc.json export-ignore
+includes/analytics/.gitignore export-ignore
+includes/analytics/.eslintrc.js export-ignore
+# WPF Documentor
+vendor/wpfactory/wpf-settings-exporter export-ignore
+vendor/wpfactory/wpf-documentor export-ignore
+# GIT - Release version
+/git-tag.sh export-ignore
+# Composer
+composer.json
+composer.lock export ignore
+includes/pro/composer.lock export-ignore
+includes/pro/composer.json

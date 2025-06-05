@@ -375,3 +375,178 @@ class Gestion_Almacenes_WooCommerce {
         }
     }
 }
+
+/**
+ * Formatear la visualización de almacenes en pedidos
+ */
+class Gestion_Almacenes_Order_Display {
+    
+    private $db;
+    
+    public function __construct($db) {
+        $this->db = $db;
+        $this->init_hooks();
+    }
+    
+    private function init_hooks() {
+        // Hooks para formatear la visualización
+        add_filter('woocommerce_order_item_display_meta_key', [$this, 'format_meta_key'], 20, 3);
+        add_filter('woocommerce_order_item_display_meta_value', [$this, 'format_meta_value'], 20, 3);
+        
+        // Hook para el email
+        add_filter('woocommerce_display_item_meta', [$this, 'format_item_meta_display'], 10, 3);
+        
+        // Para la vista de administración
+        add_filter('woocommerce_attribute_label', [$this, 'format_attribute_label'], 10, 3);
+        add_action('admin_head', [$this, 'add_order_styles']);
+    }
+    
+    /**
+     * Formatear claves meta relacionadas con almacenes
+     */
+    public function format_meta_key($display_key, $meta, $item) {
+        $warehouse_keys = array(
+            '_selected_warehouse' => __('Almacén seleccionado', 'gestion-almacenes'),
+            '_warehouse_id' => __('Almacén', 'gestion-almacenes'),
+            '_source_warehouse' => __('Almacén de origen', 'gestion-almacenes'),
+            '_gab_warehouse' => __('Almacén asignado', 'gestion-almacenes')
+        );
+        
+        if (isset($warehouse_keys[$meta->key])) {
+            return $warehouse_keys[$meta->key];
+        }
+        
+        return $display_key;
+    }
+    
+    /**
+     * Formatear valores meta relacionados con almacenes
+     */
+    public function format_meta_value($display_value, $meta, $item) {
+        $warehouse_keys = array('_selected_warehouse', '_warehouse_id', '_source_warehouse', '_gab_warehouse');
+        
+        if (in_array($meta->key, $warehouse_keys)) {
+            $warehouse_id = $meta->value;
+            
+            // Si es un array serializado
+            if (is_serialized($warehouse_id)) {
+                $warehouse_id = maybe_unserialize($warehouse_id);
+                if (is_array($warehouse_id) && isset($warehouse_id['id'])) {
+                    $warehouse_id = $warehouse_id['id'];
+                }
+            }
+            
+            // Obtener el nombre del almacén
+            $warehouse = $this->db->get_warehouse($warehouse_id);
+            
+            if ($warehouse) {
+                $display = '<strong>' . esc_html($warehouse->name) . '</strong>';
+                
+                // Agregar información adicional si está disponible
+                if (!empty($warehouse->ciudad)) {
+                    $display .= '<br><small style="color: #666;">' . esc_html($warehouse->ciudad);
+                    if (!empty($warehouse->region)) {
+                        $display .= ', ' . esc_html($warehouse->region);
+                    }
+                    $display .= '</small>';
+                }
+                
+                return $display;
+            } else {
+                return '<span style="color: #999;">' . sprintf(__('Almacén #%d (no encontrado)', 'gestion-almacenes'), $warehouse_id) . '</span>';
+            }
+        }
+        
+        return $display_value;
+    }
+    
+    /**
+     * Formatear la visualización de meta en emails y facturas
+     */
+    public function format_item_meta_display($html, $item, $args) {
+        // Buscar y reemplazar los IDs de almacén con nombres
+        if (preg_match_all('/_selected_warehouse:\s*(\d+)/', $html, $matches)) {
+            foreach ($matches[1] as $index => $warehouse_id) {
+                $warehouse = $this->db->get_warehouse($warehouse_id);
+                if ($warehouse) {
+                    $replacement = __('Almacén seleccionado', 'gestion-almacenes') . ': ' . esc_html($warehouse->name);
+                    $html = str_replace($matches[0][$index], $replacement, $html);
+                }
+            }
+        }
+        
+        return $html;
+    }
+    
+    /**
+     * Formatear etiquetas de atributos
+     */
+    public function format_attribute_label($label, $name, $product = null) {
+        if ($name === '_selected_warehouse' || $name === 'selected_warehouse') {
+            return __('Almacén seleccionado', 'gestion-almacenes');
+        }
+        return $label;
+    }
+
+    /**
+     * Agregar estilos CSS para la visualización de almacenes en pedidos
+     */
+    public function add_order_styles() {
+        $screen = get_current_screen();
+        
+        // Solo en las páginas de pedidos
+        if ($screen && in_array($screen->id, array('shop_order', 'edit-shop_order', 'woocommerce_page_wc-orders'))) {
+            ?>
+            <style>
+                /* Estilos para la información del almacén */
+                .woocommerce_order_items_wrapper .display_meta td {
+                    padding: 4px 0;
+                }
+                
+                .woocommerce_order_items_wrapper .display_meta strong {
+                    color: #2271b1;
+                }
+                
+                /* Icono para el almacén */
+                .woocommerce_order_items_wrapper .display_meta td:contains("Almacén") {
+                    position: relative;
+                    padding-left: 20px;
+                }
+                
+                .woocommerce_order_items_wrapper .display_meta td:contains("Almacén")::before {
+                    content: "\f481";
+                    font-family: dashicons;
+                    position: absolute;
+                    left: 0;
+                    top: 4px;
+                    color: #999;
+                }
+                
+                /* Mejorar la visualización del meta box */
+                #gab_warehouse_allocation .inside {
+                    padding: 12px;
+                }
+                
+                #gab_warehouse_allocation ul {
+                    margin: 0;
+                    padding: 0;
+                }
+                
+                #gab_warehouse_allocation li {
+                    list-style: none;
+                    padding: 2px 0;
+                    color: #666;
+                }
+                
+                #gab_warehouse_allocation strong {
+                    color: #23282d;
+                    display: block;
+                    margin-bottom: 4px;
+                    padding-bottom: 4px;
+                    border-bottom: 1px solid #eee;
+                }
+            </style>
+            <?php
+        }
+    }
+}

@@ -20,6 +20,8 @@ class Gestion_Almacenes_Transfer_Controller {
         add_action('wp_ajax_gab_update_transfer', array($this, 'ajax_update_transfer'));
         add_action('wp_ajax_gab_delete_transfer', array($this, 'ajax_delete_transfer'));
         add_action('wp_ajax_gab_complete_transfer', [$this, 'ajax_complete_transfer']);
+        add_action('wp_ajax_gab_get_warehouse', array($this, 'ajax_get_warehouse'));
+        add_action('wp_ajax_gab_update_warehouse', array($this, 'ajax_update_warehouse'));
 
     }
 
@@ -470,18 +472,12 @@ class Gestion_Almacenes_Transfer_Controller {
             wp_send_json_error(['message' => 'No tienes permisos suficientes.']);
         }
 
-        // Debugging: Ver qué datos están llegando
-        error_log('[DEBUG] POST data: ' . print_r($_POST, true));
-
         $transfer_id = intval($_POST['transfer_id']);
         $source_warehouse_id = intval($_POST['source_warehouse_id']);
         $target_warehouse_id = intval($_POST['target_warehouse_id']);
         $notes = sanitize_text_field($_POST['notes']);
 
         $items = [];
-
-        // Debugging: Ver específicamente el campo items
-        error_log('[DEBUG] Items field: ' . print_r($_POST['items'], true));
 
         if (!empty($_POST['items']) && is_array($_POST['items'])) {
             foreach ($_POST['items'] as $item) {
@@ -491,9 +487,6 @@ class Gestion_Almacenes_Transfer_Controller {
                 ];
             }
         }
-
-        // Debugging: Ver el array procesado
-        error_log('[DEBUG] Processed items: ' . print_r($items, true));
 
         if (empty($items)) {
             wp_send_json_error(['message' => 'Debes incluir al menos un producto.']);
@@ -1094,15 +1087,15 @@ class Gestion_Almacenes_Transfer_Controller {
                         if (response.success) {
                             alert(response.data.message);
                             
-                            // Preguntar si desea imprimir el comprobante
-                            if (confirm('<?php esc_html_e("¿Desea imprimir el comprobante de transferencia completada?", "gestion-almacenes"); ?>')) {
+                            // Preguntar si desea imprimir el comprobante (Desactivado, porque no muestra el stock transferido a ubicación de destino)
+                            /*if (confirm('<?php esc_html_e("¿Desea imprimir el comprobante de transferencia completada?", "gestion-almacenes"); ?>')) {
                                 window.print();
-                            }
+                            }*/
                             
                             // Recargar la página después de un momento
                             setTimeout(function() {
                                 location.reload();
-                            }, 1000);
+                            },);
                         } else {
                             alert(response.data.message);
                             $button.prop('disabled', false).text('<?php esc_html_e('Completar Transferencia', 'gestion-almacenes'); ?>');
@@ -1132,7 +1125,7 @@ class Gestion_Almacenes_Transfer_Controller {
                     success: function(response) {
                         if (response.success) {
                             alert(response.data.message);
-                            window.location.href = '<?php echo admin_url('admin.php?page=gab-stock-transfers'); ?>';
+                            window.location.href = '<?php echo admin_url('admin.php?page=gab-transfer-list'); ?>';
                         } else {
                             alert(response.data.message);
                         }
@@ -1711,6 +1704,154 @@ class Gestion_Almacenes_Transfer_Controller {
         </html>
         <?php
         die(); // Usar die() en lugar de exit para mayor compatibilidad
+    }
+
+    /**
+     * Obtener datos de un almacén vía AJAX (para editar Almacén)
+     */
+    public function ajax_get_warehouse() {
+        // Verificar nonce - usar el mismo nonce que ya tienes configurado
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'get_warehouse_stock_nonce')) {
+            wp_send_json_error('Nonce inválido');
+            wp_die();
+        }
+        
+        // Verificar permisos
+        if (!current_user_can('manage_woocommerce')) {
+            wp_send_json_error('No tienes permisos para realizar esta acción');
+            wp_die();
+        }
+        
+        // Obtener ID del almacén
+        $warehouse_id = isset($_POST['warehouse_id']) ? intval($_POST['warehouse_id']) : 0;
+        
+        if (!$warehouse_id) {
+            wp_send_json_error('ID de almacén inválido');
+            wp_die();
+        }
+        
+        global $wpdb;
+        $tabla_almacenes = $wpdb->prefix . 'gab_warehouses';
+        
+        // Obtener datos del almacén
+        $almacen = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM $tabla_almacenes WHERE id = %d",
+            $warehouse_id
+        ), ARRAY_A);
+        
+        if (!$almacen) {
+            wp_send_json_error('Almacén no encontrado');
+            wp_die();
+        }
+        
+        // Enviar respuesta exitosa
+        wp_send_json_success($almacen);
+    }
+
+    /**
+     * Actualizar datos de un almacén vía AJAX
+     */
+    public function ajax_update_warehouse() {        
+        // Intentar verificar con ambos nonces para debug
+        $nonce_stock = isset($_POST['nonce']) ? wp_verify_nonce($_POST['nonce'], 'get_warehouse_stock_nonce') : false;
+        $nonce_edit = isset($_POST['nonce']) ? wp_verify_nonce($_POST['nonce'], 'gab_edit_warehouse_nonce') : false;
+        
+        // Verificar nonce - usar el mismo nonce que ajax_get_warehouse
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'get_warehouse_stock_nonce')) {
+            wp_send_json_error('Nonce inválido para actualización');
+            wp_die();
+        }
+        
+        // Verificar permisos
+        if (!current_user_can('manage_woocommerce')) {
+            wp_send_json_error('No tienes permisos para realizar esta acción');
+            wp_die();
+        }
+        
+        // Validar y sanitizar datos
+        $warehouse_id = isset($_POST['warehouse_id']) ? intval($_POST['warehouse_id']) : 0;
+        $name = isset($_POST['warehouse_name']) ? sanitize_text_field($_POST['warehouse_name']) : '';
+        $address = isset($_POST['warehouse_address']) ? sanitize_text_field($_POST['warehouse_address']) : '';
+        $comuna = isset($_POST['warehouse_comuna']) ? sanitize_text_field($_POST['warehouse_comuna']) : '';
+        $ciudad = isset($_POST['warehouse_ciudad']) ? sanitize_text_field($_POST['warehouse_ciudad']) : '';
+        $region = isset($_POST['warehouse_region']) ? sanitize_text_field($_POST['warehouse_region']) : '';
+        $pais = isset($_POST['warehouse_pais']) ? sanitize_text_field($_POST['warehouse_pais']) : '';
+        $email = isset($_POST['warehouse_email']) ? sanitize_email($_POST['warehouse_email']) : '';
+        $telefono = isset($_POST['warehouse_phone']) ? sanitize_text_field($_POST['warehouse_phone']) : '';
+        
+        // Validaciones
+        if (!$warehouse_id) {
+            wp_send_json_error('ID de almacén inválido');
+            wp_die();
+        }
+        
+        if (empty($name)) {
+            wp_send_json_error('El nombre del almacén es obligatorio');
+            wp_die();
+        }
+        
+        if (empty($address)) {
+            wp_send_json_error('La dirección del almacén es obligatoria');
+            wp_die();
+        }
+        
+        // Validar email si se proporciona
+        if (!empty($email) && !is_email($email)) {
+            wp_send_json_error('Email inválido');
+            wp_die();
+        }
+        
+        global $wpdb;
+        $tabla_almacenes = $wpdb->prefix . 'gab_warehouses';
+        
+        // Verificar que el almacén existe
+        $exists = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM $tabla_almacenes WHERE id = %d",
+            $warehouse_id
+        ));
+        
+        if (!$exists) {
+            wp_send_json_error('El almacén no existe');
+            wp_die();
+        }
+        
+        // Generar slug si es necesario
+        $slug = sanitize_title($name);
+        
+        // Actualizar datos
+        $result = $wpdb->update(
+            $tabla_almacenes,
+            array(
+                'name' => $name,
+                'slug' => $slug,
+                'address' => $address,
+                'comuna' => $comuna,
+                'ciudad' => $ciudad,
+                'region' => $region,
+                'pais' => $pais,
+                'email' => $email,
+                'telefono' => $telefono
+            ),
+            array('id' => $warehouse_id),
+            array('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'),
+            array('%d')
+        );
+        
+        if ($result === false) {
+            wp_send_json_error('Error al actualizar el almacén: ' . $wpdb->last_error);
+            wp_die();
+        }
+        
+        // Obtener datos actualizados
+        $almacen_actualizado = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM $tabla_almacenes WHERE id = %d",
+            $warehouse_id
+        ), ARRAY_A);
+        
+        wp_send_json_success(array(
+            'message' => 'Almacén actualizado correctamente',
+            'warehouse' => $almacen_actualizado
+        ));
     }
 
 }
