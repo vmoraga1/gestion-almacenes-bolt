@@ -17757,3 +17757,38 @@ Stack trace:
 [05-Jun-2025 23:14:30 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
 [05-Jun-2025 23:14:30 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
 [05-Jun-2025 23:14:30 UTC] PHP   5. include_once() C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:545
+[05-Jun-2025 23:15:03 UTC] PHP Warning:  require_once(C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes/admin/views/page-nuevo-almacen.php): failed to open stream: No such file or directory in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\gestion-almacenes.php on line 27
+[05-Jun-2025 23:15:03 UTC] PHP Stack trace:
+[05-Jun-2025 23:15:03 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:0
+[05-Jun-2025 23:15:03 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:22
+[05-Jun-2025 23:15:03 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[05-Jun-2025 23:15:03 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[05-Jun-2025 23:15:03 UTC] PHP   5. include_once() C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:545
+[05-Jun-2025 23:15:03 UTC] PHP Fatal error:  require_once(): Failed opening required 'C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes/admin/views/page-nuevo-almacen.php' (include_path='.;C:\php\pear') in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\gestion-almacenes.php on line 27
+[05-Jun-2025 23:15:03 UTC] PHP Stack trace:
+[05-Jun-2025 23:15:03 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:0
+[05-Jun-2025 23:15:03 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:22
+[05-Jun-2025 23:15:03 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[05-Jun-2025 23:15:03 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[05-Jun-2025 23:15:03 UTC] PHP   5. include_once() C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:545
+[05-Jun-2025 23:15:05 UTC] PHP Warning:  require_once(C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes/admin/views/page-nuevo-almacen.php): failed to open stream: No such file or directory in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\gestion-almacenes.php on line 27
+[05-Jun-2025 23:15:05 UTC] PHP Stack trace:
+[05-Jun-2025 23:15:05 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[05-Jun-2025 23:15:05 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:35
+[05-Jun-2025 23:15:05 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[05-Jun-2025 23:15:05 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[05-Jun-2025 23:15:05 UTC] PHP   5. include_once() C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:545
+[05-Jun-2025 23:15:05 UTC] PHP Fatal error:  require_once(): Failed opening required 'C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes/admin/views/page-nuevo-almacen.php' (include_path='.;C:\php\pear') in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\gestion-almacenes.php on line 27
+[05-Jun-2025 23:15:05 UTC] PHP Stack trace:
+[05-Jun-2025 23:15:05 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[05-Jun-2025 23:15:05 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:35
+[05-Jun-2025 23:15:05 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[05-Jun-2025 23:15:05 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[05-Jun-2025 23:15:05 UTC] PHP   5. include_once() C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:545
+[05-Jun-2025 23:15:29 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[05-Jun-2025 23:15:36 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[05-Jun-2025 23:15:38 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[05-Jun-2025 23:15:41 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[05-Jun-2025 23:15:49 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[05-Jun-2025 23:16:00 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[05-Jun-2025 23:16:12 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
