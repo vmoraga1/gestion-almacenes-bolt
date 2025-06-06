@@ -179,6 +179,71 @@ jQuery(document).ready(function ($) {
         alert('Funcionalidad de exportación en desarrollo');
     }
 
+    // Función para verificar si un producto se agotó
+    function checkStockDepletion(productId, oldStock, newStock) {
+        if (oldStock > 0 && newStock === 0) {
+            // El producto se acaba de agotar
+            showDepletionNotification(productId);
+            
+            // Marcar la fila visualmente
+            var $row = $('tr[data-product-id="' + productId + '"]');
+            $row.addClass('just-depleted');
+            
+            // Animación de alerta
+            $row.css('background-color', '#ffcccc');
+            setTimeout(function() {
+                $row.animate({
+                    backgroundColor: '#fff5f5'
+                }, 1000, function() {
+                    $row.addClass('all-stock-depleted');
+                });
+            }, 100);
+        }
+    }
+
+    // Función para mostrar notificación de agotamiento
+    function showDepletionNotification(productId) {
+        var $row = $('tr[data-product-id="' + productId + '"]');
+        var productName = $row.find('td:first strong').text();
+        
+        // Crear notificación
+        var notification = $('<div class="notice notice-warning is-dismissible gab-depletion-notice">' +
+            '<p><strong>¡Stock Agotado!</strong> El producto "' + productName + '" se ha agotado en todos los almacenes.</p>' +
+            '<p><a href="#" class="button button-small replenish-stock" data-product-id="' + productId + '">' +
+            'Reponer Stock</a></p>' +
+            '</div>');
+        
+        // Insertar después del encabezado
+        notification.insertAfter('.gab-section-header');
+        
+        // Hacer que el botón de reponer abra el modal de ajuste
+        notification.find('.replenish-stock').on('click', function(e) {
+            e.preventDefault();
+            var productId = $(this).data('product-id');
+            var $row = $('tr[data-product-id="' + productId + '"]');
+            
+            // Simular click en el botón de ajustar stock
+            $row.find('.adjust-stock').click();
+            
+            // Cerrar la notificación
+            notification.fadeOut();
+        });
+        
+        // Auto-cerrar después de 10 segundos
+        setTimeout(function() {
+            notification.fadeOut();
+        }, 10000);
+    }
+
+    // Modificar el handler de ajuste de stock para detectar agotamiento
+    var originalAjaxSuccess = $.ajax.prototype.success;
+    $(document).on('ajaxSuccess', function(event, xhr, settings) {
+        if (settings.data && settings.data.includes('action=gab_adjust_stock')) {
+            // Revisar si algún producto se agotó
+            checkAllStocksForDepletion();
+        }
+    });
+
     /**
      * Funciones generales de utilidad
      */

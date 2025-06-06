@@ -468,8 +468,6 @@ class Gestion_Almacenes_DB {
         return $result !== false;
     }
 
-
-
     /**
      * Obtiene información de un almacén específico por ID
      */
@@ -671,6 +669,47 @@ class Gestion_Almacenes_DB {
     }
 
     /**
+     * Inicializar registro de stock si no existe
+     * @param int $warehouse_id ID del almacén
+     * @param int $product_id ID del producto
+     * @return bool
+     */
+    public function ensure_warehouse_stock_exists($warehouse_id, $product_id) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'gab_warehouse_product_stock';
+        
+        // Verificar si ya existe el registro
+        $exists = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM $table_name WHERE warehouse_id = %d AND product_id = %d",
+            $warehouse_id,
+            $product_id
+        ));
+        
+        if (!$exists) {
+            // Crear registro con stock 0
+            $result = $wpdb->insert(
+                $table_name,
+                array(
+                    'warehouse_id' => $warehouse_id,
+                    'product_id' => $product_id,
+                    'stock' => 0,
+                    'updated_at' => current_time('mysql')
+                ),
+                array('%d', '%d', '%d', '%s')
+            );
+            
+            if ($result === false) {
+                error_log('[GAB] Error al crear registro de stock: ' . $wpdb->last_error);
+                return false;
+            }
+            
+            error_log('[GAB] Registro de stock creado para producto ' . $product_id . ' en almacén ' . $warehouse_id);
+        }
+        
+        return true;
+    }
+
+    /**
      * Obtiene todos los productos con su stock por almacén
      */
     public function get_all_products_warehouse_stock() {
@@ -861,7 +900,10 @@ class Gestion_Almacenes_DB {
         global $wpdb;
         $table_name = $wpdb->prefix . 'gab_warehouse_product_stock';
         
-        // Verificar si ya existe un registro
+        // Asegurar que existe el registro
+        $this->ensure_warehouse_stock_exists($warehouse_id, $product_id);
+        
+        // Verificar el stock actual
         $existing = $wpdb->get_row($wpdb->prepare(
             "SELECT * FROM $table_name WHERE warehouse_id = %d AND product_id = %d",
             $warehouse_id,
@@ -889,28 +931,16 @@ class Gestion_Almacenes_DB {
             if ($result === false) {
                 throw new Exception('Error al actualizar el stock: ' . $wpdb->last_error);
             }
+            
+            error_log('[GAB] Stock actualizado: Almacén ' . $warehouse_id . ', Producto ' . $product_id . 
+                    ', Cambio: ' . $quantity_change . ', Nuevo stock: ' . $new_stock);
         } else {
-            // Crear nuevo registro si es positivo
-            if ($quantity_change > 0) {
-                $result = $wpdb->insert(
-                    $table_name,
-                    [
-                        'warehouse_id' => $warehouse_id,
-                        'product_id' => $product_id,
-                        'stock' => $quantity_change,
-                        'quantity' => 0, // Por compatibilidad con la estructura
-                        'updated_at' => current_time('mysql')
-                    ],
-                    ['%d', '%d', '%d', '%d', '%s']
-                );
-                
-                if ($result === false) {
-                    throw new Exception('Error al crear registro de stock: ' . $wpdb->last_error);
-                }
-            }
+            // Esto no debería pasar porque ensure_warehouse_stock_exists() ya creó el registro
+            throw new Exception('No se pudo encontrar el registro de stock después de inicialización');
         }
+        
         do_action('gab_warehouse_stock_updated', $product_id, $warehouse_id);
-
+        
         return true;
     }
 

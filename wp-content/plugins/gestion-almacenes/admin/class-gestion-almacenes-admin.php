@@ -459,23 +459,41 @@ class Gestion_Almacenes_Admin {
         echo '<div class="gab-form-group">';
         echo '<label><strong>' . esc_html__('Filtrar por Estado de Stock', 'gestion-almacenes') . '</strong></label>';
         echo '<div class="filter-checkbox-container">';
-        
+
         $estados = array(
-            'high' => __('Stock alto', 'gestion-almacenes'),
-            'medium' => __('Stock medio', 'gestion-almacenes'),
-            'low' => __('Stock bajo', 'gestion-almacenes'),
-            'out' => __('Sin stock', 'gestion-almacenes'),
-            'unassigned' => __('Sin asignar', 'gestion-almacenes') // NUEVO ESTADO
+            'high' => array(
+                'label' => __('Stock alto', 'gestion-almacenes'),
+                'color' => '#8fd694'
+            ),
+            'medium' => array(
+                'label' => __('Stock medio', 'gestion-almacenes'),
+                'color' => '#ffe082'
+            ),
+            'low' => array(
+                'label' => __('Stock bajo', 'gestion-almacenes'),
+                'color' => '#ff9e6b'
+            ),
+            'out' => array(
+                'label' => __('Sin stock / Agotados', 'gestion-almacenes'),
+                'color' => '#f28b82'
+            ),
+            'unassigned' => array(
+                'label' => __('Sin asignar', 'gestion-almacenes'),
+                'color' => '#90b7f3'
+            )
         );
-        
-        foreach ($estados as $key => $label) {
+
+        foreach ($estados as $key => $estado_info) {
             $checked = in_array($key, $status_filters) ? 'checked' : '';
-            echo '<label>';
-            echo '<input type="checkbox" name="status_filter[]" value="' . esc_attr($key) . '" ' . $checked . '>';
-            echo '<span class="gab-badge stock-' . esc_attr($key) . '" style="margin-right: 5px;">' . esc_html($label) . '</span>';
+            echo '<label style="display: block; margin-bottom: 8px; cursor: pointer;">';
+            echo '<input type="checkbox" name="status_filter[]" value="' . esc_attr($key) . '" ' . $checked . ' style="margin-right: 8px;">';
+            echo '<span style="display: inline-block; padding: 3px 8px; background-color: ' . esc_attr($estado_info['color']) . '; ';
+            echo 'color: white; border-radius: 3px; font-size: 12px; font-weight: 600;">';
+            echo esc_html($estado_info['label']);
+            echo '</span>';
             echo '</label>';
         }
-        
+
         echo '</div>';
         echo '<small class="description">' . esc_html__('Filtra productos por su estado de stock.', 'gestion-almacenes') . '</small>';
         echo '</div>';
@@ -522,10 +540,19 @@ class Gestion_Almacenes_Admin {
             }
             
             if (!empty($status_filters)) {
+                // Definir los labels de estados aquí también
+                $estados_labels = array(
+                    'high' => __('Stock alto', 'gestion-almacenes'),
+                    'medium' => __('Stock medio', 'gestion-almacenes'),
+                    'low' => __('Stock bajo', 'gestion-almacenes'),
+                    'out' => __('Sin stock', 'gestion-almacenes'),
+                    'unassigned' => __('Sin asignar', 'gestion-almacenes')
+                );
+                
                 $nombres_estados = array();
                 foreach ($status_filters as $status) {
-                    if (isset($estados[$status])) {
-                        $nombres_estados[] = $estados[$status];
+                    if (isset($estados_labels[$status])) {
+                        $nombres_estados[] = $estados_labels[$status];
                     }
                 }
                 $filtros_activos[] = sprintf(
@@ -590,15 +617,24 @@ class Gestion_Almacenes_Admin {
                 $total_stock_filtrado = 0;
                 if ($almacenes_a_mostrar) {
                     foreach ($almacenes_a_mostrar as $almacen) {
-                        $stock = isset($producto_data['almacenes'][$almacen->id]) ? $producto_data['almacenes'][$almacen->id] : 0;
-                        $total_stock_filtrado += $stock;
+                        $stock = isset($producto_data['almacenes'][$almacen->id]) ? $producto_data['almacenes'][$almacen->id] : null;
+                        $total_stock_filtrado += ($stock !== null ? $stock : 0);
                         
-                        echo '<td style="text-align: center;">';
-                        if ($stock > 0) {
+                        echo '<td style="text-align: center;" class="stock-cell" data-warehouse-id="' . esc_attr($almacen->id) . '">';
+                        
+                        if ($stock === null) {
+                            // No tiene registro en este almacén
+                            echo '<span style="color: #999; font-style: italic;">-</span>';
+                        } else if ($stock == 0) {
+                            // AGOTADO - mostrar claramente
+                            echo '<span class="gab-badge stock-out" style="font-size: 11px;">';
+                            echo '<span class="dashicons dashicons-warning" style="font-size: 12px; width: 12px; height: 12px; vertical-align: middle;"></span> ';
+                            echo esc_html__('Agotado', 'gestion-almacenes');
+                            echo '</span>';
+                        } else {
+                            // Tiene stock - mostrar con color según cantidad
                             $status_class = $this->obtener_clase_estado_stock($stock, $threshold);
                             echo '<span class="' . esc_attr($status_class) . '">' . esc_html($stock) . '</span>';
-                        } else {
-                            echo '<span style="color: #999;">0</span>';
                         }
                         echo '</td>';
                     }
@@ -610,10 +646,26 @@ class Gestion_Almacenes_Admin {
                 echo '</td>';
 
                 // Estado general
-                echo '<td style="text-align: center;">';
+                echo '<td style="text-align: center;" class="status-cell">';
                 if ($producto_data['sin_asignar']) {
                     echo '<span class="gab-badge stock-unassigned">' . esc_html__('Sin asignar', 'gestion-almacenes') . '</span>';
+                } else if ($producto_data['es_agotado_total']) {
+                    // Completamente agotado
+                    echo '<span class="gab-badge stock-out">';
+                    echo '<span class="dashicons dashicons-warning" style="font-size: 14px; vertical-align: middle;"></span> ';
+                    echo esc_html__('Agotado Total', 'gestion-almacenes');
+                    echo '</span>';
+                } else if ($producto_data['tiene_algun_agotamiento']) {
+                    // Parcialmente agotado
+                    echo '<span class="gab-badge stock-low" style="white-space: normal; display: inline-block;">';
+                    echo '<span class="dashicons dashicons-info" style="font-size: 14px; vertical-align: middle;"></span> ';
+                    echo sprintf(
+                        esc_html__('Agotado en %d almacén(es)', 'gestion-almacenes'),
+                        $producto_data['almacenes_agotados']
+                    );
+                    echo '</span>';
                 } else {
+                    // Con stock - usar lógica existente
                     $producto_data_filtrado = array(
                         'almacenes' => array(),
                         'total_stock' => $total_stock_filtrado
@@ -695,24 +747,48 @@ class Gestion_Almacenes_Admin {
         foreach ($todos_productos as $producto) {
             $product_id = $producto->product_id;
             
+            // Inicializar estructura
             $productos_agrupados[$product_id] = array(
                 'almacenes' => array(),
                 'total_stock' => 0,
-                'sin_asignar' => empty($producto->warehouse_stock)
+                'sin_asignar' => true,
+                'tiene_registros' => false,
+                'almacenes_agotados' => 0, // Nuevo: contar almacenes agotados
+                'es_agotado_total' => false, // Nuevo: si está agotado en TODOS los almacenes
+                'tiene_algun_agotamiento' => false, // Nuevo: si tiene al menos un almacén agotado
+                'wc_stock' => $producto->wc_stock,
+                'manage_stock' => $producto->manage_stock,
+                'sku' => $producto->sku
             );
             
-            // Si tiene stock en almacenes
-            if (!empty($producto->warehouse_stock)) {
+            // Si tiene registros de stock
+            if (isset($producto->warehouse_stock) && !empty($producto->warehouse_stock)) {
+                $productos_agrupados[$product_id]['tiene_registros'] = true;
+                $productos_agrupados[$product_id]['sin_asignar'] = false;
+                
+                $almacenes_con_registro = 0;
+                $almacenes_en_cero = 0;
+                
                 foreach ($producto->warehouse_stock as $warehouse_id => $stock) {
-                    $productos_agrupados[$product_id]['almacenes'][$warehouse_id] = intval($stock);
-                    $productos_agrupados[$product_id]['total_stock'] += intval($stock);
+                    $stock_value = intval($stock);
+                    $productos_agrupados[$product_id]['almacenes'][$warehouse_id] = $stock_value;
+                    $productos_agrupados[$product_id]['total_stock'] += $stock_value;
+                    
+                    $almacenes_con_registro++;
+                    
+                    if ($stock_value == 0) {
+                        $almacenes_en_cero++;
+                        $productos_agrupados[$product_id]['tiene_algun_agotamiento'] = true;
+                    }
+                }
+                
+                $productos_agrupados[$product_id]['almacenes_agotados'] = $almacenes_en_cero;
+                
+                // Está completamente agotado si todos los almacenes con registro están en 0
+                if ($almacenes_con_registro > 0 && $almacenes_con_registro == $almacenes_en_cero) {
+                    $productos_agrupados[$product_id]['es_agotado_total'] = true;
                 }
             }
-            
-            // Agregar información adicional del producto
-            $productos_agrupados[$product_id]['wc_stock'] = $producto->wc_stock;
-            $productos_agrupados[$product_id]['manage_stock'] = $producto->manage_stock;
-            $productos_agrupados[$product_id]['sku'] = $producto->sku;
         }
         
         return $productos_agrupados;
@@ -727,51 +803,77 @@ class Gestion_Almacenes_Admin {
         foreach ($productos_agrupados as $product_id => $producto_data) {
             $incluir_producto = false;
             
-            // Si está marcado mostrar todos y el producto no tiene stock asignado
-            if ($show_all === 'yes' && $producto_data['sin_asignar']) {
+            // Lógica base de inclusión
+            if ($producto_data['sin_asignar']) {
+                // Producto sin asignar
+                if ($show_all === 'yes' || empty($status_filters)) {
+                    $incluir_producto = true;
+                }
+            } else if ($producto_data['total_stock'] > 0 || $producto_data['tiene_algun_agotamiento']) {
+                // Producto con stock o con agotamientos
                 $incluir_producto = true;
             }
             
-            // Si tiene stock en algún almacén
-            if ($producto_data['total_stock'] > 0) {
-                $incluir_producto = true;
+            // Aplicar filtro por almacenes
+            if (!empty($warehouse_filters) && !$producto_data['sin_asignar']) {
+                $tiene_relacion_con_almacenes = false;
                 
-                // Aplicar filtro por almacenes si existe
-                if (!empty($warehouse_filters)) {
-                    $tiene_stock_en_almacenes_filtrados = false;
-                    foreach ($warehouse_filters as $warehouse_id) {
-                        if (isset($producto_data['almacenes'][$warehouse_id]) && $producto_data['almacenes'][$warehouse_id] > 0) {
-                            $tiene_stock_en_almacenes_filtrados = true;
-                            break;
-                        }
-                    }
-                    if (!$tiene_stock_en_almacenes_filtrados) {
-                        $incluir_producto = false;
-                    }
-                }
-            }
-            
-            // Filtro por estado
-            if (!empty($status_filters) && $incluir_producto) {
-                $cumple_estado = false;
-                
-                // Si el producto está sin asignar
-                if ($producto_data['sin_asignar'] && in_array('unassigned', $status_filters)) {
-                    $cumple_estado = true;
-                } else {
-                    // Usar la lógica existente para productos con stock
-                    $estado_producto = $this->determinar_estado_producto($producto_data, $threshold);
-                    foreach ($status_filters as $status) {
-                        if (in_array($status, $estado_producto)) {
-                            $cumple_estado = true;
-                            break;
-                        }
+                foreach ($warehouse_filters as $warehouse_id) {
+                    // Incluir si tiene stock o registro (aunque sea 0) en el almacén filtrado
+                    if (isset($producto_data['almacenes'][$warehouse_id])) {
+                        $tiene_relacion_con_almacenes = true;
+                        break;
                     }
                 }
                 
-                if (!$cumple_estado) {
+                if (!$tiene_relacion_con_almacenes) {
                     $incluir_producto = false;
                 }
+            }
+            
+            // Aplicar filtros de estado
+            if (!empty($status_filters)) {
+                $cumple_estado = false;
+                
+                // Sin asignar
+                if ($producto_data['sin_asignar'] && in_array('unassigned', $status_filters)) {
+                    $cumple_estado = true;
+                }
+                // Sin stock - incluir productos totalmente agotados O con algún agotamiento
+                else if (in_array('out', $status_filters) && 
+                        ($producto_data['es_agotado_total'] || $producto_data['tiene_algun_agotamiento'])) {
+                    $cumple_estado = true;
+                }
+                // Con stock - evaluar niveles
+                else if ($producto_data['total_stock'] > 0) {
+                    $tiene_stock_bajo = false;
+                    $tiene_stock_medio = false;
+                    $tiene_stock_alto = false;
+                    
+                    foreach ($producto_data['almacenes'] as $stock) {
+                        if ($stock > 0) {
+                            if ($stock <= $threshold) {
+                                $tiene_stock_bajo = true;
+                            } else if ($stock <= ($threshold * 2)) {
+                                $tiene_stock_medio = true;
+                            } else {
+                                $tiene_stock_alto = true;
+                            }
+                        }
+                    }
+                    
+                    if ($tiene_stock_bajo && in_array('low', $status_filters)) {
+                        $cumple_estado = true;
+                    }
+                    if ($tiene_stock_medio && in_array('medium', $status_filters)) {
+                        $cumple_estado = true;
+                    }
+                    if ($tiene_stock_alto && in_array('high', $status_filters)) {
+                        $cumple_estado = true;
+                    }
+                }
+                
+                $incluir_producto = $cumple_estado;
             }
             
             if ($incluir_producto) {
@@ -783,50 +885,66 @@ class Gestion_Almacenes_Admin {
     }
 
     /**
-     * Mostrar estadísticas extendidas
+     * Mostrar estadísticas extendidas (CORREGIDO)
      */
     private function mostrar_estadisticas_stock_agrupadas_extendido($productos_filtrados, $almacenes_mostrados, $threshold, $todos_productos) {
         $total_productos = count($productos_filtrados);
         $total_productos_wc = count($todos_productos);
         $total_stock = 0;
-        $productos_sin_stock = 0;
+        $productos_sin_stock = 0; // Incluirá productos con agotamientos
         $productos_stock_bajo = 0;
         $productos_sin_asignar = 0;
         $total_almacenes_mostrados = count($almacenes_mostrados);
 
         foreach ($productos_filtrados as $producto_data) {
+            // Producto sin asignar
             if ($producto_data['sin_asignar']) {
                 $productos_sin_asignar++;
                 continue;
             }
             
-            // Calcular solo el stock de los almacenes que se están mostrando
-            $stock_producto_filtrado = 0;
-            $tiene_stock_bajo_en_mostrados = false;
+            // Producto con algún agotamiento o totalmente agotado
+            if ($producto_data['es_agotado_total'] || $producto_data['tiene_algun_agotamiento']) {
+                $productos_sin_stock++;
+                // No hacer continue si tiene stock parcial, para contarlo también en el total
+            }
             
-            foreach ($almacenes_mostrados as $almacen) {
-                if (isset($producto_data['almacenes'][$almacen->id])) {
-                    $stock_almacen = $producto_data['almacenes'][$almacen->id];
-                    $stock_producto_filtrado += $stock_almacen;
-                    
-                    if ($stock_almacen > 0 && $stock_almacen <= $threshold) {
-                        $tiene_stock_bajo_en_mostrados = true;
+            // Contar stock total
+            $stock_producto_total = 0;
+            $tiene_stock_bajo = false;
+            
+            if (!empty($almacenes_mostrados)) {
+                foreach ($almacenes_mostrados as $almacen) {
+                    if (isset($producto_data['almacenes'][$almacen->id])) {
+                        $stock_almacen = $producto_data['almacenes'][$almacen->id];
+                        $stock_producto_total += $stock_almacen;
+                        
+                        if ($stock_almacen > 0 && $stock_almacen <= $threshold) {
+                            $tiene_stock_bajo = true;
+                        }
+                    }
+                }
+            } else {
+                $stock_producto_total = $producto_data['total_stock'];
+                
+                foreach ($producto_data['almacenes'] as $stock) {
+                    if ($stock > 0 && $stock <= $threshold) {
+                        $tiene_stock_bajo = true;
                     }
                 }
             }
             
-            $total_stock += $stock_producto_filtrado;
+            $total_stock += $stock_producto_total;
             
-            if ($stock_producto_filtrado == 0) {
-                $productos_sin_stock++;
-            } elseif ($tiene_stock_bajo_en_mostrados) {
+            // Solo contar como stock bajo si NO está en la categoría de agotados
+            if ($tiene_stock_bajo && !$producto_data['es_agotado_total']) {
                 $productos_stock_bajo++;
             }
         }
 
+        // Mostrar estadísticas
         echo '<div class="gab-stats-grid">';
         
-        // Nueva estadística: Total productos en WooCommerce
         echo '<div class="gab-stat-card">';
         echo '<span class="stat-number">' . $total_productos_wc . '</span>';
         echo '<span class="stat-label">' . esc_html__('Total Productos WC', 'gestion-almacenes') . '</span>';
@@ -853,11 +971,10 @@ class Gestion_Almacenes_Admin {
         echo '</div>';
 
         echo '<div class="gab-stat-card">';
-        echo '<span class="stat-number" style="color: #999;">' . $productos_sin_stock . '</span>';
-        echo '<span class="stat-label">' . esc_html__('Sin Stock', 'gestion-almacenes') . '</span>';
+        echo '<span class="stat-number" style="color: #dc3545; font-weight: bold;">' . $productos_sin_stock . '</span>';
+        echo '<span class="stat-label">' . esc_html__('Sin Stock / Agotados', 'gestion-almacenes') . '</span>';
         echo '</div>';
         
-        // Nueva estadística: Productos sin asignar
         echo '<div class="gab-stat-card">';
         echo '<span class="stat-number" style="color: #2271b1;">' . $productos_sin_asignar . '</span>';
         echo '<span class="stat-label">' . esc_html__('Sin Asignar', 'gestion-almacenes') . '</span>';
@@ -1119,22 +1236,67 @@ class Gestion_Almacenes_Admin {
     /**
      * Determinar estados de un producto
      */
-    private function determinar_estado_producto($producto_data, $threshold) {
-        $estados = array();
+    private function determinar_estado_detallado_producto($producto_data, $threshold) {
+        // Si nunca ha tenido registros
+        if (!isset($producto_data['tiene_registros']) || !$producto_data['tiene_registros']) {
+            return array(
+                'estado' => 'unassigned',
+                'label' => __('Sin asignar', 'gestion-almacenes'),
+                'class' => 'stock-unassigned',
+                'icon' => 'dashicons-minus'
+            );
+        }
+        
+        // Si tiene registros pero stock total es 0
+        if ($producto_data['total_stock'] == 0) {
+            return array(
+                'estado' => 'depleted',
+                'label' => __('Agotado', 'gestion-almacenes'),
+                'class' => 'stock-out',
+                'icon' => 'dashicons-warning'
+            );
+        }
+        
+        // Analizar niveles de stock
+        $almacenes_con_stock = 0;
+        $almacenes_stock_bajo = 0;
         
         foreach ($producto_data['almacenes'] as $warehouse_id => $stock) {
-            if ($stock == 0) {
-                $estados[] = 'out';
-            } elseif ($stock <= $threshold) {
-                $estados[] = 'low';
-            } elseif ($stock <= ($threshold * 2)) {
-                $estados[] = 'medium';
-            } else {
-                $estados[] = 'high';
+            if ($stock > 0) {
+                $almacenes_con_stock++;
+                if ($stock <= $threshold) {
+                    $almacenes_stock_bajo++;
+                }
             }
         }
         
-        return array_unique($estados);
+        // Si todos los almacenes con stock están bajos
+        if ($almacenes_con_stock > 0 && $almacenes_con_stock == $almacenes_stock_bajo) {
+            return array(
+                'estado' => 'low',
+                'label' => __('Stock bajo', 'gestion-almacenes'),
+                'class' => 'stock-low',
+                'icon' => 'dashicons-arrow-down'
+            );
+        }
+        
+        // Si hay mezcla de stocks
+        if ($almacenes_stock_bajo > 0) {
+            return array(
+                'estado' => 'mixed',
+                'label' => __('Stock mixto', 'gestion-almacenes'),
+                'class' => 'stock-medium',
+                'icon' => 'dashicons-leftright'
+            );
+        }
+        
+        // Stock normal/alto
+        return array(
+            'estado' => 'normal',
+            'label' => __('Stock disponible', 'gestion-almacenes'),
+            'class' => 'stock-high',
+            'icon' => 'dashicons-yes'
+        );
     }
 
     /**

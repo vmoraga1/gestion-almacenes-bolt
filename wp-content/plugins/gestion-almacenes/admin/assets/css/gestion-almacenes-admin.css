@@ -694,3 +694,70 @@
 .gab-stats-grid {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
+
+/* Estilos para productos agotados */
+.gab-badge.stock-out {
+    background-color: #dc3545;
+    color: #fff;
+    font-weight: bold;
+}
+
+.gab-badge.stock-out .dashicons {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Celda de stock agotado */
+.stock-cell .stock-out {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+/* Fila completa cuando todos los stocks están en 0 */
+tr.all-stock-depleted {
+    background-color: #fff5f5 !important;
+}
+
+tr.all-stock-depleted:hover {
+    background-color: #ffebeb !important;
+}
+
+/* Badge para stock mixto */
+.gab-badge.stock-medium {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+/* Indicador visual para celdas sin registro */
+.stock-cell span[style*="color: #999"] {
+    font-size: 18px;
+    line-height: 1;
+}
+
+/* Tooltip mejorado */
+.gab-badge[title] {
+    cursor: help;
+    position: relative;
+}
+
+.gab-badge[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    white-space: nowrap;
+    z-index: 1000;
+    margin-bottom: 5px;
+}

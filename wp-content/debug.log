@@ -20535,3 +20535,183 @@ Stack trace:
     [4] => 12
 )
 
+[06-Jun-2025 00:53:51 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:54:36 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:55:03 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+    [1] => 67
+    [2] => 60
+    [3] => 5
+    [4] => 40
+)
+
+[06-Jun-2025 00:55:03 UTC] WordPress database error Unknown column 'quantity' in 'field list' for query INSERT INTO `wp_gab_warehouse_product_stock` (`warehouse_id`, `product_id`, `stock`, `quantity`, `updated_at`) VALUES (6, 75, 3, 0, '2025-06-06 02:55:03') made by do_action('wp_ajax_gab_complete_transfer'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Transfer_Controller->ajax_complete_transfer, Gestion_Almacenes_DB->update_warehouse_stock
+[06-Jun-2025 00:55:03 UTC] [GESTION ALMACENES] Error al completar transferencia: Error al crear registro de stock: Unknown column 'quantity' in 'field list'
+[06-Jun-2025 01:10:58 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:11:30 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:11:36 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:11:55 UTC] [GAB] Registro de stock creado para producto 75 en almacén 6
+[06-Jun-2025 01:11:55 UTC] [GAB] Stock actualizado: Almacén 1, Producto 75, Cambio: -3, Nuevo stock: 64
+[06-Jun-2025 01:11:55 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+    [1] => 64
+    [2] => 60
+    [3] => 5
+    [4] => 40
+    [6] => 0
+)
+
+[06-Jun-2025 01:11:55 UTC] [GAB] Stock actualizado: Almacén 6, Producto 75, Cambio: 3, Nuevo stock: 3
+[06-Jun-2025 01:11:55 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+    [1] => 64
+    [2] => 60
+    [3] => 5
+    [4] => 40
+    [6] => 3
+)
+
+[06-Jun-2025 01:12:42 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:12:53 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:13:58 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:14:03 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:16:15 UTC] [GAB] Registro de stock creado para producto 70 en almacén 6
+[06-Jun-2025 01:16:15 UTC] [GAB] Registro de stock creado para producto 77 en almacén 6
+[06-Jun-2025 01:16:15 UTC] [GAB] Stock actualizado: Almacén 1, Producto 70, Cambio: -3, Nuevo stock: 8
+[06-Jun-2025 01:16:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 8
+    [2] => 6
+    [3] => 11
+    [4] => 12
+    [6] => 0
+)
+
+[06-Jun-2025 01:16:16 UTC] [GAB] Stock actualizado: Almacén 6, Producto 70, Cambio: 3, Nuevo stock: 3
+[06-Jun-2025 01:16:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 8
+    [2] => 6
+    [3] => 11
+    [4] => 12
+    [6] => 3
+)
+
+[06-Jun-2025 01:16:16 UTC] [GAB] Stock actualizado: Almacén 1, Producto 77, Cambio: -4, Nuevo stock: 10
+[06-Jun-2025 01:16:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 10
+    [3] => 0
+    [4] => 5
+    [6] => 0
+)
+
+[06-Jun-2025 01:16:16 UTC] [GAB] Stock actualizado: Almacén 6, Producto 77, Cambio: 4, Nuevo stock: 4
+[06-Jun-2025 01:16:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 10
+    [3] => 0
+    [4] => 5
+    [6] => 4
+)
+
+[06-Jun-2025 01:29:43 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:29:51 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:46:11 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:46:53 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:47:34 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:47:42 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:47:50 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:48:05 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:48:09 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:48:17 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:48:22 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:48:29 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:49:12 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:49:24 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:49:33 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:49:37 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:49:44 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:50:03 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:50:11 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:50:18 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:50:24 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:51:49 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:54:44 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:54:50 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 01:54:59 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 06:06:09 UTC] Automatic updates starting...
+[06-Jun-2025 06:06:10 UTC] Automatic updates complete.
+[06-Jun-2025 13:08:00 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:08:23 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:08:23 UTC] PHP Notice:  Array to string conversion in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\admin\class-gestion-almacenes-admin.php on line 551
+[06-Jun-2025 13:08:23 UTC] PHP Stack trace:
+[06-Jun-2025 13:08:23 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[06-Jun-2025 13:08:23 UTC] PHP   2. do_action($hook_name = 'warehouses_page_gab-stock-report') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[06-Jun-2025 13:08:23 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[06-Jun-2025 13:08:23 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[06-Jun-2025 13:08:23 UTC] PHP   5. Gestion_Almacenes_Admin->mostrar_reporte_stock('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[06-Jun-2025 13:08:23 UTC] PHP   6. implode($glue = ', ', $pieces = [0 => ['label' => 'Stock alto', 'color' => '#28a745']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\admin\class-gestion-almacenes-admin.php:551
+[06-Jun-2025 13:08:41 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:08:47 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:08:47 UTC] PHP Notice:  Array to string conversion in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\admin\class-gestion-almacenes-admin.php on line 551
+[06-Jun-2025 13:08:47 UTC] PHP Stack trace:
+[06-Jun-2025 13:08:47 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[06-Jun-2025 13:08:47 UTC] PHP   2. do_action($hook_name = 'warehouses_page_gab-stock-report') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[06-Jun-2025 13:08:47 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[06-Jun-2025 13:08:47 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[06-Jun-2025 13:08:47 UTC] PHP   5. Gestion_Almacenes_Admin->mostrar_reporte_stock('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[06-Jun-2025 13:08:47 UTC] PHP   6. implode($glue = ', ', $pieces = [0 => ['label' => 'Sin stock', 'color' => '#dc3545']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\admin\class-gestion-almacenes-admin.php:551
+[06-Jun-2025 13:09:02 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:09:06 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:09:06 UTC] PHP Notice:  Array to string conversion in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\admin\class-gestion-almacenes-admin.php on line 551
+[06-Jun-2025 13:09:06 UTC] PHP Stack trace:
+[06-Jun-2025 13:09:06 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[06-Jun-2025 13:09:06 UTC] PHP   2. do_action($hook_name = 'warehouses_page_gab-stock-report') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[06-Jun-2025 13:09:06 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[06-Jun-2025 13:09:06 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[06-Jun-2025 13:09:06 UTC] PHP   5. Gestion_Almacenes_Admin->mostrar_reporte_stock('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[06-Jun-2025 13:09:06 UTC] PHP   6. implode($glue = ', ', $pieces = [0 => ['label' => 'Sin asignar', 'color' => '#2271b1']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\admin\class-gestion-almacenes-admin.php:551
+[06-Jun-2025 13:09:15 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:09:29 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:09:35 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:09:40 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:09:40 UTC] PHP Notice:  Array to string conversion in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\admin\class-gestion-almacenes-admin.php on line 551
+[06-Jun-2025 13:09:40 UTC] PHP Stack trace:
+[06-Jun-2025 13:09:40 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[06-Jun-2025 13:09:40 UTC] PHP   2. do_action($hook_name = 'warehouses_page_gab-stock-report') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[06-Jun-2025 13:09:40 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[06-Jun-2025 13:09:40 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[06-Jun-2025 13:09:40 UTC] PHP   5. Gestion_Almacenes_Admin->mostrar_reporte_stock('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[06-Jun-2025 13:09:40 UTC] PHP   6. implode($glue = ', ', $pieces = [0 => ['label' => 'Sin asignar', 'color' => '#2271b1']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\admin\class-gestion-almacenes-admin.php:551
+[06-Jun-2025 13:25:20 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:25:31 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:25:40 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:25:50 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:26:09 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:26:16 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:26:24 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:26:47 UTC] GAB Stock: Stock ajustado: Malla Papal 2x1m (ID: 70) - Almacén: Tienda de Prueba - Operación: subtract - Cantidad: 3 - Nuevo stock: 0
+[06-Jun-2025 13:26:50 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:26:56 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:27:02 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:27:13 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:27:47 UTC] GAB Stock: Stock ajustado: Toldo 2x3m (ID: 76) - Almacén: Bodega Principal - Operación: subtract - Cantidad: 1 - Nuevo stock: 0
+[06-Jun-2025 13:27:49 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:27:59 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:28:14 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:28:20 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:47:41 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:49:58 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:53:25 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:55:40 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:56:11 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:56:16 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:57:38 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 13:59:48 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 14:00:37 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 14:00:52 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 14:02:17 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 14:06:14 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 14:07:53 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 14:09:00 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.

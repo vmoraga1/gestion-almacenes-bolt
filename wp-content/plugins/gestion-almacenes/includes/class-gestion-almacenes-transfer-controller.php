@@ -458,9 +458,21 @@ class Gestion_Almacenes_Transfer_Controller {
             return;
         }
         
+        // Asegurar que existe el registro antes de consultar
+        $this->db->ensure_warehouse_stock_exists($warehouse_id, $product_id);
+        
+        // Ahora obtener el stock (será 0 si es un registro nuevo)
         $stock = $this->db->get_product_stock_in_warehouse($product_id, $warehouse_id);
         
-        wp_send_json_success(array('stock' => $stock));
+        // Agregar información adicional para debug
+        $response_data = array(
+            'stock' => $stock,
+            'is_new' => ($stock === 0), // Indicar si es un registro nuevo
+            'warehouse_id' => $warehouse_id,
+            'product_id' => $product_id
+        );
+        
+        wp_send_json_success($response_data);
     }
 
     
@@ -1171,6 +1183,15 @@ class Gestion_Almacenes_Transfer_Controller {
         
         if (!in_array(strtolower($transfer->status), ['pending', 'draft'])) {
             wp_send_json_error(['message' => 'Esta transferencia ya no está pendiente.']);
+        }
+
+        // Asegurar que existen los registros de stock para todos los productos
+        foreach ($transfer->items as $item) {
+            // Asegurar registro en almacén origen
+            $this->db->ensure_warehouse_stock_exists($transfer->source_warehouse_id, $item->product_id);
+            
+            // Asegurar registro en almacén destino
+            $this->db->ensure_warehouse_stock_exists($transfer->target_warehouse_id, $item->product_id);
         }
         
         // Verificar que hay suficiente stock en el almacén de origen
