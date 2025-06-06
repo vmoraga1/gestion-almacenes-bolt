@@ -1,6 +1,6 @@
 <?php
 /**
- * Gestor de stock para ventas
+ * Gestor de stock para ventas - VERSIÓN CORREGIDA
  */
 class Gestion_Almacenes_Sales_Stock_Manager {
     
@@ -19,6 +19,14 @@ class Gestion_Almacenes_Sales_Stock_Manager {
      * Inicializar hooks
      */
     private function init_hooks() {
+        // PRIORIDAD ALTA para sobrescribir la validación de WooCommerce
+        add_filter('woocommerce_product_get_stock_quantity', [$this, 'override_stock_for_validation'], 1, 2);
+        add_filter('woocommerce_product_variation_get_stock_quantity', [$this, 'override_stock_for_validation'], 1, 2);
+        
+        // Hook para validación personalizada de stock
+        add_filter('woocommerce_add_to_cart_validation', [$this, 'validate_warehouse_stock'], 20, 5);
+        add_filter('woocommerce_update_cart_validation', [$this, 'validate_warehouse_stock_on_update'], 20, 4);
+        
         // Hook cuando se reduce el stock de un pedido
         add_action('woocommerce_reduce_order_stock', [$this, 'handle_order_stock_reduction'], 10, 1);
         
@@ -34,6 +42,183 @@ class Gestion_Almacenes_Sales_Stock_Manager {
         // Hook cuando se cancela o reembolsa un pedido
         add_action('woocommerce_order_status_cancelled', [$this, 'restore_stock_on_cancel']);
         add_action('woocommerce_order_status_refunded', [$this, 'restore_stock_on_cancel']);
+        
+        // Hook para manejar el stock en el checkout
+        add_action('woocommerce_check_cart_items', [$this, 'check_cart_items_stock']);
+    }
+    
+    /**
+     * Sobrescribir el stock para la validación de WooCommerce
+     */
+    public function override_stock_for_validation($stock, $product) {
+        // Si el producto no maneja stock, devolver el valor original
+        if (!$product || !$product->get_manage_stock()) {
+            return $stock;
+        }
+        
+        // Obtener el stock total de todos los almacenes
+        $total_stock = 0;
+        $warehouses = $this->db->get_warehouses();
+        
+        foreach ($warehouses as $warehouse) {
+            $warehouse_stock = $this->db->get_warehouse_stock($warehouse->id, $product->get_id());
+            $total_stock += $warehouse_stock;
+        }
+        
+        return $total_stock;
+    }
+    
+    /**
+     * Validar stock del almacén al agregar al carrito
+     */
+    public function validate_warehouse_stock($passed, $product_id, $quantity, $variation_id = 0, $variations = array()) {
+        // Si ya falló otra validación, no continuar
+        if (!$passed) {
+            return $passed;
+        }
+        
+        $actual_product_id = $variation_id ? $variation_id : $product_id;
+        $product = wc_get_product($actual_product_id);
+        
+        if (!$product || !$product->get_manage_stock()) {
+            return $passed;
+        }
+        
+        // Calcular stock total disponible en todos los almacenes
+        $total_available = 0;
+        $warehouses = $this->db->get_warehouses();
+        
+        foreach ($warehouses as $warehouse) {
+            $stock = $this->db->get_warehouse_stock($warehouse->id, $actual_product_id);
+            $total_available += $stock;
+        }
+        
+        // Verificar cantidad ya en el carrito
+        $cart_qty = $this->get_product_quantity_in_cart($actual_product_id);
+        $total_requested = $cart_qty + $quantity;
+        
+        if ($total_requested > $total_available) {
+            wc_add_notice(
+                sprintf(
+                    __('Solo hay %d unidades disponibles de "%s" en todos los almacenes.', 'gestion-almacenes'),
+                    $total_available,
+                    $product->get_name()
+                ),
+                'error'
+            );
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Validar stock al actualizar el carrito
+     */
+    public function validate_warehouse_stock_on_update($passed, $cart_item_key, $values, $quantity) {
+        if (!$passed) {
+            return $passed;
+        }
+        
+        $product_id = $values['variation_id'] ? $values['variation_id'] : $values['product_id'];
+        $product = wc_get_product($product_id);
+        
+        if (!$product || !$product->get_manage_stock()) {
+            return $passed;
+        }
+        
+        // Calcular stock total disponible
+        $total_available = 0;
+        $warehouses = $this->db->get_warehouses();
+        
+        foreach ($warehouses as $warehouse) {
+            $stock = $this->db->get_warehouse_stock($warehouse->id, $product_id);
+            $total_available += $stock;
+        }
+        
+        if ($quantity > $total_available) {
+            wc_add_notice(
+                sprintf(
+                    __('Solo hay %d unidades disponibles de "%s".', 'gestion-almacenes'),
+                    $total_available,
+                    $product->get_name()
+                ),
+                'error'
+            );
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Verificar stock de todos los items del carrito
+     */
+    public function check_cart_items_stock() {
+        $cart = WC()->cart;
+        if (!$cart || $cart->is_empty()) {
+            return;
+        }
+        
+        $stock_issues = array();
+        
+        foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
+            $product_id = $cart_item['variation_id'] ? $cart_item['variation_id'] : $cart_item['product_id'];
+            $product = $cart_item['data'];
+            
+            if (!$product || !$product->get_manage_stock()) {
+                continue;
+            }
+            
+            $quantity_in_cart = $cart_item['quantity'];
+            
+            // Calcular stock total disponible
+            $total_available = 0;
+            $warehouses = $this->db->get_warehouses();
+            
+            foreach ($warehouses as $warehouse) {
+                $stock = $this->db->get_warehouse_stock($warehouse->id, $product_id);
+                $total_available += $stock;
+            }
+            
+            if ($quantity_in_cart > $total_available) {
+                $stock_issues[] = sprintf(
+                    __('%s solo tiene %d unidades disponibles.', 'gestion-almacenes'),
+                    $product->get_name(),
+                    $total_available
+                );
+                
+                // Ajustar cantidad en el carrito al máximo disponible
+                $cart->set_quantity($cart_item_key, $total_available);
+            }
+        }
+        
+        // Mostrar errores si hay problemas de stock
+        if (!empty($stock_issues)) {
+            wc_add_notice(
+                __('Se han ajustado las cantidades de algunos productos debido a la disponibilidad:', 'gestion-almacenes') . 
+                '<br>' . implode('<br>', $stock_issues),
+                'notice'
+            );
+        }
+    }
+    
+    /**
+     * Obtener cantidad de un producto en el carrito
+     */
+    private function get_product_quantity_in_cart($product_id) {
+        $quantity = 0;
+        
+        if (WC()->cart) {
+            foreach (WC()->cart->get_cart() as $cart_item) {
+                $item_product_id = $cart_item['variation_id'] ? $cart_item['variation_id'] : $cart_item['product_id'];
+                if ($item_product_id == $product_id) {
+                    $quantity += $cart_item['quantity'];
+                }
+            }
+        }
+        
+        return $quantity;
     }
     
     /**
@@ -389,6 +574,10 @@ class Gestion_Almacenes_Sales_Stock_Manager {
     public function restore_stock_on_cancel($order_id) {
         $order = wc_get_order($order_id);
         
+        if (!$order) {
+            return;
+        }
+
         // Verificar si se redujo el stock
         if (get_post_meta($order_id, '_gab_stock_reduced', true) !== 'yes') {
             return;

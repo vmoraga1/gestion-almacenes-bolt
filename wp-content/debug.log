@@ -17792,3 +17792,2746 @@ Stack trace:
 [05-Jun-2025 23:15:49 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
 [05-Jun-2025 23:16:00 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
 [05-Jun-2025 23:16:12 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[05-Jun-2025 23:20:30 UTC] WordPress database error Unknown column 'status' in 'where clause' for query SELECT id FROM wp_gab_warehouses 
+            WHERE status = 'active' 
+            ORDER BY id ASC 
+            LIMIT 1 made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\StoreApi\Routes\V1\AbstractCartRoute->get_response, Automattic\WooCommerce\StoreApi\Routes\V1\AbstractRoute->get_response_by_request_method, Automattic\WooCommerce\StoreApi\Routes\V1\Cart->get_route_response, Automattic\WooCommerce\StoreApi\Schemas\V1\CartSchema->get_item_response, Automattic\WooCommerce\StoreApi\Schemas\V1\CartSchema->get_cart_errors, Automattic\WooCommerce\StoreApi\Utilities\CartController->get_cart_errors, Automattic\WooCommerce\StoreApi\Utilities\CartController->validate_cart, do_action('woocommerce_check_cart_items'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Admin->verificar_stock_checkout, Gestion_Almacenes_Admin->get_default_warehouse_id
+[05-Jun-2025 23:33:19 UTC] WordPress database error Unknown column 'status' in 'where clause' for query SELECT id FROM wp_gab_warehouses 
+            WHERE status = 'active' 
+            ORDER BY id ASC 
+            LIMIT 1 made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\StoreApi\Routes\V1\AbstractCartRoute->get_response, Automattic\WooCommerce\StoreApi\Routes\V1\AbstractRoute->get_response_by_request_method, Automattic\WooCommerce\StoreApi\Routes\V1\Cart->get_route_response, Automattic\WooCommerce\StoreApi\Schemas\V1\CartSchema->get_item_response, Automattic\WooCommerce\StoreApi\Schemas\V1\CartSchema->get_cart_errors, Automattic\WooCommerce\StoreApi\Utilities\CartController->get_cart_errors, Automattic\WooCommerce\StoreApi\Utilities\CartController->validate_cart, do_action('woocommerce_check_cart_items'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Admin->verificar_stock_checkout, Gestion_Almacenes_Admin->get_default_warehouse_id
+[06-Jun-2025 00:18:16 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:18:21 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:18:30 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:19:02 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:02 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:19:02 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:02 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:16 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:19:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:17 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:18 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:18 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:18 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:18 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:18 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:18 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:18 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:18 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:18 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:18 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:18 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:18 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:18 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:18 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 14
+    [3] => 0
+    [4] => 5
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 14
+    [3] => 0
+    [4] => 5
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 14
+    [3] => 0
+    [4] => 5
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 14
+    [3] => 0
+    [4] => 5
+)
+
+[06-Jun-2025 00:19:20 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 14
+    [3] => 0
+    [4] => 5
+)
+
+[06-Jun-2025 00:19:21 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:21 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:21 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:21 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:21 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:21 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:21 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:19:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:23:33 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:23:41 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:23:47 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:27:39 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:27:42 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:28:15 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:28:59 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:30:04 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:30:21 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:30:35 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:31:02 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:32:14 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:32:40 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:32:49 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:33:14 UTC] GAB Stock: Stock ajustado: Generador Petrolero 5.000w (ID: 72) - Almacén: Bodega Principal - Operación: set - Cantidad: 2 - Nuevo stock: 2
+[06-Jun-2025 00:33:16 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:33:34 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:33:38 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:33:43 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:34:23 UTC] GAB Stock: Stock ajustado: Generador Petrolero 5.000w (ID: 72) - Almacén: Bodega Principal - Operación: subtract - Cantidad: 2 - Nuevo stock: 0
+[06-Jun-2025 00:34:26 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:34:33 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:34:50 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:35:26 UTC] GAB Stock: Stock ajustado: Silla Plástica (ID: 69) - Almacén: Bodega Pozo - Operación: subtract - Cantidad: 7 - Nuevo stock: 0
+[06-Jun-2025 00:35:29 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:35:36 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:36:11 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:36:55 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:37:07 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:37:13 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:13 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:13 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:13 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:13 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:13 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:13 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:13 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:13 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:58 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:58 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:58 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:58 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:58 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:58 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:58 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:58 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:37:58 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:38:02 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:38:02 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:38:02 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:38:37 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:38:53 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:38:59 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:38:59 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:38:59 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:38:59 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:38:59 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:38:59 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:38:59 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:38:59 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:38:59 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:39:03 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:39:03 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:39:03 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:07 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:07 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:07 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:07 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:07 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:07 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:07 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:07 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:07 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:15 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:30 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[06-Jun-2025 00:42:30 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[06-Jun-2025 00:42:30 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[06-Jun-2025 00:42:30 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 14
+    [3] => 0
+    [4] => 5
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 14
+    [3] => 0
+    [4] => 5
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 14
+    [3] => 0
+    [4] => 5
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 14
+    [3] => 0
+    [4] => 5
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 14
+    [3] => 0
+    [4] => 5
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:31 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:33 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:42:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:34 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:35 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:35 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:35 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:35 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:35 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:35 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:35 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:35 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:35 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:35 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:35 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:35 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:35 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:42:35 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:47:49 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:47:49 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:47:54 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:47:54 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:47:54 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:47:54 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:02 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:02 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:48:02 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:02 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:22 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 00:48:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:22 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:23 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:24 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:25 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:25 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:25 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:25 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:25 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:25 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:25 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:25 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:25 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:25 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:25 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:25 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:25 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:25 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 14
+    [3] => 0
+    [4] => 5
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 14
+    [3] => 0
+    [4] => 5
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 14
+    [3] => 0
+    [4] => 5
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 14
+    [3] => 0
+    [4] => 5
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 14
+    [3] => 0
+    [4] => 5
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:28 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:30 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:30 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:30 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:30 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:30 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:30 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:30 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:30 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:30 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:32 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:38 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:38 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+
+[06-Jun-2025 00:48:38 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 11
+    [2] => 6
+    [3] => 11
+    [4] => 12
+)
+

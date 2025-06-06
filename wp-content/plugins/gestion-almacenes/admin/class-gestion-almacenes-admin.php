@@ -10,7 +10,6 @@ class Gestion_Almacenes_Admin {
 
     public function __construct() {
         add_action('admin_menu', array($this, 'registrar_menu_almacenes'));
-        //add_action('admin_post_gab_add_warehouse', array($this, 'procesar_agregar_almacen'));
         add_action('wp_ajax_get_warehouse_stock', array($this, 'ajax_get_warehouse_stock'));
         // Hook para agregar estilos CSS en admin
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
@@ -22,16 +21,7 @@ class Gestion_Almacenes_Admin {
         // Modal Agregar Stock en página de Reporte de Stock por Almacén
         add_action('wp_ajax_gab_adjust_stock', array($this, 'ajax_adjust_stock'));
         
-        // Hook para verificar el stock del almacén antes de agregar al carrito
-        add_filter('woocommerce_add_to_cart_validation', array($this, 'validar_stock_almacen'), 10, 5);
-        add_filter('woocommerce_update_cart_validation', array($this, 'validar_stock_almacen_actualizar'), 10, 4);
-
-        // Hook para verificar stock durante el checkout
-        add_action('woocommerce_check_cart_items', array($this, 'verificar_stock_checkout'));
-
-        // Hook para reducir el stock del almacén después de completar el pedido
-        add_action('woocommerce_reduce_order_stock', array($this, 'reducir_stock_almacen'), 10, 1);
-        add_action('woocommerce_payment_complete', array($this, 'reducir_stock_almacen_pago_completo'), 10, 1);
+        // Hooks de WooCommerce removidos - manejados por class-sales-stock-manager.php y class-gestion-almacenes-woocommerce.php
     }
 
     public function registrar_menu_almacenes() {
@@ -55,16 +45,6 @@ class Gestion_Almacenes_Admin {
             'gab-warehouse-management',
             array($this, 'contenido_pagina_almacenes')
         );
-
-        // Submenú para Agregar Nuevo Almacén
-        /*add_submenu_page(
-            'gab-warehouse-management',
-            __('Agregar Nuevo Almacén', 'gestion-almacenes'),
-            __('Agregar Nuevo', 'gestion-almacenes'),
-            'manage_options',
-            'gab-add-new-warehouse',
-            'gab_mostrar_formulario_nuevo_almacen'
-        );*/
 
         // NUEVOS SUBMENÚS PARA TRANSFERENCIAS
         // Separador visual (submenú deshabilitado)
@@ -399,40 +379,6 @@ class Gestion_Almacenes_Admin {
         // Llamar a la función de la vista
         gab_mostrar_listado_almacenes();
     }
-
-    /*public function procesar_agregar_almacen() {
-        if (!isset($_POST['gab_warehouse_nonce']) || !wp_verify_nonce($_POST['gab_warehouse_nonce'], 'gab_add_warehouse_nonce')) {
-            wp_die(__('No tienes permiso para realizar esta acción.', 'gestion-almacenes'));
-        }
-
-        $data = [
-            'name'     => sanitize_text_field($_POST['warehouse_name']),
-            'address'  => sanitize_textarea_field($_POST['warehouse_address']),
-            'comuna'   => sanitize_text_field($_POST['warehouse_comuna']),
-            'ciudad'   => sanitize_text_field($_POST['warehouse_ciudad']),
-            'region'   => sanitize_text_field($_POST['warehouse_region']),
-            'pais'     => sanitize_text_field($_POST['warehouse_pais']),
-            'email'    => sanitize_email($_POST['warehouse_email']),
-            'telefono' => sanitize_text_field($_POST['warehouse_telefono']),
-            'slug'     => sanitize_title($_POST['warehouse_name']),
-        ];
-
-        if (empty($data['name'])) {
-            wp_redirect(admin_url('admin.php?page=gab-add-new-warehouse&status=error&message=nombre_vacio'));
-            exit;
-        }
-
-        global $gestion_almacenes_db;
-        $insert_result = $gestion_almacenes_db->insertar_almacen($data);
-
-        if ($insert_result) {
-            wp_redirect(admin_url('admin.php?page=gab-warehouse-management&status=success'));
-        } else {
-            wp_redirect(admin_url('admin.php?page=gab-warehouse-management&status=error&message=error_db'));
-        }
-
-        exit;
-    }*/
 
     
     // Página Reporte de Stock por Almacén
@@ -1759,7 +1705,6 @@ class Gestion_Almacenes_Admin {
             .modal-content {
                 width: 95%;
                 margin: 2% auto;
-                padding: 15px;
             }
         }
         </style>
@@ -2204,7 +2149,6 @@ class Gestion_Almacenes_Admin {
         echo '</div>';
         echo '</div>';
     }
-
 
     // Página para editar transferencias
     public function mostrar_editar_transferencia() {
@@ -2828,9 +2772,9 @@ class Gestion_Almacenes_Admin {
     }
 
 
-/**
- * Página de configuración del plugin
-*/
+    /**
+     * Página de configuración del plugin
+    */
     public function mostrar_configuracion() {
         // Variable para mostrar mensaje de éxito
         $saved = false;
@@ -3190,245 +3134,6 @@ class Gestion_Almacenes_Admin {
             </table>
         </div>
         <?php
-    }
-
-    /**
-     * Validar stock del almacén al agregar al carrito
-     */
-    public function validar_stock_almacen($passed, $product_id, $quantity, $variation_id = 0, $variations = array()) {
-        if (!$passed) {
-            return $passed;
-        }
-        
-        // Usar variation_id si existe, sino usar product_id
-        $actual_product_id = $variation_id ? $variation_id : $product_id;
-        
-        // Obtener el almacén predeterminado o el seleccionado
-        $warehouse_id = $this->get_selected_warehouse(); // Implementar esta función según tu lógica
-        
-        if (!$warehouse_id) {
-            // Si no hay almacén seleccionado, usar el primero disponible
-            $warehouse_id = $this->get_default_warehouse_id();
-        }
-        
-        // Verificar stock en el almacén
-        $stock_disponible = $this->get_warehouse_stock($actual_product_id, $warehouse_id);
-        
-        // Verificar cantidad en el carrito actual
-        $cart_qty = $this->get_product_quantity_in_cart($actual_product_id);
-        $total_qty = $cart_qty + $quantity;
-        
-        if ($stock_disponible < $total_qty) {
-            $product = wc_get_product($actual_product_id);
-            wc_add_notice(sprintf(
-                __('No hay suficientes unidades disponibles de "%s". Stock disponible: %d unidades.', 'gestion-almacenes'),
-                $product->get_name(),
-                $stock_disponible
-            ), 'error');
-            return false;
-        }
-        
-        return $passed;
-    }
-
-    /**
-     * Validar stock al actualizar carrito
-     */
-    public function validar_stock_almacen_actualizar($passed, $cart_item_key, $values, $quantity) {
-        if (!$passed) {
-            return $passed;
-        }
-        
-        $product_id = $values['variation_id'] ? $values['variation_id'] : $values['product_id'];
-        $warehouse_id = $this->get_selected_warehouse();
-        
-        if (!$warehouse_id) {
-            $warehouse_id = $this->get_default_warehouse_id();
-        }
-        
-        $stock_disponible = $this->get_warehouse_stock($product_id, $warehouse_id);
-        
-        if ($stock_disponible < $quantity) {
-            $product = wc_get_product($product_id);
-            wc_add_notice(sprintf(
-                __('No hay suficientes unidades disponibles de "%s". Stock disponible: %d unidades.', 'gestion-almacenes'),
-                $product->get_name(),
-                $stock_disponible
-            ), 'error');
-            return false;
-        }
-        
-        return $passed;
-    }
-
-    /**
-     * Verificar stock durante el checkout
-     */
-    public function verificar_stock_checkout() {
-        $warehouse_id = $this->get_selected_warehouse();
-        
-        if (!$warehouse_id) {
-            $warehouse_id = $this->get_default_warehouse_id();
-        }
-        
-        foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) {
-            $product_id = $cart_item['variation_id'] ? $cart_item['variation_id'] : $cart_item['product_id'];
-            $quantity = $cart_item['quantity'];
-            
-            $stock_disponible = $this->get_warehouse_stock($product_id, $warehouse_id);
-            
-            if ($stock_disponible < $quantity) {
-                $product = $cart_item['data'];
-                wc_add_notice(sprintf(
-                    __('No hay suficientes unidades disponibles de "%s" en el almacén seleccionado. Stock disponible: %d unidades.', 'gestion-almacenes'),
-                    $product->get_name(),
-                    $stock_disponible
-                ), 'error');
-            }
-        }
-    }
-
-    /**
-     * Reducir stock del almacén cuando se completa el pedido
-     */
-    public function reducir_stock_almacen($order) {
-        // Verificar si ya se procesó para evitar duplicados
-        $already_reduced = $order->get_meta('_gab_stock_reduced');
-        if ($already_reduced) {
-            return;
-        }
-        
-        $warehouse_id = $this->get_selected_warehouse();
-        if (!$warehouse_id) {
-            $warehouse_id = $this->get_default_warehouse_id();
-        }
-        
-        global $wpdb;
-        $table = $wpdb->prefix . 'gab_warehouse_product_stock';
-        
-        foreach ($order->get_items() as $item) {
-            $product_id = $item->get_variation_id() ? $item->get_variation_id() : $item->get_product_id();
-            $quantity = $item->get_quantity();
-            
-            // Reducir stock del almacén
-            $wpdb->query($wpdb->prepare(
-                "UPDATE $table 
-                SET stock = stock - %d 
-                WHERE product_id = %d 
-                AND warehouse_id = %d 
-                AND stock >= %d",
-                $quantity,
-                $product_id,
-                $warehouse_id,
-                $quantity
-            ));
-            
-            // Registrar en el log o historial
-            $this->log_stock_movement($product_id, $warehouse_id, -$quantity, 'order', $order->get_id());
-        }
-        
-        // Marcar como procesado
-        $order->update_meta_data('_gab_stock_reduced', 'yes');
-        $order->update_meta_data('_gab_warehouse_id', $warehouse_id);
-        $order->save();
-    }
-
-    /**
-     * Funciones auxiliares
-     */
-
-    /**
-     * Obtener stock de un producto en un almacén
-     */
-    private function get_warehouse_stock($product_id, $warehouse_id) {
-        global $wpdb;
-        $table = $wpdb->prefix . 'gab_warehouse_product_stock';
-        
-        $stock = $wpdb->get_var($wpdb->prepare(
-            "SELECT stock FROM $table WHERE product_id = %d AND warehouse_id = %d",
-            $product_id,
-            $warehouse_id
-        ));
-        
-        return $stock !== null ? intval($stock) : 0;
-    }
-
-    /**
-     * Obtener cantidad de producto en el carrito
-     */
-    private function get_product_quantity_in_cart($product_id) {
-        $quantity = 0;
-        
-        if (WC()->cart) {
-            foreach (WC()->cart->get_cart() as $cart_item) {
-                $item_product_id = $cart_item['variation_id'] ? $cart_item['variation_id'] : $cart_item['product_id'];
-                if ($item_product_id == $product_id) {
-                    $quantity += $cart_item['quantity'];
-                }
-            }
-        }
-        
-        return $quantity;
-    }
-
-    /**
-     * Obtener almacén seleccionado (implementar según tu lógica)
-     */
-    private function get_selected_warehouse() {
-        // Opción 1: Desde la sesión
-        if (WC()->session) {
-            $warehouse_id = WC()->session->get('selected_warehouse');
-            if ($warehouse_id) {
-                return intval($warehouse_id);
-            }
-        }
-        
-        // Opción 2: Desde una cookie
-        if (isset($_COOKIE['gab_selected_warehouse'])) {
-            return intval($_COOKIE['gab_selected_warehouse']);
-        }
-        
-        // Opción 3: Basado en la ubicación del cliente
-        // Implementar lógica según zona de envío
-        
-        return null;
-    }
-
-    /**
-     * Obtener ID del almacén predeterminado
-     */
-    private function get_default_warehouse_id() {
-        // Opción 1: Desde configuración
-        $default_id = get_option('gab_default_warehouse_id');
-        if ($default_id) {
-            return intval($default_id);
-        }
-        
-        // Opción 2: El primer almacén activo
-        global $wpdb;
-        $warehouse_id = $wpdb->get_var(
-            "SELECT id FROM {$wpdb->prefix}gab_warehouses 
-            WHERE status = 'active' 
-            ORDER BY id ASC 
-            LIMIT 1"
-        );
-        
-        return $warehouse_id ? intval($warehouse_id) : null;
-    }
-
-    /**
-     * Registrar movimiento de stock
-     */
-    private function log_stock_movement($product_id, $warehouse_id, $quantity, $type, $reference_id = null) {
-        // Implementar registro en tabla de logs si existe
-        do_action('gab_stock_movement', array(
-            'product_id' => $product_id,
-            'warehouse_id' => $warehouse_id,
-            'quantity' => $quantity,
-            'type' => $type,
-            'reference_id' => $reference_id,
-            'date' => current_time('mysql')
-        ));
     }
 
 
