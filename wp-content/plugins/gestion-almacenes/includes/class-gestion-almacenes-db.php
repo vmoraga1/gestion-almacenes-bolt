@@ -57,6 +57,39 @@ class Gestion_Almacenes_DB {
             error_log('[DEBUG GESTION ALMACENES DB] La tabla de almacenes ya existe. No se intentó crear.');
         }
 
+        // Tabla de movimientos de stock
+        $table_movements = $wpdb->prefix . 'gab_stock_movements';
+        if ($wpdb->get_var("SHOW TABLES LIKE '$table_movements'") != $table_movements) {
+            error_log('[DEBUG GESTION ALMACENES DB] Creando tabla de movimientos...');
+            
+            $sql_movements = "CREATE TABLE $table_movements (
+                id mediumint(9) NOT NULL AUTO_INCREMENT,
+                product_id bigint(20) UNSIGNED NOT NULL,
+                warehouse_id mediumint(9) NOT NULL,
+                movement_type enum('in','out','adjustment','transfer_in','transfer_out','sale','return','initial') NOT NULL,
+                quantity int(11) NOT NULL,
+                balance_after int(11) NOT NULL,
+                reference_type varchar(50),
+                reference_id bigint(20),
+                notes text,
+                created_by bigint(20) UNSIGNED NOT NULL,
+                created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (id),
+                KEY idx_product (product_id),
+                KEY idx_warehouse (warehouse_id),
+                KEY idx_date (created_at),
+                KEY idx_type (movement_type),
+                KEY idx_reference (reference_type, reference_id)
+            ) $charset_collate;";
+            
+            dbDelta($sql_movements);
+            
+            if ($wpdb->last_error) {
+                error_log('[DEBUG GESTION ALMACENES DB] Error al crear tabla de movimientos: ' . $wpdb->last_error);
+            } else {
+                error_log('[DEBUG GESTION ALMACENES DB] Tabla de movimientos creada correctamente.');
+            }
+        }
 
         // *** Nueva Tabla de Stock por Almacén ***
         $table_name_stock = $wpdb->prefix . 'gab_warehouse_product_stock';
@@ -373,12 +406,12 @@ class Gestion_Almacenes_DB {
     }
 
     public function save_product_warehouse_stock($product_id, $warehouse_id, $stock) {
-        global $wpdb;
+        global $wpdb, $gestion_almacenes_movements;
         $table_name = $wpdb->prefix . 'gab_warehouse_product_stock';
 
         $existing_stock = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT id FROM $table_name WHERE product_id = %d AND warehouse_id = %d",
+                "SELECT id, stock FROM $table_name WHERE product_id = %d AND warehouse_id = %d",
                 $product_id,
                 $warehouse_id
             )
@@ -387,32 +420,32 @@ class Gestion_Almacenes_DB {
         $data = array(
             'product_id' => $product_id,
             'warehouse_id' => $warehouse_id,
-            'stock' => max(0, intval($stock)), // Asegura que el stock no sea negativo
+            'stock' => max(0, intval($stock)),
         );
 
         $format = array('%d', '%d', '%d');
 
         if ($existing_stock) {
             // Actualizar registro existente
+            $old_stock = intval($existing_stock->stock);
             $where = array('id' => $existing_stock->id);
             $where_format = array('%d');
             $result = $wpdb->update($table_name, $data, $where, $format, $where_format);
-            if ($result === false) {
-                error_log('[DEBUG GESTION ALMACENES DB] Error al actualizar stock: ' . $wpdb->last_error);
-            } else {
-                error_log('[DEBUG GESTION ALMACENES DB] Stock actualizado para Producto ID ' . $product_id . ' en Almacén ID ' . $warehouse_id . '. Filas afectadas: ' . $result);
-            }
-             return $result !== false; // Retorna true si la actualización fue exitosa (0 filas afectadas también es un éxito)
 
         } else {
-            // Insertar nuevo registro
+            // Insertar nuevo registro - STOCK INICIAL
             $result = $wpdb->insert($table_name, $data, $format);
-            if ($result === false) {
-                error_log('[DEBUG GESTION ALMACENES DB] Error al insertar stock: ' . $wpdb->last_error);
-            } else {
-                error_log('[DEBUG GESTION ALMACENES DB] Stock insertado para Producto ID ' . $product_id . ' en Almacén ID ' . $warehouse_id . '. Filas afectadas: ' . $result);
+            
+            if ($result !== false && intval($stock) > 0 && isset($gestion_almacenes_movements)) {
+                // Registrar movimiento inicial
+                $gestion_almacenes_movements->log_movement(array(
+                    'product_id' => $product_id,
+                    'warehouse_id' => $warehouse_id,
+                    'type' => 'initial',
+                    'quantity' => intval($stock),
+                    'notes' => __('Stock inicial', 'gestion-almacenes')
+                ));
             }
-            return $result !== false; // Retorna true si la inserción fue exitosa
         }
     }
 
@@ -1141,6 +1174,46 @@ class Gestion_Almacenes_DB {
         }
         
         return intval($wpdb->get_var($query));
+    }
+
+    /**
+     * Actualizar stock sin registrar movimiento (para uso interno)
+     */
+    public function update_warehouse_stock_silent($warehouse_id, $product_id, $quantity_change) {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'gab_warehouse_product_stock';
+        
+        // Asegurar que existe el registro
+        $this->ensure_warehouse_stock_exists($warehouse_id, $product_id);
+        
+        // Actualizar directamente
+        $result = $wpdb->query($wpdb->prepare(
+            "UPDATE $table_name 
+            SET stock = stock + %d, 
+                updated_at = %s 
+            WHERE warehouse_id = %d AND product_id = %d",
+            $quantity_change,
+            current_time('mysql'),
+            $warehouse_id,
+            $product_id
+        ));
+        
+        if ($result === false) {
+            throw new Exception('Error al actualizar el stock: ' . $wpdb->last_error);
+        }
+        
+        // Asegurar que el stock no sea negativo
+        $wpdb->query($wpdb->prepare(
+            "UPDATE $table_name 
+            SET stock = 0 
+            WHERE warehouse_id = %d AND product_id = %d AND stock < 0",
+            $warehouse_id,
+            $product_id
+        ));
+        
+        do_action('gab_warehouse_stock_updated', $product_id, $warehouse_id);
+        
+        return true;
     }
         
 }

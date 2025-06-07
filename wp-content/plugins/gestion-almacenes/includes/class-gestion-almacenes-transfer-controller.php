@@ -1217,18 +1217,37 @@ class Gestion_Almacenes_Transfer_Controller {
         }
         
         // Procesar la transferencia
-        global $wpdb;
+        global $wpdb, $gestion_almacenes_movements;
         $wpdb->query('START TRANSACTION');
         
         try {
             // Actualizar el stock para cada producto
             foreach ($transfer->items as $item) {
+                // Obtener stock antes del movimiento
+                $source_stock_before = $this->db->get_warehouse_stock($transfer->source_warehouse_id, $item->product_id);
+                $target_stock_before = $this->db->get_warehouse_stock($transfer->target_warehouse_id, $item->product_id);
+
                 // Reducir stock del almacén de origen
                 $this->db->update_warehouse_stock(
                     $transfer->source_warehouse_id,
                     $item->product_id,
                     -$item->requested_qty
                 );
+
+                // Registrar movimiento de salida
+                $gestion_almacenes_movements->log_movement(array(
+                    'product_id' => $item->product_id,
+                    'warehouse_id' => $transfer->source_warehouse_id,
+                    'type' => 'transfer_out',
+                    'quantity' => -$item->requested_qty,
+                    'reference_type' => 'transfer',
+                    'reference_id' => $transfer_id,
+                    'notes' => sprintf(
+                        __('Transferencia #%d hacia %s', 'gestion-almacenes'),
+                        $transfer_id,
+                        $warehouses_by_id[$transfer->target_warehouse_id]->name ?? 'ID: ' . $transfer->target_warehouse_id
+                    )
+                ));
                 
                 // Aumentar stock del almacén de destino
                 $this->db->update_warehouse_stock(
@@ -1237,6 +1256,21 @@ class Gestion_Almacenes_Transfer_Controller {
                     $item->requested_qty
                 );
                 
+                // Registrar movimiento de entrada
+                $gestion_almacenes_movements->log_movement(array(
+                    'product_id' => $item->product_id,
+                    'warehouse_id' => $transfer->target_warehouse_id,
+                    'type' => 'transfer_in',
+                    'quantity' => $item->requested_qty,
+                    'reference_type' => 'transfer',
+                    'reference_id' => $transfer_id,
+                    'notes' => sprintf(
+                        __('Transferencia #%d desde %s', 'gestion-almacenes'),
+                        $transfer_id,
+                        $warehouses_by_id[$transfer->source_warehouse_id]->name ?? 'ID: ' . $transfer->source_warehouse_id
+                    )
+                ));
+
                 // Actualizar la cantidad transferida en el item
                 $wpdb->update(
                     $wpdb->prefix . 'gab_stock_transfer_items',

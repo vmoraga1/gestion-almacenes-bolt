@@ -20715,3 +20715,268 @@ Stack trace:
 [06-Jun-2025 14:06:14 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
 [06-Jun-2025 14:07:53 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
 [06-Jun-2025 14:09:00 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 20:01:03 UTC] Automatic updates starting...
+[06-Jun-2025 20:01:04 UTC] Automatic updates complete.
+[06-Jun-2025 20:01:56 UTC] GAB Stock: Stock ajustado: Malla Papal 2x1m (ID: 70) - Almacén: Bodega Sur - Operación: subtract - Cantidad: 6 - Nuevo stock: 0
+[06-Jun-2025 20:02:00 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 20:04:47 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 20:05:45 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 20:05:51 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 20:06:14 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 20:06:33 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 20:07:03 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 21:06:57 UTC] PHP Parse error:  syntax error, unexpected 'private' (T_PRIVATE) in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\admin\class-gestion-almacenes-admin.php on line 1285
+[06-Jun-2025 21:07:00 UTC] PHP Parse error:  syntax error, unexpected 'private' (T_PRIVATE) in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\admin\class-gestion-almacenes-admin.php on line 1285
+[06-Jun-2025 21:24:00 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 21:24:49 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 21:24:55 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 21:25:16 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 21:25:23 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 21:25:28 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 21:25:38 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 21:25:52 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 22:24:53 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 22:25:05 UTC] WordPress database error Table 'bolt.wp_gab_stock_movements' doesn't exist for query SELECT 
+                    m.*,
+                    w.name as warehouse_name,
+                    u.display_name as user_name
+                FROM wp_gab_stock_movements m
+                LEFT JOIN wp_gab_warehouses w ON m.warehouse_id = w.id
+                LEFT JOIN wp_users u ON m.created_by = u.ID
+                WHERE 1=1 ORDER BY m.created_at DESC, m.id DESC LIMIT 50 OFFSET 0 made by do_action('warehouses_page_gab-movements-history'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Admin->mostrar_historial_movimientos, Gestion_Almacenes_Admin->get_filtered_movements
+[06-Jun-2025 22:25:05 UTC] WordPress database error Table 'bolt.wp_gab_stock_movements' doesn't exist for query SELECT COUNT(*) FROM wp_gab_stock_movements WHERE 1=1 made by do_action('warehouses_page_gab-movements-history'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Admin->mostrar_historial_movimientos, Gestion_Almacenes_Admin->count_filtered_movements
+[06-Jun-2025 22:25:05 UTC] WordPress database error Table 'bolt.wp_gab_stock_movements' doesn't exist for query SELECT 
+                    movement_type,
+                    COUNT(*) as total_movements,
+                    SUM(ABS(quantity)) as total_quantity
+                FROM wp_gab_stock_movements
+                WHERE 1=1
+                GROUP BY movement_type made by do_action('warehouses_page_gab-movements-history'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Admin->mostrar_historial_movimientos, Gestion_Almacenes_Movements->get_movement_stats
+[06-Jun-2025 22:25:52 UTC] WordPress database error Table 'bolt.wp_gab_stock_movements' doesn't exist for query SELECT 
+                    m.*,
+                    w.name as warehouse_name,
+                    u.display_name as user_name
+                FROM wp_gab_stock_movements m
+                LEFT JOIN wp_gab_warehouses w ON m.warehouse_id = w.id
+                LEFT JOIN wp_users u ON m.created_by = u.ID
+                WHERE 1=1 AND m.created_at >= '2025-06-02 00:00:00' AND m.created_at <= '2025-06-06 23:59:59' ORDER BY m.created_at DESC, m.id DESC LIMIT 50 OFFSET 0 made by do_action('warehouses_page_gab-movements-history'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Admin->mostrar_historial_movimientos, Gestion_Almacenes_Admin->get_filtered_movements
+[06-Jun-2025 22:25:52 UTC] WordPress database error Table 'bolt.wp_gab_stock_movements' doesn't exist for query SELECT COUNT(*) FROM wp_gab_stock_movements WHERE 1=1 AND created_at >= '2025-06-02 00:00:00' AND created_at <= '2025-06-06 23:59:59' made by do_action('warehouses_page_gab-movements-history'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Admin->mostrar_historial_movimientos, Gestion_Almacenes_Admin->count_filtered_movements
+[06-Jun-2025 22:25:52 UTC] WordPress database error Table 'bolt.wp_gab_stock_movements' doesn't exist for query SELECT 
+                    movement_type,
+                    COUNT(*) as total_movements,
+                    SUM(ABS(quantity)) as total_quantity
+                FROM wp_gab_stock_movements
+                WHERE 1=1 AND created_at >= '2025-06-02 00:00:00' AND created_at <= '2025-06-06 23:59:59'
+                GROUP BY movement_type made by do_action('warehouses_page_gab-movements-history'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Admin->mostrar_historial_movimientos, Gestion_Almacenes_Movements->get_movement_stats
+[06-Jun-2025 22:26:37 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 22:27:46 UTC] WordPress database error Table 'bolt.wp_gab_stock_movements' doesn't exist for query SELECT 
+                    m.*,
+                    w.name as warehouse_name,
+                    u.display_name as user_name
+                FROM wp_gab_stock_movements m
+                LEFT JOIN wp_gab_warehouses w ON m.warehouse_id = w.id
+                LEFT JOIN wp_users u ON m.created_by = u.ID
+                WHERE 1=1 ORDER BY m.created_at DESC, m.id DESC LIMIT 50 OFFSET 0 made by do_action('warehouses_page_gab-movements-history'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Admin->mostrar_historial_movimientos, Gestion_Almacenes_Admin->get_filtered_movements
+[06-Jun-2025 22:27:46 UTC] WordPress database error Table 'bolt.wp_gab_stock_movements' doesn't exist for query SELECT COUNT(*) FROM wp_gab_stock_movements WHERE 1=1 made by do_action('warehouses_page_gab-movements-history'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Admin->mostrar_historial_movimientos, Gestion_Almacenes_Admin->count_filtered_movements
+[06-Jun-2025 22:27:46 UTC] WordPress database error Table 'bolt.wp_gab_stock_movements' doesn't exist for query SELECT 
+                    movement_type,
+                    COUNT(*) as total_movements,
+                    SUM(ABS(quantity)) as total_quantity
+                FROM wp_gab_stock_movements
+                WHERE 1=1
+                GROUP BY movement_type made by do_action('warehouses_page_gab-movements-history'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Admin->mostrar_historial_movimientos, Gestion_Almacenes_Movements->get_movement_stats
+[06-Jun-2025 22:27:51 UTC] WordPress database error Table 'bolt.wp_gab_stock_movements' doesn't exist for query SELECT 
+                    m.*,
+                    w.name as warehouse_name,
+                    u.display_name as user_name
+                FROM wp_gab_stock_movements m
+                LEFT JOIN wp_gab_warehouses w ON m.warehouse_id = w.id
+                LEFT JOIN wp_users u ON m.created_by = u.ID
+                WHERE 1=1 ORDER BY m.created_at DESC, m.id DESC LIMIT 50 OFFSET 0 made by do_action('warehouses_page_gab-movements-history'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Admin->mostrar_historial_movimientos, Gestion_Almacenes_Admin->get_filtered_movements
+[06-Jun-2025 22:27:51 UTC] WordPress database error Table 'bolt.wp_gab_stock_movements' doesn't exist for query SELECT COUNT(*) FROM wp_gab_stock_movements WHERE 1=1 made by do_action('warehouses_page_gab-movements-history'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Admin->mostrar_historial_movimientos, Gestion_Almacenes_Admin->count_filtered_movements
+[06-Jun-2025 22:27:51 UTC] WordPress database error Table 'bolt.wp_gab_stock_movements' doesn't exist for query SELECT 
+                    movement_type,
+                    COUNT(*) as total_movements,
+                    SUM(ABS(quantity)) as total_quantity
+                FROM wp_gab_stock_movements
+                WHERE 1=1
+                GROUP BY movement_type made by do_action('warehouses_page_gab-movements-history'), WP_Hook->do_action, WP_Hook->apply_filters, Gestion_Almacenes_Admin->mostrar_historial_movimientos, Gestion_Almacenes_Movements->get_movement_stats
+[06-Jun-2025 22:28:53 UTC] [DEBUG GESTION ALMACENES DB] La tabla de almacenes ya existe. No se intentó crear.
+[06-Jun-2025 22:28:53 UTC] [DEBUG GESTION ALMACENES DB] Creando tabla de movimientos...
+[06-Jun-2025 22:28:53 UTC] [DEBUG GESTION ALMACENES DB] Tabla de movimientos creada correctamente.
+[06-Jun-2025 22:28:53 UTC] [DEBUG GESTION ALMACENES DB] La tabla de stock ya existe. No se intentó crear.
+[06-Jun-2025 22:29:07 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 22:30:00 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 22:30:43 UTC] GAB Stock: Stock ajustado: Producto de Prueba (ID: 62) - Almacén: Tienda de Prueba - Operación: set - Cantidad: 5 - Nuevo stock: 5
+[06-Jun-2025 22:30:47 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 22:31:18 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[06-Jun-2025 22:31:44 UTC] GAB Stock: Stock ajustado: Producto de Prueba (ID: 62) - Almacén: Bodega Pozo - Operación: subtract - Cantidad: 15 - Nuevo stock: 0
+[06-Jun-2025 22:31:47 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 10
+    [3] => 0
+    [4] => 5
+    [6] => 4
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 10
+    [3] => 0
+    [4] => 5
+    [6] => 4
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 10
+    [3] => 0
+    [4] => 5
+    [6] => 4
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 10
+    [3] => 0
+    [4] => 5
+    [6] => 4
+)
+
+[07-Jun-2025 02:48:27 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 10
+    [3] => 0
+    [4] => 5
+    [6] => 4
+)
+
+[07-Jun-2025 02:49:37 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 02:50:35 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 02:51:56 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 02:52:59 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 02:53:26 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 02:53:42 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 02:53:52 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 02:54:03 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 02:54:16 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 02:54:28 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 02:54:38 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 02:55:00 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 02:56:30 UTC] GAB Stock: Stock ajustado: Malla Papal 2x1m (ID: 70) - Almacén: Tienda de Prueba - Operación: set - Cantidad: 3 - Nuevo stock: 3
+[07-Jun-2025 02:56:32 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 02:56:51 UTC] GAB Stock: Stock ajustado: Malla Papal 2x1m (ID: 70) - Almacén: Bodega Principal - Operación: subtract - Cantidad: 3 - Nuevo stock: 5
+[07-Jun-2025 02:56:53 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 02:57:45 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 02:57:50 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 02:59:01 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 03:00:33 UTC] [GAB] Stock actualizado: Almacén 1, Producto 69, Cambio: -4, Nuevo stock: 6
+[07-Jun-2025 03:00:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 69: Array
+(
+    [1] => 6
+    [2] => 9
+    [3] => 8
+    [4] => 0
+)
+
+[07-Jun-2025 03:00:33 UTC] [GAB] Stock actualizado: Almacén 2, Producto 69, Cambio: 4, Nuevo stock: 13
+[07-Jun-2025 03:00:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 69: Array
+(
+    [1] => 6
+    [2] => 13
+    [3] => 8
+    [4] => 0
+)
+
+[07-Jun-2025 03:00:33 UTC] [GAB] Stock actualizado: Almacén 1, Producto 75, Cambio: -4, Nuevo stock: 60
+[07-Jun-2025 03:00:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+    [1] => 60
+    [2] => 60
+    [3] => 5
+    [4] => 40
+    [6] => 3
+)
+
+[07-Jun-2025 03:00:33 UTC] [GAB] Stock actualizado: Almacén 2, Producto 75, Cambio: 4, Nuevo stock: 64
+[07-Jun-2025 03:00:33 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+    [1] => 60
+    [2] => 64
+    [3] => 5
+    [4] => 40
+    [6] => 3
+)
+
+[07-Jun-2025 04:20:39 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[07-Jun-2025 04:32:08 UTC] PHP Parse error:  syntax error, unexpected 'endif' (T_ENDIF) in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\admin\class-gestion-almacenes-admin.php on line 893
+[07-Jun-2025 04:33:19 UTC] PHP Parse error:  syntax error, unexpected '<' in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\admin\class-gestion-almacenes-admin.php on line 855
+[07-Jun-2025 06:05:28 UTC] Automatic updates starting...
+[07-Jun-2025 06:05:30 UTC] Automatic updates complete.

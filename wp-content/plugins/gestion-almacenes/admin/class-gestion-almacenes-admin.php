@@ -20,8 +20,9 @@ class Gestion_Almacenes_Admin {
         add_action('wp_ajax_gab_create_warehouse', array($this, 'ajax_create_warehouse'));
         // Modal Agregar Stock en página de Reporte de Stock por Almacén
         add_action('wp_ajax_gab_adjust_stock', array($this, 'ajax_adjust_stock'));
+        add_action('wp_ajax_gab_search_products_for_select', array($this, 'ajax_search_products_for_select'));
+        add_action('wp_ajax_gab_export_movements', array($this, 'ajax_export_movements'));
         
-        // Hooks de WooCommerce removidos - manejados por class-sales-stock-manager.php y class-gestion-almacenes-woocommerce.php
     }
 
     public function registrar_menu_almacenes() {
@@ -144,6 +145,16 @@ class Gestion_Almacenes_Admin {
             'manage_options',
             'gab-stock-report', 
             array($this, 'mostrar_reporte_stock')
+        );
+
+        // Historial de Movimientos
+        add_submenu_page(
+            'gab-warehouse-management',
+            __('Historial de Movimientos', 'gestion-almacenes'),
+            __('Historial de Movimientos', 'gestion-almacenes'),
+            'manage_options',
+            'gab-movements-history',
+            array($this, 'mostrar_historial_movimientos')
         );
         
         // Submenú para Configuración
@@ -337,13 +348,32 @@ class Gestion_Almacenes_Admin {
         }
         
         try {
-            global $gestion_almacenes_db;
+            global $gestion_almacenes_db, $gestion_almacenes_movements;
+
+            // Obtener stock anterior
+            $old_stock = $gestion_almacenes_db->get_warehouse_stock($warehouse_id, $product_id);
             
             // Actualizar stock del almacén
             $result = $gestion_almacenes_db->set_warehouse_stock($warehouse_id, $product_id, $new_stock);
             
             if (!$result) {
                 throw new Exception(__('No se pudo actualizar el stock en la base de datos', 'gestion-almacenes'));
+            }
+
+            // Registrar movimiento
+            $quantity_change = $new_stock - $old_stock;
+            if ($quantity_change != 0) {
+                $gestion_almacenes_movements->log_movement(array(
+                    'product_id' => $product_id,
+                    'warehouse_id' => $warehouse_id,
+                    'type' => 'adjustment',
+                    'quantity' => $quantity_change,
+                    'notes' => sprintf(
+                        __('Ajuste manual de stock: %d → %d', 'gestion-almacenes'),
+                        $old_stock,
+                        $new_stock
+                    )
+                ));
             }
             
             // Obtener stock total de todos los almacenes
@@ -703,6 +733,15 @@ class Gestion_Almacenes_Admin {
                 echo 'title="' . esc_attr__('Ajustar stock', 'gestion-almacenes') . '">';
                 echo '<span class="dashicons dashicons-update"></span>';
                 echo '</button>';
+
+                /* // Botón para Ver Historial de Movimientos del producto
+                echo '<a href="' . esc_url(add_query_arg(array(
+                    'page' => 'gab-movements-history',
+                    'product_id' => $product_id
+                ), admin_url('admin.php'))) . '" ';
+                echo 'class="button button-small" title="' . esc_attr__('Ver historial', 'gestion-almacenes') . '">';
+                echo '<span class="dashicons dashicons-backup"></span>';
+                echo '</a> ';*/
                 
                 echo '</td>';
 
@@ -736,6 +775,1160 @@ class Gestion_Almacenes_Admin {
         $this->render_adjust_stock_modal($almacenes);
 
         echo '</div>'; // fin wrap
+    }
+
+    /**
+     * Mostrar página de historial de movimientos
+     */
+    public function mostrar_historial_movimientos() {
+        global $gestion_almacenes_db, $gestion_almacenes_movements;
+        
+        // Obtener filtros
+        $product_id = isset($_GET['product_id']) ? intval($_GET['product_id']) : 0;
+        $warehouse_id = isset($_GET['warehouse_id']) ? intval($_GET['warehouse_id']) : 0;
+        $movement_type = isset($_GET['movement_type']) ? sanitize_text_field($_GET['movement_type']) : '';
+        $date_from = isset($_GET['date_from']) ? sanitize_text_field($_GET['date_from']) : '';
+        $date_to = isset($_GET['date_to']) ? sanitize_text_field($_GET['date_to']) : '';
+        $page_num = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+        $per_page = 50;
+        
+        // Obtener almacenes para el filtro
+        $almacenes = $gestion_almacenes_db->get_warehouses();
+        
+        // Obtener movimientos
+        $movements = $this->get_filtered_movements($product_id, $warehouse_id, $movement_type, $date_from, $date_to, $page_num, $per_page);
+        $total_movements = $this->count_filtered_movements($product_id, $warehouse_id, $movement_type, $date_from, $date_to);
+        
+        // Obtener estadísticas
+        $stats = $gestion_almacenes_movements->get_movement_stats($product_id, $warehouse_id, $date_from, $date_to);
+        
+        ?>
+        <div class="wrap gab-admin-page">
+            <div class="gab-section-header">
+                <h1><?php esc_html_e('Historial de Movimientos de Stock', 'gestion-almacenes'); ?></h1>
+                <p><?php esc_html_e('Visualiza todos los movimientos de entrada y salida de stock en los almacenes.', 'gestion-almacenes'); ?></p>
+            </div>
+            
+            <!-- Estadísticas Rápidas -->
+            <div class="gab-form-section" style="margin-bottom: 20px;">
+                <h3><?php esc_html_e('Resumen General', 'gestion-almacenes'); ?></h3>
+                <div class="gab-movement-types-grid">
+                    <?php
+                    // Calcular totales de entradas y salidas
+                    $total_entradas = 0;
+                    $total_salidas = 0;
+                    $movimientos_totales = 0;
+                    
+                    foreach ($stats as $tipo => $data) {
+                        $movimientos_totales += $data->total_movements;
+                        if (in_array($tipo, ['initial', 'adjustment', 'transfer_in', 'return', 'in'])) {
+                            $total_entradas += abs($data->total_quantity);
+                        } else {
+                            $total_salidas += abs($data->total_quantity);
+                        }
+                    }
+                    
+                    // Ajustes manuales pueden ser tanto entradas como salidas
+                    if (isset($stats['adjustment'])) {
+                        // Recalcular basándose en los movimientos reales
+                        // Esto requeriría análisis más detallado de los datos
+                    }
+                    ?>
+                    
+                    <!-- Total Movimientos -->
+                    <div class="movement-type-card">
+                        <div class="movement-type-icon" style="background-color: #0073aa;">
+                            <span class="dashicons dashicons-chart-bar"></span>
+                        </div>
+                        <div class="movement-type-info">
+                            <h4><?php esc_html_e('Total Movimientos', 'gestion-almacenes'); ?></h4>
+                            <p>
+                                <strong style="font-size: 24px;"><?php echo esc_html($movimientos_totales); ?></strong>
+                            </p>
+                            <p style="color: #666;">
+                                <?php esc_html_e('registros totales', 'gestion-almacenes'); ?>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Total Entradas -->
+                    <div class="movement-type-card">
+                        <div class="movement-type-icon" style="background-color: #00a32a;">
+                            <span class="dashicons dashicons-arrow-down-alt"></span>
+                        </div>
+                        <div class="movement-type-info">
+                            <h4><?php esc_html_e('Total Entradas', 'gestion-almacenes'); ?></h4>
+                            <p>
+                                <strong style="font-size: 24px; color: #00a32a;">+<?php echo esc_html($total_entradas); ?></strong>
+                            </p>
+                            <p style="color: #666;">
+                                <?php esc_html_e('unidades ingresadas', 'gestion-almacenes'); ?>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Total Salidas -->
+                    <div class="movement-type-card">
+                        <div class="movement-type-icon" style="background-color: #d63638;">
+                            <span class="dashicons dashicons-arrow-up-alt"></span>
+                        </div>
+                        <div class="movement-type-info">
+                            <h4><?php esc_html_e('Total Salidas', 'gestion-almacenes'); ?></h4>
+                            <p>
+                                <strong style="font-size: 24px; color: #d63638;">-<?php echo esc_html($total_salidas); ?></strong>
+                            </p>
+                            <p style="color: #666;">
+                                <?php esc_html_e('unidades retiradas', 'gestion-almacenes'); ?>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Balance Neto -->
+                    <div class="movement-type-card">
+                        <div class="movement-type-icon" style="background-color: <?php echo ($total_entradas - $total_salidas) >= 0 ? '#00a32a' : '#d63638'; ?>;">
+                            <span class="dashicons dashicons-<?php echo ($total_entradas - $total_salidas) >= 0 ? 'plus' : 'minus'; ?>"></span>
+                        </div>
+                        <div class="movement-type-info">
+                            <h4><?php esc_html_e('Balance Neto', 'gestion-almacenes'); ?></h4>
+                            <p>
+                                <strong style="font-size: 24px; color: <?php echo ($total_entradas - $total_salidas) >= 0 ? '#00a32a' : '#d63638'; ?>;">
+                                    <?php 
+                                    $balance = $total_entradas - $total_salidas;
+                                    echo ($balance >= 0 ? '+' : '') . esc_html($balance); 
+                                    ?>
+                                </strong>
+                            </p>
+                            <p style="color: #666;">
+                                <?php esc_html_e('diferencia neta', 'gestion-almacenes'); ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Desglose por tipo de movimiento -->
+            <div class="gab-form-section" style="margin-bottom: 20px;">
+                <h3><?php esc_html_e('Desglose por Tipo de Movimiento', 'gestion-almacenes'); ?></h3>
+                <div class="gab-movement-types-grid">
+                    <?php
+                    $tipos_info = array(
+                        'initial' => array('label' => __('Stock Inicial', 'gestion-almacenes'), 'icon' => 'plus-alt', 'color' => '#2271b1'),
+                        'adjustment' => array('label' => __('Ajustes', 'gestion-almacenes'), 'icon' => 'update', 'color' => '#f0ad4e'),
+                        'transfer_in' => array('label' => __('Entrada Transfer.', 'gestion-almacenes'), 'icon' => 'download', 'color' => '#00a32a'),
+                        'transfer_out' => array('label' => __('Salida Transfer.', 'gestion-almacenes'), 'icon' => 'upload', 'color' => '#d63638'),
+                        'sale' => array('label' => __('Ventas', 'gestion-almacenes'), 'icon' => 'cart', 'color' => '#dc3545'),
+                        'return' => array('label' => __('Devoluciones', 'gestion-almacenes'), 'icon' => 'undo', 'color' => '#00a32a')
+                    );
+                    
+                    // Mostrar todos los tipos, incluso con valor 0
+                    foreach ($tipos_info as $tipo => $info):
+                        $movements_count = isset($stats[$tipo]) ? $stats[$tipo]->total_movements : 0;
+                        $units_count = isset($stats[$tipo]) ? abs($stats[$tipo]->total_quantity) : 0;
+                    ?>
+                        <div class="movement-type-card<?php echo $movements_count == 0 ? ' movement-type-empty' : ''; ?>">
+                            <div class="movement-type-icon" style="background-color: <?php echo esc_attr($info['color']); ?>;">
+                                <span class="dashicons dashicons-<?php echo esc_attr($info['icon']); ?>"></span>
+                            </div>
+                            <div class="movement-type-info">
+                                <h4><?php echo esc_html($info['label']); ?></h4>
+                                <p>
+                                    <strong><?php echo esc_html($movements_count); ?></strong> 
+                                    <?php esc_html_e('movimientos', 'gestion-almacenes'); ?>
+                                </p>
+                                <p>
+                                    <strong><?php echo esc_html($units_count); ?></strong> 
+                                    <?php esc_html_e('unidades', 'gestion-almacenes'); ?>
+                                </p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            
+            <!-- Filtros -->
+            <div class="gab-form-section">
+                <h3><?php esc_html_e('Filtros', 'gestion-almacenes'); ?></h3>
+                <form method="get" action="" id="gab-movements-filter">
+                    <input type="hidden" name="page" value="gab-movements-history">
+                    
+                    <div class="gab-form-row">
+                        <!-- Filtro por producto -->
+                        <div class="gab-form-group">
+                            <label for="product_id"><?php esc_html_e('Producto', 'gestion-almacenes'); ?></label>
+                            <select name="product_id" id="product_id" class="gab-select2" style="width: 100%;">
+                            <option value=""><?php esc_html_e('Todos los productos', 'gestion-almacenes'); ?></option>
+                                <?php
+                                if ($product_id) {
+                                    $product = wc_get_product($product_id);
+                                    if ($product) {
+                                        echo '<option value="' . esc_attr($product_id) . '" selected>';
+                                        echo esc_html($product->get_name());
+                                        if ($product->get_sku()) {
+                                            echo ' (SKU: ' . esc_html($product->get_sku()) . ')';
+                                        }
+                                        echo '</option>';
+                                    }
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        
+                        <!-- Filtro por almacén -->
+                        <div class="gab-form-group">
+                            <label for="warehouse_id"><?php esc_html_e('Almacén', 'gestion-almacenes'); ?></label>
+                            <select name="warehouse_id" id="warehouse_id">
+                                <option value=""><?php esc_html_e('Todos los almacenes', 'gestion-almacenes'); ?></option>
+                                <?php foreach ($almacenes as $almacen): ?>
+                                    <option value="<?php echo esc_attr($almacen->id); ?>" 
+                                        <?php selected($warehouse_id, $almacen->id); ?>>
+                                        <?php echo esc_html($almacen->name); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
+                        <!-- Filtro por tipo de movimiento -->
+                        <div class="gab-form-group">
+                            <label for="movement_type"><?php esc_html_e('Tipo de Movimiento', 'gestion-almacenes'); ?></label>
+                            <select name="movement_type" id="movement_type">
+                                <option value=""><?php esc_html_e('Todos los tipos', 'gestion-almacenes'); ?></option>
+                                <option value="initial" <?php selected($movement_type, 'initial'); ?>>
+                                    <?php esc_html_e('Stock Inicial', 'gestion-almacenes'); ?>
+                                </option>
+                                <option value="adjustment" <?php selected($movement_type, 'adjustment'); ?>>
+                                    <?php esc_html_e('Ajuste Manual', 'gestion-almacenes'); ?>
+                                </option>
+                                <option value="transfer_in" <?php selected($movement_type, 'transfer_in'); ?>>
+                                    <?php esc_html_e('Entrada por Transferencia', 'gestion-almacenes'); ?>
+                                </option>
+                                <option value="transfer_out" <?php selected($movement_type, 'transfer_out'); ?>>
+                                    <?php esc_html_e('Salida por Transferencia', 'gestion-almacenes'); ?>
+                                </option>
+                                <option value="sale" <?php selected($movement_type, 'sale'); ?>>
+                                    <?php esc_html_e('Venta', 'gestion-almacenes'); ?>
+                                </option>
+                                <option value="return" <?php selected($movement_type, 'return'); ?>>
+                                    <?php esc_html_e('Devolución', 'gestion-almacenes'); ?>
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="gab-form-date">
+                        <!-- Filtro por fecha -->
+                        <div class="gab-form-group">
+                            <label for="date_from"><?php esc_html_e('Desde', 'gestion-almacenes'); ?></label>
+                            <input type="date" name="date_from" id="date_from" value="<?php echo esc_attr($date_from); ?>">
+                        </div>
+                        
+                        <div class="gab-form-group">
+                            <label for="date_to"><?php esc_html_e('Hasta', 'gestion-almacenes'); ?></label>
+                            <input type="date" name="date_to" id="date_to" value="<?php echo esc_attr($date_to); ?>">
+                        </div>
+                        
+                        
+                    </div>
+                    <div class="gab-form-group-btn" style="align-self: flex-end;">
+                        <button type="submit" class="button button-primary">
+                            <span class="dashicons dashicons-filter" style="vertical-align: middle;"></span>
+                            <?php esc_html_e('Aplicar Filtros', 'gestion-almacenes'); ?>
+                        </button>
+                        <a href="<?php echo esc_url(admin_url('admin.php?page=gab-movements-history')); ?>" 
+                        class="button button-secondary">
+                            <?php esc_html_e('Limpiar', 'gestion-almacenes'); ?>
+                        </a>
+                        <button type="button" class="button" onclick="exportMovements()">
+                            <span class="dashicons dashicons-download" style="vertical-align: middle;"></span>
+                            <?php esc_html_e('Exportar CSV', 'gestion-almacenes'); ?>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Información de filtros activos -->
+            <?php if ($product_id || $warehouse_id || $movement_type || $date_from || $date_to): ?>
+            <div class="gab-active-filters-section">
+                <div class="gab-active-filters-header">
+                    <span class="dashicons dashicons-filter"></span>
+                    <strong><?php esc_html_e('Filtros activos', 'gestion-almacenes'); ?></strong>
+                </div>
+                <div class="gab-active-filters-tags">
+                    <?php
+                    // Producto
+                    if ($product_id) {
+                        $product = wc_get_product($product_id);
+                        if ($product) {
+                            ?>
+                            <div class="gab-filter-tag">
+                                <span class="filter-tag-label"><?php esc_html_e('Producto', 'gestion-almacenes'); ?></span>
+                                <span class="filter-tag-value"><?php echo esc_html($product->get_name()); ?></span>
+                                <a href="<?php echo esc_url(remove_query_arg('product_id')); ?>" class="filter-tag-remove" title="<?php esc_attr_e('Quitar filtro', 'gestion-almacenes'); ?>">
+                                    <span class="dashicons dashicons-no-alt"></span>
+                                </a>
+                            </div>
+                            <?php
+                        }
+                    }
+                    
+                    // Almacén
+                    if ($warehouse_id) {
+                        foreach ($almacenes as $almacen) {
+                            if ($almacen->id == $warehouse_id) {
+                                ?>
+                                <div class="gab-filter-tag">
+                                    <span class="filter-tag-label"><?php esc_html_e('Almacén', 'gestion-almacenes'); ?></span>
+                                    <span class="filter-tag-value"><?php echo esc_html($almacen->name); ?></span>
+                                    <a href="<?php echo esc_url(remove_query_arg('warehouse_id')); ?>" class="filter-tag-remove" title="<?php esc_attr_e('Quitar filtro', 'gestion-almacenes'); ?>">
+                                        <span class="dashicons dashicons-no-alt"></span>
+                                    </a>
+                                </div>
+                                <?php
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // Tipo de movimiento
+                    if ($movement_type) {
+                        $type_info = $this->get_movement_type_info($movement_type);
+                        ?>
+                        <div class="gab-filter-tag" style="border-left-color: <?php echo esc_attr($type_info['color']); ?>;">
+                            <span class="filter-tag-label"><?php esc_html_e('Tipo', 'gestion-almacenes'); ?></span>
+                            <span class="filter-tag-value"><?php echo esc_html($type_info['label']); ?></span>
+                            <a href="<?php echo esc_url(remove_query_arg('movement_type')); ?>" class="filter-tag-remove" title="<?php esc_attr_e('Quitar filtro', 'gestion-almacenes'); ?>">
+                                <span class="dashicons dashicons-no-alt"></span>
+                            </a>
+                        </div>
+                        <?php
+                    }
+                    
+                    // Período
+                    if ($date_from || $date_to) {
+                        $periodo = '';
+                        if ($date_from && $date_to) {
+                            $periodo = date_i18n('j M Y', strtotime($date_from)) . ' - ' . date_i18n('j M Y', strtotime($date_to));
+                        } elseif ($date_from) {
+                            $periodo = sprintf(esc_html__('Desde %s', 'gestion-almacenes'), date_i18n('j M Y', strtotime($date_from)));
+                        } else {
+                            $periodo = sprintf(esc_html__('Hasta %s', 'gestion-almacenes'), date_i18n('j M Y', strtotime($date_to)));
+                        }
+                        ?>
+                        <div class="gab-filter-tag">
+                            <span class="filter-tag-label"><?php esc_html_e('Período', 'gestion-almacenes'); ?></span>
+                            <span class="filter-tag-value"><?php echo esc_html($periodo); ?></span>
+                            <a href="<?php echo esc_url(remove_query_arg(['date_from', 'date_to'])); ?>" class="filter-tag-remove" title="<?php esc_attr_e('Quitar filtro', 'gestion-almacenes'); ?>">
+                                <span class="dashicons dashicons-no-alt"></span>
+                            </a>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                    
+                    <!-- Botón limpiar todos -->
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=gab-movements-history')); ?>" 
+                    class="gab-clear-all-filters">
+                        <span class="dashicons dashicons-dismiss"></span>
+                        <?php esc_html_e('Limpiar todos', 'gestion-almacenes'); ?>
+                    </a>
+                </div>
+            </div>
+            <?php endif; ?>
+            
+            <!-- Tabla de movimientos -->
+            <?php if (!empty($movements)): ?>
+                <div class="gab-table-container">
+                    <table class="gab-table wp-list-table widefat fixed striped" id="movements-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 10%;"><?php esc_html_e('Fecha/Hora', 'gestion-almacenes'); ?></th>
+                                <th style="width: 20%;"><?php esc_html_e('Producto', 'gestion-almacenes'); ?></th>
+                                <th style="width: 15%;"><?php esc_html_e('Almacén', 'gestion-almacenes'); ?></th>
+                                <th style="width: 15%;"><?php esc_html_e('Tipo', 'gestion-almacenes'); ?></th>
+                                <th style="width: 5%; text-align: center;"><?php esc_html_e('Cantidad', 'gestion-almacenes'); ?></th>
+                                <th style="width: 5%; text-align: center;"><?php esc_html_e('Saldo', 'gestion-almacenes'); ?></th>
+                                <th style="width: 20%;"><?php esc_html_e('Detalles', 'gestion-almacenes'); ?></th>
+                                <th style="width: 10%;"><?php esc_html_e('Usuario', 'gestion-almacenes'); ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($movements as $movement): ?>
+                                <?php
+                                $product = wc_get_product($movement->product_id);
+                                $type_info = $this->get_movement_type_info($movement->movement_type);
+                                ?>
+                                <tr>
+                                    <td>
+                                        <span style="font-size: 12px;">
+                                            <?php echo esc_html(date_i18n(
+                                                get_option('date_format') . ' ' . get_option('time_format'), 
+                                                strtotime($movement->created_at)
+                                            )); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <?php if ($product): ?>
+                                            <strong><?php echo esc_html($product->get_name()); ?></strong>
+                                            <?php if ($product->get_sku()): ?>
+                                                <br><small style="color: #666;">SKU: <?php echo esc_html($product->get_sku()); ?></small>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            <em style="color: #999;"><?php esc_html_e('Producto eliminado', 'gestion-almacenes'); ?></em>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><?php echo esc_html($movement->warehouse_name); ?></td>
+                                    <td>
+                                        <span class="gab-badge" style="background: <?php echo esc_attr($type_info['color']); ?>; color: white;">
+                                            <?php echo esc_html($type_info['label']); ?>
+                                        </span>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <?php
+                                        $qty_class = $movement->quantity > 0 ? 'stock-in' : 'stock-out';
+                                        $qty_symbol = $movement->quantity > 0 ? '+' : '';
+                                        ?>
+                                        <strong class="<?php echo esc_attr($qty_class); ?>" style="font-size: 14px;">
+                                            <?php echo esc_html($qty_symbol . $movement->quantity); ?>
+                                        </strong>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <strong style="font-size: 14px; color: #0073aa;">
+                                            <?php echo esc_html($movement->balance_after); ?>
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <div style="font-size: 12px;">
+                                            <?php echo esc_html($movement->notes ?: '-'); ?>
+                                            <?php if ($movement->reference_type && $movement->reference_id): ?>
+                                                <br>
+                                                <small style="color: #0073aa;">
+                                                    <?php echo $this->get_reference_link($movement->reference_type, $movement->reference_id); ?>
+                                                </small>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <small><?php echo esc_html($movement->user_name ?: __('Sistema', 'gestion-almacenes')); ?></small>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Paginación -->
+                <?php
+                $total_pages = ceil($total_movements / $per_page);
+                if ($total_pages > 1):
+                    $pagination_args = array(
+                        'base' => add_query_arg('paged', '%#%'),
+                        'format' => '',
+                        'current' => $page_num,
+                        'total' => $total_pages,
+                        'prev_text' => '&laquo; ' . __('Anterior', 'gestion-almacenes'),
+                        'next_text' => __('Siguiente', 'gestion-almacenes') . ' &raquo;',
+                        'type' => 'plain',
+                        'end_size' => 2,
+                        'mid_size' => 2
+                    );
+                    ?>
+                    <div class="tablenav bottom">
+                        <div class="tablenav-pages">
+                            <span class="displaying-num">
+                                <?php printf(
+                                    esc_html__('%d movimientos', 'gestion-almacenes'),
+                                    $total_movements
+                                ); ?>
+                            </span>
+                            <?php echo paginate_links($pagination_args); ?>
+                        </div>
+                    </div>
+                <?php endif; ?>
+                
+                <!-- Resumen -->
+                <p class="description" style="margin-top: 10px;">
+                    <?php printf(
+                        esc_html__('Mostrando %d de %d movimientos totales.', 'gestion-almacenes'), 
+                        count($movements), 
+                        $total_movements
+                    ); ?>
+                </p>
+                
+            <?php else: ?>
+                <div class="gab-message info">
+                    <h3><?php esc_html_e('No se encontraron movimientos', 'gestion-almacenes'); ?></h3>
+                    <p><?php esc_html_e('No hay movimientos que coincidan con los filtros seleccionados.', 'gestion-almacenes'); ?></p>
+                </div>
+            <?php endif; ?>
+        </div>
+        
+        <!-- Estilos adicionales -->
+        <style>
+        /* Estilos para movimientos */
+        .stock-in { 
+            color: #00a32a; 
+            font-weight: bold;
+        }
+        .stock-out { 
+            color: #d63638; 
+            font-weight: bold;
+        }
+        
+        /* Grid de tipos de movimiento */
+        .gab-movement-types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .movement-type-card {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .movement-type-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-color: #0073aa;
+        }
+        
+        /* Cards vacías con estilo más sutil */
+        .movement-type-card.movement-type-empty {
+            opacity: 0.6;
+            background: #f9f9f9;
+        }
+
+        .movement-type-card.movement-type-empty:hover {
+            transform: none;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border-color: #e0e0e0;
+        }
+
+        .movement-type-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .movement-type-icon .dashicons {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+        
+        .movement-type-info h4 {
+            margin: 0 0 2px 0;
+            font-size: 14px;
+            color: #23282d;
+            font-weight: 600;
+        }
+
+        .movement-type-info p {
+            margin: 0 0 4px 0;
+            font-size: 11px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .movement-type-info p strong {
+            color: #23282d;
+            font-size: 16px;
+        }
+        
+        /* Select2 personalizado */
+        .gab-select2 { 
+            min-width: 300px; 
+        }
+
+        /* Mejorar paginación */
+        .tablenav-pages {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .tablenav-pages .page-numbers {
+            padding: 5px 10px;
+            margin: 0 2px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            border-radius: 3px;
+        }
+        
+        .tablenav-pages .page-numbers:hover {
+            background: #0073aa;
+            color: white;
+            border-color: #0073aa;
+        }
+        
+        .tablenav-pages .page-numbers.current {
+            background: #0073aa;
+            color: white;
+            border-color: #0073aa;
+            font-weight: bold;
+        }
+
+        /* Estilos para filtros activos */
+        .gab-active-filters-section {
+            background: #f0f6fc;
+            border: 1px solid #c3dcf3;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .gab-active-filters-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            color: #0073aa;
+            font-size: 14px;
+        }
+
+        .gab-active-filters-header .dashicons {
+            margin-right: 6px;
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .gab-active-filters-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* Tags de filtros */
+        .gab-filter-tag {
+            display: inline-flex;
+            align-items: center;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-left: 3px solid #0073aa;
+            border-radius: 4px;
+            padding: 0;
+            font-size: 13px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+
+        .gab-filter-tag:hover {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transform: translateY(-1px);
+        }
+
+        .filter-tag-label {
+            background: #f5f5f5;
+            padding: 6px 10px;
+            color: #666;
+            font-weight: 600;
+            border-right: 1px solid #ddd;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-tag-value {
+            padding: 6px 12px;
+            color: #23282d;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .filter-tag-remove {
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            color: #666;
+            text-decoration: none;
+            border-left: 1px solid #eee;
+            transition: all 0.2s ease;
+        }
+
+        .filter-tag-remove:hover {
+            background: #fee;
+            color: #d63638;
+        }
+
+        .filter-tag-remove .dashicons {
+            font-size: 14px;
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Botón limpiar todos */
+        .gab-clear-all-filters {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            background: #dc3545;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .gab-clear-all-filters:hover {
+            background: #b32d2e;
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(220,53,69,0.3);
+        }
+
+        .gab-clear-all-filters .dashicons {
+            margin-right: 4px;
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Alineación vertical de etiquetas y campos */
+        .gab-form-group {
+            display: flex;
+            flex-direction: column;
+            margin-right: 20px; /* Espacio entre columnas si hay varias por fila */
+            flex: 1; /* Hace que los filtros se repartan equitativamente */
+            min-width: 200px; /* Evita que se encojan demasiado */
+        }
+
+        /* Opcional: estilo consistente para labels */
+        .gab-form-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .gab-form-row {
+            display: ruby;
+            flex-wrap: wrap;
+            gap: 15px; /* Espacio entre grupos de filtros */
+            margin-bottom: 15px;
+        }
+
+        .gab-form-date {
+            display: ruby;
+            flex-wrap: wrap;
+            gap: 15px; /* Espacio entre grupos de filtros */
+            margin-bottom: 15px;
+        }
+
+        .gab-form-group-btn {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        /* Animación de entrada */
+        @keyframes filterTagSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .gab-filter-tag {
+            animation: filterTagSlideIn 0.3s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .gab-active-filters-section {
+                padding: 12px 15px;
+            }
+            
+            .gab-active-filters-tags {
+                gap: 8px;
+            }
+            
+            .gab-filter-tag {
+                font-size: 12px;
+            }
+            
+            .filter-tag-label {
+                padding: 5px 8px;
+                font-size: 10px;
+            }
+            
+            .filter-tag-value {
+                padding: 5px 10px;
+                max-width: 150px;
+            }
+            
+            .filter-tag-remove {
+                padding: 5px 6px;
+            }
+            
+            .gab-clear-all-filters {
+                padding: 5px 10px;
+                font-size: 11px;
+            }
+        }
+
+        </style>
+        
+        <script>
+        jQuery(document).ready(function($) {
+            // Inicializar Select2 para búsqueda de productos
+            if ($.fn.select2) {
+                $('#product_id').select2({
+                    ajax: {
+                        url: ajaxurl,
+                        dataType: 'json',
+                        delay: 250,
+                        data: function (params) {
+                            return {
+                                action: 'gab_search_products_for_select',
+                                term: params.term,
+                                nonce: '<?php echo wp_create_nonce('gab_search_products'); ?>'
+                            };
+                        },
+                        processResults: function (data) {
+                            return {
+                                results: data.data || []
+                            };
+                        },
+                        cache: true
+                    },
+                    minimumInputLength: 2,
+                    placeholder: '<?php esc_html_e('Buscar producto...', 'gestion-almacenes'); ?>',
+                    allowClear: true,
+                    language: {
+                        inputTooShort: function() {
+                            return '<?php esc_html_e('Escribe al menos 2 caracteres', 'gestion-almacenes'); ?>';
+                        },
+                        noResults: function() {
+                            return '<?php esc_html_e('No se encontraron resultados', 'gestion-almacenes'); ?>';
+                        },
+                        searching: function() {
+                            return '<?php esc_html_e('Buscando...', 'gestion-almacenes'); ?>';
+                        }
+                    }
+                });
+            }
+            
+            // Validar fechas
+            $('#date_from, #date_to').on('change', function() {
+                var from = $('#date_from').val();
+                var to = $('#date_to').val();
+                
+                if (from && to && from > to) {
+                    alert('<?php esc_html_e('La fecha "Desde" no puede ser mayor que la fecha "Hasta"', 'gestion-almacenes'); ?>');
+                    $(this).val('');
+                }
+            });
+        });
+        
+        function exportMovements() {
+            var params = new URLSearchParams(window.location.search);
+            params.set('action', 'gab_export_movements');
+            params.set('nonce', '<?php echo wp_create_nonce('gab_export_movements'); ?>');
+            
+            window.location.href = ajaxurl + '?' + params.toString();
+        }
+        </script>
+        <?php
+    }
+
+    /**
+     * Obtener movimientos filtrados
+     */
+    private function get_filtered_movements($product_id, $warehouse_id, $movement_type, $date_from, $date_to, $page, $per_page) {
+        global $wpdb;
+        $table = $wpdb->prefix . 'gab_stock_movements';
+        $warehouses_table = $wpdb->prefix . 'gab_warehouses';
+        
+        $offset = ($page - 1) * $per_page;
+        
+        $query = "SELECT 
+                    m.*,
+                    w.name as warehouse_name,
+                    u.display_name as user_name
+                FROM $table m
+                LEFT JOIN $warehouses_table w ON m.warehouse_id = w.id
+                LEFT JOIN {$wpdb->users} u ON m.created_by = u.ID
+                WHERE 1=1";
+        
+        $params = array();
+        
+        if ($product_id) {
+            $query .= " AND m.product_id = %d";
+            $params[] = $product_id;
+        }
+        
+        if ($warehouse_id) {
+            $query .= " AND m.warehouse_id = %d";
+            $params[] = $warehouse_id;
+        }
+        
+        if ($movement_type) {
+            $query .= " AND m.movement_type = %s";
+            $params[] = $movement_type;
+        }
+        
+        if ($date_from) {
+            $query .= " AND m.created_at >= %s";
+            $params[] = $date_from . ' 00:00:00';
+        }
+        
+        if ($date_to) {
+            $query .= " AND m.created_at <= %s";
+            $params[] = $date_to . ' 23:59:59';
+        }
+        
+        $query .= " ORDER BY m.created_at DESC, m.id DESC LIMIT %d OFFSET %d";
+        $params[] = $per_page;
+        $params[] = $offset;
+        
+        if (!empty($params)) {
+            $query = $wpdb->prepare($query, $params);
+        }
+        
+        return $wpdb->get_results($query);
+    }
+
+    /**
+     * Contar movimientos filtrados
+     */
+    private function count_filtered_movements($product_id, $warehouse_id, $movement_type, $date_from, $date_to) {
+        global $wpdb;
+        $table = $wpdb->prefix . 'gab_stock_movements';
+        
+        $query = "SELECT COUNT(*) FROM $table WHERE 1=1";
+        $params = array();
+        
+        if ($product_id) {
+            $query .= " AND product_id = %d";
+            $params[] = $product_id;
+        }
+        
+        if ($warehouse_id) {
+            $query .= " AND warehouse_id = %d";
+            $params[] = $warehouse_id;
+        }
+        
+        if ($movement_type) {
+            $query .= " AND movement_type = %s";
+            $params[] = $movement_type;
+        }
+        
+        if ($date_from) {
+            $query .= " AND created_at >= %s";
+            $params[] = $date_from . ' 00:00:00';
+        }
+        
+        if ($date_to) {
+            $query .= " AND created_at <= %s";
+            $params[] = $date_to . ' 23:59:59';
+        }
+        
+        if (!empty($params)) {
+            $query = $wpdb->prepare($query, $params);
+        }
+        
+        return intval($wpdb->get_var($query));
+    }
+
+    /**
+     * Mostrar estadísticas de movimientos
+     */
+    private function mostrar_estadisticas_movimientos($stats) {
+        $tipos = array(
+            'initial' => array('label' => __('Stock Inicial', 'gestion-almacenes'), 'icon' => 'plus-alt'),
+            'adjustment' => array('label' => __('Ajustes', 'gestion-almacenes'), 'icon' => 'update'),
+            'transfer_in' => array('label' => __('Entradas por Transferencia', 'gestion-almacenes'), 'icon' => 'download'),
+            'transfer_out' => array('label' => __('Salidas por Transferencia', 'gestion-almacenes'), 'icon' => 'upload'),
+            'sale' => array('label' => __('Ventas', 'gestion-almacenes'), 'icon' => 'cart'),
+            'return' => array('label' => __('Devoluciones', 'gestion-almacenes'), 'icon' => 'undo')
+        );
+        
+        foreach ($tipos as $tipo => $info) {
+            $count = isset($stats[$tipo]) ? $stats[$tipo]->total_movements : 0;
+            $quantity = isset($stats[$tipo]) ? abs($stats[$tipo]->total_quantity) : 0;
+            ?>
+            <div class="gab-stat-card">
+                <span class="dashicons dashicons-<?php echo esc_attr($info['icon']); ?>" 
+                    style="font-size: 24px; color: #0073aa; margin-bottom: 5px;"></span>
+                <span class="stat-number"><?php echo esc_html($count); ?></span>
+                <span class="stat-label"><?php echo esc_html($info['label']); ?></span>
+                <small style="color: #666;"><?php echo sprintf(__('%d unidades', 'gestion-almacenes'), $quantity); ?></small>
+            </div>
+            <?php
+        }
+    }
+
+    /**
+     * Obtener información del tipo de movimiento
+     */
+    private function get_movement_type_info($type) {
+        $types = array(
+            'initial' => array('label' => __('Stock Inicial', 'gestion-almacenes'), 'color' => '#2271b1'),
+            'adjustment' => array('label' => __('Ajuste Manual', 'gestion-almacenes'), 'color' => '#f0ad4e'),
+            'transfer_in' => array('label' => __('Entrada Transferencia', 'gestion-almacenes'), 'color' => '#5cb85c'),
+            'transfer_out' => array('label' => __('Salida Transferencia', 'gestion-almacenes'), 'color' => '#d9534f'),
+            'sale' => array('label' => __('Venta', 'gestion-almacenes'), 'color' => '#dc3545'),
+            'return' => array('label' => __('Devolución', 'gestion-almacenes'), 'color' => '#00a32a'),
+            'in' => array('label' => __('Entrada', 'gestion-almacenes'), 'color' => '#5cb85c'),
+            'out' => array('label' => __('Salida', 'gestion-almacenes'), 'color' => '#d9534f')
+        );
+        
+        return isset($types[$type]) ? $types[$type] : array('label' => $type, 'color' => '#666');
+    }
+
+    /**
+     * Obtener enlace de referencia
+     */
+    private function get_reference_link($type, $id) {
+        switch ($type) {
+            case 'order':
+                return sprintf(
+                    '<a href="%s">%s #%d</a>',
+                    esc_url(admin_url('post.php?post=' . $id . '&action=edit')),
+                    __('Pedido', 'gestion-almacenes'),
+                    $id
+                );
+                
+            case 'transfer':
+                return sprintf(
+                    '<a href="%s">%s #%d</a>',
+                    esc_url(admin_url('admin.php?page=gab-view-transfer&transfer_id=' . $id)),
+                    __('Transferencia', 'gestion-almacenes'),
+                    $id
+                );
+                
+            default:
+                return $type . ' #' . $id;
+        }
+    }
+
+    /**
+     * AJAX: Buscar productos para select2
+     */
+    public function ajax_search_products_for_select() {
+        check_ajax_referer('gab_search_products', 'nonce');
+        
+        $term = isset($_GET['term']) ? sanitize_text_field($_GET['term']) : '';
+        
+        if (strlen($term) < 2) {
+            wp_send_json_success(array());
+            return;
+        }
+        
+        $args = array(
+            'post_type' => array('product', 'product_variation'),
+            'post_status' => 'publish',
+            'posts_per_page' => 20,
+            's' => $term,
+            'orderby' => 'relevance'
+        );
+        
+        $products = get_posts($args);
+        $results = array();
+        
+        foreach ($products as $product_post) {
+            $product = wc_get_product($product_post->ID);
+            if ($product) {
+                $text = $product->get_name();
+                if ($product->get_sku()) {
+                    $text .= ' (SKU: ' . $product->get_sku() . ')';
+                }
+                
+                $results[] = array(
+                    'id' => $product->get_id(),
+                    'text' => $text
+                );
+            }
+        }
+        
+        wp_send_json_success($results);
+    }
+
+    /**
+     * Exportar movimientos a CSV
+     */
+    public function ajax_export_movements() {
+        check_ajax_referer('gab_export_movements', 'nonce');
+        
+        if (!current_user_can('manage_options')) {
+            wp_die('Sin permisos');
+        }
+        
+        // Obtener filtros
+        $product_id = isset($_GET['product_id']) ? intval($_GET['product_id']) : 0;
+        $warehouse_id = isset($_GET['warehouse_id']) ? intval($_GET['warehouse_id']) : 0;
+        $movement_type = isset($_GET['movement_type']) ? sanitize_text_field($_GET['movement_type']) : '';
+        $date_from = isset($_GET['date_from']) ? sanitize_text_field($_GET['date_from']) : '';
+        $date_to = isset($_GET['date_to']) ? sanitize_text_field($_GET['date_to']) : '';
+        
+        // Obtener todos los movimientos (sin límite)
+        $movements = $this->get_filtered_movements($product_id, $warehouse_id, $movement_type, $date_from, $date_to, 1, 999999);
+        
+        // Configurar headers para descarga
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="movimientos-stock-' . date('Y-m-d') . '.csv"');
+        
+        // Abrir output
+        $output = fopen('php://output', 'w');
+        
+        // BOM para Excel
+        fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+        
+        // Encabezados
+        fputcsv($output, array(
+            'Fecha',
+            'Producto',
+            'SKU',
+            'Almacén',
+            'Tipo',
+            'Cantidad',
+            'Saldo',
+            'Notas',
+            'Usuario'
+        ));
+        
+        // Datos
+        foreach ($movements as $movement) {
+            $product = wc_get_product($movement->product_id);
+            $type_info = $this->get_movement_type_info($movement->movement_type);
+            
+            fputcsv($output, array(
+                date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($movement->created_at)),
+                $product ? $product->get_name() : 'Producto eliminado',
+                $product ? $product->get_sku() : '',
+                $movement->warehouse_name,
+                $type_info['label'],
+                $movement->quantity,
+                $movement->balance_after,
+                $movement->notes,
+                $movement->user_name
+            ));
+        }
+        
+        fclose($output);
+        exit;
     }
 
     /**
@@ -1145,7 +2338,7 @@ class Gestion_Almacenes_Admin {
             wp_die();
         }
         
-        global $wpdb;
+        global $wpdb, $gestion_almacenes_movements;
         $table = $wpdb->prefix . 'gab_warehouse_product_stock';
         
         // Obtener stock actual
@@ -1155,22 +2348,39 @@ class Gestion_Almacenes_Admin {
             $warehouse_id
         ));
         
+        $old_stock = $current_stock !== null ? intval($current_stock) : 0;
         $new_stock = 0;
+        $movement_qty = 0;
+        $movement_notes = '';
         
         // Calcular nuevo stock según la operación
         switch ($operation) {
             case 'add':
-                $new_stock = ($current_stock !== null ? intval($current_stock) : 0) + $stock;
+                $new_stock = $old_stock + $stock;
+                $movement_qty = $stock;
+                $movement_notes = sprintf(
+                    __('Ajuste: Agregar %d unidades. Stock: %d → %d', 'gestion-almacenes'),
+                    $stock, $old_stock, $new_stock
+                );
                 break;
                 
             case 'subtract':
-                $current = $current_stock !== null ? intval($current_stock) : 0;
-                $new_stock = max(0, $current - $stock);
+                $new_stock = max(0, $old_stock - $stock);
+                $movement_qty = -min($stock, $old_stock);
+                $movement_notes = sprintf(
+                    __('Ajuste: Restar %d unidades. Stock: %d → %d', 'gestion-almacenes'),
+                    $stock, $old_stock, $new_stock
+                );
                 break;
                 
             case 'set':
             default:
                 $new_stock = $stock;
+                $movement_qty = $new_stock - $old_stock;
+                $movement_notes = sprintf(
+                    __('Ajuste: Establecer stock en %d. Stock anterior: %d', 'gestion-almacenes'),
+                    $new_stock, $old_stock
+                );
                 break;
         }
         
@@ -1205,6 +2415,17 @@ class Gestion_Almacenes_Admin {
             wp_die();
         }
         
+        // Registrar el movimiento solo si hubo cambio y el gestor de movimientos existe
+        if ($movement_qty !== 0 && isset($gestion_almacenes_movements)) {
+            $gestion_almacenes_movements->log_movement(array(
+                'product_id' => $product_id,
+                'warehouse_id' => $warehouse_id,
+                'type' => 'adjustment',
+                'quantity' => $movement_qty,
+                'notes' => $movement_notes
+            ));
+        }
+        
         // Obtener información del almacén
         $warehouse = $wpdb->get_row($wpdb->prepare(
             "SELECT name FROM {$wpdb->prefix}gab_warehouses WHERE id = %d",
@@ -1222,7 +2443,6 @@ class Gestion_Almacenes_Admin {
             $new_stock
         );
         
-        // Aquí podrías agregar el registro en una tabla de logs si la tienes
         error_log('GAB Stock: ' . $log_message);
         
         wp_send_json_success(array(

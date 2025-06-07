@@ -232,6 +232,9 @@ class Gestion_Almacenes_Sales_Stock_Manager {
         
         $warehouse_allocations = array();
         $errors = array();
+
+        // Guardar el ID del pedido para los movimientos
+        $GLOBALS['gab_current_order_id'] = $order->get_id();
         
         // Procesar cada item del pedido
         foreach ($order->get_items() as $item) {
@@ -290,6 +293,9 @@ class Gestion_Almacenes_Sales_Stock_Manager {
         
         // Agregar nota al pedido
         $this->add_stock_reduction_note($order, $warehouse_allocations);
+
+        // Limpiar la variable global
+        unset($GLOBALS['gab_current_order_id']);
     }
     
     /**
@@ -371,11 +377,28 @@ class Gestion_Almacenes_Sales_Stock_Manager {
      */
     private function reduce_warehouse_stock($warehouse_id, $product_id, $quantity) {
         try {
+            global $gestion_almacenes_movements;
+            
+            // Obtener stock antes
+            $stock_before = $this->db->get_warehouse_stock($warehouse_id, $product_id);
+            
             $this->db->update_warehouse_stock($warehouse_id, $product_id, -$quantity);
             
-            // Registrar el movimiento
-            $this->log_stock_movement($warehouse_id, $product_id, -$quantity, 'sale');
-            
+            // Registrar el movimiento de venta
+            $gestion_almacenes_movements->log_movement(array(
+                'product_id' => $product_id,
+                'warehouse_id' => $warehouse_id,
+                'type' => 'sale',
+                'quantity' => -$quantity,
+                'reference_type' => 'order',
+                'reference_id' => isset($GLOBALS['gab_current_order_id']) ? $GLOBALS['gab_current_order_id'] : 0,
+                'notes' => sprintf(
+                    __('Venta de %d unidades. Stock: %d → %d', 'gestion-almacenes'),
+                    $quantity,
+                    $stock_before,
+                    $stock_before - $quantity
+                )
+            ));
         } catch (Exception $e) {
             error_log('[GAB Sales] Error al reducir stock: ' . $e->getMessage());
             throw $e;
@@ -387,10 +410,27 @@ class Gestion_Almacenes_Sales_Stock_Manager {
      */
     private function restore_warehouse_stock($warehouse_id, $product_id, $quantity) {
         try {
-            $this->db->update_warehouse_stock($warehouse_id, $product_id, $quantity);
+            global $gestion_almacenes_movements;
             
-            // Registrar el movimiento
-            $this->log_stock_movement($warehouse_id, $product_id, $quantity, 'restore');
+            // Obtener stock antes
+            $stock_before = $this->db->get_warehouse_stock($warehouse_id, $product_id);
+            
+            $this->db->update_warehouse_stock_silent($warehouse_id, $product_id, $quantity);
+            
+            // Registrar el movimiento de devolución
+            $gestion_almacenes_movements->log_movement(array(
+                'product_id' => $product_id,
+                'warehouse_id' => $warehouse_id,
+                'type' => 'return',
+                'quantity' => $quantity,
+                'reference_type' => 'order',
+                'reference_id' => isset($GLOBALS['gab_current_order_id']) ? $GLOBALS['gab_current_order_id'] : 0,
+                'notes' => sprintf(
+                    __('Devolución/Cancelación. Stock: %d → %d', 'gestion-almacenes'),
+                    $stock_before,
+                    $stock_before + $quantity
+                )
+            ));
             
         } catch (Exception $e) {
             error_log('[GAB Sales] Error al restaurar stock: ' . $e->getMessage());

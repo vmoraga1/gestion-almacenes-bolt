@@ -29,9 +29,10 @@ require_once GESTION_ALMACENES_PLUGIN_DIR . 'admin/views/page-almacenes-list.php
 require_once GESTION_ALMACENES_PLUGIN_DIR . 'includes/class-gestion-almacenes-transfer-controller.php';
 require_once GESTION_ALMACENES_PLUGIN_DIR . 'includes/class-gestion-almacenes-stock-sync-manager.php';
 require_once GESTION_ALMACENES_PLUGIN_DIR . 'includes/class-sales-stock-manager.php';
+require_once GESTION_ALMACENES_PLUGIN_DIR . 'includes/class-gestion-almacenes-movements.php';
 
 // Variables globales para las instancias
-global $gestion_almacenes_db, $gestion_almacenes_admin, $gestion_almacenes_woocommerce, $gestion_almacenes_stock_sync, $gestion_almacenes_sales_manager, $gestion_almacenes_order_display;
+global $gestion_almacenes_db, $gestion_almacenes_admin, $gestion_almacenes_woocommerce, $gestion_almacenes_stock_sync, $gestion_almacenes_sales_manager, $gestion_almacenes_order_display, $gestion_almacenes_movements;
 
 // Instanciar clases principales
 $gestion_almacenes_db = new Gestion_Almacenes_DB();
@@ -40,6 +41,7 @@ $gestion_almacenes_woocommerce = new Gestion_Almacenes_WooCommerce();
 $gestion_almacenes_stock_sync = new Gestion_Almacenes_Stock_Sync_Manager($gestion_almacenes_db);
 $gestion_almacenes_sales_manager = new Gestion_Almacenes_Sales_Stock_Manager($gestion_almacenes_db);
 $gestion_almacenes_order_display = new Gestion_Almacenes_Order_Display($gestion_almacenes_db);
+$gestion_almacenes_movements = new Gestion_Almacenes_Movements($gestion_almacenes_db);
 
 // Registrar hook de activación
 register_activation_hook(__FILE__, array($gestion_almacenes_db, 'activar_plugin'));
