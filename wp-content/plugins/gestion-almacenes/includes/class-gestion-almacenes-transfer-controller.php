@@ -576,6 +576,10 @@ class Gestion_Almacenes_Transfer_Controller {
             }
         }
 
+        // ✅ Definir $source y $target UNA VEZ para usar en toda la página
+        $source = isset($warehouses_by_id[$transfer->source_warehouse_id]) ? $warehouses_by_id[$transfer->source_warehouse_id] : null;
+        $target = isset($warehouses_by_id[$transfer->target_warehouse_id]) ? $warehouses_by_id[$transfer->target_warehouse_id] : null;
+
     ?>
 
         <?php
@@ -587,40 +591,49 @@ class Gestion_Almacenes_Transfer_Controller {
         $company_email = get_option('gab_company_email', '');
         ?>
 
-    <div class="wrap">
-        <!-- Encabezado de empresa (solo visible en impresión) -->
-        <div class="gab-company-header">
-            <h2><?php echo esc_html($company_name); ?></h2>
-            <?php if ($company_rut): ?>
-                <p><strong><?php esc_html_e('RUT:', 'gestion-almacenes'); ?></strong> <?php echo esc_html($company_rut); ?></p>
-            <?php endif; ?>
-            <?php if ($company_address): ?>
-                <p><?php echo nl2br(esc_html($company_address)); ?></p>
-            <?php endif; ?>
-            <?php if ($company_phone): ?>
-                <p><strong><?php esc_html_e('Teléfono:', 'gestion-almacenes'); ?></strong> <?php echo esc_html($company_phone); ?></p>
-            <?php endif; ?>
-            <?php if ($company_email): ?>
-                <p><strong><?php esc_html_e('Email:', 'gestion-almacenes'); ?></strong> <?php echo esc_html($company_email); ?></p>
-            <?php endif; ?>
+    <!-- Página Detalles de transferencia -->
+    <div class="wrap gab-admin-page">
+        <div class="container-header">
+            <div class="gab-company-header">
+                <h1><?php echo esc_html($company_name); ?></h1>
+                <?php if ($company_rut): ?>
+                    <p><strong><?php esc_html_e('RUT:', 'gestion-almacenes'); ?></strong> <?php echo esc_html($company_rut); ?></p>
+                <?php endif; ?>
+                <?php if ($company_address): ?>
+                    <p><?php echo nl2br(esc_html($company_address)); ?></p>
+                <?php endif; ?>
+                <?php if ($company_phone): ?>
+                    <p><strong><?php esc_html_e('Teléfono:', 'gestion-almacenes'); ?></strong> <?php echo esc_html($company_phone); ?></p>
+                <?php endif; ?>
+                <?php if ($company_email): ?>
+                    <p><strong><?php esc_html_e('Email:', 'gestion-almacenes'); ?></strong> <?php echo esc_html($company_email); ?></p>
+                <?php endif; ?>
+            </div>
+            
+            <div class="titulo-det-transfer">
+                <h2>
+                    <?php esc_html_e('Detalles de Transferencia', 'gestion-almacenes'); ?>
+                </h2>
+                <h4><?php esc_html_e('ID de Transferencia:', 'gestion-almacenes'); ?></h4>
+                <div class="id-transfer"><h3>N° <?php echo esc_html($transfer->id); ?></h3></div>
+                <div class="fecha-creacion">
+                    <p><?php esc_html_e('Fecha Creación:', 'gestion-almacenes'); ?></p>
+                    <p><?php echo esc_html(wp_date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($transfer->created_at))); ?></p>
+                </div>
+                <div class="fecha-confirmacion">
+                    <p><?php esc_html_e('Fecha Completado: ', 'gestion-almacenes'); ?></p>
+                    <p><?php echo esc_html(wp_date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($transfer->completed_at))); ?></p>
+                </div>
+            </div>
         </div>
-
-        <h1>
-            <?php esc_html_e('Detalles de Transferencia', 'gestion-almacenes'); ?>
-            <a href="<?php echo admin_url('admin.php?page=gab-transfer-list'); ?>" class="page-title-action">
-                <?php esc_html_e('Volver al listado', 'gestion-almacenes'); ?>
-            </a>
-        </h1>
-
+    
         <div class="gab-transfer-view">
             <!-- Información general de la transferencia -->
             <div class="gab-card">
                 <h2><?php esc_html_e('Información General', 'gestion-almacenes'); ?></h2>
+                <div class="container-info">
                 <table class="gab-info-table">
-                    <tr>
-                        <th><?php esc_html_e('ID de Transferencia:', 'gestion-almacenes'); ?></th>
-                        <td>#<?php echo esc_html($transfer->id); ?></td>
-                    </tr>
+                    
                     <tr>
                         <th><?php esc_html_e('Estado:', 'gestion-almacenes'); ?></th>
                         <td>
@@ -629,6 +642,29 @@ class Gestion_Almacenes_Transfer_Controller {
                             </span>
                         </td>
                     </tr>
+                    
+                    <tr>
+                        <th><?php esc_html_e('Creado por:', 'gestion-almacenes'); ?></th>
+                        <td>
+                            <?php 
+                            $user = get_user_by('id', $transfer->created_by);
+                            echo $user ? esc_html($user->display_name) : __('Usuario desconocido', 'gestion-almacenes');
+                            ?>
+                        </td>
+                    </tr>
+                    
+                    <?php if ($transfer->status === 'completed' && $transfer->completed_by): ?>
+                    <tr>
+                        <th><?php esc_html_e('Completado por:', 'gestion-almacenes'); ?></th>
+                        <td>
+                            <?php 
+                            $completed_user = get_user_by('id', $transfer->completed_by);
+                            echo $completed_user ? esc_html($completed_user->display_name) : __('Usuario desconocido', 'gestion-almacenes');
+                            ?>
+                        </td>
+                    </tr>
+                </table>
+                <table class="gab-info-table">
                     <tr>
                         <th><?php esc_html_e('Almacén de Origen:', 'gestion-almacenes'); ?></th>
                         <td>
@@ -649,33 +685,6 @@ class Gestion_Almacenes_Transfer_Controller {
                             ?>
                         </td>
                     </tr>
-                    <tr>
-                        <th><?php esc_html_e('Creado por:', 'gestion-almacenes'); ?></th>
-                        <td>
-                            <?php 
-                            $user = get_user_by('id', $transfer->created_by);
-                            echo $user ? esc_html($user->display_name) : __('Usuario desconocido', 'gestion-almacenes');
-                            ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><?php esc_html_e('Fecha de Creación:', 'gestion-almacenes'); ?></th>
-                        <td><?php echo esc_html(wp_date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($transfer->created_at))); ?></td>
-                    </tr>
-                    <?php if ($transfer->status === 'completed' && $transfer->completed_by): ?>
-                    <tr>
-                        <th><?php esc_html_e('Completado por:', 'gestion-almacenes'); ?></th>
-                        <td>
-                            <?php 
-                            $completed_user = get_user_by('id', $transfer->completed_by);
-                            echo $completed_user ? esc_html($completed_user->display_name) : __('Usuario desconocido', 'gestion-almacenes');
-                            ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th><?php esc_html_e('Fecha de Completado:', 'gestion-almacenes'); ?></th>
-                        <td><?php echo esc_html(wp_date(get_option('date_format') . ' ' . get_option('time_format'), strtotime($transfer->completed_at))); ?></td>
-                    </tr>
                     <?php endif; ?>
                     <?php if (!empty($transfer->notes)): ?>
                     <tr>
@@ -684,6 +693,7 @@ class Gestion_Almacenes_Transfer_Controller {
                     </tr>
                     <?php endif; ?>
                 </table>
+                </div>
             </div>
 
             <!-- Productos de la transferencia -->
@@ -752,7 +762,7 @@ class Gestion_Almacenes_Transfer_Controller {
             </div>
 
             <!-- Acciones -->
-            <div class="gab-card">
+            <div class="gab-card-acciones">
                 <h2><?php esc_html_e('Acciones', 'gestion-almacenes'); ?></h2>
                 <div class="gab-actions">
                     <!-- Botón de imprimir siempre visible -->
@@ -787,23 +797,30 @@ class Gestion_Almacenes_Transfer_Controller {
                             ?>
                         </span>
                     <?php endif; ?>
+
+                    <button 
+                        class="button button-secondary" 
+                        onclick="window.location.href='<?php echo esc_url(admin_url('admin.php?page=gab-transfer-list')); ?>'">
+                        <?php esc_html_e('Volver a Lista de Transferencias', 'gestion-almacenes'); ?>
+                    </button>
                 </div>
             </div>
 
             <!-- Área de firmas (solo visible en impresión) -->
+            <div class="footer-impresion">
             <div class="gab-signatures">
                 <div class="gab-signature-box">
                     <div class="gab-signature-line"></div>
                     <div class="gab-signature-label">
-                        <?php esc_html_e('Entregado por', 'gestion-almacenes'); ?><br>
-                        <?php esc_html_e('Nombre y Firma', 'gestion-almacenes'); ?>
+                        <?php esc_html_e('Entregado por ', 'gestion-almacenes'); ?>
+                        <?php esc_html_e('(Nombre y Firma)', 'gestion-almacenes'); ?>
                     </div>
                 </div>
                 <div class="gab-signature-box">
                     <div class="gab-signature-line"></div>
                     <div class="gab-signature-label">
-                        <?php esc_html_e('Recibido por', 'gestion-almacenes'); ?><br>
-                        <?php esc_html_e('Nombre y Firma', 'gestion-almacenes'); ?>
+                        <?php esc_html_e('Recibido por ', 'gestion-almacenes'); ?>
+                        <?php esc_html_e('(Nombre y Firma)', 'gestion-almacenes'); ?>
                     </div>
                 </div>
             </div>
@@ -816,264 +833,352 @@ class Gestion_Almacenes_Transfer_Controller {
                     wp_date(get_option('time_format'))
                 ); ?></p>
             </div>
+            </div>
         </div>
 
-<style>
-/* Estilos generales */
-.gab-transfer-view {
-    max-width: 1200px;
-    margin-top: 20px;
-}
+        <style>
+        /* Estilos generales */
+        .wrap.gab-admin-page {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
 
-.gab-card {
-    background: #fff;
-    border: 1px solid #ccd0d4;
-    box-shadow: 0 1px 1px rgba(0,0,0,.04);
-    margin-bottom: 20px;
-    padding: 20px;
-}
+        .container-header {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Una columna para el texto y otra para la tabla */
+            gap: 15px; /* Espacio entre el cuadro de texto y la tabla */
+            align-items: stretch; /* Estira los elementos para que tengan la misma altura */
+        }
 
-.gab-card h2 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #eee;
-}
+        .gab-company-header {
 
-.gab-info-table {
-    width: 100%;
-    border-collapse: collapse;
-}
+        }
+        .gab-company-header h4 {
+            margin: 0;
+        }
 
-.gab-info-table th {
-    text-align: left;
-    padding: 10px;
-    width: 200px;
-    font-weight: 600;
-    vertical-align: top;
-}
+        .titulo-det-transfer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #ccc;      /* borde gris claro */
+            padding: 5px;               /* espacio interior */
+            border-radius: 6px;          /* bordes redondeados opcional */
+            background-color: #f9f9f9;   /* fondo suave opcional */
+            margin-bottom: 0;         /* separación hacia abajo */
 
-.gab-info-table td {
-    padding: 10px;
-}
+        }
+        .titulo-det-transfer h1,h2,h3,h4,p {
+            margin: 0;
+        }
+        .id-transfer h3 {
+            color: red;
+            padding: 5px;
+        }
 
-.gab-status {
-    display: inline-block;
-    padding: 5px 10px;
-    border-radius: 3px;
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-}
+        .fecha-creacion {
+            display: flex;
+            gap: 6px;
+            margin: 0;
+        }
+        .fecha-confirmacion {
+            display: flex;
+            gap: 6px;
+            margin: 0;
+        }
+        .fecha-creacion p {
+            margin: 0;
+        }
+        .fecha-confirmacion p {
+            margin: 0;
+        }
 
-.gab-status-pending,
-.gab-status-draft {
-    background: #f0ad4e;
-    color: #fff;
-}
+        .gab-transfer-view {
+            max-width: 100%;
+            margin-top: 10px;
+            
+        }
 
-.gab-status-completed {
-    background: #5cb85c;
-    color: #fff;
-}
+        .container-info {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Una columna para el texto y otra para la tabla */
+            gap: 10px; /* Espacio entre el cuadro de texto y la tabla */
+            align-items: stretch; /* Estira los elementos para que tengan la misma altura */
+        }
 
-.gab-status-cancelled {
-    background: #d9534f;
-    color: #fff;
-}
+        .gab-info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-.gab-actions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
+        .gab-card {
+            background: #fff;
+            border: 1px solid #ccd0d4;
+            box-shadow: 0 1px 1px rgba(0,0,0,.04);
+            margin-bottom: 10px;
+            padding: 20px;
+        }
 
-.gab-actions .button-link-delete {
-    color: #d63638;
-}
+        .gab-card h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
 
-.gab-actions .button-link-delete:hover {
-    color: #b32d2e;
-}
+        .gab-card-acciones {
+            background: #fff;
+            border: 1px solid #ccd0d4;
+            box-shadow: 0 1px 1px rgba(0,0,0,.04);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
 
-/* Información de empresa para impresión */
-.gab-company-header {
-    display: none;
-}
+        .gab-info-table th {
+            text-align: left;
+            padding: 5px;
+            width: 150px;
+            font-weight: 600;
+            vertical-align: top;
+        }
 
-/* Fuera del @media print, para mostrar solo en impresión */
-.gab-signatures,
-.gab-print-footer {
-    display: none;
-}
+        .gab-info-table td {
+            padding: 5px;
+        }
 
-/* Estilos para impresión */
-@media print {
-    @page {
-        size: letter;
-        margin: 15mm;
-    }
-    
-    body {
-        background: white;
-        font-size: 11pt;
-        margin: 0;
-        padding: 0;
-    }
-    
-    /* Ocultar elementos de WordPress */
-    #adminmenumain,
-    #adminmenuback,
-    #adminmenuwrap,
-    #wpadminbar,
-    #screen-meta,
-    #screen-meta-links,
-    #wpfooter,
-    .notice,
-    .no-print,
-    .gab-actions button,
-    .gab-actions a {
-        display: none !important;
-    }
-    
-    #wpcontent {
-        margin-left: 0 !important;
-        padding-left: 0 !important;
-    }
-    
-    .wrap {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    
-    h1 {
-        font-size: 20pt;
-        margin-bottom: 10px;
-    }
-    
-    .page-title-action {
-        display: none !important;
-    }
-    
-    /* Mostrar información de empresa */
-    .gab-company-header {
-        display: block;
-        margin-bottom: 20px;
-        padding-bottom: 20px;
-        border-bottom: 2px solid #000;
-    }
-    
-    .gab-company-header h2 {
-        font-size: 18pt;
-        margin: 0 0 10px 0;
-    }
-    
-    .gab-company-header p {
-        margin: 3px 0;
-        font-size: 10pt;
-    }
-    
-    /* Ajustar diseño de tarjetas */
-    .gab-card {
-        border: none;
-        box-shadow: none;
-        padding: 15px 0;
-        margin-bottom: 15px;
-        page-break-inside: avoid;
-    }
-    
-    .gab-card h2 {
-        font-size: 14pt;
-        margin-bottom: 10px;
-        padding-bottom: 5px;
-        border-bottom: 1px solid #000;
-    }
-    
-    /* Tabla de información */
-    .gab-info-table th {
-        width: 150px;
-        padding: 5px;
-        font-size: 10pt;
-    }
-    
-    .gab-info-table td {
-        padding: 5px;
-        font-size: 10pt;
-    }
-    
-    /* Estados */
-    .gab-status {
-        background: none !important;
-        color: #000 !important;
-        border: 1px solid #000;
-        padding: 2px 5px !important;
-    }
-    
-    /* Tabla de productos */
-    .wp-list-table {
-        border-collapse: collapse;
-        width: 100%;
-        font-size: 10pt;
-    }
-    
-    .wp-list-table th,
-    .wp-list-table td {
-        border: 1px solid #000 !important;
-        padding: 5px !important;
-    }
-    
-    .wp-list-table th {
-        background-color: #f0f0f0 !important;
-        font-weight: bold;
-    }
-    
-    .wp-list-table tr:nth-child(even) {
-        background-color: transparent !important;
-    }
-    
-    /* Área de firmas */
-    .gab-signatures {
-        margin-top: 50px;
-        display: flex;
-        justify-content: space-between;
-    }
-    
-    .gab-signature-box {
-        width: 45%;
-        text-align: center;
-    }
-    
-    .gab-signature-line {
-        border-bottom: 1px solid #000;
-        height: 40px;
-        margin-bottom: 5px;
-    }
-    
-    .gab-signature-label {
-        font-size: 10pt;
-    }
+        .gab-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
 
-    /* Mostrar firmas y pie de página en impresión */
-    .gab-signatures,
-    .gab-print-footer {
-        display: block !important;
-    }
-    
-    .gab-signatures {
-        margin-top: 50px;
-        display: flex !important;
-        justify-content: space-between;
-    }
-    
-    /* Pie de página */
-    .gab-print-footer {
-        margin-top: 30px;
-        text-align: center;
-        font-size: 9pt;
-        color: #666;
-    }
-}
-</style>
+        .gab-status-pending,
+        .gab-status-draft {
+            background: #f0ad4e;
+            color: #fff;
+        }
+
+        .gab-status-completed {
+            background: #5cb85c;
+            color: #fff;
+        }
+
+        .gab-status-cancelled {
+            background: #d9534f;
+            color: #fff;
+        }
+
+        .gab-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .gab-actions .button-link-delete {
+            color: #d63638;
+        }
+
+        .gab-actions .button-link-delete:hover {
+            color: #b32d2e;
+        }
+
+        /* Información de empresa para impresión */
+        .gab-company-header {
+            display: block;
+        }
+
+        /* Fuera del @media print, para mostrar solo en impresión */
+        .gab-signatures,
+        .gab-print-footer {
+            display: none;
+        }
+
+        /* Estilos para impresión */
+        @media print {
+            @page {
+                size: letter;
+                margin-top: 0 !important;
+            }
+            
+            body {
+                background: #fff;
+                font-size: 11pt;
+                margin: 0;
+                padding: 0;
+            }
+            
+            /* Ocultar elementos de WordPress */
+            #adminmenumain,
+            #adminmenuback,
+            #adminmenuwrap,
+            #wpadminbar,
+            #screen-meta,
+            #screen-meta-links,
+            #wpfooter,
+            .notice,
+            .no-print,
+            .gab-actions button,
+            .gab-actions a {
+                display: none !important;
+            }
+            
+            #wpcontent {
+                margin-left: 0 !important;
+                padding-left: 0 !important;
+            }
+
+            .wrap {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            
+            
+            .page-title-action {
+                display: none !important;
+            }
+            
+            /* Mostrar información de empresa */
+            .gab-company-header {
+                display: block;
+                margin-bottom: 0;
+                padding-bottom: 0;
+            }
+            
+            .gab-company-header h2 {
+                font-size: 18pt;
+                margin: 0 0 10px 0;
+            }
+            
+            .gab-company-header p {
+                margin: 3px 0;
+                font-size: 10pt;
+            }
+            .id-transfer h3 {
+                color: red !important;
+                padding: 5px;
+            }
+            
+            /* Ajustar diseño de tarjetas */
+            .gab-card {
+                border: none;
+                box-shadow: none;
+                padding: 5px 0;
+                margin-bottom: 0;
+                page-break-inside: avoid;
+            }
+            
+            .gab-card h2 {
+                font-size: 14pt;
+                margin-bottom: 10px;
+                padding-bottom: 5px;
+                border-bottom: 1px solid #000;
+            }
+
+            .gab-card-acciones {
+                display: none;
+            }
+            
+            /* Tabla de información */
+            .gab-info-table th {
+                width: 150px;
+                padding: 5px;
+                font-size: 10pt;
+            }
+            
+            .gab-info-table td {
+                padding: 5px;
+                font-size: 10pt;
+            }
+            
+            /* Estados */
+            .gab-status {
+                background: none !important;
+                color: #000 !important;
+                border: 1px solid #000;
+                padding: 2px 5px !important;
+            }
+            
+            /* Tabla de productos */
+            .wp-list-table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 10pt;
+            }
+            
+            .wp-list-table th,
+            .wp-list-table td {
+                border: 1px solid #000 !important;
+                padding: 5px !important;
+            }
+            
+            .wp-list-table th {
+                background-color: #f0f0f0 !important;
+                font-weight: bold;
+            }
+            
+            .wp-list-table tr:nth-child(even) {
+                background-color: transparent !important;
+            }
+            
+            /* Área de firmas */
+            .footer-impresion {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                text-align: center;
+                padding: 10px 0;
+                width: 100%;
+                font-size: 10px;
+            }
+            
+            .gab-signature-box {
+                width: 45%;
+                text-align: center;
+            }
+            
+            .gab-signature-line {
+                border-bottom: 1px solid #000;
+                height: 40px;
+                margin-bottom: 5px;
+            }
+            
+            .gab-signature-label {
+                font-size: 10pt;
+            }
+
+            /* Mostrar firmas y pie de página en impresión */
+            .gab-signatures,
+            .gab-print-footer {
+                display: block !important;
+            }
+            
+            .gab-signatures {
+                margin-top: 50px;
+                margin-bottom: 0;
+                display: flex !important;
+                justify-content: space-between;
+            }
+            
+            /* Pie de página */
+            .gab-print-footer {
+                margin-top: 5px;
+                margin-bottom: 0;
+                text-align: center;
+                font-size: 9pt;
+                color: #666;
+            }
+        }
+        </style>
 
         <!-- JavaScript para las acciones -->
         <script type="text/javascript">

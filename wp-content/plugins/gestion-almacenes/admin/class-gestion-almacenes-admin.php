@@ -688,9 +688,9 @@ class Gestion_Almacenes_Admin {
                 } else if ($producto_data['tiene_algun_agotamiento']) {
                     // Parcialmente agotado
                     echo '<span class="gab-badge stock-low" style="white-space: normal; display: inline-block;">';
-                    echo '<span class="dashicons dashicons-info" style="font-size: 14px; vertical-align: middle;"></span> ';
+                    echo '<span class="dashicons dashicons-info" style="font-size: 14px; vertical-align: middle;" title="Agotado"></span> ';
                     echo sprintf(
-                        esc_html__('Agotado en %d almacén(es)', 'gestion-almacenes'),
+                        esc_html__('En %d', 'gestion-almacenes'),
                         $producto_data['almacenes_agotados']
                     );
                     echo '</span>';
@@ -1263,6 +1263,21 @@ class Gestion_Almacenes_Admin {
         
         <!-- Estilos adicionales -->
         <style>
+
+        .wrap.gab-admin-page {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .gab-section-header {
+            border-bottom: 2px solid #0073aa;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
         /* Estilos para movimientos */
         .stock-in { 
             color: #00a32a; 
@@ -3083,6 +3098,47 @@ class Gestion_Almacenes_Admin {
             background: #555;
         }
 
+        .wrap.gab-admin-page {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .gab-section-header {
+            border-bottom: 2px solid #0073aa;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .gab-form-row {
+            display: block;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .gab-form-group {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%; /* o 50% si deseas dos columnas en desktop */
+            max-width: 600px;
+            margin-bottom: 1rem;
+        }
+
+        .gab-form-group label {
+            width: 150px; /* ajusta según lo largo de los textos */
+            margin-right: 1rem;
+            font-weight: bold;
+        }
+
+        .gab-form-group select {
+            flex: 1;
+            padding: 0.5rem;
+            max-width: 100%;
+        }
+
         @media (max-width: 768px) {
             .modal-content {
                 width: 95%;
@@ -3509,6 +3565,28 @@ class Gestion_Almacenes_Admin {
         }
 
         echo '</div>';
+
+        ?>
+        <style>
+        .wrap.gab-admin-page {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .gab-section-header {
+            border-bottom: 2px solid #0073aa;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .gab-form-row {
+            margin-bottom: 20px;
+        }
+        </style>
+        <?php
     }
 
     /**
@@ -4223,8 +4301,10 @@ class Gestion_Almacenes_Admin {
         $productos_stock_bajo = $gestion_almacenes_db->get_low_stock_products($low_stock_threshold);
         ?>
         
-        <div class="wrap">
-            <h1><?php esc_html_e('Configuración de Gestión de Almacenes', 'gestion-almacenes'); ?></h1>
+        <div class="wrap gab-admin-page">
+            <div class="gab-section-header">
+                <h1><?php esc_html_e('Configuración de Gestión de Almacenes', 'gestion-almacenes'); ?></h1>
+            </div>
             
             <?php if ($saved): ?>
                 <div class="notice notice-success is-dismissible">
@@ -4515,6 +4595,24 @@ class Gestion_Almacenes_Admin {
                 </tbody>
             </table>
         </div>
+
+        <style>
+        .wrap.gab-admin-page {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .gab-section-header {
+            border-bottom: 2px solid #0073aa;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        </style>
+
         <?php
     }
 

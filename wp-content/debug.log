@@ -20980,3 +20980,195 @@ Stack trace:
 [07-Jun-2025 04:33:19 UTC] PHP Parse error:  syntax error, unexpected '<' in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\admin\class-gestion-almacenes-admin.php on line 855
 [07-Jun-2025 06:05:28 UTC] Automatic updates starting...
 [07-Jun-2025 06:05:30 UTC] Automatic updates complete.
+[07-Jun-2025 20:39:38 UTC] Automatic updates starting...
+[07-Jun-2025 20:39:39 UTC] Automatic updates complete.
+[08-Jun-2025 00:30:15 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 00:31:50 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 00:32:01 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 00:38:42 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 00:38:55 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 00:39:35 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 00:41:50 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 00:42:32 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 00:51:05 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 00:53:31 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 00:53:47 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 00:54:48 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 00:54:57 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 00:55:03 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 00:55:54 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 00:56:30 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:12:49 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:15:23 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:15:30 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:15:35 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:20:03 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:20:56 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:21:39 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:22:09 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:23:19 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:36:37 UTC] PHP Parse error:  syntax error, unexpected '<' in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\admin\class-gestion-almacenes-admin.php on line 3555
+[08-Jun-2025 02:38:39 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:38:56 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:39:20 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:41:36 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:42:55 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:45:28 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:47:38 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:48:00 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:48:32 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:48:35 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:48:46 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 02:49:00 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 06:05:18 UTC] Automatic updates starting...
+[08-Jun-2025 06:05:19 UTC] Automatic updates complete.
+[08-Jun-2025 06:11:15 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 06:11:51 UTC] [GAB] Registro de stock creado para producto 68 en almacén 1
+[08-Jun-2025 06:13:33 UTC] PHP Notice:  Undefined variable: source in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\includes\class-gestion-almacenes-transfer-controller.php on line 736
+[08-Jun-2025 06:13:33 UTC] PHP Stack trace:
+[08-Jun-2025 06:13:33 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[08-Jun-2025 06:13:33 UTC] PHP   2. do_action($hook_name = 'admin_page_gab-view-transfer') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[08-Jun-2025 06:13:33 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[08-Jun-2025 06:13:33 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[08-Jun-2025 06:13:33 UTC] PHP   5. Gestion_Almacenes_Transfer_Controller->render_view_transfer_page('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[08-Jun-2025 06:13:33 UTC] PHP Notice:  Undefined variable: target in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\includes\class-gestion-almacenes-transfer-controller.php on line 746
+[08-Jun-2025 06:13:33 UTC] PHP Stack trace:
+[08-Jun-2025 06:13:33 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[08-Jun-2025 06:13:33 UTC] PHP   2. do_action($hook_name = 'admin_page_gab-view-transfer') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[08-Jun-2025 06:13:33 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[08-Jun-2025 06:13:33 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[08-Jun-2025 06:13:33 UTC] PHP   5. Gestion_Almacenes_Transfer_Controller->render_view_transfer_page('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[08-Jun-2025 06:13:33 UTC] PHP Notice:  Undefined variable: source in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\includes\class-gestion-almacenes-transfer-controller.php on line 736
+[08-Jun-2025 06:13:33 UTC] PHP Stack trace:
+[08-Jun-2025 06:13:33 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[08-Jun-2025 06:13:33 UTC] PHP   2. do_action($hook_name = 'admin_page_gab-view-transfer') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[08-Jun-2025 06:13:33 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[08-Jun-2025 06:13:33 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[08-Jun-2025 06:13:33 UTC] PHP   5. Gestion_Almacenes_Transfer_Controller->render_view_transfer_page('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[08-Jun-2025 06:13:33 UTC] PHP Notice:  Undefined variable: target in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\includes\class-gestion-almacenes-transfer-controller.php on line 746
+[08-Jun-2025 06:13:33 UTC] PHP Stack trace:
+[08-Jun-2025 06:13:33 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[08-Jun-2025 06:13:33 UTC] PHP   2. do_action($hook_name = 'admin_page_gab-view-transfer') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[08-Jun-2025 06:13:33 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[08-Jun-2025 06:13:33 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[08-Jun-2025 06:13:33 UTC] PHP   5. Gestion_Almacenes_Transfer_Controller->render_view_transfer_page('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[08-Jun-2025 06:13:33 UTC] PHP Notice:  Undefined variable: source in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\includes\class-gestion-almacenes-transfer-controller.php on line 736
+[08-Jun-2025 06:13:33 UTC] PHP Stack trace:
+[08-Jun-2025 06:13:33 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[08-Jun-2025 06:13:33 UTC] PHP   2. do_action($hook_name = 'admin_page_gab-view-transfer') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[08-Jun-2025 06:13:33 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[08-Jun-2025 06:13:33 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[08-Jun-2025 06:13:33 UTC] PHP   5. Gestion_Almacenes_Transfer_Controller->render_view_transfer_page('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[08-Jun-2025 06:13:33 UTC] PHP Notice:  Undefined variable: target in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\includes\class-gestion-almacenes-transfer-controller.php on line 746
+[08-Jun-2025 06:13:33 UTC] PHP Stack trace:
+[08-Jun-2025 06:13:33 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[08-Jun-2025 06:13:33 UTC] PHP   2. do_action($hook_name = 'admin_page_gab-view-transfer') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[08-Jun-2025 06:13:33 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[08-Jun-2025 06:13:33 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[08-Jun-2025 06:13:33 UTC] PHP   5. Gestion_Almacenes_Transfer_Controller->render_view_transfer_page('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[08-Jun-2025 06:13:33 UTC] PHP Notice:  Undefined variable: source in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\includes\class-gestion-almacenes-transfer-controller.php on line 736
+[08-Jun-2025 06:13:33 UTC] PHP Stack trace:
+[08-Jun-2025 06:13:33 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[08-Jun-2025 06:13:33 UTC] PHP   2. do_action($hook_name = 'admin_page_gab-view-transfer') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[08-Jun-2025 06:13:33 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[08-Jun-2025 06:13:33 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[08-Jun-2025 06:13:33 UTC] PHP   5. Gestion_Almacenes_Transfer_Controller->render_view_transfer_page('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[08-Jun-2025 06:13:33 UTC] PHP Notice:  Undefined variable: target in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes\includes\class-gestion-almacenes-transfer-controller.php on line 746
+[08-Jun-2025 06:13:33 UTC] PHP Stack trace:
+[08-Jun-2025 06:13:33 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[08-Jun-2025 06:13:33 UTC] PHP   2. do_action($hook_name = 'admin_page_gab-view-transfer') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[08-Jun-2025 06:13:33 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[08-Jun-2025 06:13:33 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[08-Jun-2025 06:13:33 UTC] PHP   5. Gestion_Almacenes_Transfer_Controller->render_view_transfer_page('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[08-Jun-2025 06:26:19 UTC] [GAB] Registro de stock creado para producto 69 en almacén 6
+[08-Jun-2025 06:26:19 UTC] [GAB] Stock actualizado: Almacén 1, Producto 62, Cambio: -5, Nuevo stock: 20
+[08-Jun-2025 06:26:19 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 0
+    [6] => 5
+)
+
+[08-Jun-2025 06:26:19 UTC] [GAB] Stock actualizado: Almacén 6, Producto 62, Cambio: 5, Nuevo stock: 10
+[08-Jun-2025 06:26:19 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 5
+    [3] => 25
+    [4] => 0
+    [6] => 10
+)
+
+[08-Jun-2025 06:26:19 UTC] [GAB] Stock actualizado: Almacén 1, Producto 69, Cambio: -2, Nuevo stock: 4
+[08-Jun-2025 06:26:19 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 69: Array
+(
+    [1] => 4
+    [2] => 13
+    [3] => 8
+    [4] => 0
+    [6] => 0
+)
+
+[08-Jun-2025 06:26:19 UTC] [GAB] Stock actualizado: Almacén 6, Producto 69, Cambio: 2, Nuevo stock: 2
+[08-Jun-2025 06:26:19 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 69: Array
+(
+    [1] => 4
+    [2] => 13
+    [3] => 8
+    [4] => 0
+    [6] => 2
+)
+
+[08-Jun-2025 06:26:19 UTC] [GAB] Stock actualizado: Almacén 1, Producto 75, Cambio: -5, Nuevo stock: 55
+[08-Jun-2025 06:26:19 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+    [1] => 55
+    [2] => 64
+    [3] => 5
+    [4] => 40
+    [6] => 3
+)
+
+[08-Jun-2025 06:26:19 UTC] [GAB] Stock actualizado: Almacén 6, Producto 75, Cambio: 5, Nuevo stock: 8
+[08-Jun-2025 06:26:19 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+    [1] => 55
+    [2] => 64
+    [3] => 5
+    [4] => 40
+    [6] => 8
+)
+
+[08-Jun-2025 06:26:19 UTC] [GAB] Stock actualizado: Almacén 1, Producto 77, Cambio: -2, Nuevo stock: 8
+[08-Jun-2025 06:26:19 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 8
+    [3] => 0
+    [4] => 5
+    [6] => 4
+)
+
+[08-Jun-2025 06:26:19 UTC] [GAB] Stock actualizado: Almacén 6, Producto 77, Cambio: 2, Nuevo stock: 6
+[08-Jun-2025 06:26:19 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 8
+    [3] => 0
+    [4] => 5
+    [6] => 6
+)
+
+[08-Jun-2025 06:30:07 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 06:30:29 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 06:34:43 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 06:36:21 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 06:36:53 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 06:37:26 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 06:37:49 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 06:40:06 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 06:42:33 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 06:46:34 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 06:46:47 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 06:47:50 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[08-Jun-2025 06:48:17 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
