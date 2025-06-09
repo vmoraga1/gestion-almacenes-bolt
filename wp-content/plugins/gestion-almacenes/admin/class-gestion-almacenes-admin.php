@@ -171,6 +171,9 @@ class Gestion_Almacenes_Admin {
     }
 
     public function enqueue_admin_scripts($hook) {
+        // Debug temporal
+        error_log('Hook actual: ' . $hook);
+        
         // Páginas donde cargar los scripts del plugin
         $plugin_pages = array(
             'toplevel_page_gab-warehouse-management',
@@ -180,25 +183,48 @@ class Gestion_Almacenes_Admin {
             'almacenes_page_gab-transfers',
             'almacenes_page_gab-create-transfer',
             'almacenes_page_gab-view-transfer',
-            'almacenes_page_gab-movements-history' // Agregar esta página
+            'almacenes_page_gab-movements-history',
+            // Agregar versiones en inglés
+            'warehouses_page_gab-settings',
+            'warehouses_page_gab-stock-report',
+            'warehouses_page_gab-mermas',
+            'warehouses_page_gab-transfers',
+            'warehouses_page_gab-create-transfer',
+            'warehouses_page_gab-view-transfer',
+            'warehouses_page_gab-movements-history'
         );
         
         if (!in_array($hook, $plugin_pages)) {
             return;
         }
         
+        // Verificar si el archivo CSS existe
+        $css_path = GESTION_ALMACENES_PLUGIN_DIR . 'admin/assets/css/gestion-almacenes-admin.css';
+        if (!file_exists($css_path)) {
+            error_log('ADVERTENCIA: El archivo CSS no existe en: ' . $css_path);
+        } else {
+            error_log('Archivo CSS encontrado en: ' . $css_path);
+        }
+        
         // Estilos generales del plugin
         wp_enqueue_style(
             'gab-admin-style',
-            GESTION_ALMACENES_PLUGIN_URL . 'assets/css/admin-style.css',
+            GESTION_ALMACENES_PLUGIN_URL . 'admin/assets/css/gestion-almacenes-admin.css',
             array(),
             GESTION_ALMACENES_VERSION
         );
         
+        // Verificar si se encoló correctamente
+        if (wp_style_is('gab-admin-style', 'enqueued')) {
+            error_log('CSS encolado correctamente');
+        } else {
+            error_log('ERROR: CSS no se encoló');
+        }
+        
         // Scripts generales
         wp_enqueue_script(
             'gab-admin-script',
-            GESTION_ALMACENES_PLUGIN_URL . 'assets/js/admin-script.js',
+            GESTION_ALMACENES_PLUGIN_URL . 'admin/assets/js/gestion-almacenes-admin.js',
             array('jquery'),
             GESTION_ALMACENES_VERSION,
             true
@@ -4234,6 +4260,54 @@ class Gestion_Almacenes_Admin {
             color: #666;
             font-style: italic;
             text-align: center;
+        }
+
+        .wrap.gab-admin-page {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .gab-section-header {
+            border-bottom: 2px solid #0073aa;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .gab-form-row {
+            display: block;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .gab-form-group {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%; /* o 50% si deseas dos columnas en desktop */
+            max-width: 600px;
+            margin-bottom: 1rem;
+        }
+
+        .gab-form-group label {
+            width: 150px; /* ajusta según lo largo de los textos */
+            margin-right: 1rem;
+            font-weight: bold;
+        }
+
+        .gab-form-group select {
+            flex: 1;
+            padding: 0.5rem;
+            max-width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+                margin: 2% auto;
+            }
         }
         </style>
 

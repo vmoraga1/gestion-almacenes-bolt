@@ -948,6 +948,7 @@ class Gestion_Almacenes_Transfer_Controller {
 
         .gab-info-table td {
             padding: 5px;
+            vertical-align: top;
         }
 
         .gab-status {
