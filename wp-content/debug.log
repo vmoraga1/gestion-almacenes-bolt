@@ -1,2 +1,22 @@
 [09-Jun-2025 14:24:01 UTC] Archivo CSS encontrado en: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\gestion-almacenes/admin/assets/css/gestion-almacenes-admin.css
 [09-Jun-2025 14:24:01 UTC] CSS encolado correctamente
+[09-Jun-2025 15:03:12 UTC] [GAB] Stock actualizado: Almacén 1, Producto 75, Cambio: -10, Nuevo stock: 45
+[09-Jun-2025 15:03:12 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+    [1] => 45
+    [2] => 64
+    [3] => 5
+    [4] => 40
+    [6] => 8
+)
+
+[09-Jun-2025 15:03:12 UTC] [GAB] Stock actualizado: Almacén 4, Producto 75, Cambio: 10, Nuevo stock: 50
+[09-Jun-2025 15:03:12 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+    [1] => 45
+    [2] => 64
+    [3] => 5
+    [4] => 50
+    [6] => 8
+)
+

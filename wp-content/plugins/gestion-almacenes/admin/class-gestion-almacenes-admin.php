@@ -229,9 +229,9 @@ class Gestion_Almacenes_Admin {
         );
         
         // Localización
-        wp_localize_script('gab-admin-script', 'gab_ajax', array(
+        wp_localize_script('gab-admin-script', 'gestionAlmacenesAjax', array(
             'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('gab_ajax_nonce')
+            'nonce' => wp_create_nonce('get_warehouse_stock_nonce')
         ));
         
         // Para páginas que necesitan Select2

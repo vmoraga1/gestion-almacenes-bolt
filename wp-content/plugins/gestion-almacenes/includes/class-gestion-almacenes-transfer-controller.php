@@ -663,8 +663,9 @@ class Gestion_Almacenes_Transfer_Controller {
                             ?>
                         </td>
                     </tr>
-                </table>
-                <table class="gab-info-table">
+                    <?php endif; ?>
+                    </table>
+                    <table class="gab-info-table">
                     <tr>
                         <th><?php esc_html_e('Almacén de Origen:', 'gestion-almacenes'); ?></th>
                         <td>
@@ -685,7 +686,7 @@ class Gestion_Almacenes_Transfer_Controller {
                             ?>
                         </td>
                     </tr>
-                    <?php endif; ?>
+
                     <?php if (!empty($transfer->notes)): ?>
                     <tr>
                         <th><?php esc_html_e('Notas:', 'gestion-almacenes'); ?></th>
@@ -1753,14 +1754,14 @@ class Gestion_Almacenes_Transfer_Controller {
                         <div class="info-row">
                             <span class="info-label"><?php esc_html_e('Origen:', 'gestion-almacenes'); ?></span>
                             <?php 
-                            $source = $warehouses_by_id[$transfer->source_warehouse_id] ?? null;
+                            $source = isset($warehouses_by_id[$transfer->source_warehouse_id]) ? $warehouses_by_id[$transfer->source_warehouse_id] : null;
                             echo $source ? esc_html($source->name) : __('(Almacén eliminado)', 'gestion-almacenes');
                             ?>
                         </div>
                         <div class="info-row">
                             <span class="info-label"><?php esc_html_e('Destino:', 'gestion-almacenes'); ?></span>
                             <?php 
-                            $target = $warehouses_by_id[$transfer->target_warehouse_id] ?? null;
+                            $target = isset($warehouses_by_id[$transfer->target_warehouse_id]) ? $warehouses_by_id[$transfer->target_warehouse_id] : null;
                             echo $target ? esc_html($target->name) : __('(Almacén eliminado)', 'gestion-almacenes');
                             ?>
                         </div>
