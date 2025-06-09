@@ -29,8 +29,8 @@ class Gestion_Almacenes_Admin {
     public function registrar_menu_almacenes() {
         // Menú Principal de Almacenes
         add_menu_page(
-            __('Warehouses', 'gestion-almacenes'),
-            __('Warehouses', 'gestion-almacenes'),
+            __('Almacenes', 'gestion-almacenes'),
+            __('Almacenes', 'gestion-almacenes'),
             'manage_options',
             'gab-warehouse-management',
             array($this, 'contenido_pagina_almacenes'),
@@ -108,7 +108,7 @@ class Gestion_Almacenes_Admin {
             [$this->transfer_controller, 'render_print_transfer_page']
         );
 
-        // Gestión de Discrepancias
+        /*// Gestión de Discrepancias
         add_submenu_page(
             'gab-warehouse-management',
             __('Gestión de Discrepancias', 'gestion-almacenes'),
@@ -116,9 +116,9 @@ class Gestion_Almacenes_Admin {
             'manage_options',
             'gab-discrepancies',
             array($this, 'mostrar_discrepancias')
-        );
+        );*/
 
-        // Almacén de Mermas
+        /*// Almacén de Mermas
         add_submenu_page(
             'gab-warehouse-management',
             __('Almacén de Mermas', 'gestion-almacenes'),
@@ -126,7 +126,7 @@ class Gestion_Almacenes_Admin {
             'manage_options',
             'gab-waste-store',
             array($this, 'mostrar_almacen_mermas')
-        );
+        );*/
 
         // Separador visual
         add_submenu_page(
@@ -171,8 +171,6 @@ class Gestion_Almacenes_Admin {
     }
 
     public function enqueue_admin_scripts($hook) {
-        // Debug temporal
-        error_log('Hook actual: ' . $hook);
         
         // Páginas donde cargar los scripts del plugin
         $plugin_pages = array(
@@ -198,13 +196,13 @@ class Gestion_Almacenes_Admin {
             return;
         }
         
-        // Verificar si el archivo CSS existe
+        /* // Verificar si el archivo CSS existe
         $css_path = GESTION_ALMACENES_PLUGIN_DIR . 'admin/assets/css/gestion-almacenes-admin.css';
         if (!file_exists($css_path)) {
             error_log('ADVERTENCIA: El archivo CSS no existe en: ' . $css_path);
         } else {
             error_log('Archivo CSS encontrado en: ' . $css_path);
-        }
+        }*/
         
         // Estilos generales del plugin
         wp_enqueue_style(
@@ -214,12 +212,12 @@ class Gestion_Almacenes_Admin {
             GESTION_ALMACENES_VERSION
         );
         
-        // Verificar si se encoló correctamente
+        /* // Verificar si se encoló correctamente
         if (wp_style_is('gab-admin-style', 'enqueued')) {
             error_log('CSS encolado correctamente');
         } else {
             error_log('ERROR: CSS no se encoló');
-        }
+        } */
         
         // Scripts generales
         wp_enqueue_script(

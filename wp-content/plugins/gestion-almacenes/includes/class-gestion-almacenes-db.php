@@ -397,9 +397,9 @@ class Gestion_Almacenes_DB {
 
         if ($almacenes === null) {
             error_log('[DEBUG GESTION ALMACENES DB] No se encontraron almacenes en la base de datos.');
-        } else {
+        } /*else {
             error_log('[DEBUG GESTION ALMACENES DB] Se encontraron ' . count($almacenes) . ' almacenes.');
-        }
+        }*/
 
 
         return $almacenes;
