@@ -21172,3 +21172,225 @@ Stack trace:
 [08-Jun-2025 06:46:47 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
 [08-Jun-2025 06:47:50 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
 [08-Jun-2025 06:48:17 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[09-Jun-2025 01:06:14 UTC] Automatic updates starting...
+[09-Jun-2025 01:06:14 UTC] Automatic updates complete.
+[09-Jun-2025 01:20:06 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[09-Jun-2025 01:20:47 UTC] GAB Stock: Stock ajustado: Producto de Prueba (ID: 62) - Almacén: Bodega Sur - Operación: subtract - Cantidad: 5 - Nuevo stock: 0
+[09-Jun-2025 01:20:50 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 78: Array
+(
+    [1] => 2
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 79: Array
+(
+    [3] => 2
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 80: Array
+(
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 69: Array
+(
+    [1] => 4
+    [2] => 13
+    [3] => 8
+    [4] => 0
+    [6] => 2
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 69: Array
+(
+    [1] => 4
+    [2] => 13
+    [3] => 8
+    [4] => 0
+    [6] => 2
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 5
+    [2] => 0
+    [3] => 11
+    [4] => 12
+    [6] => 3
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 5
+    [2] => 0
+    [3] => 11
+    [4] => 12
+    [6] => 3
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 71: Array
+(
+    [4] => 2
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 71: Array
+(
+    [4] => 2
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 72: Array
+(
+    [1] => 0
+    [6] => 6
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 72: Array
+(
+    [1] => 0
+    [6] => 6
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 73: Array
+(
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 73: Array
+(
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 74: Array
+(
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 74: Array
+(
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+    [1] => 55
+    [2] => 64
+    [3] => 5
+    [4] => 40
+    [6] => 8
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+    [1] => 55
+    [2] => 64
+    [3] => 5
+    [4] => 40
+    [6] => 8
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 76: Array
+(
+    [1] => 0
+    [2] => 31
+    [3] => 13
+    [4] => 23
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 76: Array
+(
+    [1] => 0
+    [2] => 31
+    [3] => 13
+    [4] => 23
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 8
+    [3] => 0
+    [4] => 5
+    [6] => 6
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 77: Array
+(
+    [1] => 8
+    [3] => 0
+    [4] => 5
+    [6] => 6
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 68: Array
+(
+    [1] => 0
+    [2] => 2
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 68: Array
+(
+    [1] => 0
+    [2] => 2
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 0
+    [3] => 25
+    [4] => 0
+    [6] => 10
+)
+
+[09-Jun-2025 01:22:16 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 62: Array
+(
+    [1] => 20
+    [2] => 0
+    [3] => 25
+    [4] => 0
+    [6] => 10
+)
+
+[09-Jun-2025 01:23:15 UTC] WordPress database error FUNCTION bolt.REGEXP_SUBSTR does not exist for query 
+					SELECT meta_value, FROM_UNIXTIME(REGEXP_SUBSTR(meta_value,'(?<=update_date";i:).+?(?=;)')) AS update_datetime
+					FROM wp_postmeta
+					WHERE post_id = 88 AND meta_key = '_alg_wc_cog_cost_archive'
+				ORDER BY update_datetime DESC made by require('wp-admin/edit-form-advanced.php'), do_meta_boxes, Alg_WC_Cost_of_Goods_Products_Cost_Archive->display_product_cost_archive_metabox, Alg_WC_Cost_of_Goods_Products_Cost_Archive->get_product_cost_archive_table, Alg_WC_Cost_of_Goods_Products_Cost_Archive->get_product_cost_archive
+[09-Jun-2025 01:24:42 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 88: Array
+(
+    [3] => 5
+)
+
+[09-Jun-2025 01:24:51 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 88: Array
+(
+    [1] => 8
+    [3] => 5
+)
+
+[09-Jun-2025 01:25:03 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 88: Array
+(
+    [1] => 8
+    [3] => 5
+)
+
+[09-Jun-2025 01:25:03 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 88: Array
+(
+    [1] => 8
+    [3] => 5
+)
+
+[09-Jun-2025 01:25:05 UTC] WordPress database error FUNCTION bolt.REGEXP_SUBSTR does not exist for query 
+					SELECT meta_value, FROM_UNIXTIME(REGEXP_SUBSTR(meta_value,'(?<=update_date";i:).+?(?=;)')) AS update_datetime
+					FROM wp_postmeta
+					WHERE post_id = 88 AND meta_key = '_alg_wc_cog_cost_archive'
+				ORDER BY update_datetime DESC made by require('wp-admin/edit-form-advanced.php'), do_meta_boxes, Alg_WC_Cost_of_Goods_Products_Cost_Archive->display_product_cost_archive_metabox, Alg_WC_Cost_of_Goods_Products_Cost_Archive->get_product_cost_archive_table, Alg_WC_Cost_of_Goods_Products_Cost_Archive->get_product_cost_archive
+[09-Jun-2025 02:40:01 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.
+[09-Jun-2025 02:40:13 UTC] [DEBUG GESTION ALMACENES DB] Se encontraron 5 almacenes.

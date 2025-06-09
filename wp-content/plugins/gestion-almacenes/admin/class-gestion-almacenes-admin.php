@@ -22,6 +22,7 @@ class Gestion_Almacenes_Admin {
         add_action('wp_ajax_gab_adjust_stock', array($this, 'ajax_adjust_stock'));
         add_action('wp_ajax_gab_search_products_for_select', array($this, 'ajax_search_products_for_select'));
         add_action('wp_ajax_gab_export_movements', array($this, 'ajax_export_movements'));
+        add_action('wp_ajax_gab_test_ajax', array($this, 'test_ajax'));
         
     }
 
@@ -170,43 +171,75 @@ class Gestion_Almacenes_Admin {
     }
 
     public function enqueue_admin_scripts($hook) {
-        // Solo en páginas relevantes del plugin
-        if (strpos($hook, 'gab-stock-report') === false && 
-            strpos($hook, 'gab-transfer-stock') === false && 
-            strpos($hook, 'gab-warehouse-management') === false &&
-            strpos($hook, 'gab-add-new-warehouse') === false &&
-            strpos($hook, 'gab-warehouse-settings') === false) {
+        // Páginas donde cargar los scripts del plugin
+        $plugin_pages = array(
+            'toplevel_page_gab-warehouse-management',
+            'almacenes_page_gab-settings',
+            'almacenes_page_gab-stock-report',
+            'almacenes_page_gab-mermas',
+            'almacenes_page_gab-transfers',
+            'almacenes_page_gab-create-transfer',
+            'almacenes_page_gab-view-transfer',
+            'almacenes_page_gab-movements-history' // Agregar esta página
+        );
+        
+        if (!in_array($hook, $plugin_pages)) {
             return;
         }
-
-        // Enqueue CSS
+        
+        // Estilos generales del plugin
         wp_enqueue_style(
-            'gestion-almacenes-admin-css',
-            GESTION_ALMACENES_PLUGIN_URL . 'admin/assets/css/gestion-almacenes-admin.css',
+            'gab-admin-style',
+            GESTION_ALMACENES_PLUGIN_URL . 'assets/css/admin-style.css',
             array(),
-            '1.0.0'
+            GESTION_ALMACENES_VERSION
         );
-
-        // Enqueue JavaScript
+        
+        // Scripts generales
         wp_enqueue_script(
-            'gestion-almacenes-admin-js',
-            GESTION_ALMACENES_PLUGIN_URL . 'admin/assets/js/gestion-almacenes-admin.js',
+            'gab-admin-script',
+            GESTION_ALMACENES_PLUGIN_URL . 'assets/js/admin-script.js',
             array('jquery'),
-            '1.0.0',
+            GESTION_ALMACENES_VERSION,
             true
         );
-
-        // Localizar script con datos AJAX
-        wp_localize_script('gestion-almacenes-admin-js', 'gestionAlmacenesAjax', array(
+        
+        // Localización
+        wp_localize_script('gab-admin-script', 'gab_ajax', array(
             'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce'    => wp_create_nonce('get_warehouse_stock_nonce'),
-            'messages' => array(
-                'confirm_delete' => __('¿Está seguro de que desea eliminar este elemento?', 'gestion-almacenes'),
-                'transfer_confirm' => __('¿Confirma la transferencia?', 'gestion-almacenes'),
-                'error_connection' => __('Error de conexión', 'gestion-almacenes'),
-                'stock_updated' => __('Stock actualizado correctamente', 'gestion-almacenes')
-            )
+            'nonce' => wp_create_nonce('gab_ajax_nonce')
         ));
+        
+        // Para páginas que necesitan Select2
+        if (in_array($hook, ['almacenes_page_gab-movements-history', 'almacenes_page_gab-create-transfer'])) {
+            // Cargar Select2 directamente desde CDN si WooCommerce no está disponible
+            if (!wp_script_is('select2', 'registered')) {
+                wp_enqueue_script(
+                    'select2',
+                    'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js',
+                    array('jquery'),
+                    '4.1.0',
+                    true
+                );
+                
+                wp_enqueue_style(
+                    'select2',
+                    'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css',
+                    array(),
+                    '4.1.0'
+                );
+            } else {
+                // Si está registrado, usar el de WooCommerce
+                wp_enqueue_script('select2');
+                wp_enqueue_style('select2');
+            }
+            
+            // También cargar los enhanced selects de WooCommerce si están disponibles
+            if (function_exists('WC')) {
+                wp_enqueue_script('wc-enhanced-select');
+                wp_enqueue_style('woocommerce_admin_styles');
+            }
+        }
     }
 
     /**
@@ -912,11 +945,11 @@ class Gestion_Almacenes_Admin {
                 <div class="gab-movement-types-grid">
                     <?php
                     $tipos_info = array(
-                        'initial' => array('label' => __('Stock Inicial', 'gestion-almacenes'), 'icon' => 'plus-alt', 'color' => '#2271b1'),
+                        //'initial' => array('label' => __('Stock Inicial', 'gestion-almacenes'), 'icon' => 'plus-alt', 'color' => '#2271b1'),
+                        'sale' => array('label' => __('Ventas', 'gestion-almacenes'), 'icon' => 'cart', 'color' => '#dc3545'),
                         'adjustment' => array('label' => __('Ajustes', 'gestion-almacenes'), 'icon' => 'update', 'color' => '#f0ad4e'),
                         'transfer_in' => array('label' => __('Entrada Transfer.', 'gestion-almacenes'), 'icon' => 'download', 'color' => '#00a32a'),
                         'transfer_out' => array('label' => __('Salida Transfer.', 'gestion-almacenes'), 'icon' => 'upload', 'color' => '#d63638'),
-                        'sale' => array('label' => __('Ventas', 'gestion-almacenes'), 'icon' => 'cart', 'color' => '#dc3545'),
                         'return' => array('label' => __('Devoluciones', 'gestion-almacenes'), 'icon' => 'undo', 'color' => '#00a32a')
                     );
                     
@@ -956,20 +989,7 @@ class Gestion_Almacenes_Admin {
                         <div class="gab-form-group">
                             <label for="product_id"><?php esc_html_e('Producto', 'gestion-almacenes'); ?></label>
                             <select name="product_id" id="product_id" class="gab-select2" style="width: 100%;">
-                            <option value=""><?php esc_html_e('Todos los productos', 'gestion-almacenes'); ?></option>
-                                <?php
-                                if ($product_id) {
-                                    $product = wc_get_product($product_id);
-                                    if ($product) {
-                                        echo '<option value="' . esc_attr($product_id) . '" selected>';
-                                        echo esc_html($product->get_name());
-                                        if ($product->get_sku()) {
-                                            echo ' (SKU: ' . esc_html($product->get_sku()) . ')';
-                                        }
-                                        echo '</option>';
-                                    }
-                                }
-                                ?>
+                                <!-- Select2 manejará las opciones dinámicamente -->
                             </select>
                         </div>
                         
@@ -1260,6 +1280,10 @@ class Gestion_Almacenes_Admin {
                 </div>
             <?php endif; ?>
         </div>
+
+        <!-- Cargar Select2 directamente -->
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         
         <!-- Estilos adicionales -->
         <style>
@@ -1603,49 +1627,229 @@ class Gestion_Almacenes_Admin {
             }
         }
 
+        /* Estilos personalizados para Select2 */
+        .gab-select2 {
+            min-width: 300px;
+        }
+
+        .select2-container--default .select2-selection--single {
+            height: 36px;
+            line-height: 34px;
+            border-color: #7e8993;
+            border-radius: 4px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            padding-left: 10px;
+            padding-right: 30px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 34px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__placeholder {
+            color: #72777c;
+        }
+
+        /* Dropdown personalizado */
+        .select2-container--default .select2-results__option {
+            padding: 8px 12px;
+        }
+
+        .gab-select2-dropdown .select2-results__option--highlighted[aria-selected] {
+            background-color: #0073aa;
+        }
+
+        /* Mensaje de carga */
+        .select2-container--default .select2-results__option--loading {
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Clear button */
+        .select2-container--default .select2-selection--single .select2-selection__clear {
+            margin-right: 5px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__clear:hover {
+            color: #d63638;
+        }
+
+        /* Focus state */
+        .select2-container--default.select2-container--focus .select2-selection--single {
+            border-color: #2271b1;
+            box-shadow: 0 0 0 1px #2271b1;
+        }
+
+        /* Personalización adicional de Select2 */
+        
+
+        .select2-container--default .select2-results__option strong {
+            color: #23282d;
+        }
+
+        .select2-container--default .select2-results__option small {
+            display: inline-block;
+            margin-left: 5px;
+        }
+
+        .select2-results__option--highlighted strong {
+            color: #fff;
+        }        
+
+        /* Spinner de carga personalizado */
+        .select2-container--default .select2-results__option.loading-results {
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .gab-select2 {
+                min-width: 100%;
+                width: 100% !important;
+            }
+        }
+
         </style>
         
         <script>
         jQuery(document).ready(function($) {
-            // Inicializar Select2 para búsqueda de productos
-            if ($.fn.select2) {
+            
+            // Verificar si Select2 está disponible después de cargarlo
+            if (typeof $.fn.select2 === 'function') {
+                initializeProductSelect();
+            } else {
+                console.error('Select2 no está disponible incluso después de cargarlo');
+            }
+            
+            function initializeProductSelect() {
                 $('#product_id').select2({
                     ajax: {
                         url: ajaxurl,
+                        type: 'GET',
                         dataType: 'json',
                         delay: 250,
                         data: function (params) {
                             return {
                                 action: 'gab_search_products_for_select',
-                                term: params.term,
-                                nonce: '<?php echo wp_create_nonce('gab_search_products'); ?>'
+                                term: params.term || '',
+                                nonce: '<?php echo wp_create_nonce('gab_search_products'); ?>' // Nonce correcto
                             };
                         },
                         processResults: function (data) {
-                            return {
-                                results: data.data || []
-                            };
+                            
+                            if (data.success && data.data) {
+                                // Agregar opción "Todos los productos"
+                                var results = [{
+                                    id: '',
+                                    text: '<?php esc_html_e('Todos los productos', 'gestion-almacenes'); ?>'
+                                }];
+                                
+                                // Agregar productos encontrados
+                                $.each(data.data, function(index, item) {
+                                    // Decodificar HTML entities
+                                    var decodedText = $('<div/>').html(item.text).text();
+                                    
+                                    results.push({
+                                        id: item.id,
+                                        text: decodedText,
+                                        sku: item.sku,
+                                        name: item.name
+                                    });
+                                });
+                                
+                                return {
+                                    results: results
+                                };
+                            } else {
+                                return {
+                                    results: [{
+                                        id: '',
+                                        text: '<?php esc_html_e('Todos los productos', 'gestion-almacenes'); ?>'
+                                    }]
+                                };
+                            }
                         },
-                        cache: true
+                        cache: true,
+                        error: function(xhr, textStatus, errorThrown) {
+                            console.error('Error AJAX:', {
+                                status: xhr.status,
+                                statusText: xhr.statusText,
+                                responseText: xhr.responseText,
+                                error: errorThrown
+                            });
+                        }
                     },
                     minimumInputLength: 2,
-                    placeholder: '<?php esc_html_e('Buscar producto...', 'gestion-almacenes'); ?>',
+                    placeholder: '<?php esc_html_e('Buscar producto por nombre o SKU...', 'gestion-almacenes'); ?>',
                     allowClear: true,
+                    width: '100%',
+                    // Template para mostrar resultados en el dropdown
+                    templateResult: function(data) {
+                        if (!data.id) {
+                            return data.text;
+                        }
+                        
+                        var $result = $('<span>');
+                        
+                        // Nombre del producto
+                        $result.append($('<strong>').text(data.name || data.text));
+                        
+                        // SKU si existe
+                        if (data.sku) {
+                            $result.append(' <small style="color: #666;">(' + data.sku + ')</small>');
+                        }
+                        
+                        return $result;
+                    },
+                    // Template para mostrar la selección
+                    templateSelection: function(data) {
+                        if (!data.id) {
+                            return data.text;
+                        }
+                        
+                        var text = data.name || data.text;
+                        if (data.sku) {
+                            text += ' (SKU: ' + data.sku + ')';
+                        }
+                        
+                        return text;
+                    },
                     language: {
-                        inputTooShort: function() {
-                            return '<?php esc_html_e('Escribe al menos 2 caracteres', 'gestion-almacenes'); ?>';
+                        inputTooShort: function(args) {
+                            var remainingChars = args.minimum - args.input.length;
+                            return 'Por favor ingresa ' + remainingChars + ' o más caracteres';
                         },
                         noResults: function() {
-                            return '<?php esc_html_e('No se encontraron resultados', 'gestion-almacenes'); ?>';
+                            return '<?php esc_html_e('No se encontraron productos', 'gestion-almacenes'); ?>';
                         },
                         searching: function() {
                             return '<?php esc_html_e('Buscando...', 'gestion-almacenes'); ?>';
+                        },
+                        errorLoading: function() {
+                            return '<?php esc_html_e('Error al cargar los resultados', 'gestion-almacenes'); ?>';
                         }
                     }
                 });
+                
+                // Si hay un producto preseleccionado
+                <?php if ($product_id && $product = wc_get_product($product_id)): ?>
+                var preselectedOption = new Option(
+                    '<?php echo esc_js($product->get_name() . ($product->get_sku() ? ' (SKU: ' . $product->get_sku() . ')' : '')); ?>',
+                    '<?php echo esc_js($product_id); ?>',
+                    true,
+                    true
+                );
+                $('#product_id').append(preselectedOption).trigger('change');
+                <?php endif; ?>
+                
             }
             
-            // Validar fechas
+            // Validación de fechas
             $('#date_from, #date_to').on('change', function() {
                 var from = $('#date_from').val();
                 var to = $('#date_to').val();
@@ -1655,8 +1859,27 @@ class Gestion_Almacenes_Admin {
                     $(this).val('');
                 }
             });
+            
+            // Función de prueba para verificar AJAX
+            window.testAjax = function() {
+                $.ajax({
+                    url: ajaxurl,
+                    type: 'GET',
+                    data: {
+                        action: 'gab_search_products_for_select',
+                        term: 'test',
+                        nonce: '<?php echo wp_create_nonce('gab_search_products'); ?>'
+                    },
+                    success: function(response) {
+                        console.log('Prueba AJAX exitosa:', response);
+                    },
+                    error: function(xhr) {
+                        console.error('Error en prueba AJAX:', xhr.responseText);
+                    }
+                });
+            };
         });
-        
+
         function exportMovements() {
             var params = new URLSearchParams(window.location.search);
             params.set('action', 'gab_export_movements');
@@ -1666,6 +1889,13 @@ class Gestion_Almacenes_Admin {
         }
         </script>
         <?php
+    }
+
+    /**
+     * Método de prueba AJAX
+     */
+    public function test_ajax() {
+        wp_send_json_success(array('message' => 'AJAX funciona correctamente'));
     }
 
     /**
@@ -1843,7 +2073,21 @@ class Gestion_Almacenes_Admin {
      * AJAX: Buscar productos para select2
      */
     public function ajax_search_products_for_select() {
-        check_ajax_referer('gab_search_products', 'nonce');
+        // Verificar nonce - intentar diferentes nombres por compatibilidad
+        $nonce_valid = false;
+        
+        if (isset($_GET['nonce']) && wp_verify_nonce($_GET['nonce'], 'gab_search_products')) {
+            $nonce_valid = true;
+        } elseif (isset($_REQUEST['nonce']) && wp_verify_nonce($_REQUEST['nonce'], 'gab_search_products')) {
+            $nonce_valid = true;
+        } elseif (isset($_GET['_ajax_nonce']) && wp_verify_nonce($_GET['_ajax_nonce'], 'gab_search_products')) {
+            $nonce_valid = true;
+        }
+        
+        if (!$nonce_valid) {
+            wp_send_json_error('Nonce inválido');
+            return;
+        }
         
         $term = isset($_GET['term']) ? sanitize_text_field($_GET['term']) : '';
         
@@ -1852,6 +2096,23 @@ class Gestion_Almacenes_Admin {
             return;
         }
         
+        // Primero buscar por SKU exacto
+        $args = array(
+            'post_type' => array('product', 'product_variation'),
+            'post_status' => 'publish',
+            'posts_per_page' => 20,
+            'meta_query' => array(
+                array(
+                    'key' => '_sku',
+                    'value' => $term,
+                    'compare' => 'LIKE'
+                )
+            )
+        );
+        
+        $products_by_sku = get_posts($args);
+        
+        // Luego buscar por nombre
         $args = array(
             'post_type' => array('product', 'product_variation'),
             'post_status' => 'publish',
@@ -1860,21 +2121,64 @@ class Gestion_Almacenes_Admin {
             'orderby' => 'relevance'
         );
         
-        $products = get_posts($args);
+        $products_by_name = get_posts($args);
+        
+        // Combinar resultados y eliminar duplicados
+        $all_products = array_merge($products_by_sku, $products_by_name);
+        $seen = array();
         $results = array();
         
-        foreach ($products as $product_post) {
+        foreach ($all_products as $product_post) {
+            if (in_array($product_post->ID, $seen)) {
+                continue;
+            }
+            
+            $seen[] = $product_post->ID;
             $product = wc_get_product($product_post->ID);
-            if ($product) {
-                $text = $product->get_name();
-                if ($product->get_sku()) {
-                    $text .= ' (SKU: ' . $product->get_sku() . ')';
+            
+            if (!$product) {
+                continue;
+            }
+            
+            // Construir el texto de visualización
+            $text = $product->get_name();
+            
+            // Agregar SKU si existe
+            if ($product->get_sku()) {
+                $text .= ' (SKU: ' . $product->get_sku() . ')';
+            }
+            
+            // Para variaciones, mostrar atributos
+            if ($product->is_type('variation')) {
+                $attributes = $product->get_variation_attributes();
+                $attr_text = array();
+                foreach ($attributes as $attr_name => $attr_value) {
+                    if ($attr_value) {
+                        $attr_text[] = $attr_value;
+                    }
                 }
-                
-                $results[] = array(
-                    'id' => $product->get_id(),
-                    'text' => $text
-                );
+                if (!empty($attr_text)) {
+                    $text .= ' - ' . implode(', ', $attr_text);
+                }
+            }
+            
+            // Agregar precio para referencia
+            $price = $product->get_price();
+            if ($price) {
+                $text .= ' - ' . get_woocommerce_currency_symbol() . number_format($price, 0, ',', '.');
+            }
+
+            $results[] = array(
+                'id' => $product->get_id(),
+                'text' => $text, // Ya no necesita wp_strip_all_tags
+                'sku' => $product->get_sku(),
+                'name' => $product->get_name(),
+                'price' => $price
+            );
+            
+            // Limitar a 20 resultados
+            if (count($results) >= 20) {
+                break;
             }
         }
         

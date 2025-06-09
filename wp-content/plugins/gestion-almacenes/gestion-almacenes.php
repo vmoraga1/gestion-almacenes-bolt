@@ -3,7 +3,7 @@
  * Plugin Name: Gestión de Almacenes / Bodegas / Tiendas
  * Plugin URI: https://hostpanish.com
  * Description: Gestión de Stock para multiples "Almacenes"
- * Version: 1.0.0
+ * Version: 1.0.6
  * Author: Víctor Moraga
  * Author URI: https://hostpanish.com
  */
