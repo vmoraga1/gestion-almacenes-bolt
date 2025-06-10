@@ -876,11 +876,61 @@ class Gestion_Almacenes_Admin {
                     $total_salidas = 0;
                     $movimientos_totales = 0;
                     
+                    // Para manejar correctamente los ajustes, necesitamos una consulta adicional
+                    global $wpdb;
+                    $table = $wpdb->prefix . 'gab_stock_movements';
+                    
+                    // Construir WHERE clause para los filtros actuales
+                    $where_conditions = ["1=1"];
+                    $where_params = [];
+                    
+                    if ($product_id) {
+                        $where_conditions[] = "product_id = %d";
+                        $where_params[] = $product_id;
+                    }
+                    if ($warehouse_id) {
+                        $where_conditions[] = "warehouse_id = %d";
+                        $where_params[] = $warehouse_id;
+                    }
+                    if ($date_from) {
+                        $where_conditions[] = "created_at >= %s";
+                        $where_params[] = $date_from . ' 00:00:00';
+                    }
+                    if ($date_to) {
+                        $where_conditions[] = "created_at <= %s";
+                        $where_params[] = $date_to . ' 23:59:59';
+                    }
+                    
+                    $where_clause = implode(' AND ', $where_conditions);
+                    
+                    // Consulta para obtener ajustes positivos y negativos por separado
+                    $adjustment_query = "SELECT 
+                        SUM(CASE WHEN movement_type = 'adjustment' AND quantity > 0 THEN quantity ELSE 0 END) as adjustment_positive,
+                        SUM(CASE WHEN movement_type = 'adjustment' AND quantity < 0 THEN ABS(quantity) ELSE 0 END) as adjustment_negative
+                        FROM $table 
+                        WHERE $where_clause";
+                    
+                    if (!empty($where_params)) {
+                        $adjustment_query = $wpdb->prepare($adjustment_query, $where_params);
+                    }
+                    
+                    $adjustment_data = $wpdb->get_row($adjustment_query);
+                    
+                    // Procesar las estadísticas normales
                     foreach ($stats as $tipo => $data) {
                         $movimientos_totales += $data->total_movements;
-                        if (in_array($tipo, ['initial', 'adjustment', 'transfer_in', 'return', 'in'])) {
+                        
+                        // Para ajustes, usar los datos separados
+                        if ($tipo === 'adjustment') {
+                            $total_entradas += intval($adjustment_data->adjustment_positive);
+                            $total_salidas += intval($adjustment_data->adjustment_negative);
+                        } 
+                        // Tipos que son siempre entradas
+                        elseif (in_array($tipo, ['initial', 'transfer_in', 'return'])) {
                             $total_entradas += abs($data->total_quantity);
-                        } else {
+                        } 
+                        // Tipos que son siempre salidas
+                        else {
                             $total_salidas += abs($data->total_quantity);
                         }
                     }

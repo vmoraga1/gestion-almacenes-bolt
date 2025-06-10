@@ -20,3 +20,90 @@
     [6] => 8
 )
 
+[09-Jun-2025 16:46:48 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 5
+    [2] => 0
+    [3] => 11
+    [4] => 12
+    [6] => 3
+)
+
+[09-Jun-2025 16:46:48 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 5
+    [2] => 0
+    [3] => 11
+    [4] => 12
+    [6] => 3
+)
+
+[09-Jun-2025 16:46:48 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 5
+    [2] => 0
+    [3] => 11
+    [4] => 12
+    [6] => 3
+)
+
+[09-Jun-2025 16:46:48 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 5
+    [2] => 0
+    [3] => 11
+    [4] => 12
+    [6] => 3
+)
+
+[09-Jun-2025 16:46:48 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 5
+    [2] => 0
+    [3] => 11
+    [4] => 12
+    [6] => 3
+)
+
+[09-Jun-2025 16:46:48 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 5
+    [2] => 0
+    [3] => 11
+    [4] => 12
+    [6] => 3
+)
+
+[09-Jun-2025 16:46:48 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 70: Array
+(
+    [1] => 5
+    [2] => 0
+    [3] => 11
+    [4] => 12
+    [6] => 3
+)
+
+[09-Jun-2025 20:34:49 UTC] Automatic updates starting...
+[09-Jun-2025 20:34:50 UTC]   Automatic plugin updates starting...
+[09-Jun-2025 20:34:50 UTC]   Automatic plugin updates complete.
+[09-Jun-2025 20:34:51 UTC] Automatic updates complete.
+[09-Jun-2025 21:00:52 UTC] [GAB] Stock actualizado: Almacén 1, Producto 75, Cambio: -7, Nuevo stock: 38
+[09-Jun-2025 21:00:52 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+    [1] => 38
+    [2] => 64
+    [3] => 5
+    [4] => 50
+    [6] => 8
+)
+
+[09-Jun-2025 21:00:52 UTC] [GAB] Stock actualizado: Almacén 2, Producto 75, Cambio: 7, Nuevo stock: 71
+[09-Jun-2025 21:00:52 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+    [1] => 38
+    [2] => 71
+    [3] => 5
+    [4] => 50
+    [6] => 8
+)
+
