@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 class Gestion_Almacenes_DB {
 
     public function __construct() {
-        // Aquí podrías añadir hooks si esta clase necesitara interactuar con WordPress directamente en el constructor.
+        // A    ñadir hooks si esta clase necesitara interactuar con WordPress directamente en el constructor.
         // Para la creación de tabla, se llama directamente en el hook de activación.
     }
 
@@ -18,192 +18,199 @@ class Gestion_Almacenes_DB {
     }
 
     // Función para crear las tablas del plugin
-    public function crear_tablas_plugin() { // Renombramos esta función
+    public function crear_tablas_plugin() {
         global $wpdb;
         $charset_collate = $wpdb->get_charset_collate();
-        require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); // Incluimos dbDelta aquí
-
-        // Tabla de Almacenes
-        $table_name_warehouses = $wpdb->prefix . 'gab_warehouses';
-
-        // Asegúrate de que la tabla no exista antes de intentar crearla
-        // *** CORRECCIÓN AQUÍ: Usar $table_name_warehouses en lugar de $table_name ***
-        if ($wpdb->get_var("SHOW TABLES LIKE '$table_name_warehouses'") != $table_name_warehouses) {
-            error_log('[DEBUG GESTION ALMACENES DB] Intentando crear tabla de almacenes...');
-
-            $sql_warehouses = "CREATE TABLE $table_name_warehouses (
-                id mediumint(9) NOT NULL AUTO_INCREMENT,
-                name tinytext NOT NULL,
-                slug tinytext NOT NULL,
-                address text NOT NULL,
-                comuna tinytext NOT NULL,
-                ciudad tinytext NOT NULL,
-                region tinytext NOT NULL,
-                pais tinytext NOT NULL,
-                email tinytext NOT NULL,
-                telefono tinytext NOT NULL,
-                PRIMARY KEY  (id)
-            ) $charset_collate;";
-
-            dbDelta($sql_warehouses);
-
-            if ($wpdb->last_error) {
-                error_log('[DEBUG GESTION ALMACENES DB] Error al crear la tabla de almacenes: ' . $wpdb->last_error);
-            } else {
-                error_log('[DEBUG GESTION ALMACENES DB] Tabla de almacenes creada o actualizada correctamente.');
-            }
-
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        
+        $tables_created = 0;
+        $tables_errors = array();
+        
+        // 1. Tabla de Almacenes
+        $table_warehouses = $wpdb->prefix . 'gab_warehouses';
+        $sql_warehouses = "CREATE TABLE IF NOT EXISTS $table_warehouses (
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            name varchar(100) NOT NULL,
+            slug varchar(100) NOT NULL,
+            address text NOT NULL,
+            comuna varchar(100) NOT NULL,
+            ciudad varchar(100) NOT NULL,
+            region varchar(100) NOT NULL,
+            pais varchar(100) NOT NULL DEFAULT 'Chile',
+            email varchar(100) NOT NULL,
+            telefono varchar(20) NOT NULL,
+            created_at datetime DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (id)
+        ) $charset_collate;";
+        
+        dbDelta($sql_warehouses);
+        if ($wpdb->last_error) {
+            $tables_errors[] = "Almacenes: " . $wpdb->last_error;
         } else {
-            error_log('[DEBUG GESTION ALMACENES DB] La tabla de almacenes ya existe. No se intentó crear.');
+            $tables_created++;
         }
-
-        // Tabla de movimientos de stock
+        
+        // 2. Tabla de Stock por Almacén
+        $table_stock = $wpdb->prefix . 'gab_warehouse_product_stock';
+        $sql_stock = "CREATE TABLE IF NOT EXISTS $table_stock (
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            warehouse_id mediumint(9) NOT NULL,
+            product_id bigint(20) UNSIGNED NOT NULL,
+            stock int(11) NOT NULL DEFAULT 0,
+            updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            UNIQUE KEY product_warehouse (product_id, warehouse_id),
+            KEY idx_warehouse (warehouse_id),
+            KEY idx_product (product_id)
+        ) $charset_collate;";
+        
+        dbDelta($sql_stock);
+        if ($wpdb->last_error) {
+            $tables_errors[] = "Stock: " . $wpdb->last_error;
+        } else {
+            $tables_created++;
+        }
+        
+        // 3. Tabla de Movimientos (CRÍTICA - la que faltaba)
         $table_movements = $wpdb->prefix . 'gab_stock_movements';
-        if ($wpdb->get_var("SHOW TABLES LIKE '$table_movements'") != $table_movements) {
-            error_log('[DEBUG GESTION ALMACENES DB] Creando tabla de movimientos...');
-            
-            $sql_movements = "CREATE TABLE $table_movements (
-                id mediumint(9) NOT NULL AUTO_INCREMENT,
-                product_id bigint(20) UNSIGNED NOT NULL,
-                warehouse_id mediumint(9) NOT NULL,
-                movement_type enum('in','out','adjustment','transfer_in','transfer_out','sale','return','initial') NOT NULL,
-                quantity int(11) NOT NULL,
-                balance_after int(11) NOT NULL,
-                reference_type varchar(50),
-                reference_id bigint(20),
-                notes text,
-                created_by bigint(20) UNSIGNED NOT NULL,
-                created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (id),
-                KEY idx_product (product_id),
-                KEY idx_warehouse (warehouse_id),
-                KEY idx_date (created_at),
-                KEY idx_type (movement_type),
-                KEY idx_reference (reference_type, reference_id)
-            ) $charset_collate;";
-            
-            dbDelta($sql_movements);
-            
-            if ($wpdb->last_error) {
-                error_log('[DEBUG GESTION ALMACENES DB] Error al crear tabla de movimientos: ' . $wpdb->last_error);
-            } else {
-                error_log('[DEBUG GESTION ALMACENES DB] Tabla de movimientos creada correctamente.');
-            }
-        }
-
-        // *** Nueva Tabla de Stock por Almacén ***
-        $table_name_stock = $wpdb->prefix . 'gab_warehouse_product_stock';
-
-         // Asegúrate de que la tabla no exista antes de intentar crearla
-        if ($wpdb->get_var("SHOW TABLES LIKE '$table_name_stock'") != $table_name_stock) {
-            error_log('[DEBUG GESTION ALMACENES DB] Intentando crear tabla de stock por almacén...');
-            $sql_stock = "CREATE TABLE $table_name_stock (
-                id mediumint(9) NOT NULL AUTO_INCREMENT,
-                warehouse_id mediumint(9) NOT NULL,
-                product_id bigint(20) UNSIGNED NOT NULL,
-                stock int(11) NOT NULL DEFAULT 0,
-                updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                PRIMARY KEY  (id),
-                UNIQUE KEY product_warehouse (product_id, warehouse_id), -- Asegura que un producto solo tenga un registro por almacén
-                KEY idx_warehouse (warehouse_id),
-                KEY idx_product (product_id)
-            ) $charset_collate;";
-
-            dbDelta($sql_stock);
-
-            if ($wpdb->last_error) {
-                error_log('[DEBUG GESTION ALMACENES DB] Error al crear la tabla de stock: ' . $wpdb->last_error);
-            } else {
-                error_log('[DEBUG GESTION ALMACENES DB] Tabla de stock creada o actualizada correctamente.');
-            }
-
+        $sql_movements = "CREATE TABLE IF NOT EXISTS $table_movements (
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            product_id bigint(20) UNSIGNED NOT NULL,
+            warehouse_id mediumint(9) NOT NULL,
+            movement_type enum('in','out','adjustment','transfer_in','transfer_out','sale','return','initial') NOT NULL,
+            quantity int(11) NOT NULL,
+            balance_after int(11) NOT NULL,
+            reference_type varchar(50) DEFAULT NULL,
+            reference_id bigint(20) DEFAULT NULL,
+            notes text DEFAULT NULL,
+            created_by bigint(20) UNSIGNED NOT NULL,
+            created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            KEY idx_product (product_id),
+            KEY idx_warehouse (warehouse_id),
+            KEY idx_date (created_at),
+            KEY idx_type (movement_type),
+            KEY idx_reference (reference_type, reference_id)
+        ) $charset_collate;";
+        
+        dbDelta($sql_movements);
+        if ($wpdb->last_error) {
+            $tables_errors[] = "Movimientos: " . $wpdb->last_error;
         } else {
-            error_log('[DEBUG GESTION ALMACENES DB] La tabla de stock ya existe. No se intentó crear.');
+            $tables_created++;
         }
+        
+        // 4. Tabla de Transferencias
+        $table_transfers = $wpdb->prefix . 'gab_stock_transfers';
+        $sql_transfers = "CREATE TABLE IF NOT EXISTS $table_transfers (
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            source_warehouse_id mediumint(9) NOT NULL,
+            target_warehouse_id mediumint(9) NOT NULL,
+            status enum('draft','pending','completed','cancelled') NOT NULL DEFAULT 'draft',
+            notes text DEFAULT NULL,
+            created_by bigint(20) UNSIGNED NOT NULL,
+            created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            completed_by bigint(20) UNSIGNED DEFAULT NULL,
+            completed_at datetime DEFAULT NULL,
+            updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            KEY idx_source (source_warehouse_id),
+            KEY idx_target (target_warehouse_id),
+            KEY idx_status (status),
+            KEY idx_created (created_at)
+        ) $charset_collate;";
+        
+        dbDelta($sql_transfers);
+        if ($wpdb->last_error) {
+            $tables_errors[] = "Transferencias: " . $wpdb->last_error;
+        } else {
+            $tables_created++;
+        }
+        
+        // 5. Tabla de Items de Transferencias
+        $table_transfer_items = $wpdb->prefix . 'gab_stock_transfer_items';
+        $sql_transfer_items = "CREATE TABLE IF NOT EXISTS $table_transfer_items (
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            transfer_id mediumint(9) NOT NULL,
+            product_id bigint(20) UNSIGNED NOT NULL,
+            requested_qty int(11) NOT NULL,
+            transferred_qty int(11) DEFAULT 0,
+            PRIMARY KEY (id),
+            KEY idx_transfer (transfer_id),
+            KEY idx_product (product_id)
+        ) $charset_collate;";
+        
+        dbDelta($sql_transfer_items);
+        if ($wpdb->last_error) {
+            $tables_errors[] = "Items Transferencias: " . $wpdb->last_error;
+        } else {
+            $tables_created++;
+        }
+        
+        // Registrar en el log el resultado
+        if (count($tables_errors) > 0) {
+            error_log('[GESTION ALMACENES] Errores al crear tablas: ' . implode(', ', $tables_errors));
+        }
+        
+        error_log('[GESTION ALMACENES] Tablas creadas: ' . $tables_created . ' de 5');
+        
+        // Guardar versión de la base de datos
+        $version_actual = get_option('gab_db_version', '0');
+        if ($version_actual === '0') {
+            // Primera instalación
+            add_option('gab_db_version', GESTION_ALMACENES_DB_VERSION);
+            add_option('gab_db_install_date', current_time('mysql'));
+        } else {
+            // Actualización
+            update_option('gab_db_version', GESTION_ALMACENES_DB_VERSION);
+        }
+        
+        // Registrar en el log
+        error_log('[GESTION ALMACENES] Tablas creadas: ' . $tables_created . ' de 5. Versión DB: ' . GESTION_ALMACENES_DB_VERSION);
+        
+        return array(
+            'success' => count($tables_errors) === 0,
+            'tables_created' => $tables_created,
+            'errors' => $tables_errors,
+            'db_version' => GESTION_ALMACENES_DB_VERSION
+        );
+        
+    }
 
-        $table_name_stock = $wpdb->prefix . 'gab_warehouse_stock';
-            if ($wpdb->get_var("SHOW TABLES LIKE '$table_name_stock'") != $table_name_stock) {
-                error_log('[DEBUG GESTION ALMACENES DB] Intentando crear tabla de stock...');
-                
-                $sql_stock = "CREATE TABLE $table_name_stock (
-                    id mediumint(9) NOT NULL AUTO_INCREMENT,
-                    warehouse_id mediumint(9) NOT NULL,
-                    product_id mediumint(9) NOT NULL,
-                    quantity int NOT NULL DEFAULT 0,
-                    updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                    PRIMARY KEY (id),
-                    UNIQUE KEY warehouse_product (warehouse_id, product_id),
-                    KEY idx_warehouse (warehouse_id),
-                    KEY idx_product (product_id)
-                ) $charset_collate;";
-                
-                dbDelta($sql_stock);
-                
-                if ($wpdb->last_error) {
-                    error_log('[DEBUG GESTION ALMACENES DB] Error al crear la tabla de stock: ' . $wpdb->last_error);
-                } else {
-                    error_log('[DEBUG GESTION ALMACENES DB] Tabla de stock creada correctamente.');
-                }
+    // Agregar también este método para verificar la integridad de las tablas
+    public function verificar_tablas() {
+        global $wpdb;
+        
+        $tablas_requeridas = array(
+            'gab_warehouses',
+            'gab_warehouse_product_stock',
+            'gab_stock_movements',
+            'gab_stock_transfers',
+            'gab_stock_transfer_items'
+        );
+        
+        $tablas_faltantes = array();
+        
+        foreach ($tablas_requeridas as $tabla) {
+            $tabla_completa = $wpdb->prefix . $tabla;
+            if ($wpdb->get_var("SHOW TABLES LIKE '$tabla_completa'") != $tabla_completa) {
+                $tablas_faltantes[] = $tabla;
             }
+        }
+        
+        return $tablas_faltantes;
+    }
 
-            // Tabla de transferencias de stock
-            $table_name_transfers = $wpdb->prefix . 'gab_stock_transfers';
-            if ($wpdb->get_var("SHOW TABLES LIKE '$table_name_transfers'") != $table_name_transfers) {
-                error_log('[DEBUG GESTION ALMACENES DB] Intentando crear tabla de transferencias...');
-                
-                $sql_transfers = "CREATE TABLE $table_name_transfers (
-                    id mediumint(9) NOT NULL AUTO_INCREMENT,
-                    source_warehouse_id mediumint(9) NOT NULL,
-                    target_warehouse_id mediumint(9) NOT NULL,
-                    status varchar(20) DEFAULT 'pending',
-                    notes text,
-                    created_by mediumint(9) NOT NULL,
-                    created_at datetime DEFAULT CURRENT_TIMESTAMP,
-                    completed_by mediumint(9),
-                    completed_at datetime,
-                    updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                    PRIMARY KEY (id),
-                    KEY idx_source (source_warehouse_id),
-                    KEY idx_target (target_warehouse_id),
-                    KEY idx_status (status),
-                    KEY idx_created (created_at)
-                ) $charset_collate;";
-                
-                dbDelta($sql_transfers);
-                
-                if ($wpdb->last_error) {
-                    error_log('[DEBUG GESTION ALMACENES DB] Error al crear la tabla de transferencias: ' . $wpdb->last_error);
-                } else {
-                    error_log('[DEBUG GESTION ALMACENES DB] Tabla de transferencias creada correctamente.');
-                }
-            }
-
-            // Tabla de items de transferencia
-            $table_name_transfer_items = $wpdb->prefix . 'gab_stock_transfer_items';
-            if ($wpdb->get_var("SHOW TABLES LIKE '$table_name_transfer_items'") != $table_name_transfer_items) {
-                error_log('[DEBUG GESTION ALMACENES DB] Intentando crear tabla de items de transferencia...');
-                
-                $sql_transfer_items = "CREATE TABLE $table_name_transfer_items (
-                    id mediumint(9) NOT NULL AUTO_INCREMENT,
-                    transfer_id mediumint(9) NOT NULL,
-                    product_id mediumint(9) NOT NULL,
-                    requested_qty int NOT NULL,
-                    transferred_qty int,
-                    PRIMARY KEY (id),
-                    KEY idx_transfer (transfer_id),
-                    KEY idx_product (product_id)
-                ) $charset_collate;";
-                
-                dbDelta($sql_transfer_items);
-                
-                if ($wpdb->last_error) {
-                    error_log('[DEBUG GESTION ALMACENES DB] Error al crear la tabla de items: ' . $wpdb->last_error);
-                } else {
-                    error_log('[DEBUG GESTION ALMACENES DB] Tabla de items creada correctamente.');
-                }
-            }
-
-        $this->crear_tablas_transferencias();
+    // Método para reparar tablas faltantes
+    public function reparar_tablas_faltantes() {
+        $tablas_faltantes = $this->verificar_tablas();
+        
+        if (count($tablas_faltantes) > 0) {
+            error_log('[GESTION ALMACENES] Reparando tablas faltantes: ' . implode(', ', $tablas_faltantes));
+            return $this->crear_tablas_plugin();
+        }
+        
+        return array('success' => true, 'message' => 'Todas las tablas están presentes');
     }
 
     public function crear_tablas_transferencias() {
@@ -1215,5 +1222,91 @@ class Gestion_Almacenes_DB {
         
         return true;
     }
+
+    /**
+     * Verificar y actualizar la versión de la base de datos
+     */
+    public function verificar_version_db() {
+        $version_actual = get_option('gab_db_version', '0');
         
+        if (version_compare($version_actual, GESTION_ALMACENES_DB_VERSION, '<')) {
+            // Ejecutar actualizaciones según la versión
+            $this->actualizar_db($version_actual);
+        }
+    }
+
+    /**
+     * Actualizar la base de datos según la versión
+     */
+    private function actualizar_db($version_desde) {
+        global $wpdb;
+        $charset_collate = $wpdb->get_charset_collate();
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        
+        // Versión 1.0.0 -> 1.1.0
+        if (version_compare($version_desde, '1.1.0', '<')) {
+            try {
+                // Actualizar tabla de almacenes
+                $table_warehouses = $wpdb->prefix . 'gab_warehouses';
+                
+                // Verificar si las columnas ya existen antes de agregarlas
+                $columns = $wpdb->get_col("SHOW COLUMNS FROM $table_warehouses");
+                
+                if (!in_array('active', $columns)) {
+                    $wpdb->query("ALTER TABLE $table_warehouses ADD COLUMN active TINYINT(1) DEFAULT 1");
+                }
+                
+                if (!in_array('priority', $columns)) {
+                    $wpdb->query("ALTER TABLE $table_warehouses ADD COLUMN priority INT DEFAULT 0");
+                }
+                
+                // Agregar índices si no existen
+                $indices = $wpdb->get_results("SHOW INDEX FROM $table_warehouses WHERE Key_name = 'idx_slug'");
+                if (empty($indices)) {
+                    $wpdb->query("ALTER TABLE $table_warehouses ADD INDEX idx_slug (slug)");
+                }
+                
+                // Actualizar movimientos
+                $table_movements = $wpdb->prefix . 'gab_stock_movements';
+                $columns_mov = $wpdb->get_col("SHOW COLUMNS FROM $table_movements");
+                
+                if (!in_array('updated_at', $columns_mov)) {
+                    $wpdb->query("ALTER TABLE $table_movements ADD COLUMN updated_at DATETIME DEFAULT NULL");
+                }
+                
+                $this->registrar_migracion('1.1.0', 'Agregados campos active y priority a almacenes, índices mejorados', 'success');
+                
+            } catch (Exception $e) {
+                $this->registrar_migracion('1.1.0', 'Error: ' . $e->getMessage(), 'error');
+                error_log('[GESTION ALMACENES] Error en migración 1.1.0: ' . $e->getMessage());
+            }
+        }
+        
+        // Actualizar la versión en la base de datos
+        update_option('gab_db_version', GESTION_ALMACENES_DB_VERSION);
+    }
+
+    /**
+     * Registrar una migración ejecutada
+     */
+    private function registrar_migracion($version, $descripcion, $resultado = 'success') {
+        $migraciones = get_option('gab_db_migrations', array());
+        
+        $migraciones[] = array(
+            'version' => $version,
+            'descripcion' => $descripcion,
+            'fecha' => current_time('mysql'),
+            'resultado' => $resultado
+        );
+        
+        update_option('gab_db_migrations', $migraciones);
+    }
+
+    /**
+     * Obtener historial de migraciones
+     */
+    public function obtener_historial_migraciones() {
+        return get_option('gab_db_migrations', array());
+    }
+
 }

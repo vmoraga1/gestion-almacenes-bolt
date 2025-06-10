@@ -3,7 +3,7 @@
  * Plugin Name: Gestión de Almacenes / Bodegas / Tiendas
  * Plugin URI: https://hostpanish.com
  * Description: Gestión de Stock para multiples "Almacenes"
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Víctor Moraga
  * Author URI: https://hostpanish.com
  */
@@ -12,7 +12,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('GESTION_ALMACENES_VERSION', '1.0.0');
+define('GESTION_ALMACENES_VERSION', '1.1.0');
+define('GESTION_ALMACENES_DB_VERSION', '1.1.0');
 define('GESTION_ALMACENES_PLUGIN_BASENAME', plugin_basename(__FILE__));
 // Definir constantes del plugin
 if (!defined('GESTION_ALMACENES_PLUGIN_DIR')) {
@@ -58,6 +59,121 @@ function gestion_almacenes_init() {
     
     // Cargar archivos de idioma
     load_plugin_textdomain('gestion-almacenes', false, GESTION_ALMACENES_PLUGIN_DIR . '/languages/');
+}
+
+// Hook de activación mejorado
+register_activation_hook(__FILE__, 'gab_plugin_activation');
+function gab_plugin_activation() {
+    global $gestion_almacenes_db;
+    
+    // Asegurarse de que la clase esté cargada
+    if (!class_exists('Gestion_Almacenes_DB')) {
+        require_once GESTION_ALMACENES_PLUGIN_DIR . 'includes/class-gestion-almacenes-db.php';
+        $gestion_almacenes_db = new Gestion_Almacenes_DB();
+    }
+    
+    // Ejecutar la creación de tablas
+    $result = $gestion_almacenes_db->activar_plugin();
+    
+    // Verificar versión de la base de datos
+    $gestion_almacenes_db->verificar_version_db();
+    
+    // Configurar opciones por defecto
+    gab_set_default_options();
+    
+    // Registrar la activación
+    add_option('gab_activation_date', current_time('mysql'));
+    
+    // Forzar verificación de tablas en la próxima carga
+    set_transient('gab_check_tables', true, 60);
+}
+
+add_action('plugins_loaded', 'gab_check_db_version');
+function gab_check_db_version() {
+    global $gestion_almacenes_db;
+    
+    // Verificar si necesita actualización
+    $version_actual = get_option('gab_db_version', '0');
+    
+    if (version_compare($version_actual, GESTION_ALMACENES_DB_VERSION, '<')) {
+        if ($gestion_almacenes_db) {
+            $gestion_almacenes_db->verificar_version_db();
+        }
+    }
+}
+
+// Verificación automática de tablas al cargar el admin
+add_action('admin_init', 'gab_check_tables_integrity');
+function gab_check_tables_integrity() {
+    // Solo verificar si el transient está activo o cada 24 horas
+    if (!get_transient('gab_tables_checked') || get_transient('gab_check_tables')) {
+        global $gestion_almacenes_db;
+        
+        if ($gestion_almacenes_db) {
+            $tablas_faltantes = $gestion_almacenes_db->verificar_tablas();
+            
+            if (count($tablas_faltantes) > 0) {
+                // Intentar reparar automáticamente
+                $repair_result = $gestion_almacenes_db->reparar_tablas_faltantes();
+                
+                if (!$repair_result['success']) {
+                    // Mostrar aviso al admin
+                    add_action('admin_notices', function() use ($tablas_faltantes) {
+                        echo '<div class="notice notice-error is-dismissible">';
+                        echo '<p><strong>Gestión de Almacenes:</strong> ';
+                        echo 'Faltan las siguientes tablas: ' . implode(', ', $tablas_faltantes) . '. ';
+                        echo 'Por favor, desactiva y vuelve a activar el plugin.';
+                        echo '</p></div>';
+                    });
+                }
+            }
+            
+            // Marcar como verificado por 24 horas
+            set_transient('gab_tables_checked', true, DAY_IN_SECONDS);
+            delete_transient('gab_check_tables');
+        }
+    }
+}
+
+// Agregar enlace de "Reparar tablas" en la página de plugins
+add_filter('plugin_action_links_' . GESTION_ALMACENES_PLUGIN_BASENAME, 'gab_add_repair_link');
+function gab_add_repair_link($links) {
+    $repair_link = '<a href="' . wp_nonce_url(admin_url('admin.php?page=gab-warehouse-management&gab_repair_tables=1'), 'gab_repair_tables') . '">' . __('Reparar tablas', 'gestion-almacenes') . '</a>';
+    array_unshift($links, $repair_link);
+    return $links;
+}
+
+// Manejar la reparación manual
+add_action('admin_init', 'gab_handle_repair_tables');
+function gab_handle_repair_tables() {
+    if (isset($_GET['gab_repair_tables']) && isset($_GET['_wpnonce'])) {
+        if (wp_verify_nonce($_GET['_wpnonce'], 'gab_repair_tables') && current_user_can('manage_options')) {
+            global $gestion_almacenes_db;
+            
+            $result = $gestion_almacenes_db->crear_tablas_plugin();
+            
+            if ($result['success']) {
+                wp_redirect(admin_url('admin.php?page=gab-warehouse-management&repair=success'));
+            } else {
+                wp_redirect(admin_url('admin.php?page=gab-warehouse-management&repair=error'));
+            }
+            exit;
+        }
+    }
+    
+    // Mostrar mensaje después de reparación
+    if (isset($_GET['repair'])) {
+        add_action('admin_notices', function() {
+            $type = $_GET['repair'] === 'success' ? 'success' : 'error';
+            $message = $_GET['repair'] === 'success' 
+                ? 'Las tablas se han reparado correctamente.' 
+                : 'Hubo un error al reparar las tablas. Revisa los logs.';
+            
+            echo '<div class="notice notice-' . $type . ' is-dismissible">';
+            echo '<p><strong>Gestión de Almacenes:</strong> ' . $message . '</p>';
+            echo '</div>';
+        });
+    }
 }
 
 // Configurar opciones por defecto en la activación

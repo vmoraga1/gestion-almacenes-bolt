@@ -107,3 +107,55 @@
     [6] => 8
 )
 
+[10-Jun-2025 20:51:30 UTC] Automatic updates starting...
+[10-Jun-2025 20:51:31 UTC]   Automatic plugin updates starting...
+[10-Jun-2025 20:51:31 UTC]   Automatic plugin updates complete.
+[10-Jun-2025 20:51:31 UTC] Automatic updates complete.
+[10-Jun-2025 21:06:32 UTC] WordPress database error FUNCTION bolt.REGEXP_SUBSTR does not exist for query 
+					SELECT meta_value, FROM_UNIXTIME(REGEXP_SUBSTR(meta_value,'(?<=update_date";i:).+?(?=;)')) AS update_datetime
+					FROM wp_postmeta
+					WHERE post_id = 88 AND meta_key = '_alg_wc_cog_cost_archive'
+				ORDER BY update_datetime DESC made by require('wp-admin/edit-form-advanced.php'), do_meta_boxes, Alg_WC_Cost_of_Goods_Products_Cost_Archive->display_product_cost_archive_metabox, Alg_WC_Cost_of_Goods_Products_Cost_Archive->get_product_cost_archive_table, Alg_WC_Cost_of_Goods_Products_Cost_Archive->get_product_cost_archive
+[10-Jun-2025 21:44:47 UTC] WordPress database error BLOB/TEXT column 'slug' used in key specification without a key length for query ALTER TABLE wp_gab_warehouses ADD INDEX idx_slug (slug) made by require_once('wp-load.php'), require_once('wp-config.php'), require_once('wp-settings.php'), do_action('plugins_loaded'), WP_Hook->do_action, WP_Hook->apply_filters, gab_check_db_version, Gestion_Almacenes_DB->verificar_version_db, Gestion_Almacenes_DB->actualizar_db
+[10-Jun-2025 22:19:58 UTC] [GAB] Stock actualizado: Almacén 1, Producto 75, Cambio: -3, Nuevo stock: 35
+[10-Jun-2025 22:19:58 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+    [1] => 35
+    [2] => 71
+    [3] => 5
+    [4] => 50
+    [6] => 8
+)
+
+[10-Jun-2025 22:19:58 UTC] [GAB] Stock actualizado: Almacén 3, Producto 75, Cambio: 3, Nuevo stock: 8
+[10-Jun-2025 22:19:58 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+    [1] => 35
+    [2] => 71
+    [3] => 8
+    [4] => 50
+    [6] => 8
+)
+
+[10-Jun-2025 22:22:13 UTC] [GESTION ALMACENES] Tablas creadas: 5 de 5
+[10-Jun-2025 22:22:13 UTC] [GESTION ALMACENES] Tablas creadas: 5 de 5. Versión DB: 1.1.0
+[10-Jun-2025 22:22:52 UTC] [GAB] Stock actualizado: Almacén 3, Producto 75, Cambio: -2, Nuevo stock: 6
+[10-Jun-2025 22:22:52 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+    [1] => 35
+    [2] => 71
+    [3] => 6
+    [4] => 50
+    [6] => 8
+)
+
+[10-Jun-2025 22:22:52 UTC] [GAB] Stock actualizado: Almacén 4, Producto 75, Cambio: 2, Nuevo stock: 52
+[10-Jun-2025 22:22:52 UTC] [DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID 75: Array
+(
+    [1] => 35
+    [2] => 71
+    [3] => 6
+    [4] => 52
+    [6] => 8
+)
+

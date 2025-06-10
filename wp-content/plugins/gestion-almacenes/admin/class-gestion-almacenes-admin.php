@@ -168,6 +168,26 @@ class Gestion_Almacenes_Admin {
             array($this, 'mostrar_configuracion')
         );
 
+        // Submenú Herramientas
+        add_submenu_page(
+            'gab-warehouse-management',
+            __('Herramientas', 'gestion-almacenes'),
+            __('Herramientas', 'gestion-almacenes'),
+            'manage_options',
+            'gab-tools',
+            array($this, 'mostrar_herramientas')
+        );
+
+        // Submenú Gestor de Versiones:
+        add_submenu_page(
+            'gab-warehouse-management',
+            __('Gestor de Versiones', 'gestion-almacenes'),
+            __('Versiones', 'gestion-almacenes'),
+            'manage_options',
+            'gab-version-manager',
+            array($this, 'mostrar_gestor_versiones')
+        );
+
     }
 
     public function enqueue_admin_scripts($hook) {
@@ -5039,6 +5059,353 @@ class Gestion_Almacenes_Admin {
 
         </style>
 
+        <?php
+    }
+
+    // Página de herramienas
+    public function mostrar_herramientas() {
+        global $gestion_almacenes_db, $wpdb;
+        
+        // Manejar acciones
+        if (isset($_POST['gab_action']) && wp_verify_nonce($_POST['gab_tools_nonce'], 'gab_tools_actions')) {
+            switch ($_POST['gab_action']) {
+                case 'verify_tables':
+                    $missing = $gestion_almacenes_db->verificar_tablas();
+                    if (empty($missing)) {
+                        echo '<div class="notice notice-success"><p>✓ Todas las tablas están presentes</p></div>';
+                    } else {
+                        echo '<div class="notice notice-warning"><p>Tablas faltantes: ' . implode(', ', $missing) . '</p></div>';
+                    }
+                    break;
+                    
+                case 'repair_tables':
+                    $result = $gestion_almacenes_db->crear_tablas_plugin();
+                    if ($result['success']) {
+                        echo '<div class="notice notice-success"><p>✓ Tablas reparadas correctamente</p></div>';
+                    } else {
+                        echo '<div class="notice notice-error"><p>Errores: ' . implode('<br>', $result['errors']) . '</p></div>';
+                    }
+                    break;
+                    
+                case 'clear_logs':
+                    // Limpiar logs antiguos si implementas un sistema de logs
+                    echo '<div class="notice notice-success"><p>✓ Logs limpiados</p></div>';
+                    break;
+            }
+        }
+        ?>
+        <div class="wrap gab-admin-page">
+            <h1><?php esc_html_e('Herramientas de Gestión de Almacenes', 'gestion-almacenes'); ?></h1>
+            
+            <div class="gab-tools-section">
+                <h2><?php esc_html_e('Estado de la Base de Datos', 'gestion-almacenes'); ?></h2>
+                
+                <table class="wp-list-table widefat fixed striped">
+                    <thead>
+                        <tr>
+                            <th><?php esc_html_e('Tabla', 'gestion-almacenes'); ?></th>
+                            <th><?php esc_html_e('Estado', 'gestion-almacenes'); ?></th>
+                            <th><?php esc_html_e('Registros', 'gestion-almacenes'); ?></th>
+                            <th><?php esc_html_e('Tamaño', 'gestion-almacenes'); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $tables = [
+                            'gab_warehouses' => __('Almacenes', 'gestion-almacenes'),
+                            'gab_warehouse_product_stock' => __('Stock por Almacén', 'gestion-almacenes'),
+                            'gab_stock_movements' => __('Movimientos de Stock', 'gestion-almacenes'),
+                            'gab_stock_transfers' => __('Transferencias', 'gestion-almacenes'),
+                            'gab_stock_transfer_items' => __('Items de Transferencias', 'gestion-almacenes')
+                        ];
+                        
+                        foreach ($tables as $table => $name) {
+                            $full_table = $wpdb->prefix . $table;
+                            $exists = $wpdb->get_var("SHOW TABLES LIKE '$full_table'") === $full_table;
+                            
+                            echo '<tr>';
+                            echo '<td><strong>' . esc_html($name) . '</strong><br><code>' . esc_html($full_table) . '</code></td>';
+                            
+                            if ($exists) {
+                                $count = $wpdb->get_var("SELECT COUNT(*) FROM $full_table");
+                                $size = $wpdb->get_var("SELECT ROUND(((data_length + index_length) / 1024 / 1024), 2) AS size FROM information_schema.TABLES WHERE table_schema = '" . DB_NAME . "' AND table_name = '$full_table'");
+                                
+                                echo '<td><span style="color: green;">✓ ' . __('Existe', 'gestion-almacenes') . '</span></td>';
+                                echo '<td>' . number_format($count) . '</td>';
+                                echo '<td>' . ($size ? $size . ' MB' : '-') . '</td>';
+                            } else {
+                                echo '<td><span style="color: red;">✗ ' . __('No existe', 'gestion-almacenes') . '</span></td>';
+                                echo '<td>-</td>';
+                                echo '<td>-</td>';
+                            }
+                            echo '</tr>';
+                        }
+                        ?>
+                    </tbody>
+                </table>
+                
+                <h2 style="margin-top: 30px;"><?php esc_html_e('Acciones de Mantenimiento', 'gestion-almacenes'); ?></h2>
+                
+                <form method="post" style="margin-top: 20px;">
+                    <?php wp_nonce_field('gab_tools_actions', 'gab_tools_nonce'); ?>
+                    
+                    <p>
+                        <button type="submit" name="gab_action" value="verify_tables" class="button">
+                            <?php esc_html_e('Verificar Tablas', 'gestion-almacenes'); ?>
+                        </button>
+                        <span class="description"><?php esc_html_e('Verifica que todas las tablas necesarias existan', 'gestion-almacenes'); ?></span>
+                    </p>
+                    
+                    <p>
+                        <button type="submit" name="gab_action" value="repair_tables" class="button button-primary" 
+                                onclick="return confirm('<?php esc_attr_e('¿Estás seguro? Esto intentará crear todas las tablas faltantes.', 'gestion-almacenes'); ?>')">
+                            <?php esc_html_e('Reparar Tablas', 'gestion-almacenes'); ?>
+                        </button>
+                        <span class="description"><?php esc_html_e('Crea las tablas faltantes', 'gestion-almacenes'); ?></span>
+                    </p>
+                </form>
+                
+                <h2 style="margin-top: 30px;"><?php esc_html_e('Información del Sistema', 'gestion-almacenes'); ?></h2>
+                
+                <table class="form-table">
+                    <tr>
+                        <th><?php esc_html_e('Versión del Plugin', 'gestion-almacenes'); ?></th>
+                        <td><?php echo GESTION_ALMACENES_VERSION; ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Versión de la BD', 'gestion-almacenes'); ?></th>
+                        <td><?php echo get_option('gab_db_version', 'version'); ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Prefijo de Tablas', 'gestion-almacenes'); ?></th>
+                        <td><code><?php echo $wpdb->prefix; ?></code></td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Versión de PHP', 'gestion-almacenes'); ?></th>
+                        <td><?php echo phpversion(); ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php esc_html_e('Versión de MySQL', 'gestion-almacenes'); ?></th>
+                        <td><?php echo $wpdb->db_version(); ?></td>
+                    </tr>
+                </table>
+
+                <h2 style="margin-top: 30px;"><?php esc_html_e('Historial de Migraciones', 'gestion-almacenes'); ?></h2>
+
+                <?php
+                $migraciones = $gestion_almacenes_db->obtener_historial_migraciones();
+                if (!empty($migraciones)) {
+                    ?>
+                    <table class="wp-list-table widefat fixed striped">
+                        <thead>
+                            <tr>
+                                <th><?php esc_html_e('Versión', 'gestion-almacenes'); ?></th>
+                                <th><?php esc_html_e('Descripción', 'gestion-almacenes'); ?></th>
+                                <th><?php esc_html_e('Fecha', 'gestion-almacenes'); ?></th>
+                                <th><?php esc_html_e('Resultado', 'gestion-almacenes'); ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach (array_reverse($migraciones) as $migracion) : ?>
+                            <tr>
+                                <td><strong><?php echo esc_html($migracion['version']); ?></strong></td>
+                                <td><?php echo esc_html($migracion['descripcion']); ?></td>
+                                <td><?php echo esc_html(date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($migracion['fecha']))); ?></td>
+                                <td>
+                                    <?php if ($migracion['resultado'] === 'success') : ?>
+                                        <span style="color: green;">✓ <?php esc_html_e('Exitoso', 'gestion-almacenes'); ?></span>
+                                    <?php else : ?>
+                                        <span style="color: red;">✗ <?php esc_html_e('Error', 'gestion-almacenes'); ?></span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    <?php
+                } else {
+                    echo '<p>' . esc_html__('No hay migraciones registradas.', 'gestion-almacenes') . '</p>';
+                }
+                ?>
+            </div>
+        </div>
+        <?php
+    }
+
+    // Agregar este método en la misma clase:
+    public function mostrar_gestor_versiones() {
+        // Cargar el gestor de versiones
+        require_once GESTION_ALMACENES_PLUGIN_DIR . 'includes/class-gestion-almacenes-version-manager.php';
+        $version_manager = new Gestion_Almacenes_Version_Manager();
+        
+        // Procesar acciones
+        if (isset($_POST['action']) && wp_verify_nonce($_POST['version_nonce'], 'gab_version_action')) {
+            switch ($_POST['action']) {
+                case 'increment_version':
+                    $type = sanitize_text_field($_POST['version_type']);
+                    $description = sanitize_textarea_field($_POST['version_description']);
+                    $new_version = $version_manager->incrementar_version($type, $description);
+                    echo '<div class="notice notice-success"><p>Versión actualizada a: ' . $new_version . '</p></div>';
+                    break;
+                    
+                case 'add_change':
+                    $change_type = sanitize_text_field($_POST['change_type']);
+                    $change_desc = sanitize_textarea_field($_POST['change_description']);
+                    $version_manager->registrar_cambio_pendiente($change_type, $change_desc);
+                    echo '<div class="notice notice-success"><p>Cambio registrado para el próximo release</p></div>';
+                    break;
+                    
+                case 'create_release':
+                    $result = $version_manager->crear_release();
+                    if ($result['success']) {
+                        echo '<div class="notice notice-success"><p>Release creado: <a href="' . $result['url'] . '">Descargar</a></p></div>';
+                    } else {
+                        echo '<div class="notice notice-error"><p>Error: ' . $result['error'] . '</p></div>';
+                    }
+                    break;
+            }
+        }
+        
+        $pending_changes = $version_manager->obtener_cambios_pendientes();
+        $version_history = $version_manager->obtener_historial_versiones();
+        ?>
+        <div class="wrap gab-admin-page">
+            <h1><?php esc_html_e('Gestor de Versiones', 'gestion-almacenes'); ?></h1>
+            
+            <div class="gab-version-info" style="background: #f0f0f0; padding: 20px; margin: 20px 0; border-radius: 5px;">
+                <h2 style="margin-top: 0;">Información Actual</h2>
+                <p><strong>Versión del Plugin:</strong> <?php echo GESTION_ALMACENES_VERSION; ?></p>
+                <p><strong>Versión de la Base de Datos:</strong> <?php echo defined('GESTION_ALMACENES_DB_VERSION') ? GESTION_ALMACENES_DB_VERSION : 'No definida'; ?></p>
+                <p><strong>Fecha de Instalación:</strong> <?php echo get_option('gab_db_install_date', 'No registrada'); ?></p>
+            </div>
+            
+            <!-- Incrementar Versión -->
+            <div class="gab-card" style="background: white; padding: 20px; margin-bottom: 20px; border: 1px solid #ccc;">
+                <h2><?php esc_html_e('Crear Nueva Versión', 'gestion-almacenes'); ?></h2>
+                
+                <form method="post">
+                    <?php wp_nonce_field('gab_version_action', 'version_nonce'); ?>
+                    <input type="hidden" name="action" value="increment_version">
+                    
+                    <table class="form-table">
+                        <tr>
+                            <th><label for="version_type"><?php esc_html_e('Tipo de Versión', 'gestion-almacenes'); ?></label></th>
+                            <td>
+                                <select name="version_type" id="version_type">
+                                    <option value="patch"><?php esc_html_e('Patch (x.x.X) - Correcciones menores', 'gestion-almacenes'); ?></option>
+                                    <option value="minor"><?php esc_html_e('Minor (x.X.0) - Nuevas funcionalidades', 'gestion-almacenes'); ?></option>
+                                    <option value="major"><?php esc_html_e('Major (X.0.0) - Cambios importantes', 'gestion-almacenes'); ?></option>
+                                </select>
+                                <p class="description">
+                                    <?php esc_html_e('Patch: correcciones de bugs. Minor: nuevas características. Major: cambios que rompen compatibilidad.', 'gestion-almacenes'); ?>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="version_description"><?php esc_html_e('Descripción', 'gestion-almacenes'); ?></label></th>
+                            <td>
+                                <textarea name="version_description" id="version_description" rows="3" cols="50"></textarea>
+                                <p class="description"><?php esc_html_e('Resumen de los cambios principales en esta versión', 'gestion-almacenes'); ?></p>
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <p class="submit">
+                        <input type="submit" class="button button-primary" value="<?php esc_attr_e('Crear Nueva Versión', 'gestion-almacenes'); ?>">
+                        <a href="<?php echo admin_url('admin.php?page=gab-version-manager&action=create_release'); ?>" 
+                        class="button button-secondary"
+                        onclick="return confirm('¿Crear un archivo ZIP de la versión actual?');">
+                            <?php esc_html_e('Crear Release ZIP', 'gestion-almacenes'); ?>
+                        </a>
+                    </p>
+                </form>
+            </div>
+            
+            <!-- Registrar Cambios Pendientes -->
+            <div class="gab-card" style="background: white; padding: 20px; margin-bottom: 20px; border: 1px solid #ccc;">
+                <h2><?php esc_html_e('Registrar Cambio Pendiente', 'gestion-almacenes'); ?></h2>
+                
+                <form method="post">
+                    <?php wp_nonce_field('gab_version_action', 'version_nonce'); ?>
+                    <input type="hidden" name="action" value="add_change">
+                    
+                    <table class="form-table">
+                        <tr>
+                            <th><label for="change_type"><?php esc_html_e('Tipo de Cambio', 'gestion-almacenes'); ?></label></th>
+                            <td>
+                                <select name="change_type" id="change_type">
+                                    <option value="Added"><?php esc_html_e('Added - Nueva funcionalidad', 'gestion-almacenes'); ?></option>
+                                    <option value="Changed"><?php esc_html_e('Changed - Cambio en funcionalidad existente', 'gestion-almacenes'); ?></option>
+                                    <option value="Fixed"><?php esc_html_e('Fixed - Corrección de bug', 'gestion-almacenes'); ?></option>
+                                    <option value="Removed"><?php esc_html_e('Removed - Funcionalidad eliminada', 'gestion-almacenes'); ?></option>
+                                    <option value="Security"><?php esc_html_e('Security - Mejora de seguridad', 'gestion-almacenes'); ?></option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><label for="change_description"><?php esc_html_e('Descripción', 'gestion-almacenes'); ?></label></th>
+                            <td>
+                                <input type="text" name="change_description" id="change_description" class="regular-text" required>
+                                <p class="description"><?php esc_html_e('Describe brevemente el cambio realizado', 'gestion-almacenes'); ?></p>
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <p class="submit">
+                        <input type="submit" class="button" value="<?php esc_attr_e('Registrar Cambio', 'gestion-almacenes'); ?>">
+                    </p>
+                </form>
+            </div>
+            
+            <!-- Cambios Pendientes -->
+            <?php if (!empty($pending_changes)) : ?>
+            <div class="gab-card" style="background: white; padding: 20px; margin-bottom: 20px; border: 1px solid #ccc;">
+                <h2><?php esc_html_e('Cambios Pendientes para el Próximo Release', 'gestion-almacenes'); ?></h2>
+                
+                <ul>
+                    <?php foreach ($pending_changes as $change) : ?>
+                    <li>
+                        <strong><?php echo esc_html($change['type']); ?>:</strong> 
+                        <?php echo esc_html($change['description']); ?>
+                        <em>(<?php echo esc_html($change['date']); ?> por <?php echo esc_html($change['user']); ?>)</em>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <?php endif; ?>
+            
+            <!-- Historial de Versiones -->
+            <div class="gab-card" style="background: white; padding: 20px; border: 1px solid #ccc;">
+                <h2><?php esc_html_e('Historial de Versiones', 'gestion-almacenes'); ?></h2>
+                
+                <?php if (!empty($version_history)) : ?>
+                <table class="wp-list-table widefat fixed striped">
+                    <thead>
+                        <tr>
+                            <th><?php esc_html_e('Versión', 'gestion-almacenes'); ?></th>
+                            <th><?php esc_html_e('Tipo', 'gestion-almacenes'); ?></th>
+                            <th><?php esc_html_e('Descripción', 'gestion-almacenes'); ?></th>
+                            <th><?php esc_html_e('Fecha', 'gestion-almacenes'); ?></th>
+                            <th><?php esc_html_e('Usuario', 'gestion-almacenes'); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach (array_reverse($version_history) as $version) : ?>
+                        <tr>
+                            <td><strong><?php echo esc_html($version['version']); ?></strong></td>
+                            <td><?php echo esc_html(ucfirst($version['type'])); ?></td>
+                            <td><?php echo esc_html($version['description']); ?></td>
+                            <td><?php echo esc_html(date_i18n(get_option('date_format'), strtotime($version['date']))); ?></td>
+                            <td><?php echo esc_html($version['user']); ?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <?php else : ?>
+                <p><?php esc_html_e('No hay historial de versiones registrado aún.', 'gestion-almacenes'); ?></p>
+                <?php endif; ?>
+            </div>
+        </div>
         <?php
     }
 
