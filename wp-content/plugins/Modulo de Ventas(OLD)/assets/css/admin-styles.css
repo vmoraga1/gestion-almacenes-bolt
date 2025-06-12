@@ -1,0 +1,169 @@
+.estado-pendiente {
+    color: #f0ad4e;
+    font-weight: bold;
+}
+
+.estado-aprobada {
+    color: #5cb85c;
+    font-weight: bold;
+}
+
+.estado-rechazada {
+    color: #d9534f;
+    font-weight: bold;
+}
+
+.wp-list-table .column-acciones {
+    width: 200px;
+}
+
+.wp-list-table .column-acciones .button {
+    margin: 2px;
+}
+
+.cotizacion-detalle {
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.cotizacion-header {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.estado-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.cotizacion-items {
+    margin-bottom: 30px;
+}
+
+.cotizacion-totales {
+    max-width: 400px;
+    margin-left: auto;
+}
+
+.total-final td {
+    font-size: 1.2em;
+    padding: 15px 10px;
+}
+
+.cotizacion-acciones {
+    margin-top: 30px;
+    text-align: right;
+}
+
+.cotizacion-acciones .button {
+    margin-left: 10px;
+}
+
+.cliente-selector-container {
+    margin-bottom: 20px;
+}
+
+.cliente-controls {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.cliente-controls .select2-container {
+    flex: 1;
+    min-width: 300px;
+}
+
+#cliente-datos {
+    background: #fff;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 15px 0;
+}
+
+#cliente-datos table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#cliente-datos th,
+#cliente-datos td {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+#cliente-datos th {
+    width: 200px;
+    text-align: left;
+    background: #f9f9f9;
+}
+
+#editar-cliente-btn {
+    display: none;
+    margin-left: 10px !important;
+    vertical-align: top;
+}
+
+#cliente-datos {
+    margin: 20px 0;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+#cliente-datos table {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+#cliente-datos th,
+#cliente-datos td {
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+#cliente-datos tr:last-child th,
+#cliente-datos tr:last-child td {
+    border-bottom: none;
+}
+
+#cliente-datos th {
+    width: 200px;
+    background: #f9f9f9;
+    font-weight: 600;
+}
+
+.cliente-derecha {
+    margin-top: 15px;
+}
+
+.cliente-derecha div {
+    margin-bottom: 10px;
+}
+
+.cliente-derecha label {
+    display: inline-block;
+    width: 120px;
+    font-weight: bold;
+}
+
+.cliente-derecha input[type="date"],
+.cliente-derecha select {
+    width: 200px;
+    padding: 5px;
+}
+
+.campo-credito {
+    margin-left: 0;
+}
