@@ -250,6 +250,7 @@ class Modulo_Ventas {
             wp_die(__('Este plugin requiere PHP 7.4 o superior.', 'modulo-ventas'));
         }
         
+        $this->cargar_archivos();
         // Crear tablas
         $this->db = new Modulo_Ventas_DB();
         $this->db->crear_tablas();
