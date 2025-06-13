@@ -25,7 +25,7 @@ if (!$cotizacion_id) {
 }
 
 // Obtener instancia de la base de datos
-$db = Ventas_DB::get_instance();
+$db = Modulo_Ventas_DB::get_instance();
 $cotizacion = $db->get_cotizacion($cotizacion_id);
 
 if (!$cotizacion) {
@@ -238,18 +238,18 @@ if (!empty($cotizacion->vendedor_id)) {
                                             <?php endif; ?>
                                             
                                             <td class="column-cantidad"><?php echo esc_html($item->cantidad); ?></td>
-                                            <td class="column-precio"><?php echo ventas_format_price($item->precio_unitario); ?></td>
+                                            <td class="column-precio"><?php echo wc_price($item->precio_unitario); ?></td>
                                             <td class="column-descuento">
                                                 <?php 
                                                 if ($item->descuento > 0) {
-                                                    echo ventas_format_price($item->descuento);
+                                                    echo wc_price($item->descuento);
                                                 } else {
                                                     echo '-';
                                                 }
                                                 ?>
                                             </td>
                                             <td class="column-subtotal">
-                                                <strong><?php echo ventas_format_price($item->total); ?></strong>
+                                                <strong><?php echo wc_price($item->total); ?></strong>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -267,7 +267,7 @@ if (!empty($cotizacion->vendedor_id)) {
                                         <?php _e('Subtotal:', 'modulo-ventas'); ?>
                                     </td>
                                     <td class="column-total">
-                                        <?php echo ventas_format_price($cotizacion->subtotal); ?>
+                                        <?php echo wc_price($cotizacion->subtotal); ?>
                                     </td>
                                 </tr>
                                 
@@ -285,9 +285,9 @@ if (!empty($cotizacion->vendedor_id)) {
                                     <td class="column-total">
                                         -<?php 
                                         if ($cotizacion->tipo_descuento_global == 'porcentaje') {
-                                            echo ventas_format_price($cotizacion->subtotal * ($cotizacion->descuento_global / 100));
+                                            echo wc_price($cotizacion->subtotal * ($cotizacion->descuento_global / 100));
                                         } else {
-                                            echo ventas_format_price($cotizacion->descuento_global);
+                                            echo wc_price($cotizacion->descuento_global);
                                         }
                                         ?>
                                     </td>
@@ -309,7 +309,7 @@ if (!empty($cotizacion->vendedor_id)) {
                                                 $base_imponible -= $cotizacion->descuento_global;
                                             }
                                         }
-                                        echo ventas_format_price($base_imponible * 0.19);
+                                        echo wc_price($base_imponible * 0.19);
                                         ?>
                                     </td>
                                 </tr>
@@ -321,7 +321,7 @@ if (!empty($cotizacion->vendedor_id)) {
                                         <?php _e('Envío:', 'modulo-ventas'); ?>
                                     </td>
                                     <td class="column-total">
-                                        <?php echo ventas_format_price($cotizacion->envio); ?>
+                                        <?php echo wc_price($cotizacion->envio); ?>
                                     </td>
                                 </tr>
                                 <?php endif; ?>
@@ -331,7 +331,7 @@ if (!empty($cotizacion->vendedor_id)) {
                                         <strong><?php _e('TOTAL:', 'modulo-ventas'); ?></strong>
                                     </td>
                                     <td class="column-total">
-                                        <strong class="mv-total-amount"><?php echo ventas_format_price($cotizacion->total); ?></strong>
+                                        <strong class="mv-total-amount"><?php echo wc_price($cotizacion->total); ?></strong>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -430,16 +430,16 @@ if (!empty($cotizacion->vendedor_id)) {
                     <div class="mv-resumen-totales">
                         <div class="mv-total-row">
                             <span><?php _e('Subtotal:', 'modulo-ventas'); ?></span>
-                            <span><?php echo ventas_format_price($cotizacion->subtotal); ?></span>
+                            <span><?php echo wc_price($cotizacion->subtotal); ?></span>
                         </div>
                         <?php if ($cotizacion->descuento_global > 0): ?>
                         <div class="mv-total-row">
                             <span><?php _e('Descuento:', 'modulo-ventas'); ?></span>
                             <span>-<?php 
                                 if ($cotizacion->tipo_descuento_global == 'porcentaje') {
-                                    echo ventas_format_price($cotizacion->subtotal * ($cotizacion->descuento_global / 100));
+                                    echo wc_price($cotizacion->subtotal * ($cotizacion->descuento_global / 100));
                                 } else {
-                                    echo ventas_format_price($cotizacion->descuento_global);
+                                    echo wc_price($cotizacion->descuento_global);
                                 }
                             ?></span>
                         </div>
@@ -456,19 +456,19 @@ if (!empty($cotizacion->vendedor_id)) {
                                         $base_imponible -= $cotizacion->descuento_global;
                                     }
                                 }
-                                echo ventas_format_price($base_imponible * 0.19);
+                                echo wc_price($base_imponible * 0.19);
                             ?></span>
                         </div>
                         <?php endif; ?>
                         <?php if ($cotizacion->envio > 0): ?>
                         <div class="mv-total-row">
                             <span><?php _e('Envío:', 'modulo-ventas'); ?></span>
-                            <span><?php echo ventas_format_price($cotizacion->envio); ?></span>
+                            <span><?php echo wc_price($cotizacion->envio); ?></span>
                         </div>
                         <?php endif; ?>
                         <div class="mv-total-row mv-total-final">
                             <span><?php _e('TOTAL:', 'modulo-ventas'); ?></span>
-                            <span><?php echo ventas_format_price($cotizacion->total); ?></span>
+                            <span><?php echo wc_price($cotizacion->total); ?></span>
                         </div>
                     </div>
                 </div>

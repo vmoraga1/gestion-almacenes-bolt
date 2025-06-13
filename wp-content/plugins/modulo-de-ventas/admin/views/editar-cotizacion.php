@@ -25,7 +25,7 @@ if (!$cotizacion_id) {
 }
 
 // Obtener instancia de la base de datos
-$db = Ventas_DB::get_instance();
+$db = Modulo_Ventas_DB::get_instance();
 $cotizacion = $db->get_cotizacion($cotizacion_id);
 
 if (!$cotizacion) {
@@ -372,7 +372,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mv_cotizacion_nonce']
                                                 </td>
                                                 
                                                 <td class="column-subtotal">
-                                                    <span class="mv-subtotal-item"><?php echo ventas_format_price($item->total); ?></span>
+                                                    <span class="mv-subtotal-item"><?php echo wc_price($item->total); ?></span>
                                                     <input type="hidden" name="items[<?php echo $index; ?>][subtotal]" value="<?php echo esc_attr($item->total); ?>" class="mv-input-subtotal">
                                                 </td>
                                                 
@@ -491,7 +491,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mv_cotizacion_nonce']
                             <tbody>
                                 <tr class="subtotal">
                                     <th><?php _e('Subtotal', 'modulo-ventas'); ?></th>
-                                    <td><span id="mv-subtotal"><?php echo ventas_format_price($cotizacion->subtotal); ?></span></td>
+                                    <td><span id="mv-subtotal"><?php echo wc_price($cotizacion->subtotal); ?></span></td>
                                 </tr>
                                 
                                 <tr class="descuento">
@@ -515,12 +515,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mv_cotizacion_nonce']
                                         <?php 
                                         if ($cotizacion->descuento_global > 0) {
                                             if ($cotizacion->tipo_descuento_global == 'porcentaje') {
-                                                echo ventas_format_price($cotizacion->subtotal * ($cotizacion->descuento_global / 100));
+                                                echo wc_price($cotizacion->subtotal * ($cotizacion->descuento_global / 100));
                                             } else {
-                                                echo ventas_format_price($cotizacion->descuento_global);
+                                                echo wc_price($cotizacion->descuento_global);
                                             }
                                         } else {
-                                            echo ventas_format_price(0);
+                                            echo wc_price(0);
                                         }
                                         ?>
                                     </span></td>
@@ -538,7 +538,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mv_cotizacion_nonce']
                                                 $subtotal_con_descuento -= $cotizacion->descuento_global;
                                             }
                                         }
-                                        echo ventas_format_price($subtotal_con_descuento);
+                                        echo wc_price($subtotal_con_descuento);
                                         ?>
                                     </span></td>
                                 </tr>
@@ -548,9 +548,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mv_cotizacion_nonce']
                                     <td><span id="mv-iva">
                                         <?php 
                                         if ($cotizacion->incluye_iva) {
-                                            echo ventas_format_price($subtotal_con_descuento * 0.19);
+                                            echo wc_price($subtotal_con_descuento * 0.19);
                                         } else {
-                                            echo ventas_format_price(0);
+                                            echo wc_price(0);
                                         }
                                         ?>
                                     </span></td>
@@ -567,12 +567,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mv_cotizacion_nonce']
                                                step="1"
                                                class="small-text">
                                     </th>
-                                    <td><span id="mv-envio"><?php echo ventas_format_price($cotizacion->envio ?? 0); ?></span></td>
+                                    <td><span id="mv-envio"><?php echo wc_price($cotizacion->envio ?? 0); ?></span></td>
                                 </tr>
                                 
                                 <tr class="total">
                                     <th><?php _e('TOTAL', 'modulo-ventas'); ?></th>
-                                    <td><strong id="mv-total"><?php echo ventas_format_price($cotizacion->total); ?></strong></td>
+                                    <td><strong id="mv-total"><?php echo wc_price($cotizacion->total); ?></strong></td>
                                 </tr>
                             </tbody>
                         </table>

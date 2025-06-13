@@ -1,0 +1,15 @@
+/* Estilos básicos del plugin */
+.mv-dashboard-widget {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.mv-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Los demás estilos ya están en las vistas inline */
