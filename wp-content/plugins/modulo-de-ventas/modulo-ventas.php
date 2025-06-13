@@ -64,6 +64,20 @@ class Modulo_Ventas {
         // Hooks de activación/desactivación
         register_activation_hook(MODULO_VENTAS_PLUGIN_FILE, array($this, 'activar'));
         register_deactivation_hook(MODULO_VENTAS_PLUGIN_FILE, array($this, 'desactivar'));
+
+        // Declarar compatibilidad con HPOS (High-Performance Order Storage)
+        add_action('before_woocommerce_init', function() {
+            if (class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {
+                \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__, true);
+            }
+        });
+
+        // Alternativa si la primera no funciona
+        /*add_action('before_woocommerce_init', function() {
+            if (class_exists('Automattic\WooCommerce\Utilities\FeaturesUtil')) {
+                Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__, true);
+            }
+        });*/
         
         // Inicializar el plugin
         add_action('init', array($this, 'init'), 0);
@@ -251,9 +265,10 @@ class Modulo_Ventas {
         }
         
         $this->cargar_archivos();
-        // Crear tablas
-        $this->db = new Modulo_Ventas_DB();
-        $this->db->crear_tablas();
+    
+        // Crear instancia temporal de DB para la activación
+        $db = new Modulo_Ventas_DB();
+        $db->crear_tablas();
         
         // Crear directorios necesarios
         $this->crear_directorios();

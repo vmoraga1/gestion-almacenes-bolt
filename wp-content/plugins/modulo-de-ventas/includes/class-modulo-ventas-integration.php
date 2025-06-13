@@ -120,6 +120,281 @@ class Modulo_Ventas_Integration {
     private function init_rest_api_hooks() {
         add_action('rest_api_init', array($this, 'registrar_rutas_api'));
     }
+
+    /**
+     * Filtrar capacidades de usuario
+     * Permite extender las capacidades según el contexto
+     */
+    public function filtrar_capacidades_usuario($allcaps, $caps, $args) {
+        // Si el usuario es cliente, darle permisos para ver sus propias cotizaciones
+        if (isset($args[0]) && $args[0] === 'view_own_quotes') {
+            $user_id = isset($args[1]) ? $args[1] : get_current_user_id();
+            $user = get_user_by('id', $user_id);
+            
+            if ($user && in_array('customer', $user->roles)) {
+                // Verificar si tiene cliente asociado
+                $clientes = new Modulo_Ventas_Clientes();
+                $cliente = $clientes->obtener_cliente_por_usuario($user_id);
+                
+                if ($cliente) {
+                    $allcaps['view_own_quotes'] = true;
+                }
+            }
+        }
+        
+        return $allcaps;
+    }
+    
+    /**
+     * Agregar widgets al dashboard
+     */
+    public function agregar_widgets_dashboard() {
+        // Solo para usuarios con permisos
+        if (!current_user_can('view_cotizaciones')) {
+            return;
+        }
+        
+        wp_add_dashboard_widget(
+            'mv_dashboard_resumen',
+            __('Resumen de Ventas', 'modulo-ventas'),
+            array($this, 'widget_resumen_ventas')
+        );
+        
+        wp_add_dashboard_widget(
+            'mv_dashboard_cotizaciones',
+            __('Últimas Cotizaciones', 'modulo-ventas'),
+            array($this, 'widget_ultimas_cotizaciones')
+        );
+    }
+    
+    /**
+     * Widget de resumen de ventas
+     */
+    public function widget_resumen_ventas() {
+        $db = $this->db;
+        $stats = $db->obtener_estadisticas_dashboard();
+        ?>
+        <div class="mv-dashboard-stats">
+            <div class="mv-stat">
+                <span class="mv-stat-number"><?php echo esc_html($stats['cotizaciones_mes']); ?></span>
+                <span class="mv-stat-label"><?php _e('Cotizaciones este mes', 'modulo-ventas'); ?></span>
+            </div>
+            <div class="mv-stat">
+                <span class="mv-stat-number"><?php echo wc_price($stats['monto_mes']); ?></span>
+                <span class="mv-stat-label"><?php _e('Monto cotizado', 'modulo-ventas'); ?></span>
+            </div>
+            <div class="mv-stat">
+                <span class="mv-stat-number"><?php echo esc_html($stats['conversion_rate']); ?>%</span>
+                <span class="mv-stat-label"><?php _e('Tasa de conversión', 'modulo-ventas'); ?></span>
+            </div>
+        </div>
+        <p class="mv-dashboard-link">
+            <a href="<?php echo admin_url('admin.php?page=modulo-ventas-estadisticas'); ?>">
+                <?php _e('Ver estadísticas completas', 'modulo-ventas'); ?> →
+            </a>
+        </p>
+        <?php
+    }
+    
+    /**
+     * Widget de últimas cotizaciones
+     */
+    public function widget_ultimas_cotizaciones() {
+        $db = $this->db;
+        $cotizaciones = $db->obtener_cotizaciones(array(
+            'limite' => 5,
+            'orden' => 'fecha',
+            'orden_dir' => 'DESC'
+        ));
+        
+        if (empty($cotizaciones['items'])) {
+            echo '<p>' . __('No hay cotizaciones recientes.', 'modulo-ventas') . '</p>';
+            return;
+        }
+        ?>
+        <table class="mv-dashboard-table">
+            <thead>
+                <tr>
+                    <th><?php _e('Número', 'modulo-ventas'); ?></th>
+                    <th><?php _e('Cliente', 'modulo-ventas'); ?></th>
+                    <th><?php _e('Total', 'modulo-ventas'); ?></th>
+                    <th><?php _e('Estado', 'modulo-ventas'); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($cotizaciones['items'] as $cotizacion) : 
+                    $cliente = $db->obtener_cliente($cotizacion['cliente_id']);
+                ?>
+                    <tr>
+                        <td>
+                            <a href="<?php echo admin_url('admin.php?page=modulo-ventas-ver-cotizacion&id=' . $cotizacion['id']); ?>">
+                                <?php echo esc_html($cotizacion['numero']); ?>
+                            </a>
+                        </td>
+                        <td><?php echo $cliente ? esc_html($cliente->razon_social) : '-'; ?></td>
+                        <td><?php echo wc_price($cotizacion['total']); ?></td>
+                        <td>
+                            <span class="mv-estado-badge mv-estado-<?php echo esc_attr($cotizacion['estado']); ?>">
+                                <?php echo esc_html($cotizacion['estado']); ?>
+                            </span>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <p class="mv-dashboard-link">
+            <a href="<?php echo admin_url('admin.php?page=modulo-ventas-cotizaciones'); ?>">
+                <?php _e('Ver todas las cotizaciones', 'modulo-ventas'); ?> →
+            </a>
+        </p>
+        <?php
+    }
+    
+    /**
+     * Agregar elementos a la barra de administración
+     */
+    public function agregar_menu_barra_admin($wp_admin_bar) {
+        if (!current_user_can('create_cotizaciones')) {
+            return;
+        }
+        
+        // Menú principal
+        $wp_admin_bar->add_node(array(
+            'id' => 'mv-quick-access',
+            'title' => '<span class="ab-icon dashicons dashicons-cart"></span>' . __('Ventas', 'modulo-ventas'),
+            'href' => admin_url('admin.php?page=modulo-ventas'),
+            'meta' => array(
+                'title' => __('Acceso rápido a Módulo de Ventas', 'modulo-ventas')
+            )
+        ));
+        
+        // Nueva cotización
+        $wp_admin_bar->add_node(array(
+            'parent' => 'mv-quick-access',
+            'id' => 'mv-nueva-cotizacion',
+            'title' => __('Nueva Cotización', 'modulo-ventas'),
+            'href' => admin_url('admin.php?page=modulo-ventas-nueva-cotizacion')
+        ));
+        
+        // Nuevo cliente
+        if (current_user_can('manage_clientes_ventas')) {
+            $wp_admin_bar->add_node(array(
+                'parent' => 'mv-quick-access',
+                'id' => 'mv-nuevo-cliente',
+                'title' => __('Nuevo Cliente', 'modulo-ventas'),
+                'href' => admin_url('admin.php?page=modulo-ventas-nuevo-cliente')
+            ));
+        }
+    }
+    
+    /*
+     * Cargar assets para integraciones
+
+    public function cargar_assets_integracion($hook) {
+        // Solo en páginas relevantes
+        $screens = array('post.php', 'post-new.php', 'shop_order');
+        
+        if (!in_array($hook, $screens) && strpos($hook, 'woocommerce') === false) {
+            return;
+        }
+        
+        // CSS para integraciones
+        wp_enqueue_style(
+            'modulo-ventas-integration',
+            MODULO_VENTAS_PLUGIN_URL . 'assets/css/integration.css',
+            array(),
+            MODULO_VENTAS_VERSION
+        );
+    }*/
+    
+    /*
+     * Registrar rutas de API REST
+
+    public function registrar_rutas_api() {
+        register_rest_route('modulo-ventas/v1', '/cotizaciones', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'api_obtener_cotizaciones'),
+            'permission_callback' => array($this, 'api_permisos_lectura')
+        ));
+        
+        register_rest_route('modulo-ventas/v1', '/cotizaciones/(?P<id>\d+)', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'api_obtener_cotizacion'),
+            'permission_callback' => array($this, 'api_permisos_lectura'),
+            'args' => array(
+                'id' => array(
+                    'validate_callback' => function($param) {
+                        return is_numeric($param);
+                    }
+                )
+            )
+        ));
+        
+        register_rest_route('modulo-ventas/v1', '/clientes', array(
+            'methods' => 'GET',
+            'callback' => array($this, 'api_obtener_clientes'),
+            'permission_callback' => array($this, 'api_permisos_lectura')
+        ));
+    }*/
+    
+    /**
+     * API: Verificar permisos de lectura
+     */
+    public function api_permisos_lectura() {
+        return current_user_can('view_cotizaciones');
+    }
+    
+    /*
+     * API: Obtener cotizaciones
+
+    public function api_obtener_cotizaciones($request) {
+        $parametros = $request->get_params();
+        
+        $args = array(
+            'limite' => isset($parametros['per_page']) ? intval($parametros['per_page']) : 10,
+            'offset' => isset($parametros['page']) ? (intval($parametros['page']) - 1) * intval($parametros['per_page']) : 0,
+            'estado' => isset($parametros['estado']) ? sanitize_text_field($parametros['estado']) : null,
+            'cliente_id' => isset($parametros['cliente_id']) ? intval($parametros['cliente_id']) : null
+        );
+        
+        $resultado = $this->db->obtener_cotizaciones($args);
+        
+        return new WP_REST_Response($resultado, 200);
+    }*/
+    
+    /**
+     * API: Obtener una cotización
+     */
+    public function api_obtener_cotizacion($request) {
+        $id = $request->get_param('id');
+        $cotizacion = $this->db->obtener_cotizacion($id);
+        
+        if (!$cotizacion) {
+            return new WP_Error('not_found', __('Cotización no encontrada', 'modulo-ventas'), array('status' => 404));
+        }
+        
+        // Agregar items
+        $cotizacion->items = $this->db->obtener_items_cotizacion($id);
+        
+        return new WP_REST_Response($cotizacion, 200);
+    }
+    
+    /*
+     * API: Obtener clientes
+    
+    public function api_obtener_clientes($request) {
+        $parametros = $request->get_params();
+        
+        $args = array(
+            'limite' => isset($parametros['per_page']) ? intval($parametros['per_page']) : 10,
+            'offset' => isset($parametros['page']) ? (intval($parametros['page']) - 1) * intval($parametros['per_page']) : 0,
+            'buscar' => isset($parametros['search']) ? sanitize_text_field($parametros['search']) : null
+        );
+        
+        $resultado = $this->db->obtener_clientes($args);
+        
+        return new WP_REST_Response($resultado, 200);
+    }*/
     
     /**
      * Mostrar datos de cotización en el pedido
@@ -712,23 +987,6 @@ class Modulo_Ventas_Integration {
     }
     
     /**
-     * Agregar widgets al dashboard
-     */
-    public function agregar_widgets_dashboard() {
-        wp_add_dashboard_widget(
-            'mv_cotizaciones_resumen',
-            __('Resumen de Cotizaciones', 'modulo-ventas'),
-            array($this, 'widget_resumen_cotizaciones')
-        );
-        
-        wp_add_dashboard_widget(
-            'mv_cotizaciones_recientes',
-            __('Cotizaciones Recientes', 'modulo-ventas'),
-            array($this, 'widget_cotizaciones_recientes')
-        );
-    }
-    
-    /**
      * Widget de resumen de cotizaciones
      */
     public function widget_resumen_cotizaciones() {
@@ -825,47 +1083,6 @@ class Modulo_Ventas_Integration {
     }
     
     /**
-     * Agregar menú en la barra de administración
-     */
-    public function agregar_menu_barra_admin($wp_admin_bar) {
-        if (!current_user_can('view_cotizaciones')) {
-            return;
-        }
-        
-        // Menú principal
-        $wp_admin_bar->add_node(array(
-            'id' => 'modulo-ventas',
-            'title' => '<span class="ab-icon dashicons dashicons-cart"></span>' . __('Ventas', 'modulo-ventas'),
-            'href' => admin_url('admin.php?page=modulo-ventas-cotizaciones'),
-            'meta' => array(
-                'title' => __('Módulo de Ventas', 'modulo-ventas')
-            )
-        ));
-        
-        // Submenús
-        $wp_admin_bar->add_node(array(
-            'id' => 'mv-nueva-cotizacion',
-            'parent' => 'modulo-ventas',
-            'title' => __('Nueva Cotización', 'modulo-ventas'),
-            'href' => admin_url('admin.php?page=modulo-ventas-nueva-cotizacion')
-        ));
-        
-        $wp_admin_bar->add_node(array(
-            'id' => 'mv-cotizaciones',
-            'parent' => 'modulo-ventas',
-            'title' => __('Ver Cotizaciones', 'modulo-ventas'),
-            'href' => admin_url('admin.php?page=modulo-ventas-cotizaciones')
-        ));
-        
-        $wp_admin_bar->add_node(array(
-            'id' => 'mv-clientes',
-            'parent' => 'modulo-ventas',
-            'title' => __('Clientes', 'modulo-ventas'),
-            'href' => admin_url('users.php')
-        ));
-    }
-    
-    /**
      * Cargar assets para integraciones
      */
     public function cargar_assets_integracion($hook) {
@@ -949,20 +1166,6 @@ class Modulo_Ventas_Integration {
             'total' => $total,
             'pages' => ceil($total / $args['limit'])
         ), 200);
-    }
-    
-    /**
-     * API: Obtener una cotización
-     */
-    public function api_obtener_cotizacion($request) {
-        $cotizacion_id = $request['id'];
-        $cotizacion = $this->db->obtener_cotizacion($cotizacion_id);
-        
-        if (!$cotizacion) {
-            return new WP_Error('cotizacion_no_encontrada', __('Cotización no encontrada', 'modulo-ventas'), array('status' => 404));
-        }
-        
-        return new WP_REST_Response($cotizacion, 200);
     }
     
     /**

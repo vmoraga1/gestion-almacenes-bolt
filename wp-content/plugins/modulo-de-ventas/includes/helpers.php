@@ -15,18 +15,28 @@ if (!defined('ABSPATH')) {
  * Obtener instancia del plugin
  */
 if (!function_exists('mv_get_instance')) {
-    function mv_get_instance() {
-        return Modulo_Ventas::get_instance();
+    static $instance = null;
+    
+    if (null === $instance) {
+        $instance = new stdClass();
+        $instance->messages = Modulo_Ventas_Messages::get_instance();
     }
+    
+    return $instance;
 }
 
 /**
- * Obtener instancia de la base de datos
+ * Acceso directo a la clase de mensajes
  */
-if (!function_exists('mv_db')) {
-    function mv_db() {
-        return mv_get_instance()->get_db();
-    }
+function mv_messages() {
+    return Modulo_Ventas_Messages::get_instance();
+}
+
+/**
+ * Acceso directo a la base de datos
+ */
+function mv_db() {
+    return new Modulo_Ventas_DB();
 }
 
 /**
@@ -270,6 +280,14 @@ if (!function_exists('mv_get_plazos_pago')) {
 }
 
 /**
+ * Obtener label de plazo de pago
+ */
+function mv_get_plazo_pago_label($key) {
+    $plazos = mv_get_plazos_pago();
+    return isset($plazos[$key]) ? $plazos[$key] : $key;
+}
+
+/**
  * Formatear fecha según configuración de WordPress
  */
 if (!function_exists('mv_formato_fecha')) {
@@ -398,6 +416,20 @@ if (!function_exists('mv_sanitizar_campo')) {
 }
 
 /**
+ * Sanitizar array recursivamente
+ */
+function mv_sanitize_array($array) {
+    foreach ($array as $key => $value) {
+        if (is_array($value)) {
+            $array[$key] = mv_sanitize_array($value);
+        } else {
+            $array[$key] = sanitize_text_field($value);
+        }
+    }
+    return $array;
+}
+
+/**
  * Verificar capacidad del usuario
  */
 if (!function_exists('mv_current_user_can')) {
@@ -411,21 +443,63 @@ if (!function_exists('mv_current_user_can')) {
 }
 
 /**
+ * Verificar si el usuario actual puede ver una cotización
+ */
+function mv_current_user_can_view_quote($cotizacion_id) {
+    // Administradores siempre pueden ver
+    if (current_user_can('manage_options')) {
+        return true;
+    }
+    
+    // Usuarios con permiso específico
+    if (current_user_can('view_cotizaciones')) {
+        return true;
+    }
+    
+    // Verificar si es el vendedor asignado
+    $cotizacion = mv_db()->obtener_cotizacion($cotizacion_id);
+    if ($cotizacion && $cotizacion->vendedor_id == get_current_user_id()) {
+        return true;
+    }
+    
+    // Verificar si es el cliente
+    if (is_user_logged_in()) {
+        $clientes = new Modulo_Ventas_Clientes();
+        $cliente = $clientes->obtener_cliente_por_usuario(get_current_user_id());
+        
+        if ($cliente && $cotizacion && $cotizacion->cliente_id == $cliente->id) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+/**
  * Obtener URL de administración del plugin
  */
 if (!function_exists('mv_admin_url')) {
-    function mv_admin_url($page = '', $args = array()) {
-        $base_url = admin_url('admin.php');
+    function mv_admin_url($page, $args = array()) {
+        $pages_map = array(
+            'cotizaciones' => 'modulo-ventas-cotizaciones',
+            'nueva-cotizacion' => 'modulo-ventas-nueva-cotizacion',
+            'ver-cotizacion' => 'modulo-ventas-ver-cotizacion',
+            'editar-cotizacion' => 'modulo-ventas-editar-cotizacion',
+            'clientes' => 'modulo-ventas-clientes',
+            'nuevo-cliente' => 'modulo-ventas-nuevo-cliente',
+            'configuracion' => 'modulo-ventas-configuracion',
+            'reportes' => 'modulo-ventas-reportes'
+        );
         
-        if ($page) {
-            $args['page'] = 'modulo-ventas' . ($page ? '-' . $page : '');
-        }
+        $page_slug = isset($pages_map[$page]) ? $pages_map[$page] : $page;
+        
+        $url = admin_url('admin.php?page=' . $page_slug);
         
         if (!empty($args)) {
-            $base_url = add_query_arg($args, $base_url);
+            $url = add_query_arg($args, $url);
         }
         
-        return $base_url;
+        return $url;
     }
 }
 
@@ -537,6 +611,29 @@ if (!function_exists('mv_get_vendedores')) {
         return get_users($args);
     }
 }
+
+/**
+ * Obtener configuración del plugin
+ */
+function mv_get_config($key = null, $default = null) {
+    $config = get_option('modulo_ventas_config', array());
+    
+    if (null === $key) {
+        return $config;
+    }
+    
+    return isset($config[$key]) ? $config[$key] : $default;
+}
+
+/**
+ * Guardar configuración del plugin
+ */
+function mv_set_config($key, $value) {
+    $config = get_option('modulo_ventas_config', array());
+    $config[$key] = $value;
+    update_option('modulo_ventas_config', $config);
+}
+
 
 /**
  * Log de actividad

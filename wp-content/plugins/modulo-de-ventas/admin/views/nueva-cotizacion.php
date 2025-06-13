@@ -16,6 +16,14 @@ if (!defined('ABSPATH')) {
 // $lista_clientes - Array de clientes
 // $almacenes - Array de almacenes disponibles
 // $config - Configuración del plugin
+
+// Función temporal para tooltips
+if (!function_exists('mv_tooltip')) {
+    function mv_tooltip($content, $text) {
+        return $content; // Por ahora, solo retornar el contenido sin tooltip
+    }
+}
+
 ?>
 
 <div class="wrap mv-nueva-cotizacion">
@@ -102,9 +110,9 @@ if (!defined('ABSPATH')) {
                             <div class="mv-form-group">
                                 <label for="fecha_expiracion">
                                     <?php _e('Válida hasta', 'modulo-ventas'); ?>
-                                    <?php echo mv_get_instance()->get_messages()->tooltip(
+                                    <?php echo mv_tooltip(
                                         '<span class="dashicons dashicons-editor-help"></span>',
-                                        __('Fecha hasta la cual la cotización es válida', 'modulo-ventas')
+                                        __('Texto del tooltip', 'modulo-ventas')
                                     ); ?>
                                 </label>
                                 <input type="date" 

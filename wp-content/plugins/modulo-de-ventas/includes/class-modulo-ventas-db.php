@@ -954,6 +954,14 @@ class Modulo_Ventas_DB {
         
         return $this->wpdb->get_var($sql);
     }
+
+    public function obtener_estadisticas_dashboard() {
+        return array(
+            'cotizaciones_mes' => 0,
+            'monto_mes' => 0,
+            'conversion_rate' => 0
+        );
+    }
     
     /**
      * Eliminar cotización
