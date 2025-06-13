@@ -12,6 +12,17 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// SOLUCIÓN TEMPORAL: Incluir helpers manualmente si no están cargados
+if (!function_exists('mv_calcular_fecha_expiracion')) {
+    $helpers_path = plugin_dir_path(dirname(dirname(__FILE__))) . 'includes/helpers.php';
+    if (file_exists($helpers_path)) {
+        require_once $helpers_path;
+        error_log('[MODULO_VENTAS] Helpers cargado manualmente desde nueva-cotizacion.php');
+    } else {
+        error_log('[MODULO_VENTAS] No se pudo encontrar helpers.php en: ' . $helpers_path);
+    }
+}
+
 // Variables disponibles:
 // $lista_clientes - Array de clientes
 // $almacenes - Array de almacenes disponibles

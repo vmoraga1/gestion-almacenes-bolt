@@ -55,34 +55,40 @@ class Modulo_Ventas {
     
     // Constructor
     private function __construct() {
-        // Verificar dependencias
-        add_action('plugins_loaded', array($this, 'verificar_dependencias'));
+        // Cargar archivos básicos que no usan traducciones inmediatamente
+        //$this->cargar_archivos_basicos();
         
-        // Cargar traducciones
-        add_action('init', array($this, 'cargar_textdomain'));
+        // Verificar dependencias
+        add_action('plugins_loaded', array($this, 'verificar_dependencias'), 5);
+        
+        // Cargar traducciones en el momento correcto
+        add_action('init', array($this, 'cargar_textdomain'), 0);
         
         // Hooks de activación/desactivación
         register_activation_hook(MODULO_VENTAS_PLUGIN_FILE, array($this, 'activar'));
         register_deactivation_hook(MODULO_VENTAS_PLUGIN_FILE, array($this, 'desactivar'));
-
-        // Declarar compatibilidad con HPOS (High-Performance Order Storage)
+        
+        // Declarar compatibilidad con HPOS
         add_action('before_woocommerce_init', function() {
             if (class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {
                 \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__, true);
             }
         });
-
-        // Alternativa si la primera no funciona
-        /*add_action('before_woocommerce_init', function() {
-            if (class_exists('Automattic\WooCommerce\Utilities\FeaturesUtil')) {
-                Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__, true);
-            }
-        });*/
         
         // Inicializar el plugin
-        add_action('init', array($this, 'init'), 0);
+        add_action('init', array($this, 'init'), 10);
     }
     
+    // Cargar archivos básicos que no dependen de traducciones
+    /*private function cargar_archivos_basicos() {
+        // Solo cargar helpers.php si estamos en el admin y es necesario
+        if (is_admin()) {
+            // Cargar helpers pero sin ejecutar código que use traducciones
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/helpers-basic.php';
+        }
+    }*/
+    
+    // Verificar dependencias del plugin
     // Verificar dependencias del plugin
     public function verificar_dependencias() {
         $dependencias_cumplidas = true;
@@ -91,13 +97,15 @@ class Modulo_Ventas {
         // Verificar WooCommerce
         if (!class_exists('WooCommerce')) {
             $dependencias_cumplidas = false;
-            $mensajes_error[] = __('Módulo de Ventas requiere WooCommerce para funcionar.', 'modulo-ventas');
+            // NO usar traducciones aquí, usar texto plano
+            $mensajes_error[] = 'Módulo de Ventas requiere WooCommerce para funcionar.';
         }
         
         // Verificar Gestión de Almacenes
         if (!defined('GESTION_ALMACENES_VERSION')) {
             $dependencias_cumplidas = false;
-            $mensajes_error[] = __('Módulo de Ventas requiere el plugin Gestión de Almacenes para funcionar.', 'modulo-ventas');
+            // NO usar traducciones aquí, usar texto plano
+            $mensajes_error[] = 'Módulo de Ventas requiere el plugin Gestión de Almacenes para funcionar.';
         }
         
         // Si faltan dependencias, mostrar avisos y desactivar
@@ -125,10 +133,10 @@ class Modulo_Ventas {
     // Cargar archivos del plugin
     private function cargar_archivos() {
         // Clases base
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/helpers.php';
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-db.php';
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-logger.php';
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-messages.php';
-        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/helpers.php';
         
         // Clases de funcionalidad
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-clientes.php';

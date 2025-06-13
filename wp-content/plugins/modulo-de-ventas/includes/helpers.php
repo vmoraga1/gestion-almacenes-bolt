@@ -15,21 +15,32 @@ if (!defined('ABSPATH')) {
  * Obtener instancia del plugin
  */
 if (!function_exists('mv_get_instance')) {
-    static $instance = null;
-    
-    if (null === $instance) {
-        $instance = new stdClass();
-        $instance->messages = Modulo_Ventas_Messages::get_instance();
+    function mv_get_instance() {
+        static $instance = null;
+        
+        if (null === $instance) {
+            $instance = new stdClass();
+        }
+        
+        // Lazy loading - solo cargar cuando se necesite
+        if (!isset($instance->messages) && class_exists('Modulo_Ventas_Messages')) {
+            $instance->messages = Modulo_Ventas_Messages::get_instance();
+        }
+        
+        return $instance;
     }
-    
-    return $instance;
 }
 
 /**
- * Acceso directo a la clase de mensajes
+ * Helper para obtener instancia de mensajes
  */
-function mv_messages() {
-    return Modulo_Ventas_Messages::get_instance();
+if (!function_exists('mv_messages')) {
+    function mv_messages() {
+        if (class_exists('Modulo_Ventas_Messages')) {
+            return Modulo_Ventas_Messages::get_instance();
+        }
+        return null;
+    }
 }
 
 /**
@@ -886,5 +897,31 @@ if (!function_exists('mv_ajax_check_permissions')) {
         }
         
         return true;
+    }
+}
+
+/**
+ * Helper para mostrar tooltips
+ */
+if (!function_exists('mv_tooltip')) {
+    function mv_tooltip($content, $text, $position = 'top') {
+        return Modulo_Ventas_Messages::get_instance()->tooltip($content, $text, $position);
+    }
+}
+
+/**
+ * Calcular fecha de expiración
+ */
+if (!function_exists('mv_calcular_fecha_expiracion')) {
+    function mv_calcular_fecha_expiracion($fecha_base = null, $dias = null) {
+        if (!$fecha_base) {
+            $fecha_base = current_time('Y-m-d');
+        }
+        
+        if (!$dias) {
+            $dias = get_option('modulo_ventas_dias_expiracion', 30);
+        }
+        
+        return date('Y-m-d', strtotime($fecha_base . ' + ' . $dias . ' days'));
     }
 }
