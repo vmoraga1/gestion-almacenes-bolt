@@ -466,7 +466,8 @@ class Modulo_Ventas_DB {
      * Obtener todos los clientes para select
      */
     public function obtener_clientes_para_select() {
-        $sql = "SELECT id, razon_social, rut FROM {$this->tabla_clientes} 
+        $sql = "SELECT id, razon_social, rut, email, telefono, direccion_facturacion, giro_comercial 
+                FROM {$this->tabla_clientes} 
                 WHERE estado = 'activo' 
                 ORDER BY razon_social ASC";
         

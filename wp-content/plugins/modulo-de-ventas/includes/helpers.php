@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Obtener instancia del plugin
+ * Obtener instancia del plugin con manejo seguro
  */
 if (!function_exists('mv_get_instance')) {
     function mv_get_instance() {
@@ -20,20 +20,44 @@ if (!function_exists('mv_get_instance')) {
         
         if (null === $instance) {
             $instance = new stdClass();
-        }
-        
-        // Lazy loading - solo cargar cuando se necesite
-        if (!isset($instance->messages) && class_exists('Modulo_Ventas_Messages')) {
-            $instance->messages = Modulo_Ventas_Messages::get_instance();
+            
+            // Crear un objeto wrapper para mensajes que siempre tenga el método get_messages
+            $instance->messages = new class {
+                private $real_instance = null;
+                
+                public function get_messages($context = null) {
+                    if ($this->real_instance === null && class_exists('Modulo_Ventas_Messages')) {
+                        $this->real_instance = Modulo_Ventas_Messages::get_instance();
+                    }
+                    
+                    if ($this->real_instance !== null) {
+                        return $this->real_instance->get_messages($context);
+                    }
+                    
+                    // Si no hay instancia, retornar array vacío
+                    return array();
+                }
+                
+                public function __call($method, $args) {
+                    if ($this->real_instance === null && class_exists('Modulo_Ventas_Messages')) {
+                        $this->real_instance = Modulo_Ventas_Messages::get_instance();
+                    }
+                    
+                    if ($this->real_instance !== null && method_exists($this->real_instance, $method)) {
+                        return call_user_func_array(array($this->real_instance, $method), $args);
+                    }
+                    
+                    return null;
+                }
+            };
         }
         
         return $instance;
     }
 }
 
-/**
- * Helper para obtener instancia de mensajes
- */
+/* //Helper para obtener instancia de mensajes
+
 if (!function_exists('mv_messages')) {
     function mv_messages() {
         if (class_exists('Modulo_Ventas_Messages')) {
@@ -41,13 +65,36 @@ if (!function_exists('mv_messages')) {
         }
         return null;
     }
+}*/
+
+/**
+ * Acceso directo a la clase de mensajes
+ */
+if (!function_exists('mv_messages')) {
+    function mv_messages() {
+        if (class_exists('Modulo_Ventas_Messages')) {
+            return Modulo_Ventas_Messages::get_instance();
+        }
+        // Retornar un objeto mock si la clase no existe aún
+        return new class {
+            public function get_messages($context = null) { return array(); }
+            public function add_message($message, $type = 'info', $context = 'general') { return null; }
+            public function display_messages($context = null, $echo = true) { return ''; }
+            public function __call($method, $args) { return null; }
+        };
+    }
 }
 
 /**
  * Acceso directo a la base de datos
  */
-function mv_db() {
-    return new Modulo_Ventas_DB();
+if (!function_exists('mv_db')) {
+    function mv_db() {
+        if (class_exists('Modulo_Ventas_DB')) {
+            return new Modulo_Ventas_DB();
+        }
+        return null;
+    }
 }
 
 /**

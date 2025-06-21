@@ -103,117 +103,203 @@ class Modulo_Ventas_Ajax {
      * Buscar productos
      */
     public function buscar_productos() {
-        mv_ajax_check_permissions('view_cotizaciones', 'modulo_ventas_nonce');
+        // Verificar nonce
+        if (!check_ajax_referer('modulo_ventas_nonce', 'nonce', false)) {
+            wp_send_json_error(array('message' => __('Error de seguridad', 'modulo-ventas')));
+        }
+        
+        // Verificar permisos
+        if (!current_user_can('create_cotizaciones')) {
+            wp_send_json_error(array('message' => __('Sin permisos', 'modulo-ventas')));
+        }
         
         $busqueda = isset($_POST['busqueda']) ? sanitize_text_field($_POST['busqueda']) : '';
         $almacen_id = isset($_POST['almacen_id']) ? intval($_POST['almacen_id']) : 0;
         $limite = isset($_POST['limite']) ? intval($_POST['limite']) : 20;
         
-        // Buscar productos
-        $args = array(
-            'post_type' => array('product', 'product_variation'),
-            'posts_per_page' => $limite,
-            's' => $busqueda,
-            'post_status' => 'publish',
-            'meta_query' => array(
-                array(
-                    'key' => '_stock_status',
-                    'value' => 'instock',
-                    'compare' => '='
-                )
-            )
-        );
-        
-        // Si se busca por SKU
-        if (strpos($busqueda, 'sku:') === 0) {
-            $sku = str_replace('sku:', '', $busqueda);
-            unset($args['s']);
-            $args['meta_query'][] = array(
-                'key' => '_sku',
-                'value' => $sku,
-                'compare' => 'LIKE'
-            );
+        // Si no hay búsqueda o es muy corta, no devolver resultados
+        if (empty($busqueda) || strlen($busqueda) < 2) {
+            wp_send_json_success(array(
+                'productos' => array(),
+                'total' => 0,
+                'busqueda' => $busqueda,
+                'mensaje' => __('Ingrese al menos 2 caracteres para buscar', 'modulo-ventas')
+            ));
+            return;
         }
         
-        $query = new WP_Query($args);
+        // Arrays para almacenar resultados
+        $productos_encontrados = array();
+        $ids_procesados = array();
+        
+        // 1. Buscar por SKU exacto (case insensitive)
+        global $wpdb;
+        
+        // Primero intentar búsqueda exacta de SKU
+        $sku_exacto = $wpdb->get_var($wpdb->prepare("
+            SELECT post_id 
+            FROM {$wpdb->postmeta} 
+            WHERE meta_key = '_sku' 
+            AND LOWER(meta_value) = LOWER(%s)
+            LIMIT 1
+        ", $busqueda));
+        
+        if ($sku_exacto) {
+            $product = wc_get_product($sku_exacto);
+            if ($product && $product->is_purchasable() && $product->is_in_stock()) {
+                $productos_encontrados[] = $product;
+                $ids_procesados[] = $product->get_id();
+            }
+        }
+        
+        // 2. Buscar por SKU parcial (LIKE)
+        if (count($productos_encontrados) < $limite) {
+            $sku_search = '%' . $wpdb->esc_like(strtolower($busqueda)) . '%';
+            
+            $productos_sku = $wpdb->get_col($wpdb->prepare("
+                SELECT DISTINCT p.ID 
+                FROM {$wpdb->posts} p
+                INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
+                INNER JOIN {$wpdb->postmeta} pm2 ON p.ID = pm2.post_id
+                WHERE p.post_type IN ('product', 'product_variation')
+                AND p.post_status = 'publish'
+                AND pm.meta_key = '_sku' 
+                AND LOWER(pm.meta_value) LIKE %s
+                AND pm2.meta_key = '_stock_status'
+                AND pm2.meta_value = 'instock'
+                AND p.ID NOT IN (" . implode(',', array_map('intval', $ids_procesados ?: [0])) . ")
+                ORDER BY 
+                    CASE 
+                        WHEN LOWER(pm.meta_value) = LOWER(%s) THEN 1
+                        WHEN LOWER(pm.meta_value) LIKE %s THEN 2
+                        ELSE 3 
+                    END,
+                    p.post_title
+                LIMIT %d
+            ", $sku_search, $busqueda, $busqueda . '%', $limite - count($productos_encontrados)));
+            
+            foreach ($productos_sku as $product_id) {
+                $product = wc_get_product($product_id);
+                if ($product && $product->is_purchasable()) {
+                    // Para variaciones, obtener el producto padre
+                    if ($product->get_type() === 'variation') {
+                        $parent_id = $product->get_parent_id();
+                        if (!in_array($parent_id, $ids_procesados)) {
+                            $parent_product = wc_get_product($parent_id);
+                            if ($parent_product) {
+                                $productos_encontrados[] = $parent_product;
+                                $ids_procesados[] = $parent_id;
+                            }
+                        }
+                    } else if (!in_array($product_id, $ids_procesados)) {
+                        $productos_encontrados[] = $product;
+                        $ids_procesados[] = $product_id;
+                    }
+                }
+            }
+        }
+        
+        // 3. Buscar por nombre
+        if (count($productos_encontrados) < $limite) {
+            $args = array(
+                'post_type' => 'product',
+                'posts_per_page' => $limite - count($productos_encontrados),
+                'post_status' => 'publish',
+                's' => $busqueda,
+                'post__not_in' => $ids_procesados ?: [0],
+                'meta_query' => array(
+                    array(
+                        'key' => '_stock_status',
+                        'value' => 'instock',
+                        'compare' => '='
+                    )
+                )
+            );
+            
+            $query = new WP_Query($args);
+            
+            if ($query->have_posts()) {
+                while ($query->have_posts()) {
+                    $query->the_post();
+                    $product = wc_get_product(get_the_ID());
+                    if ($product && $product->is_purchasable()) {
+                        $productos_encontrados[] = $product;
+                        $ids_procesados[] = $product->get_id();
+                    }
+                }
+                wp_reset_postdata();
+            }
+        }
+        
+        // Si no hay resultados, retornar mensaje
+        if (empty($productos_encontrados)) {
+            wp_send_json_success(array(
+                'productos' => array(),
+                'total' => 0,
+                'busqueda' => $busqueda,
+                'mensaje' => sprintf(__('No se encontraron productos para "%s"', 'modulo-ventas'), $busqueda)
+            ));
+            return;
+        }
+        
+        // Formatear productos para Select2
         $productos = array();
         
-        if ($query->have_posts()) {
-            while ($query->have_posts()) {
-                $query->the_post();
-                $product_id = get_the_ID();
-                $product = wc_get_product($product_id);
-                
-                if (!$product) {
-                    continue;
-                }
-                
-                // Obtener información básica
-                $producto_data = array(
-                    'id' => $product->get_id(),
-                    'text' => $product->get_name() . ' - ' . mv_formato_precio($product->get_price()),
-                    'nombre' => $product->get_name(),
-                    'sku' => $product->get_sku(),
-                    'precio' => $product->get_price(),
-                    'precio_regular' => $product->get_regular_price(),
-                    'precio_oferta' => $product->get_sale_price(),
-                    'tipo' => $product->get_type(),
-                    'imagen' => wp_get_attachment_image_url($product->get_image_id(), 'thumbnail'),
-                    'stock_gestion' => $product->managing_stock()
-                );
-                
-                // Stock según contexto
-                if ($almacen_id && mv_almacenes_activo()) {
-                    $producto_data['stock'] = mv_get_stock_almacen($product_id, $almacen_id);
-                    $producto_data['stock_total'] = mv_get_stock_almacen($product_id);
-                } else {
-                    $producto_data['stock'] = $product->get_stock_quantity();
-                }
-                
-                // Si es variable, obtener variaciones
-                if ($product->is_type('variable')) {
-                    $producto_data['es_variable'] = true;
-                    $producto_data['variaciones'] = array();
-                    
-                    $variations = $product->get_available_variations();
-                    foreach ($variations as $variation) {
-                        $var_obj = wc_get_product($variation['variation_id']);
-                        if (!$var_obj) continue;
-                        
-                        $stock_var = $almacen_id && mv_almacenes_activo() 
-                            ? mv_get_stock_almacen($variation['variation_id'], $almacen_id)
-                            : $var_obj->get_stock_quantity();
-                        
-                        $attributes = array();
-                        foreach ($variation['attributes'] as $attr_name => $attr_value) {
-                            $taxonomy = str_replace('attribute_', '', $attr_name);
-                            $term = get_term_by('slug', $attr_value, $taxonomy);
-                            $attributes[] = $term ? $term->name : $attr_value;
-                        }
-                        
-                        $producto_data['variaciones'][] = array(
-                            'id' => $variation['variation_id'],
-                            'nombre' => implode(' - ', $attributes),
-                            'precio' => $var_obj->get_price(),
-                            'precio_regular' => $var_obj->get_regular_price(),
-                            'precio_oferta' => $var_obj->get_sale_price(),
-                            'stock' => $stock_var,
-                            'sku' => $var_obj->get_sku(),
-                            'imagen' => $variation['image']['thumb_src']
-                        );
-                    }
-                } else {
-                    $producto_data['es_variable'] = false;
-                }
-                
-                $productos[] = $producto_data;
+        foreach ($productos_encontrados as $product) {
+            // Obtener stock
+            $stock_disponible = $product->get_stock_quantity();
+            
+            // Si hay gestión de almacenes
+            if ($almacen_id && function_exists('mv_get_stock_almacen')) {
+                $stock_disponible = mv_get_stock_almacen($product->get_id(), $almacen_id);
             }
-            wp_reset_postdata();
+            
+            $precio = $product->get_price();
+            $precio_formateado = number_format($precio, 0, ',', '.');
+            
+            $producto_data = array(
+                'id' => $product->get_id(),
+                'text' => $product->get_name() . ' - $' . $precio_formateado,
+                'nombre' => $product->get_name(),
+                'sku' => $product->get_sku() ?: 'N/A',
+                'precio' => $precio,
+                'precio_regular' => $product->get_regular_price() ?: $precio,
+                'precio_oferta' => $product->get_sale_price() ?: '',
+                'stock' => $stock_disponible ?: 0,
+                'variacion_id' => 0,
+                'es_variable' => $product->is_type('variable')
+            );
+            
+            // Si es un producto variable, obtener la primera variación
+            if ($product->is_type('variable')) {
+                $variaciones = $product->get_available_variations();
+                if (!empty($variaciones)) {
+                    $primera_variacion = reset($variaciones);
+                    $var_obj = wc_get_product($primera_variacion['variation_id']);
+                    
+                    if ($var_obj && $var_obj->is_in_stock()) {
+                        $producto_data['variacion_id'] = $primera_variacion['variation_id'];
+                        $producto_data['precio'] = $var_obj->get_price() ?: $precio;
+                        $producto_data['precio_regular'] = $var_obj->get_regular_price() ?: $producto_data['precio_regular'];
+                        $producto_data['precio_oferta'] = $var_obj->get_sale_price() ?: '';
+                        
+                        if ($almacen_id && function_exists('mv_get_stock_almacen')) {
+                            $producto_data['stock'] = mv_get_stock_almacen($primera_variacion['variation_id'], $almacen_id);
+                        } else {
+                            $producto_data['stock'] = $var_obj->get_stock_quantity() ?: 0;
+                        }
+                    }
+                }
+            }
+            
+            $productos[] = $producto_data;
         }
         
+        // Siempre incluir estos campos en la respuesta
         wp_send_json_success(array(
             'productos' => $productos,
-            'total' => $query->found_posts
+            'total' => count($productos),
+            'busqueda' => $busqueda
         ));
     }
     

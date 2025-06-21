@@ -28,7 +28,7 @@ class Gestion_Almacenes_DB {
         
         // 1. Tabla de Almacenes
         $table_warehouses = $wpdb->prefix . 'gab_warehouses';
-        $sql_warehouses = "CREATE TABLE IF NOT EXISTS $table_warehouses (
+        $sql_warehouses = "CREATE TABLE $table_warehouses (
             id mediumint(9) NOT NULL AUTO_INCREMENT,
             name varchar(100) NOT NULL,
             slug varchar(100) NOT NULL,
@@ -39,10 +39,17 @@ class Gestion_Almacenes_DB {
             pais varchar(100) NOT NULL DEFAULT 'Chile',
             email varchar(100) NOT NULL,
             telefono varchar(20) NOT NULL,
+            description text,
+            manager varchar(200),
+            priority int(11) DEFAULT 0,
+            is_active tinyint(1) DEFAULT 1,
             created_at datetime DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (id)
+            updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            UNIQUE KEY slug (slug),
+            KEY idx_active (is_active)
         ) $charset_collate;";
-        
+
         dbDelta($sql_warehouses);
         if ($wpdb->last_error) {
             $tables_errors[] = "Almacenes: " . $wpdb->last_error;
@@ -51,27 +58,32 @@ class Gestion_Almacenes_DB {
         }
         
         // 2. Tabla de Stock por Almacén
-        $table_stock = $wpdb->prefix . 'gab_warehouse_product_stock';
-        $sql_stock = "CREATE TABLE IF NOT EXISTS $table_stock (
+        $table_warehouse_stock = $wpdb->prefix . 'gab_warehouse_product_stock';
+        $sql_warehouse_stock = "CREATE TABLE $table_warehouse_stock (
             id mediumint(9) NOT NULL AUTO_INCREMENT,
-            warehouse_id mediumint(9) NOT NULL,
             product_id bigint(20) UNSIGNED NOT NULL,
+            warehouse_id mediumint(9) NOT NULL,
             stock int(11) NOT NULL DEFAULT 0,
-            updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            reserved_stock int(11) NOT NULL DEFAULT 0,
+            deleted tinyint(1) NOT NULL DEFAULT 0,
+            deleted_at datetime DEFAULT NULL,
+            created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
             UNIQUE KEY product_warehouse (product_id, warehouse_id),
+            KEY idx_product (product_id),
             KEY idx_warehouse (warehouse_id),
-            KEY idx_product (product_id)
+            KEY idx_deleted (deleted)
         ) $charset_collate;";
-        
-        dbDelta($sql_stock);
+
+        dbDelta($sql_warehouse_stock);
         if ($wpdb->last_error) {
             $tables_errors[] = "Stock: " . $wpdb->last_error;
         } else {
             $tables_created++;
         }
         
-        // 3. Tabla de Movimientos (CRÍTICA - la que faltaba)
+        // 3. Tabla de Movimientos
         $table_movements = $wpdb->prefix . 'gab_stock_movements';
         $sql_movements = "CREATE TABLE IF NOT EXISTS $table_movements (
             id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -418,7 +430,7 @@ class Gestion_Almacenes_DB {
 
         $existing_stock = $wpdb->get_row(
             $wpdb->prepare(
-                "SELECT id, stock FROM $table_name WHERE product_id = %d AND warehouse_id = %d",
+                "SELECT id, stock FROM $table_name WHERE product_id = %d AND warehouse_id = %d AND deleted = 0",
                 $product_id,
                 $warehouse_id
             )
@@ -428,23 +440,37 @@ class Gestion_Almacenes_DB {
             'product_id' => $product_id,
             'warehouse_id' => $warehouse_id,
             'stock' => max(0, intval($stock)),
+            'deleted' => 0
         );
 
-        $format = array('%d', '%d', '%d');
+        $format = array('%d', '%d', '%d', '%d');
 
         if ($existing_stock) {
             // Actualizar registro existente
-            $old_stock = intval($existing_stock->stock);
             $where = array('id' => $existing_stock->id);
             $where_format = array('%d');
             $result = $wpdb->update($table_name, $data, $where, $format, $where_format);
-
+            
+            // update() devuelve 0 si no hay cambios, pero eso no es un error
+            if ($result === false) {
+                error_log('[GAB DB] Error al actualizar stock: ' . $wpdb->last_error);
+                return false;
+            }
+            
+            // Si no hay cambios (result = 0) o si se actualizó (result > 0), es exitoso
+            return true;
+            
         } else {
             // Insertar nuevo registro - STOCK INICIAL
             $result = $wpdb->insert($table_name, $data, $format);
             
-            if ($result !== false && intval($stock) > 0 && isset($gestion_almacenes_movements)) {
-                // Registrar movimiento inicial
+            if ($result === false) {
+                error_log('[GAB DB] Error al insertar stock: ' . $wpdb->last_error);
+                return false;
+            }
+            
+            // Registrar movimiento inicial si es necesario
+            if (intval($stock) > 0 && isset($gestion_almacenes_movements)) {
                 $gestion_almacenes_movements->log_movement(array(
                     'product_id' => $product_id,
                     'warehouse_id' => $warehouse_id,
@@ -453,6 +479,8 @@ class Gestion_Almacenes_DB {
                     'notes' => __('Stock inicial', 'gestion-almacenes')
                 ));
             }
+            
+            return true;
         }
     }
 
@@ -466,7 +494,7 @@ class Gestion_Almacenes_DB {
 
         $stock_data = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT warehouse_id, stock FROM $table_name WHERE product_id = %d",
+                "SELECT warehouse_id, stock FROM $table_name WHERE product_id = %d AND deleted = 0",
                 $product_id
             ),
             OBJECT_K // Devuelve un array de objetos, con warehouse_id como clave
@@ -478,7 +506,7 @@ class Gestion_Almacenes_DB {
                 $formatted_stock[$warehouse_id] = $item->stock;
             }
         }
-        error_log('[DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID ' . $product_id . ': ' . print_r($formatted_stock, true));
+        //error_log('[DEBUG GESTION ALMACENES DB] Stock obtenido para Producto ID ' . $product_id . ': ' . print_r($formatted_stock, true));
 
         return $formatted_stock;
     }
@@ -534,7 +562,7 @@ class Gestion_Almacenes_DB {
 
         $stock = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT stock FROM $table_name WHERE product_id = %d AND warehouse_id = %d",
+                "SELECT stock FROM $table_name WHERE product_id = %d AND warehouse_id = %d AND deleted = 0",
                 $product_id,
                 $warehouse_id
             )
@@ -592,7 +620,8 @@ class Gestion_Almacenes_DB {
             $stock_query = $wpdb->prepare(
                 "SELECT warehouse_id, stock 
                 FROM $stock_table 
-                WHERE $where_clause",
+                WHERE $where_clause
+                AND deleted = 0",
                 $params
             );
             
@@ -685,7 +714,7 @@ class Gestion_Almacenes_DB {
         
         // Verificar si ya existe
         $exists = $wpdb->get_var($wpdb->prepare(
-            "SELECT COUNT(*) FROM $table WHERE product_id = %d AND warehouse_id = %d",
+            "SELECT COUNT(*) FROM $table WHERE product_id = %d AND warehouse_id = %d AND deleted = 0",
             $product_id,
             $warehouse_id
         ));
@@ -720,7 +749,7 @@ class Gestion_Almacenes_DB {
         
         // Verificar si ya existe el registro
         $exists = $wpdb->get_var($wpdb->prepare(
-            "SELECT COUNT(*) FROM $table_name WHERE warehouse_id = %d AND product_id = %d",
+            "SELECT COUNT(*) FROM $table_name WHERE warehouse_id = %d AND product_id = %d AND deleted = 0",
             $warehouse_id,
             $product_id
         ));
@@ -756,14 +785,15 @@ class Gestion_Almacenes_DB {
         global $wpdb;
         $table_name_stock = $wpdb->prefix . 'gab_warehouse_product_stock';
         $table_name_warehouses = $wpdb->prefix . 'gab_warehouses';
-
+        
         $results = $wpdb->get_results("
             SELECT s.product_id, s.warehouse_id, s.stock, w.name as warehouse_name
             FROM $table_name_stock s
             LEFT JOIN $table_name_warehouses w ON s.warehouse_id = w.id
+            WHERE s.deleted = 0
             ORDER BY s.product_id, s.warehouse_id
         ");
-
+        
         return $results;
     }
 
@@ -782,17 +812,19 @@ class Gestion_Almacenes_DB {
         global $wpdb;
         $table_name_stock = $wpdb->prefix . 'gab_warehouse_product_stock';
         $table_name_warehouses = $wpdb->prefix . 'gab_warehouses';
-
+        
         $results = $wpdb->get_results(
             $wpdb->prepare("
                 SELECT s.product_id, s.warehouse_id, s.stock, w.name as warehouse_name
                 FROM $table_name_stock s
                 LEFT JOIN $table_name_warehouses w ON s.warehouse_id = w.id
-                WHERE s.stock <= %d AND s.stock > 0
+                WHERE s.stock <= %d 
+                AND s.stock > 0
+                AND s.deleted = 0
                 ORDER BY s.stock ASC, s.product_id
             ", $threshold)
         );
-
+        
         return $results;
     }
 
@@ -845,17 +877,19 @@ class Gestion_Almacenes_DB {
         global $wpdb;
         $table_name_stock = $wpdb->prefix . 'gab_warehouse_product_stock';
         $table_name_warehouses = $wpdb->prefix . 'gab_warehouses';
-
+        
         $results = $wpdb->get_results(
             $wpdb->prepare("
                 SELECT w.*, s.stock
                 FROM $table_name_warehouses w
                 INNER JOIN $table_name_stock s ON w.id = s.warehouse_id
-                WHERE s.product_id = %d AND s.stock >= %d
+                WHERE s.product_id = %d 
+                AND s.stock >= %d
+                AND s.deleted = 0
                 ORDER BY s.stock DESC
             ", $product_id, $min_stock)
         );
-
+        
         return $results;
     }
 
@@ -945,7 +979,7 @@ class Gestion_Almacenes_DB {
         
         // Verificar el stock actual
         $existing = $wpdb->get_row($wpdb->prepare(
-            "SELECT * FROM $table_name WHERE warehouse_id = %d AND product_id = %d",
+            "SELECT * FROM $table_name WHERE warehouse_id = %d AND product_id = %d AND deleted = 0",
             $warehouse_id,
             $product_id
         ));
@@ -996,7 +1030,7 @@ class Gestion_Almacenes_DB {
         
         // Verificar si ya existe un registro
         $existing = $wpdb->get_row($wpdb->prepare(
-            "SELECT * FROM $table_name WHERE warehouse_id = %d AND product_id = %d",
+            "SELECT * FROM $table_name WHERE warehouse_id = %d AND product_id = %d AND deleted = 0",
             $warehouse_id,
             $product_id
         ));
@@ -1093,7 +1127,7 @@ class Gestion_Almacenes_DB {
         $table_name = $wpdb->prefix . 'gab_warehouse_product_stock';
         
         $stock = $wpdb->get_var($wpdb->prepare(
-            "SELECT stock FROM $table_name WHERE warehouse_id = %d AND product_id = %d",
+            "SELECT stock FROM $table_name WHERE warehouse_id = %d AND product_id = %d AND deleted = 0",
             $warehouse_id,
             $product_id
         ));
@@ -1198,7 +1232,7 @@ class Gestion_Almacenes_DB {
             "UPDATE $table_name 
             SET stock = stock + %d, 
                 updated_at = %s 
-            WHERE warehouse_id = %d AND product_id = %d",
+            WHERE warehouse_id = %d AND product_id = %d AND deleted = 0",
             $quantity_change,
             current_time('mysql'),
             $warehouse_id,
@@ -1213,7 +1247,7 @@ class Gestion_Almacenes_DB {
         $wpdb->query($wpdb->prepare(
             "UPDATE $table_name 
             SET stock = 0 
-            WHERE warehouse_id = %d AND product_id = %d AND stock < 0",
+            WHERE warehouse_id = %d AND product_id = %d AND stock < 0 AND deleted = 0",
             $warehouse_id,
             $product_id
         ));
@@ -1307,6 +1341,43 @@ class Gestion_Almacenes_DB {
      */
     public function obtener_historial_migraciones() {
         return get_option('gab_db_migrations', array());
+    }
+
+    /**
+     * Obtener stock total de un producto en todos los almacenes
+     */
+    public function get_total_stock_all_warehouses($product_id) {
+        global $wpdb;
+        $table = $wpdb->prefix . 'gab_warehouse_product_stock';
+        
+        $total = $wpdb->get_var($wpdb->prepare(
+            "SELECT SUM(stock) 
+            FROM $table 
+            WHERE product_id = %d 
+            AND deleted = 0",
+            $product_id
+        ));
+        
+        return intval($total);
+    }
+
+    /**
+     * Obtener detalles de stock por almacén para un producto
+     */
+    public function get_product_stock_details($product_id) {
+        global $wpdb;
+        $table_stock = $wpdb->prefix . 'gab_warehouse_product_stock';
+        $table_warehouses = $wpdb->prefix . 'gab_warehouses';
+        
+        return $wpdb->get_results($wpdb->prepare(
+            "SELECT s.*, w.name as warehouse_name 
+            FROM $table_stock s
+            JOIN $table_warehouses w ON s.warehouse_id = w.id
+            WHERE s.product_id = %d 
+            AND s.deleted = 0
+            AND s.stock > 0",
+            $product_id
+        ));
     }
 
 }

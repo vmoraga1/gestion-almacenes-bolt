@@ -3,7 +3,7 @@
  * Plugin Name: Gestión de Almacenes / Bodegas / Tiendas
  * Plugin URI: https://hostpanish.com
  * Description: Gestión de Stock para multiples "Almacenes"
- * Version: 1.1.0
+ * Version: 1.4.2
  * Author: Víctor Moraga
  * Author URI: https://hostpanish.com
  */
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('GESTION_ALMACENES_VERSION', '1.1.0');
+define('GESTION_ALMACENES_VERSION', '1.4.2');
 define('GESTION_ALMACENES_DB_VERSION', '1.1.0');
 define('GESTION_ALMACENES_PLUGIN_BASENAME', plugin_basename(__FILE__));
 // Definir constantes del plugin
@@ -33,9 +33,11 @@ require_once GESTION_ALMACENES_PLUGIN_DIR . 'includes/class-gestion-almacenes-tr
 require_once GESTION_ALMACENES_PLUGIN_DIR . 'includes/class-gestion-almacenes-stock-sync-manager.php';
 require_once GESTION_ALMACENES_PLUGIN_DIR . 'includes/class-sales-stock-manager.php';
 require_once GESTION_ALMACENES_PLUGIN_DIR . 'includes/class-gestion-almacenes-movements.php';
+require_once GESTION_ALMACENES_PLUGIN_DIR . 'includes/class-gestion-almacenes-csv-handler.php';
+require_once GESTION_ALMACENES_PLUGIN_DIR . 'includes/class-gestion-almacenes-product-columns.php';
 
 // Variables globales para las instancias
-global $gestion_almacenes_db, $gestion_almacenes_admin, $gestion_almacenes_woocommerce, $gestion_almacenes_stock_sync, $gestion_almacenes_sales_manager, $gestion_almacenes_order_display, $gestion_almacenes_movements;
+global $gestion_almacenes_db, $gestion_almacenes_admin, $gestion_almacenes_woocommerce, $gestion_almacenes_stock_sync, $gestion_almacenes_sales_manager, $gestion_almacenes_order_display, $gestion_almacenes_movements, $gestion_almacenes_csv_handler, $gestion_almacenes_product_columns;
 
 // Instanciar clases principales
 $gestion_almacenes_db = new Gestion_Almacenes_DB();
@@ -45,6 +47,9 @@ $gestion_almacenes_stock_sync = new Gestion_Almacenes_Stock_Sync_Manager($gestio
 $gestion_almacenes_sales_manager = new Gestion_Almacenes_Sales_Stock_Manager($gestion_almacenes_db);
 $gestion_almacenes_order_display = new Gestion_Almacenes_Order_Display($gestion_almacenes_db);
 $gestion_almacenes_movements = new Gestion_Almacenes_Movements($gestion_almacenes_db);
+$gestion_almacenes_csv_handler = new Gestion_Almacenes_CSV_Handler($gestion_almacenes_db);
+$gestion_almacenes_product_columns = new Gestion_Almacenes_Product_Columns($gestion_almacenes_db);
+
 
 // Registrar hook de activación
 register_activation_hook(__FILE__, array($gestion_almacenes_db, 'activar_plugin'));
@@ -196,3 +201,24 @@ function gab_get_stock_sync_manager() {
     global $gestion_almacenes_stock_sync;
     return $gestion_almacenes_stock_sync;
 }
+
+// Debug temporal para verificar que el CSV handler se está cargando
+add_action('init', function() {
+    if (is_admin() && isset($_GET['debug_gab_csv'])) {
+        global $gestion_almacenes_csv_handler, $gestion_almacenes_db;
+        
+        echo '<pre>';
+        echo 'CSV Handler cargado: ' . (isset($gestion_almacenes_csv_handler) ? 'SÍ' : 'NO') . "\n";
+        echo 'DB cargada: ' . (isset($gestion_almacenes_db) ? 'SÍ' : 'NO') . "\n";
+        
+        if (isset($gestion_almacenes_db)) {
+            $almacenes = $gestion_almacenes_db->get_warehouses();
+            echo 'Almacenes encontrados: ' . count($almacenes) . "\n";
+            foreach ($almacenes as $almacen) {
+                echo " - ID: {$almacen->id}, Nombre: {$almacen->name}\n";
+            }
+        }
+        echo '</pre>';
+        die();
+    }
+});

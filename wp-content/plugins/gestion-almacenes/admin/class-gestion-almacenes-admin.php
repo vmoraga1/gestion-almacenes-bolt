@@ -23,6 +23,17 @@ class Gestion_Almacenes_Admin {
         add_action('wp_ajax_gab_search_products_for_select', array($this, 'ajax_search_products_for_select'));
         add_action('wp_ajax_gab_export_movements', array($this, 'ajax_export_movements'));
         add_action('wp_ajax_gab_test_ajax', array($this, 'test_ajax'));
+
+        // Hooks para manejar eliminación de productos
+        add_action('wp_trash_post', array($this, 'verificar_stock_antes_eliminar'), 10, 1);
+        add_action('before_delete_post', array($this, 'verificar_stock_antes_eliminar'), 10, 1);
+        add_filter('post_row_actions', array($this, 'modificar_acciones_producto'), 10, 2);
+        add_action('trashed_post', array($this, 'marcar_producto_eliminado'), 10, 1);
+        add_action('deleted_post', array($this, 'marcar_producto_eliminado'), 10, 1);
+        add_action('admin_notices', array($this, 'mostrar_avisos_admin'));
+            
+        // Hook para restaurar productos
+        add_action('untrashed_post', array($this, 'restaurar_producto_eliminado'), 10, 1);
         
     }
 
@@ -683,22 +694,22 @@ class Gestion_Almacenes_Admin {
             echo '<table class="gab-table wp-list-table widefat fixed striped" id="stock-report-table">';
             echo '<thead>';
             echo '<tr>';
-            echo '<th style="min-width: 200px;">' . esc_html__('Producto', 'gestion-almacenes') . '</th>';
-            echo '<th style="width: 80px;">' . esc_html__('SKU', 'gestion-almacenes') . '</th>';
+            echo '<th style="width: 20%;">' . esc_html__('Producto', 'gestion-almacenes') . '</th>';
+            echo '<th style="width: 10%;">' . esc_html__('SKU', 'gestion-almacenes') . '</th>';
             
             // Columnas dinámicas SOLO por almacenes seleccionados
             if ($almacenes_a_mostrar) {
                 foreach ($almacenes_a_mostrar as $almacen) {
-                    echo '<th style="width: 100px; text-align: center;">';
+                    echo '<th style="width: 10%; text-align: center;">';
                     echo esc_html($almacen->name);
                     echo '<br><small style="font-weight: normal;">' . esc_html($almacen->ciudad) . '</small>';
                     echo '</th>';
                 }
             }
             
-            echo '<th style="width: 80px;">' . esc_html__('Total', 'gestion-almacenes') . '</th>';
-            echo '<th style="width: 100px;">' . esc_html__('Estado', 'gestion-almacenes') . '</th>';
-            echo '<th style="width: 150px;">' . esc_html__('Acciones', 'gestion-almacenes') . '</th>';
+            echo '<th style="width: 5%; text-align: center;">' . esc_html__('Total', 'gestion-almacenes') . '</th>';
+            echo '<th style="width: 10%; text-align: center;">' . esc_html__('Estado', 'gestion-almacenes') . '</th>';
+            echo '<th style="width: 11%;">' . esc_html__('Acciones', 'gestion-almacenes') . '</th>';
             echo '</tr>';
             echo '</thead>';
             echo '<tbody>';
@@ -2756,7 +2767,7 @@ class Gestion_Almacenes_Admin {
         
         // Obtener stock actual
         $current_stock = $wpdb->get_var($wpdb->prepare(
-            "SELECT stock FROM $table WHERE product_id = %d AND warehouse_id = %d",
+            "SELECT stock FROM $table WHERE product_id = %d AND warehouse_id = %d AND deleted = 0",
             $product_id,
             $warehouse_id
         ));
@@ -4715,6 +4726,8 @@ class Gestion_Almacenes_Admin {
                 update_option('gab_allow_partial_fulfillment', isset($_POST['allow_partial_fulfillment']) ? 'yes' : 'no');
                 update_option('gab_notify_low_stock_on_sale', isset($_POST['notify_low_stock_on_sale']) ? 'yes' : 'no');
                 update_option('gab_low_stock_email', sanitize_email($_POST['low_stock_email'] ?? ''));
+
+                update_option('gab_block_delete_with_stock', isset($_POST['gab_block_delete_with_stock']) ? 'yes' : 'no');
                 
                 $saved = true;
             }
@@ -4885,7 +4898,46 @@ class Gestion_Almacenes_Admin {
                             </p>
                         </td>
                     </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="gab_block_delete_with_stock">
+                                <?php esc_html_e('Bloquear eliminación con stock', 'gestion-almacenes'); ?>
+                            </label>
+                        </th>
+                        <td>
+                            <label>
+                                <input type="checkbox" 
+                                    name="gab_block_delete_with_stock" 
+                                    id="gab_block_delete_with_stock" 
+                                    value="yes" 
+                                    <?php checked(get_option('gab_block_delete_with_stock', 'no'), 'yes'); ?>>
+                                <?php esc_html_e('Impedir eliminación de productos con stock', 'gestion-almacenes'); ?>
+                            </label>
+                            <p class="description">
+                                <?php esc_html_e('Si está activado, no se permitirá eliminar productos que tengan stock en algún almacén. Los usuarios deberán ajustar el stock a 0 antes de poder eliminar el producto.', 'gestion-almacenes'); ?>
+                            </p>
+                        </td>
+                    </tr>
                 </table>
+
+                <!-- Indicador del estado actual -->
+                <?php if (get_option('gab_block_delete_with_stock', 'no') === 'yes'): ?>
+                <div class="notice notice-info inline" style="margin-top: 20px;">
+                    <p>
+                        <span class="dashicons dashicons-lock" style="color: #d63638;"></span>
+                        <strong><?php esc_html_e('Protección activa:', 'gestion-almacenes'); ?></strong>
+                        <?php esc_html_e('Los productos con stock en almacenes NO pueden ser eliminados.', 'gestion-almacenes'); ?>
+                    </p>
+                </div>
+                <?php else: ?>
+                <div class="notice notice-warning inline" style="margin-top: 20px;">
+                    <p>
+                        <span class="dashicons dashicons-unlock" style="color: #dba617;"></span>
+                        <strong><?php esc_html_e('Protección inactiva:', 'gestion-almacenes'); ?></strong>
+                        <?php esc_html_e('Los productos con stock en almacenes pueden ser eliminados (se mostrará una advertencia).', 'gestion-almacenes'); ?>
+                    </p>    
+                </div>
+                <?php endif; ?>
 
                 <!-- Gestión de Ventas -->
                 <h2><?php esc_html_e('Gestión de Ventas', 'gestion-almacenes'); ?></h2>
@@ -5011,6 +5063,21 @@ class Gestion_Almacenes_Admin {
                         value="<?php esc_attr_e('Guardar Configuración', 'gestion-almacenes'); ?>">
                 </p>
             </form>
+
+            <div class="gab-form-section">
+                <h3><?php esc_html_e('Exportación/Importación CSV', 'gestion-almacenes'); ?></h3>
+                <div class="gab-message info">
+                    <h4><?php esc_html_e('Columnas disponibles en CSV:', 'gestion-almacenes'); ?></h4>
+                    <ul>
+                        <li><strong>Stock Total en Almacenes</strong>: <?php esc_html_e('Suma total del stock en todos los almacenes', 'gestion-almacenes'); ?></li>
+                        <?php foreach ($almacenes as $almacen): ?>
+                            <li><strong>Stock - <?php echo esc_html($almacen->name); ?></strong>: <?php esc_html_e('Stock en este almacén específico', 'gestion-almacenes'); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                    <p><?php esc_html_e('Al importar, el stock se actualizará automáticamente y se registrará en el historial de movimientos.', 'gestion-almacenes'); ?></p>
+                    <h4 style="color: purple;"><?php esc_html_e('PD: Al importar, dejar el campo "ID" vacio, ya que, el sistema le asignará un ID correlativo', 'gestion-almacenes'); ?></h4>
+                </div>
+            </div>
             
             <!-- Información del Sistema -->
             <h2><?php esc_html_e('Información del Sistema', 'gestion-almacenes'); ?></h2>
@@ -5057,7 +5124,7 @@ class Gestion_Almacenes_Admin {
             margin-bottom: 20px;
         }
 
-        </style>
+        </styl>
 
         <?php
     }
@@ -5164,7 +5231,30 @@ class Gestion_Almacenes_Admin {
                         <span class="description"><?php esc_html_e('Crea las tablas faltantes', 'gestion-almacenes'); ?></span>
                     </p>
                 </form>
+
+                <div class="gab-form-section">
+                    <h3><?php esc_html_e('Limpiar Productos Huérfanos', 'gestion-almacenes'); ?></h3>
+                    <p><?php esc_html_e('Marca como eliminados los registros de stock de productos que ya no existen en WooCommerce.', 'gestion-almacenes'); ?></p>
+                    <form method="post" action="">
+                        <?php wp_nonce_field('gab_cleanup_orphaned', 'cleanup_nonce'); ?>
+                        <p class="submit">
+                            <input type="submit" name="cleanup_orphaned" class="button button-secondary" 
+                                value="<?php esc_attr_e('Limpiar Productos Huérfanos', 'gestion-almacenes'); ?>"
+                                onclick="return confirm('<?php esc_attr_e('¿Está seguro? Esta acción marcará como eliminados todos los registros de productos que no existen.', 'gestion-almacenes'); ?>');">
+                        </p>
+                    </form>
+                </div>
+
+                <?php
+                // Procesar limpieza
+                if (isset($_POST['cleanup_orphaned']) && wp_verify_nonce($_POST['cleanup_nonce'], 'gab_cleanup_orphaned')) {
+                    $cleaned = $this->limpiar_stock_huerfano();
+                    echo '<div class="notice notice-success"><p>';
+                    printf(__('Se limpiaron %d registros de productos huérfanos.', 'gestion-almacenes'), $cleaned);
+                    echo '</p></div>';
+                }
                 
+                ?>
                 <h2 style="margin-top: 30px;"><?php esc_html_e('Información del Sistema', 'gestion-almacenes'); ?></h2>
                 
                 <table class="form-table">
@@ -5407,6 +5497,305 @@ class Gestion_Almacenes_Admin {
             </div>
         </div>
         <?php
+    }
+
+    /**
+     * Verificar stock antes de permitir eliminación
+     */
+    public function verificar_stock_antes_eliminar($post_id) {
+        // Solo para productos
+        if (get_post_type($post_id) !== 'product') {
+            return;
+        }
+        
+        // Evitar bucles infinitos
+        if (defined('GAB_DELETING_PRODUCT')) {
+            return;
+        }
+        
+        global $gestion_almacenes_db;
+        
+        // Obtener detalles del stock
+        $stock_details = $gestion_almacenes_db->get_product_stock_details($post_id);
+        $total_stock = $gestion_almacenes_db->get_total_stock_all_warehouses($post_id);
+        
+        if ($total_stock > 0) {
+            // Construir mensaje detallado
+            $details = array();
+            foreach ($stock_details as $stock) {
+                $details[] = sprintf(
+                    '%s: %d unidades',
+                    esc_html($stock->warehouse_name),
+                    intval($stock->stock)
+                );
+            }
+            
+            // Verificar si el bloqueo está activado
+            $block_delete_enabled = get_option('gab_block_delete_with_stock', 'no') === 'yes';
+            
+            if ($block_delete_enabled) {
+                // NO guardar transient cuando se bloquea
+                // Solo mostrar el mensaje de bloqueo
+                
+                $message = '<div style="margin: 50px auto; max-width: 600px; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, sans-serif;">';
+                $message .= '<h1 style="color: #d63638; font-size: 24px; margin-bottom: 20px;">' . __('⚠️ No se puede eliminar el producto', 'gestion-almacenes') . '</h1>';
+                $message .= '<div style="background: #f0f0f1; border-left: 4px solid #d63638; padding: 20px; margin-bottom: 20px;">';
+                $message .= '<p style="font-size: 16px; margin-bottom: 15px;">' . sprintf(
+                    __('El producto <strong>"%s"</strong> tiene <strong>%d unidades</strong> en stock distribuidas en los siguientes almacenes:', 'gestion-almacenes'),
+                    get_the_title($post_id),
+                    $total_stock
+                ) . '</p>';
+                $message .= '<ul style="list-style: none; padding-left: 0;">';
+                foreach ($details as $detail) {
+                    $message .= '<li style="padding: 5px 0; font-size: 14px;">📦 ' . $detail . '</li>';
+                }
+                $message .= '</ul>';
+                $message .= '</div>';
+                $message .= '<div style="background: #e5f5fa; border-left: 4px solid #0073aa; padding: 15px; margin-bottom: 20px;">';
+                $message .= '<p style="margin: 0; font-size: 14px;"><strong>' . __('¿Qué hacer?', 'gestion-almacenes') . '</strong></p>';
+                $message .= '<ol style="margin: 10px 0 0 20px; font-size: 14px;">';
+                $message .= '<li>' . __('Ajuste el stock a 0 en todos los almacenes', 'gestion-almacenes') . '</li>';
+                $message .= '<li>' . __('O transfiera el stock a otros productos', 'gestion-almacenes') . '</li>';
+                $message .= '<li>' . __('O desactive la opción "Bloquear eliminación con stock" en la configuración del plugin', 'gestion-almacenes') . '</li>';
+                $message .= '</ol>';
+                $message .= '</div>';
+                $message .= '</div>';
+                
+                wp_die(
+                    $message,
+                    __('Producto con stock en almacenes', 'gestion-almacenes'),
+                    array(
+                        'response' => 403,
+                        'back_link' => true,
+                        'text_direction' => 'ltr'
+                    )
+                );
+                
+            } else {
+                // Solo guardar advertencia si NO está bloqueado
+                set_transient('gab_delete_warning_' . get_current_user_id(), array(
+                    'product_id' => $post_id,
+                    'product_name' => get_the_title($post_id),
+                    'total_stock' => $total_stock,
+                    'details' => $details
+                ), 300);
+            }
+        }
+    }
+
+    /**
+     * Modificar las acciones del producto para mostrar advertencia
+     */
+    public function modificar_acciones_producto($actions, $post) {
+        if ($post->post_type !== 'product') {
+            return $actions;
+        }
+        
+        global $gestion_almacenes_db;
+        $total_stock = $gestion_almacenes_db->get_total_stock_all_warehouses($post->ID);
+        
+        if ($total_stock > 0) {
+            // Obtener detalles para el tooltip
+            $stock_details = $gestion_almacenes_db->get_product_stock_details($post->ID);
+            $tooltip_text = __('Stock en almacenes:', 'gestion-almacenes') . '';
+            
+            foreach ($stock_details as $stock) {
+                $tooltip_text .= sprintf(
+                    ' %s: %d unidades',
+                    $stock->warehouse_name,
+                    $stock->stock
+                );
+            }
+            
+            // Modificar el enlace de papelera
+            if (isset($actions['trash'])) {
+                $actions['trash'] = str_replace(
+                    'class="submitdelete"',
+                    sprintf(
+                        'class="submitdelete gab-has-stock" data-stock="%d" onclick="return confirm(\'%s\');" title="%s"',
+                        $total_stock,
+                        esc_js(sprintf(
+                            __('ADVERTENCIA: Este producto tiene %d unidades en stock en los almacenes.%s. ¿Está seguro de que desea eliminarlo?', 'gestion-almacenes'),
+                            $total_stock,
+                            strip_tags($tooltip_text)
+                        )),
+                        esc_attr($tooltip_text)
+                    ),
+                    $actions['trash']
+                );
+            }
+            
+            // Agregar indicador visual de stock
+            $actions['gab_stock_info'] = sprintf(
+                '<span class="gab-stock-indicator" style="color: #d63638; font-weight: bold;" title="%s">
+                    <span class="dashicons dashicons-warning" style="font-size: 12px; vertical-align: text-bottom;"></span>
+                    %d en stock
+                </span>',
+                esc_attr($tooltip_text),
+                $total_stock
+            );
+        }
+        
+        return $actions;
+    }
+
+    /**
+     * Marcar producto como eliminado (soft delete)
+     */
+    public function marcar_producto_eliminado($post_id) {
+        if (get_post_type($post_id) !== 'product') {
+            return;
+        }
+        
+        global $wpdb, $gestion_almacenes_movements, $gestion_almacenes_db;
+        
+        // Obtener stocks actuales antes de marcar como eliminado
+        $stocks = $wpdb->get_results($wpdb->prepare(
+            "SELECT warehouse_id, stock 
+            FROM {$wpdb->prefix}gab_warehouse_product_stock 
+            WHERE product_id = %d AND stock > 0 AND deleted = 0",
+            $post_id
+        ));
+        
+        // Registrar movimiento de eliminación para cada almacén con stock
+        foreach ($stocks as $stock_data) {
+            if (isset($gestion_almacenes_movements) && $stock_data->stock > 0) {
+                $gestion_almacenes_movements->log_movement(array(
+                    'product_id' => $post_id,
+                    'warehouse_id' => $stock_data->warehouse_id,
+                    'type' => 'out',
+                    'quantity' => -$stock_data->stock,
+                    'reference_type' => 'product_deletion',
+                    'reference_id' => $post_id,
+                    'notes' => sprintf(
+                        __('Producto eliminado de WooCommerce. Stock anterior: %d', 'gestion-almacenes'),
+                        $stock_data->stock
+                    )
+                ));
+            }
+        }
+        
+        // Marcar como eliminado (soft delete)
+        $result = $wpdb->update(
+            $wpdb->prefix . 'gab_warehouse_product_stock',
+            array(
+                'deleted' => 1,
+                'deleted_at' => current_time('mysql')
+            ),
+            array('product_id' => $post_id),
+            array('%d', '%s'),
+            array('%d')
+        );
+        
+        if ($result !== false) {
+            error_log(sprintf(
+                '[GAB] Producto #%d marcado como eliminado. %d registros actualizados.',
+                $post_id,
+                $result
+            ));
+        }
+    }
+
+    /**
+     * Restaurar producto eliminado
+     */
+    public function restaurar_producto_eliminado($post_id) {
+        if (get_post_type($post_id) !== 'product') {
+            return;
+        }
+        
+        global $wpdb;
+        
+        // Restaurar el producto (quitar soft delete)
+        $result = $wpdb->update(
+            $wpdb->prefix . 'gab_warehouse_product_stock',
+            array(
+                'deleted' => 0,
+                'deleted_at' => null
+            ),
+            array('product_id' => $post_id),
+            array('%d', '%s'),
+            array('%d')
+        );
+        
+        if ($result > 0) {
+            // Mostrar mensaje de éxito
+            set_transient('gab_restore_success_' . get_current_user_id(), array(
+                'product_id' => $post_id,
+                'product_name' => get_the_title($post_id),
+                'records' => $result
+            ), 60);
+        }
+    }
+
+    /**
+     * Mostrar notificaciones en el admin
+     */
+    public function mostrar_avisos_admin() {
+        // Aviso de eliminación
+        $warning = get_transient('gab_delete_warning_' . get_current_user_id());
+        if ($warning) {
+            ?>
+            <div class="notice notice-warning is-dismissible">
+                <p>
+                    <strong><?php _e('Producto eliminado con stock en almacenes', 'gestion-almacenes'); ?></strong>
+                </p>
+                <p>
+                    <?php printf(
+                        __('El producto "%s" tenía %d unidades en stock distribuidas en:', 'gestion-almacenes'),
+                        esc_html($warning['product_name']),
+                        esc_html($warning['total_stock'])
+                    ); ?>
+                </p>
+                <?php if (!empty($warning['details'])): ?>
+                    <ul>
+                        <?php foreach ($warning['details'] as $detail): ?>
+                            <li><?php echo esc_html($detail); ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+                <p>
+                    <em><?php _e('El stock ha sido marcado como eliminado y registrado en el historial de movimientos.', 'gestion-almacenes'); ?></em>
+                </p>
+            </div>
+            <?php
+            delete_transient('gab_delete_warning_' . get_current_user_id());
+        }
+        
+        // Aviso de restauración
+        $restore_success = get_transient('gab_restore_success_' . get_current_user_id());
+        if ($restore_success) {
+            ?>
+            <div class="notice notice-success is-dismissible">
+                <p>
+                    <?php printf(
+                        __('El producto "%s" ha sido restaurado junto con su stock en %d almacenes.', 'gestion-almacenes'),
+                        esc_html($restore_success['product_name']),
+                        esc_html($restore_success['records'])
+                    ); ?>
+                </p>
+            </div>
+            <?php
+            delete_transient('gab_restore_success_' . get_current_user_id());
+        }
+    }
+
+    /**
+    * Limpiar stock de productos huérfanos
+    */
+    public function limpiar_stock_huerfano() {
+        global $wpdb;
+        
+        // Marcar como eliminados los productos que no existen en WooCommerce
+        $updated = $wpdb->query("
+            UPDATE {$wpdb->prefix}gab_warehouse_product_stock s
+            LEFT JOIN {$wpdb->posts} p ON s.product_id = p.ID
+            SET s.deleted = 1, s.deleted_at = NOW()
+            WHERE (p.ID IS NULL OR p.post_status = 'trash')
+            AND s.deleted = 0
+        ");
+        
+        return $updated;
     }
 
 

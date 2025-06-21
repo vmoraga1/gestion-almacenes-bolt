@@ -236,3 +236,49 @@ Stack trace:
 #4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
 #5 {main}
   thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\nueva-cotizacion.php","line":171,"type":1}
+[2025-06-13 19:19:17] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method stdClass::get_messages() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\nueva-cotizacion.php:171
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(297): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_nueva_cotizacion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\nueva-cotizacion.php","line":171,"type":1}
+[2025-06-13 19:28:38] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method Modulo_Ventas_DB::obtener_estadisticas_cotizaciones() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php:26
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(270): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_cotizaciones('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\cotizaciones-list.php","line":26,"type":1}
+[2025-06-13 19:28:44] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method stdClass::get_messages() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\nueva-cotizacion.php:171
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(297): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_nueva_cotizacion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\nueva-cotizacion.php","line":171,"type":1}
+[2025-06-13 19:29:03] EMERGENCY: Error Fatal: Uncaught Error: Class 'Clientes_List_Table' not found in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:391
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_clientes('')
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#4 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-admin.php","line":391,"type":1}
+[2025-06-13 19:29:28] EMERGENCY: Error Fatal: require_once(): Failed opening required 'C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas/admin/views/estadisticas.php' (include_path='.;C:\php\pear') | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-admin.php","line":510,"type":64}
+[2025-06-13 19:29:40] EMERGENCY: Error Fatal: require_once(): Failed opening required 'C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas/admin/views/herramientas.php' (include_path='.;C:\php\pear') | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-admin.php","line":547,"type":64}
+[2025-06-13 19:30:15] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method stdClass::get_messages() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\nueva-cotizacion.php:171
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(297): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_nueva_cotizacion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\nueva-cotizacion.php","line":171,"type":1}

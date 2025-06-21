@@ -3,6 +3,10 @@
  * Módulo de Ventas
  */
 
+h2.hndle {
+    margin: 1em !important;
+}
+
 /* Dashboard */
 .mv-dashboard-grid {
     display: grid;

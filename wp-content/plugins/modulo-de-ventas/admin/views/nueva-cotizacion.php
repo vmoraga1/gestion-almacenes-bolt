@@ -46,384 +46,386 @@ if (!function_exists('mv_tooltip')) {
     <form method="post" id="mv-form-cotizacion" class="mv-form-cotizacion">
         <?php wp_nonce_field('mv_crear_cotizacion', 'mv_cotizacion_nonce'); ?>
         
-        <div class="mv-form-container">
-            <!-- Columna principal -->
-            <div class="mv-form-main">
-                
-                <!-- Información general -->
-                <div class="postbox">
-                    <h2 class="hndle">
-                        <span><?php _e('Información General', 'modulo-ventas'); ?></span>
-                    </h2>
-                    <div class="inside">
-                        <div class="mv-form-grid">
-                            <!-- Cliente -->
-                            <div class="mv-form-group mv-form-group-full">
-                                <label for="cliente_id" class="required">
-                                    <?php _e('Cliente', 'modulo-ventas'); ?>
-                                </label>
-                                <div class="mv-input-group">
-                                    <select name="cliente_id" id="cliente_id" class="mv-select2-cliente" required>
-                                        <option value=""><?php _e('Seleccione un cliente', 'modulo-ventas'); ?></option>
-                                        <?php foreach ($lista_clientes as $cliente) : ?>
-                                            <option value="<?php echo esc_attr($cliente->id); ?>"
-                                                    data-rut="<?php echo esc_attr(mv_formatear_rut($cliente->rut)); ?>"
-                                                    data-email="<?php echo esc_attr($cliente->email); ?>"
-                                                    data-telefono="<?php echo esc_attr($cliente->telefono); ?>"
-                                                    data-direccion="<?php echo esc_attr($cliente->direccion_facturacion); ?>"
-                                                    data-giro="<?php echo esc_attr($cliente->giro_comercial); ?>">
-                                                <?php echo esc_html($cliente->razon_social . ' - ' . mv_formatear_rut($cliente->rut)); ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <button type="button" class="button mv-btn-nuevo-cliente" title="<?php esc_attr_e('Agregar nuevo cliente', 'modulo-ventas'); ?>">
-                                        <span class="dashicons dashicons-plus-alt"></span>
-                                    </button>
+        <!-- Columna principal -->
+        <div class="mv-form-main">
+            
+            <!-- Información general -->
+            <div class="postbox">
+                <h2 class="hndle">
+                    <span style="margin: 1em;"><?php _e('Información General', 'modulo-ventas'); ?></span>
+                </h2>
+                <div class="inside">
+                    <div class="mv-form-grid">
+                        <!-- Cliente -->
+                        <div class="mv-form-group mv-form-group-full">
+                            <label for="cliente_id" class="required">
+                                <?php _e('Cliente', 'modulo-ventas'); ?>
+                            </label>
+                            <div class="mv-input-group">
+                                <select name="cliente_id" id="cliente_id" class="mv-select2-cliente" required>
+                                    <option value=""><?php _e('Seleccione un cliente', 'modulo-ventas'); ?></option>
+                                    <?php foreach ($lista_clientes as $cliente) : ?>
+                                        <option value="<?php echo esc_attr($cliente->id); ?>"
+                                                data-rut="<?php echo esc_attr(mv_formatear_rut($cliente->rut)); ?>"
+                                                data-email="<?php echo esc_attr($cliente->email); ?>"
+                                                data-telefono="<?php echo esc_attr($cliente->telefono); ?>"
+                                                data-direccion="<?php echo esc_attr($cliente->direccion_facturacion); ?>"
+                                                data-giro="<?php echo esc_attr($cliente->giro_comercial); ?>">
+                                            <?php echo esc_html($cliente->razon_social . ' - ' . mv_formatear_rut($cliente->rut)); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <button type="button" class="button mv-btn-nuevo-cliente" title="<?php esc_attr_e('Agregar nuevo cliente', 'modulo-ventas'); ?>">
+                                    <span class="dashicons dashicons-plus-alt"></span>
+                                </button>
+                            </div>
+                            <div id="mv-cliente-info" class="mv-cliente-info" style="display: none;">
+                                <div class="mv-info-row">
+                                    <span class="mv-info-label"><?php _e('RUT:', 'modulo-ventas'); ?></span>
+                                    <span class="mv-info-value" data-field="rut">-</span>
                                 </div>
-                                <div id="mv-cliente-info" class="mv-cliente-info" style="display: none;">
-                                    <div class="mv-info-row">
-                                        <span class="mv-info-label"><?php _e('RUT:', 'modulo-ventas'); ?></span>
-                                        <span class="mv-info-value" data-field="rut">-</span>
-                                    </div>
-                                    <div class="mv-info-row">
-                                        <span class="mv-info-label"><?php _e('Email:', 'modulo-ventas'); ?></span>
-                                        <span class="mv-info-value" data-field="email">-</span>
-                                    </div>
-                                    <div class="mv-info-row">
-                                        <span class="mv-info-label"><?php _e('Teléfono:', 'modulo-ventas'); ?></span>
-                                        <span class="mv-info-value" data-field="telefono">-</span>
-                                    </div>
-                                    <div class="mv-info-row">
-                                        <span class="mv-info-label"><?php _e('Dirección:', 'modulo-ventas'); ?></span>
-                                        <span class="mv-info-value" data-field="direccion">-</span>
-                                    </div>
-                                    <div class="mv-info-row">
-                                        <span class="mv-info-label"><?php _e('Giro:', 'modulo-ventas'); ?></span>
-                                        <span class="mv-info-value" data-field="giro">-</span>
-                                    </div>
+                                <div class="mv-info-row">
+                                    <span class="mv-info-label"><?php _e('Email:', 'modulo-ventas'); ?></span>
+                                    <span class="mv-info-value" data-field="email">-</span>
                                 </div>
-                            </div>
-                            
-                            <!-- Fecha -->
-                            <div class="mv-form-group">
-                                <label for="fecha">
-                                    <?php _e('Fecha', 'modulo-ventas'); ?>
-                                </label>
-                                <input type="date" 
-                                       name="fecha" 
-                                       id="fecha" 
-                                       value="<?php echo esc_attr(current_time('Y-m-d')); ?>" 
-                                       readonly
-                                       class="regular-text">
-                            </div>
-                            
-                            <!-- Fecha de expiración -->
-                            <div class="mv-form-group">
-                                <label for="fecha_expiracion">
-                                    <?php _e('Válida hasta', 'modulo-ventas'); ?>
-                                    <?php echo mv_tooltip(
-                                        '<span class="dashicons dashicons-editor-help"></span>',
-                                        __('Texto del tooltip', 'modulo-ventas')
-                                    ); ?>
-                                </label>
-                                <input type="date" 
-                                       name="fecha_expiracion" 
-                                       id="fecha_expiracion" 
-                                       value="<?php echo esc_attr(mv_calcular_fecha_expiracion()); ?>"
-                                       min="<?php echo esc_attr(current_time('Y-m-d')); ?>"
-                                       class="regular-text">
-                            </div>
-                            
-                            <!-- Plazo de pago -->
-                            <div class="mv-form-group">
-                                <label for="plazo_pago">
-                                    <?php _e('Plazo de pago', 'modulo-ventas'); ?>
-                                </label>
-                                <select name="plazo_pago" id="plazo_pago" class="regular-text">
-                                    <?php foreach (mv_get_plazos_pago() as $key => $label) : ?>
-                                        <option value="<?php echo esc_attr($key); ?>">
-                                            <?php echo esc_html($label); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            
-                            <!-- Vendedor -->
-                            <div class="mv-form-group">
-                                <label for="vendedor_id">
-                                    <?php _e('Vendedor', 'modulo-ventas'); ?>
-                                </label>
-                                <select name="vendedor_id" id="vendedor_id" class="regular-text">
-                                    <?php foreach (mv_get_vendedores() as $vendedor) : ?>
-                                        <option value="<?php echo esc_attr($vendedor->ID); ?>" 
-                                                <?php selected(get_current_user_id(), $vendedor->ID); ?>>
-                                            <?php echo esc_html($vendedor->display_name); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            
-                            <?php if (mv_almacenes_activo() && !empty($almacenes)) : ?>
-                            <!-- Almacén predeterminado -->
-                            <div class="mv-form-group">
-                                <label for="almacen_id">
-                                    <?php _e('Almacén predeterminado', 'modulo-ventas'); ?>
-                                    <?php echo mv_get_instance()->get_messages()->tooltip(
-                                        '<span class="dashicons dashicons-editor-help"></span>',
-                                        __('Almacén por defecto para los productos. Puede cambiar el almacén por cada producto.', 'modulo-ventas')
-                                    ); ?>
-                                </label>
-                                <select name="almacen_id" id="almacen_id" class="regular-text">
-                                    <option value=""><?php _e('Sin almacén específico', 'modulo-ventas'); ?></option>
-                                    <?php foreach ($almacenes as $almacen) : ?>
-                                        <option value="<?php echo esc_attr($almacen->id); ?>" 
-                                                <?php selected($config['almacen_predeterminado'], $almacen->id); ?>>
-                                            <?php echo esc_html($almacen->name); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <?php endif; ?>
-                            
-                            <!-- IVA -->
-                            <div class="mv-form-group">
-                                <label>
-                                    <input type="checkbox" 
-                                           name="incluye_iva" 
-                                           id="incluye_iva" 
-                                           value="1" 
-                                           checked>
-                                    <?php _e('Incluir IVA (19%)', 'modulo-ventas'); ?>
-                                </label>
+                                <div class="mv-info-row">
+                                    <span class="mv-info-label"><?php _e('Teléfono:', 'modulo-ventas'); ?></span>
+                                    <span class="mv-info-value" data-field="telefono">-</span>
+                                </div>
+                                <div class="mv-info-row">
+                                    <span class="mv-info-label"><?php _e('Dirección:', 'modulo-ventas'); ?></span>
+                                    <span class="mv-info-value" data-field="direccion">-</span>
+                                </div>
+                                <div class="mv-info-row">
+                                    <span class="mv-info-label"><?php _e('Giro:', 'modulo-ventas'); ?></span>
+                                    <span class="mv-info-value" data-field="giro">-</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                
-                <!-- Productos -->
-                <div class="postbox">
-                    <h2 class="hndle">
-                        <span><?php _e('Productos / Servicios', 'modulo-ventas'); ?></span>
-                    </h2>
-                    <div class="inside">
-                        <!-- Buscador de productos -->
-                        <div class="mv-product-search">
-                            <label for="buscar_producto" class="screen-reader-text">
-                                <?php _e('Buscar producto', 'modulo-ventas'); ?>
+                        
+                        <!-- Fecha -->
+                        <div class="mv-form-group">
+                            <label for="fecha">
+                                <?php _e('Fecha', 'modulo-ventas'); ?>
                             </label>
-                            <select id="buscar_producto" class="mv-select2-productos" style="width: 100%;">
-                                <option value=""><?php _e('Buscar productos por nombre, SKU o categoría...', 'modulo-ventas'); ?></option>
+                            <input type="date" 
+                                    name="fecha" 
+                                    id="fecha" 
+                                    value="<?php echo esc_attr(current_time('Y-m-d')); ?>" 
+                                    class="regular-text">
+                        </div>
+                        
+                        <!-- Fecha de expiración -->
+                        <div class="mv-form-group">
+                            <label for="fecha_expiracion">
+                                <?php _e('Válida hasta', 'modulo-ventas'); ?>
+                                <?php echo mv_tooltip(
+                                    '<span class="dashicons dashicons-editor-help"></span>',
+                                    __('Fecha de expiración', 'modulo-ventas')
+                                ); ?>
+                            </label>
+                            <input type="date" 
+                                    name="fecha_expiracion" 
+                                    id="fecha_expiracion" 
+                                    value="<?php echo esc_attr(mv_calcular_fecha_expiracion()); ?>"
+                                    min="<?php echo esc_attr(current_time('Y-m-d')); ?>"
+                                    class="regular-text">
+                        </div>
+                        
+                        <!-- Plazo de pago -->
+                        <div class="mv-form-group">
+                            <label for="plazo_pago">
+                                <?php _e('Plazo de pago', 'modulo-ventas'); ?>
+                            </label>
+                            <select name="plazo_pago" id="plazo_pago" class="regular-text">
+                                <?php foreach (mv_get_plazos_pago() as $key => $label) : ?>
+                                    <option value="<?php echo esc_attr($key); ?>">
+                                        <?php echo esc_html($label); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         
-                        <!-- Tabla de productos -->
-                        <div class="mv-productos-tabla-wrapper">
-                            <table class="wp-list-table widefat fixed striped" id="mv-tabla-productos">
-                                <thead>
-                                    <tr>
-                                        <th class="column-producto"><?php _e('Producto/Servicio', 'modulo-ventas'); ?></th>
-                                        <?php if (mv_almacenes_activo()) : ?>
-                                        <th class="column-almacen"><?php _e('Almacén', 'modulo-ventas'); ?></th>
-                                        <?php endif; ?>
-                                        <th class="column-cantidad"><?php _e('Cantidad', 'modulo-ventas'); ?></th>
-                                        <th class="column-precio"><?php _e('Precio Unit.', 'modulo-ventas'); ?></th>
-                                        <th class="column-descuento"><?php _e('Descuento', 'modulo-ventas'); ?></th>
-                                        <th class="column-subtotal"><?php _e('Subtotal', 'modulo-ventas'); ?></th>
-                                        <th class="column-acciones"></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="mv-productos-lista">
-                                    <tr class="mv-no-productos">
-                                        <td colspan="<?php echo mv_almacenes_activo() ? '7' : '6'; ?>" class="text-center">
-                                            <?php _e('No hay productos agregados. Use el buscador para agregar productos.', 'modulo-ventas'); ?>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="<?php echo mv_almacenes_activo() ? '7' : '6'; ?>">
-                                            <button type="button" class="button mv-btn-agregar-linea">
-                                                <span class="dashicons dashicons-plus-alt"></span>
-                                                <?php _e('Agregar línea personalizada', 'modulo-ventas'); ?>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                        <!-- Vendedor -->
+                        <div class="mv-form-group">
+                            <label for="vendedor_id">
+                                <?php _e('Vendedor', 'modulo-ventas'); ?>
+                            </label>
+                            <select name="vendedor_id" id="vendedor_id" class="regular-text">
+                                <?php foreach (mv_get_vendedores() as $vendedor) : ?>
+                                    <option value="<?php echo esc_attr($vendedor->ID); ?>" 
+                                            <?php selected(get_current_user_id(), $vendedor->ID); ?>>
+                                        <?php echo esc_html($vendedor->display_name); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
+                        <?php if (mv_almacenes_activo() && !empty($almacenes)) : ?>
+                        <!-- Almacén predeterminado -->
+                        <div class="mv-form-group">
+                            <label for="almacen_id">
+                                <?php _e('Almacén predeterminado', 'modulo-ventas'); ?>
+                                <?php echo mv_tooltip(
+                                    '<span class="dashicons dashicons-editor-help"></span>',
+                                    __('Almacén por defecto para los productos. Puede cambiar el almacén por cada producto.', 'modulo-ventas')
+                                ); ?>
+                            </label>
+                            <select name="almacen_id" id="almacen_id" class="regular-text">
+                                <option value=""><?php _e('Sin almacén específico', 'modulo-ventas'); ?></option>
+                                <?php foreach ($almacenes as $almacen) : ?>
+                                    <option value="<?php echo esc_attr($almacen->id); ?>"
+                                            <?php selected($config['almacen_predeterminado'], $almacen->id); ?>>
+                                        <?php echo esc_html($almacen->name); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <!-- IVA -->
+                        <div class="mv-form-group">
+                            <label>
+                                <input type="checkbox" 
+                                    name="incluye_iva" 
+                                    id="incluye_iva" 
+                                    value="1" 
+                                    checked>
+                                <?php _e('Incluir IVA (19%)', 'modulo-ventas'); ?>
+                            </label>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Observaciones -->
-                <div class="postbox">
-                    <h2 class="hndle">
-                        <span><?php _e('Información Adicional', 'modulo-ventas'); ?></span>
-                    </h2>
-                    <div class="inside">
-                        <div class="mv-form-group">
-                            <label for="observaciones">
-                                <?php _e('Observaciones', 'modulo-ventas'); ?>
-                                <span class="description"><?php _e('(Visible para el cliente)', 'modulo-ventas'); ?></span>
-                            </label>
-                            <textarea name="observaciones" 
-                                      id="observaciones" 
-                                      rows="3" 
-                                      class="large-text"
-                                      placeholder="<?php esc_attr_e('Observaciones que aparecerán en la cotización...', 'modulo-ventas'); ?>"></textarea>
-                        </div>
-                        
-                        <div class="mv-form-group">
-                            <label for="notas_internas">
-                                <?php _e('Notas internas', 'modulo-ventas'); ?>
-                                <span class="description"><?php _e('(Solo uso interno)', 'modulo-ventas'); ?></span>
-                            </label>
-                            <textarea name="notas_internas" 
-                                      id="notas_internas" 
-                                      rows="3" 
-                                      class="large-text"
-                                      placeholder="<?php esc_attr_e('Notas privadas sobre esta cotización...', 'modulo-ventas'); ?>"></textarea>
-                        </div>
-                        
-                        <div class="mv-form-group">
-                            <label for="terminos_condiciones">
-                                <?php _e('Términos y condiciones', 'modulo-ventas'); ?>
-                            </label>
-                            <textarea name="terminos_condiciones" 
-                                      id="terminos_condiciones" 
-                                      rows="4" 
-                                      class="large-text"><?php echo esc_textarea($config['terminos_condiciones'] ?? ''); ?></textarea>
-                        </div>
-                    </div>
-                </div>
-                
             </div>
             
-            <!-- Columna lateral -->
-            <div class="mv-form-sidebar">
-                
-                <!-- Acciones -->
-                <div class="postbox">
-                    <h2 class="hndle">
-                        <span><?php _e('Acciones', 'modulo-ventas'); ?></span>
-                    </h2>
-                    <div class="inside">
-                        <div class="mv-actions">
-                            <button type="submit" name="action" value="save" class="button button-primary button-large" id="mv-btn-guardar">
-                                <span class="dashicons dashicons-saved"></span>
-                                <?php _e('Crear Cotización', 'modulo-ventas'); ?>
-                            </button>
-                            
-                            <button type="submit" name="action" value="save_and_new" class="button button-large">
-                                <?php _e('Crear y Nueva', 'modulo-ventas'); ?>
-                            </button>
-                            
-                            <button type="button" class="button button-large mv-btn-preview">
-                                <span class="dashicons dashicons-visibility"></span>
-                                <?php _e('Vista Previa', 'modulo-ventas'); ?>
-                            </button>
-                            
-                            <a href="<?php echo esc_url(mv_admin_url('cotizaciones')); ?>" class="button button-link">
-                                <?php _e('Cancelar', 'modulo-ventas'); ?>
-                            </a>
-                        </div>
+            <!-- Productos -->
+            <div class="postbox">
+                <h2 class="hndle">
+                    <span style="margin: 1em;"><?php _e('Productos / Servicios', 'modulo-ventas'); ?></span>
+                </h2>
+                <div class="inside">
+                    <!-- Buscador de productos -->
+                    <div class="mv-product-search">
+                        <label for="buscar_producto" class="screen-reader-text">
+                            <?php _e('Buscar producto', 'modulo-ventas'); ?>
+                        </label>
+                        <select id="buscar_producto" class="mv-select2-productos" style="width: 100%;">
+                            <option value=""><?php _e('Buscar productos por nombre, SKU o categoría...', 'modulo-ventas'); ?></option>
+                        </select>
                     </div>
-                </div>
-                
-                <!-- Resumen de totales -->
-                <div class="postbox">
-                    <h2 class="hndle">
-                        <span><?php _e('Resumen', 'modulo-ventas'); ?></span>
-                    </h2>
-                    <div class="inside">
-                        <table class="mv-totales-tabla">
-                            <tbody>
-                                <tr class="subtotal">
-                                    <th><?php _e('Subtotal', 'modulo-ventas'); ?></th>
-                                    <td><span id="mv-subtotal">0</span></td>
+                    
+                    <!-- Tabla de productos -->
+                    <div class="mv-productos-tabla-wrapper">
+                        <table class="wp-list-table widefat fixed striped" id="mv-tabla-productos">
+                            <thead>
+                                <tr>
+                                    <th class="column-producto"><?php _e('Producto/Servicio', 'modulo-ventas'); ?></th>
+                                    <?php if (mv_almacenes_activo()) : ?>
+                                    <th class="column-almacen"><?php _e('Almacén', 'modulo-ventas'); ?></th>
+                                    <?php endif; ?>
+                                    <th class="column-cantidad"><?php _e('Cantidad', 'modulo-ventas'); ?></th>
+                                    <th class="column-precio"><?php _e('Precio Unit.', 'modulo-ventas'); ?></th>
+                                    <th class="column-descuento"><?php _e('Descuento', 'modulo-ventas'); ?></th>
+                                    <th class="column-subtotal"><?php _e('Subtotal', 'modulo-ventas'); ?></th>
+                                    <th class="column-acciones"><?php _e('Accion', 'modulo-ventas'); ?></th>
                                 </tr>
-                                
-                                <tr class="descuento">
-                                    <th>
-                                        <?php _e('Descuento', 'modulo-ventas'); ?>
-                                        <div class="mv-descuento-controls">
-                                            <select name="tipo_descuento_global" id="tipo_descuento_global" class="small-text">
-                                                <option value="monto">$</option>
-                                                <option value="porcentaje">%</option>
-                                            </select>
-                                            <input type="number" 
-                                                   name="descuento_global" 
-                                                   id="descuento_global" 
-                                                   value="0" 
-                                                   min="0" 
-                                                   step="0.01"
-                                                   class="small-text">
-                                        </div>
-                                    </th>
-                                    <td><span id="mv-descuento-total">0</span></td>
-                                </tr>
-                                
-                                <tr class="subtotal-descuento">
-                                    <th><?php _e('Subtotal c/desc', 'modulo-ventas'); ?></th>
-                                    <td><span id="mv-subtotal-descuento">0</span></td>
-                                </tr>
-                                
-                                <tr class="iva" id="mv-row-iva">
-                                    <th><?php _e('IVA (19%)', 'modulo-ventas'); ?></th>
-                                    <td><span id="mv-iva">0</span></td>
-                                </tr>
-                                
-                                <tr class="envio">
-                                    <th>
-                                        <?php _e('Envío', 'modulo-ventas'); ?>
-                                        <input type="number" 
-                                               name="costo_envio" 
-                                               id="costo_envio" 
-                                               value="0" 
-                                               min="0" 
-                                               step="1"
-                                               class="small-text">
-                                    </th>
-                                    <td><span id="mv-envio">0</span></td>
-                                </tr>
-                                
-                                <tr class="total">
-                                    <th><?php _e('TOTAL', 'modulo-ventas'); ?></th>
-                                    <td><strong id="mv-total">0</strong></td>
+                            </thead>
+                            <tbody id="mv-productos-lista">
+                                <tr class="mv-no-productos">
+                                    <td colspan="<?php echo mv_almacenes_activo() ? '7' : '6'; ?>" class="text-center">
+                                        <?php _e('No hay productos agregados. Use el buscador para agregar productos.', 'modulo-ventas'); ?>
+                                    </td>
                                 </tr>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="<?php echo mv_almacenes_activo() ? '7' : '6'; ?>">
+                                        <button type="button" class="button mv-btn-agregar-linea">
+                                            <span class="dashicons dashicons-plus-alt"></span>
+                                            <?php _e('Agregar línea personalizada', 'modulo-ventas'); ?>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </table>
-                        
-                        <input type="hidden" name="subtotal" id="input-subtotal" value="0">
-                        <input type="hidden" name="total" id="input-total" value="0">
                     </div>
                 </div>
-                
-                <!-- Plantillas rápidas -->
-                <?php if (apply_filters('mv_mostrar_plantillas', true)) : ?>
-                <div class="postbox">
-                    <h2 class="hndle">
-                        <span><?php _e('Plantillas Rápidas', 'modulo-ventas'); ?></span>
-                    </h2>
-                    <div class="inside">
-                        <select id="mv-plantillas" class="widefat">
-                            <option value=""><?php _e('Seleccionar plantilla...', 'modulo-ventas'); ?></option>
-                            <?php
-                            $plantillas = apply_filters('mv_plantillas_cotizacion', array());
-                            foreach ($plantillas as $key => $plantilla) : ?>
-                                <option value="<?php echo esc_attr($key); ?>">
-                                    <?php echo esc_html($plantilla['nombre']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <p class="description">
-                            <?php _e('Cargue una plantilla predefinida con productos y configuración.', 'modulo-ventas'); ?>
-                        </p>
+            </div>            
+        </div>
+
+        <div class="mv-form-container">    
+
+            <!-- Observaciones -->
+            <div class="postbox">
+                <h2 class="hndle">
+                    <span style="margin: 1em;"><?php _e('Información Adicional', 'modulo-ventas'); ?></span>
+                </h2>
+                <div class="inside">
+                    <div class="mv-form-group">
+                        <label for="observaciones">
+                            <?php _e('Observaciones', 'modulo-ventas'); ?>
+                            <span class="description"><?php _e('(Visible para el cliente)', 'modulo-ventas'); ?></span>
+                        </label>
+                        <textarea name="observaciones" 
+                                    id="observaciones" 
+                                    rows="3" 
+                                    class="large-text"
+                                    placeholder="<?php esc_attr_e('Observaciones que aparecerán en la cotización...', 'modulo-ventas'); ?>"></textarea>
+                    </div>
+                    
+                    <div class="mv-form-group">
+                        <label for="notas_internas">
+                            <?php _e('Notas internas', 'modulo-ventas'); ?>
+                            <span class="description"><?php _e('(Solo uso interno)', 'modulo-ventas'); ?></span>
+                        </label>
+                        <textarea name="notas_internas" 
+                                    id="notas_internas" 
+                                    rows="3" 
+                                    class="large-text"
+                                    placeholder="<?php esc_attr_e('Notas privadas sobre esta cotización...', 'modulo-ventas'); ?>"></textarea>
+                    </div>
+                    
+                    <div class="mv-form-group">
+                        <label for="terminos_condiciones">
+                            <?php _e('Términos y condiciones', 'modulo-ventas'); ?>
+                        </label>
+                        <textarea name="terminos_condiciones" 
+                                    id="terminos_condiciones" 
+                                    rows="4" 
+                                    class="large-text"><?php echo esc_textarea($config['terminos_condiciones'] ?? ''); ?></textarea>
                     </div>
                 </div>
-                <?php endif; ?>
-                
+            </div>
+
+            <!-- Resumen de totales -->
+            <div class="postbox">
+                <h2 class="hndle">
+                    <span style="margin: 1em;"><?php _e('Resumen', 'modulo-ventas'); ?></span>
+                </h2>
+                <div class="inside">
+                    <table class="mv-totales-tabla">
+                        <tbody>
+                            <tr class="subtotal">
+                                <th><?php _e('Subtotal', 'modulo-ventas'); ?></th>
+                                <td><span id="mv-subtotal">0</span></td>
+                            </tr>
+                            
+                            <tr class="descuento">
+                                <th>
+                                    <?php _e('Descuento', 'modulo-ventas'); ?>
+                                    <div class="mv-descuento-controls">
+                                        <select name="tipo_descuento_global" id="tipo_descuento_global" class="small-text">
+                                            <option value="monto">$</option>
+                                            <option value="porcentaje">%</option>
+                                        </select>
+                                        <input type="number" 
+                                            name="descuento_global" 
+                                            id="descuento_global" 
+                                            value="0" 
+                                            min="0" 
+                                            step="0.01"
+                                            class="small-text">
+                                    </div>
+                                </th>
+                                <td><span id="mv-descuento-total">0</span></td>
+                            </tr>
+                            
+                            <tr class="subtotal-descuento">
+                                <th><?php _e('Subtotal c/desc', 'modulo-ventas'); ?></th>
+                                <td><span id="mv-subtotal-descuento">0</span></td>
+                            </tr>
+                            
+                            <tr class="envio">
+                                <th>
+                                    <?php _e('Envío', 'modulo-ventas'); ?>
+                                    <input type="number" 
+                                        name="costo_envio" 
+                                        id="costo_envio" 
+                                        value="0" 
+                                        min="0" 
+                                        step="1"
+                                        class="small-text">
+                                </th>
+                                <td><span id="mv-envio">0</span></td>
+                            </tr>
+                            
+                            <tr class="subtotal-con-envio">
+                                <th><?php _e('Subtotal + Envío', 'modulo-ventas'); ?></th>
+                                <td><span id="mv-subtotal-con-envio">0</span></td>
+                            </tr>
+                            
+                            <tr class="iva" id="mv-row-iva">
+                                <th><?php _e('IVA (19%)', 'modulo-ventas'); ?></th>
+                                <td><span id="mv-iva">0</span></td>
+                            </tr>
+                            
+                            <tr class="total">
+                                <th><?php _e('TOTAL', 'modulo-ventas'); ?></th>
+                                <td><strong id="mv-total">0</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <input type="hidden" name="subtotal" id="input-subtotal" value="0">
+                    <input type="hidden" name="total" id="input-total" value="0">
+                </div>
             </div>
         </div>
+
+        <div class="mv-form-container">
+
+            <!-- Acciones -->
+            <div class="postbox">
+                <h2 class="hndle">
+                    <span style="margin: 1em;"><?php _e('Acciones', 'modulo-ventas'); ?></span>
+                </h2>
+                <div class="inside">
+                    <div class="mv-actions">
+                        <button type="submit" name="action" value="save" class="button button-primary button-large" id="mv-btn-guardar">
+                            <span class="dashicons dashicons-saved"></span>
+                            <?php _e('Crear Cotización', 'modulo-ventas'); ?>
+                        </button>
+                        
+                        <button type="submit" name="action" value="save_and_new" class="button button-large">
+                            <?php _e('Crear y Nueva', 'modulo-ventas'); ?>
+                        </button>
+                        
+                        <button type="button" class="button button-large mv-btn-preview">
+                            <span class="dashicons dashicons-visibility"></span>
+                            <?php _e('Vista Previa', 'modulo-ventas'); ?>
+                        </button>
+                        
+                        <a href="<?php echo esc_url(mv_admin_url('cotizaciones')); ?>" class="button button-link">
+                            <?php _e('Cancelar', 'modulo-ventas'); ?>
+                        </a>
+                    </div>
+                </div>
+            </div>
+                
+            <!-- Plantillas rápidas -->
+            <?php if (apply_filters('mv_mostrar_plantillas', true)) : ?>
+            <div class="postbox">
+                <h2 class="hndle">
+                    <span style="margin: 1em;"><?php _e('Plantillas Rápidas', 'modulo-ventas'); ?></span>
+                </h2>
+                <div class="inside">
+                    <select id="mv-plantillas" class="widefat">
+                        <option value=""><?php _e('Seleccionar plantilla...', 'modulo-ventas'); ?></option>
+                        <?php
+                        $plantillas = apply_filters('mv_plantillas_cotizacion', array());
+                        foreach ($plantillas as $key => $plantilla) : ?>
+                            <option value="<?php echo esc_attr($key); ?>">
+                                <?php echo esc_html($plantilla['nombre']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <p class="description">
+                        <?php _e('Cargue una plantilla predefinida con productos y configuración.', 'modulo-ventas'); ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
     </form>
 </div>
 
@@ -442,10 +444,10 @@ if (!function_exists('mv_tooltip')) {
                             <?php _e('Razón Social', 'modulo-ventas'); ?>
                         </label>
                         <input type="text" 
-                               id="nuevo_cliente_razon_social" 
-                               name="cliente[razon_social]" 
-                               required
-                               class="regular-text">
+                            id="nuevo_cliente_razon_social" 
+                            name="cliente[razon_social]" 
+                            required
+                            class="regular-text">
                     </div>
                     
                     <div class="mv-form-group">
@@ -453,11 +455,11 @@ if (!function_exists('mv_tooltip')) {
                             <?php _e('RUT', 'modulo-ventas'); ?>
                         </label>
                         <input type="text" 
-                               id="nuevo_cliente_rut" 
-                               name="cliente[rut]" 
-                               required
-                               placeholder="12.345.678-9"
-                               class="regular-text">
+                            id="nuevo_cliente_rut" 
+                            name="cliente[rut]" 
+                            required
+                            placeholder="12.345.678-9"
+                            class="regular-text">
                     </div>
                     
                     <div class="mv-form-group">
@@ -465,9 +467,9 @@ if (!function_exists('mv_tooltip')) {
                             <?php _e('Giro Comercial', 'modulo-ventas'); ?>
                         </label>
                         <input type="text" 
-                               id="nuevo_cliente_giro" 
-                               name="cliente[giro_comercial]"
-                               class="regular-text">
+                            id="nuevo_cliente_giro" 
+                            name="cliente[giro_comercial]"
+                            class="regular-text">
                     </div>
                     
                     <div class="mv-form-group">
@@ -475,9 +477,9 @@ if (!function_exists('mv_tooltip')) {
                             <?php _e('Teléfono', 'modulo-ventas'); ?>
                         </label>
                         <input type="tel" 
-                               id="nuevo_cliente_telefono" 
-                               name="cliente[telefono]"
-                               class="regular-text">
+                            id="nuevo_cliente_telefono" 
+                            name="cliente[telefono]"
+                            class="regular-text">
                     </div>
                     
                     <div class="mv-form-group">
@@ -485,9 +487,9 @@ if (!function_exists('mv_tooltip')) {
                             <?php _e('Email', 'modulo-ventas'); ?>
                         </label>
                         <input type="email" 
-                               id="nuevo_cliente_email" 
-                               name="cliente[email]"
-                               class="regular-text">
+                            id="nuevo_cliente_email" 
+                            name="cliente[email]"
+                            class="regular-text">
                     </div>
                     
                     <div class="mv-form-group">
@@ -495,9 +497,9 @@ if (!function_exists('mv_tooltip')) {
                             <?php _e('Dirección', 'modulo-ventas'); ?>
                         </label>
                         <input type="text" 
-                               id="nuevo_cliente_direccion" 
-                               name="cliente[direccion_facturacion]"
-                               class="regular-text">
+                            id="nuevo_cliente_direccion" 
+                            name="cliente[direccion_facturacion]"
+                            class="regular-text">
                     </div>
                 </div>
                 
@@ -524,16 +526,16 @@ if (!function_exists('mv_tooltip')) {
             <div class="mv-producto-info">
                 <strong class="mv-producto-nombre">{{nombre}}</strong>
                 <input type="text" 
-                       name="items[{{index}}][nombre]" 
-                       value="{{nombre}}" 
-                       class="mv-producto-nombre-input" 
-                       style="display:none;">
+                    name="items[{{index}}][nombre]" 
+                    value="{{nombre}}" 
+                    class="mv-producto-nombre-input" 
+                    style="display:none;">
                 <small class="mv-producto-sku">SKU: {{sku}}</small>
             </div>
             <div class="mv-producto-descripcion">
                 <textarea name="items[{{index}}][descripcion]" 
-                          placeholder="<?php esc_attr_e('Descripción adicional (opcional)', 'modulo-ventas'); ?>" 
-                          rows="2"></textarea>
+                        placeholder="<?php esc_attr_e('Descripción adicional (opcional)', 'modulo-ventas'); ?>" 
+                        rows="2"></textarea>
             </div>
         </td>
         
@@ -549,20 +551,20 @@ if (!function_exists('mv_tooltip')) {
         
         <td class="column-cantidad">
             <input type="number" 
-                   name="items[{{index}}][cantidad]" 
-                   value="1" 
-                   min="0.01" 
-                   step="0.01" 
-                   class="mv-input-cantidad small-text">
+                name="items[{{index}}][cantidad]" 
+                value="1" 
+                min="0.01" 
+                step="0.01" 
+                class="mv-input-cantidad small-text">
         </td>
         
         <td class="column-precio">
             <input type="number" 
-                   name="items[{{index}}][precio_unitario]" 
-                   value="{{precio}}" 
-                   min="0" 
-                   step="1" 
-                   class="mv-input-precio regular-text">
+                name="items[{{index}}][precio_unitario]" 
+                value="{{precio}}" 
+                min="0" 
+                step="1" 
+                class="mv-input-precio regular-text">
             <input type="hidden" name="items[{{index}}][precio_original]" value="{{precio_original}}">
         </td>
         
@@ -573,11 +575,11 @@ if (!function_exists('mv_tooltip')) {
                     <option value="porcentaje">%</option>
                 </select>
                 <input type="number" 
-                       name="items[{{index}}][descuento_monto]" 
-                       value="0" 
-                       min="0" 
-                       step="0.01" 
-                       class="mv-input-descuento small-text">
+                    name="items[{{index}}][descuento_monto]" 
+                    value="0" 
+                    min="0" 
+                    step="0.01" 
+                    class="mv-input-descuento small-text">
             </div>
         </td>
         
@@ -598,7 +600,7 @@ if (!function_exists('mv_tooltip')) {
 /* Layout principal */
 .mv-form-container {
     display: grid;
-    grid-template-columns: 1fr 350px;
+    grid-template-columns: 2fr 1fr;
     gap: 20px;
     margin-top: 20px;
 }
@@ -673,7 +675,6 @@ if (!function_exists('mv_tooltip')) {
 }
 
 .column-producto {
-    width: 35%;
 }
 
 .column-almacen {
@@ -681,15 +682,15 @@ if (!function_exists('mv_tooltip')) {
 }
 
 .column-cantidad {
-    width: 10%;
+    width: 7%;
 }
 
 .column-precio {
-    width: 15%;
+    width: 10%;
 }
 
 .column-descuento {
-    width: 12%;
+    width: 15%;
 }
 
 .column-subtotal {
@@ -702,7 +703,7 @@ if (!function_exists('mv_tooltip')) {
     text-align: center;
 }
 
-.mv-producto-info {
+/*.mv-producto-info {
     margin-bottom: 5px;
 }
 
@@ -728,7 +729,7 @@ if (!function_exists('mv_tooltip')) {
     display: block;
     color: #646970;
     margin-top: 5px;
-}
+}*/
 
 /* Sidebar */
 .mv-actions {
@@ -801,7 +802,7 @@ if (!function_exists('mv_tooltip')) {
 .mv-modal-content {
     background-color: #fff;
     width: 90%;
-    max-width: 600px;
+    max-width: 800px;
     max-height: 90vh;
     overflow-y: auto;
     border-radius: 8px;
@@ -836,7 +837,6 @@ if (!function_exists('mv_tooltip')) {
 
 .mv-modal-footer {
     padding: 20px;
-    border-top: 1px solid #dcdcde;
     display: flex;
     justify-content: flex-end;
     gap: 10px;
@@ -924,32 +924,86 @@ jQuery(document).ready(function($) {
             minimumInputLength: 2,
             ajax: {
                 url: ajaxurl,
+                type: 'POST',
                 dataType: 'json',
                 delay: 250,
                 data: function(params) {
+                    console.log('=== ENVIANDO BÚSQUEDA ===');
+                    console.log('Término buscado:', params.term);
+                    console.log('Almacén ID:', $('#almacen_id').val());
+                    
                     return {
                         action: 'mv_buscar_productos',
                         busqueda: params.term,
-                        almacen_id: $('#almacen_id').val(),
+                        almacen_id: $('#almacen_id').val() || 0,
                         nonce: '<?php echo wp_create_nonce('modulo_ventas_nonce'); ?>'
                     };
                 },
                 processResults: function(data) {
+                    console.log('=== RESPUESTA DEL SERVIDOR ===');
+                    console.log('Respuesta completa:', data);
+                    
+                    if (data.data) {
+                        console.log('Búsqueda recibida por el servidor:', data.data.busqueda);
+                        console.log('Total de resultados:', data.data.total);
+                        console.log('Productos:', data.data.productos);
+                    }
+                    
                     if (data.success) {
+                        if (!data.data.productos || data.data.productos.length === 0) {
+                            console.log('No se encontraron productos');
+                            return {
+                                results: [{
+                                    id: 0,
+                                    text: data.data.mensaje || '<?php _e('No se encontraron productos', 'modulo-ventas'); ?>',
+                                    disabled: true
+                                }]
+                            };
+                        }
+                        
                         return {
                             results: data.data.productos
                         };
                     }
-                    return { results: [] };
+                    
+                    console.error('Error en la respuesta:', data);
+                    return { 
+                        results: [{
+                            id: 0,
+                            text: '<?php _e('Error al buscar productos', 'modulo-ventas'); ?>',
+                            disabled: true
+                        }]
+                    };
                 },
-                cache: true
+                error: function(xhr, textStatus, errorThrown) {
+                    console.error('=== ERROR AJAX ===');
+                    console.error('Status:', textStatus);
+                    console.error('Error:', errorThrown);
+                    console.error('Response:', xhr.responseText);
+                },
+                cache: false
             },
             templateResult: formatProducto,
             templateSelection: function(producto) {
-                if (producto.id) {
+                if (producto.id && producto.id !== '0') {
                     agregarProducto(producto);
                 }
                 return null;
+            },
+            language: {
+                searching: function() {
+                    return '<?php _e('Buscando...', 'modulo-ventas'); ?>';
+                },
+                noResults: function() {
+                    return '<?php _e('No se encontraron resultados', 'modulo-ventas'); ?>';
+                },
+                errorLoading: function() {
+                    return '<?php _e('Error al cargar los resultados', 'modulo-ventas'); ?>';
+                },
+                inputTooShort: function(args) {
+                    var remainingChars = args.minimum - args.input.length;
+                    return '<?php _e('Por favor ingrese', 'modulo-ventas'); ?> ' + remainingChars + ' <?php _e('o más caracteres', 'modulo-ventas'); ?>';
+                }
             }
         });
     }
@@ -958,19 +1012,76 @@ jQuery(document).ready(function($) {
     function formatProducto(producto) {
         if (!producto.id) return producto.text;
         
+        // Si es un mensaje (no un producto real)
+        if (producto.id === 0 || producto.disabled) {
+            return $('<div class="select2-no-results">' + producto.text + '</div>');
+        }
+        
+        var stockClass = producto.stock > 0 ? 'in-stock' : 'out-of-stock';
+        var stockText = producto.stock > 0 ? 'Stock: ' + producto.stock : 'Sin stock';
+        
         var $producto = $(
             '<div class="mv-producto-result">' +
                 '<div class="mv-producto-nombre">' + producto.nombre + '</div>' +
                 '<div class="mv-producto-meta">' +
-                    'SKU: ' + (producto.sku || 'N/A') + ' | ' +
-                    'Stock: ' + (producto.stock || 0) + ' | ' +
-                    'Precio: ' + moduloVentasAjax.currency_symbol + producto.precio +
+                    '<span class="sku">SKU: ' + (producto.sku || 'N/A') + '</span> | ' +
+                    '<span class="stock ' + stockClass + '">' + stockText + '</span> | ' +
+                    '<span class="precio">Precio: ' + moduloVentasAjax.currency_symbol + ' ' + 
+                    new Intl.NumberFormat('es-CL').format(producto.precio) + '</span>' +
                 '</div>' +
             '</div>'
         );
         
         return $producto;
     }
+
+    // Agregar estos estilos CSS para mejorar la visualización
+    var styles = `
+    <style>
+    .select2-results__option {
+        padding: 8px 12px !important;
+    }
+
+    .mv-producto-result {
+        line-height: 1.4;
+    }
+
+    .mv-producto-nombre {
+        font-weight: 600;
+        margin-bottom: 3px;
+    }
+
+    .mv-producto-meta {
+        font-size: 12px;
+        color: #666;
+    }
+
+    .mv-producto-meta .sku {
+        color: #2271b1;
+    }
+
+    .mv-producto-meta .stock.in-stock {
+        color: #46b450;
+    }
+
+    .mv-producto-meta .stock.out-of-stock {
+        color: #dc3232;
+    }
+
+    .mv-producto-meta .precio {
+        font-weight: 600;
+        color: #23282d;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] .mv-producto-meta {
+        color: #fff;
+        opacity: 0.9;
+    }
+    </style>
+    `;
+
+    // Agregar los estilos al head
+    $('head').append(styles);
     
     // Mostrar información del cliente seleccionado
     $('#cliente_id').on('change', function() {
@@ -1006,20 +1117,22 @@ jQuery(document).ready(function($) {
         
         $submit.prop('disabled', true).text('<?php _e('Creando...', 'modulo-ventas'); ?>');
         
+        // Recopilar datos del formulario
+        var datosCliente = {};
+        $form.find('input').each(function() {
+            var match = $(this).attr('name').match(/cliente\[(.+)\]/);
+            if (match) {
+                datosCliente[match[1]] = $(this).val();
+            }
+        });
+        
         $.post(ajaxurl, {
             action: 'mv_crear_cliente_rapido',
-            cliente: $form.serializeArray().reduce(function(obj, item) {
-                var keys = item.name.match(/\[([^\]]+)\]/g);
-                if (keys) {
-                    var key = keys[0].replace(/[\[\]]/g, '');
-                    obj[key] = item.value;
-                }
-                return obj;
-            }, {}),
+            cliente: datosCliente,
             nonce: '<?php echo wp_create_nonce('modulo_ventas_nonce'); ?>'
         }, function(response) {
             if (response.success) {
-                // Agregar cliente al select
+                // Agregar cliente al select con todos los datos
                 var nuevoCliente = response.data.cliente;
                 var option = new Option(
                     nuevoCliente.razon_social + ' - ' + nuevoCliente.rut,
@@ -1027,6 +1140,15 @@ jQuery(document).ready(function($) {
                     true,
                     true
                 );
+                
+                // Agregar atributos de datos
+                $(option).attr({
+                    'data-rut': nuevoCliente.rut || '',
+                    'data-email': nuevoCliente.email || '',
+                    'data-telefono': nuevoCliente.telefono || '',
+                    'data-direccion': nuevoCliente.direccion_facturacion || '',
+                    'data-giro': nuevoCliente.giro_comercial || ''
+                });
                 
                 $('#cliente_id').append(option).trigger('change');
                 
@@ -1037,8 +1159,10 @@ jQuery(document).ready(function($) {
                 // Mostrar mensaje
                 mvShowToast('<?php _e('Cliente creado exitosamente', 'modulo-ventas'); ?>', 'success');
             } else {
-                alert(response.data.message);
+                alert(response.data.message || '<?php _e('Error al crear el cliente', 'modulo-ventas'); ?>');
             }
+        }).fail(function() {
+            alert('<?php _e('Error de conexión', 'modulo-ventas'); ?>');
         }).always(function() {
             $submit.prop('disabled', false).text('<?php _e('Crear Cliente', 'modulo-ventas'); ?>');
         });
@@ -1046,6 +1170,12 @@ jQuery(document).ready(function($) {
     
     // Agregar producto a la tabla
     function agregarProducto(producto) {
+        // Verificar que el producto tenga los datos necesarios
+        if (!producto || !producto.id) {
+            console.error('Producto inválido:', producto);
+            return;
+        }
+        
         // Eliminar mensaje de "no hay productos"
         $('.mv-no-productos').remove();
         
@@ -1060,19 +1190,33 @@ jQuery(document).ready(function($) {
         // Obtener template
         var template = $('#mv-template-producto').html();
         
-        // Reemplazar variables
-        var html = template
-            .replace(/{{index}}/g, productoIndex)
-            .replace(/{{producto_id}}/g, producto.id)
-            .replace(/{{variacion_id}}/g, producto.variacion_id || 0)
-            .replace(/{{nombre}}/g, producto.nombre)
-            .replace(/{{sku}}/g, producto.sku || '')
-            .replace(/{{precio}}/g, producto.precio)
-            .replace(/{{precio_original}}/g, producto.precio_regular || producto.precio)
-            .replace(/{{opciones_almacen}}/g, opcionesAlmacen);
+        // Usar valores por defecto si faltan algunos campos
+        var datos = {
+            index: productoIndex,
+            producto_id: producto.id || 0,
+            variacion_id: producto.variacion_id || 0,
+            nombre: producto.nombre || producto.text || '',
+            sku: producto.sku || '',
+            precio: producto.precio || 0,
+            precio_original: producto.precio_regular || producto.precio || 0,
+            opciones_almacen: opcionesAlmacen
+        };
+        
+        // Reemplazar variables en el template
+        var html = template;
+        for (var key in datos) {
+            var regex = new RegExp('{{' + key + '}}', 'g');
+            html = html.replace(regex, datos[key]);
+        }
         
         // Agregar a la tabla
         $('#mv-productos-lista').append(html);
+        
+        // Si hay stock disponible, mostrarlo
+        if (producto.stock !== undefined) {
+            var $row = $('#mv-productos-lista tr:last');
+            $row.find('.mv-stock-cantidad').text(producto.stock);
+        }
         
         // Incrementar índice
         productoIndex++;
@@ -1082,6 +1226,8 @@ jQuery(document).ready(function($) {
         
         // Limpiar select de productos
         $('.mv-select2-productos').val(null).trigger('change');
+        
+        console.log('Producto agregado:', datos);
     }
     
     // Agregar línea personalizada
@@ -1220,21 +1366,25 @@ jQuery(document).ready(function($) {
         var subtotalConDescuento = subtotal - descuentoGlobalMonto;
         subtotalConDescuento = Math.max(0, subtotalConDescuento);
         
-        // IVA
-        var iva = incluyeIva ? subtotalConDescuento * 0.19 : 0;
-        
         // Envío
         var envio = parseFloat($('#costo_envio').val()) || 0;
         
+        // Subtotal con envío
+        var subtotalConEnvio = subtotalConDescuento + envio;
+        
+        // IVA (se calcula después del envío)
+        var iva = incluyeIva ? subtotalConEnvio * 0.19 : 0;
+        
         // Total
-        var total = subtotalConDescuento + iva + envio;
+        var total = subtotalConEnvio + iva;
         
         // Actualizar UI
         $('#mv-subtotal').text(formatearPrecio(subtotal));
         $('#mv-descuento-total').text(formatearPrecio(descuentoGlobalMonto));
         $('#mv-subtotal-descuento').text(formatearPrecio(subtotalConDescuento));
-        $('#mv-iva').text(formatearPrecio(iva));
         $('#mv-envio').text(formatearPrecio(envio));
+        $('#mv-subtotal-con-envio').text(formatearPrecio(subtotalConEnvio));
+        $('#mv-iva').text(formatearPrecio(iva));
         $('#mv-total').text(formatearPrecio(total));
         
         // Actualizar inputs hidden

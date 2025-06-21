@@ -1,0 +1,20 @@
+[2025-06-16 18:47:21] INFO: Tablas de base de datos creadas/actualizadas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-06-16 18:47:21] INFO: Plugin activado correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-06-16 18:48:41] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method Modulo_Ventas_DB::obtener_estadisticas_cotizaciones() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php:26
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(270): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_cotizaciones('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\cotizaciones-list.php","line":26,"type":1}
+[2025-06-16 18:48:53] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method stdClass::get_messages() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\nueva-cotizacion.php:171
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(297): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_nueva_cotizacion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\nueva-cotizacion.php","line":171,"type":1}

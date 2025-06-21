@@ -378,14 +378,22 @@
     border-radius: 3px;
 }
 
+/* Contenedor con scroll horizontal */
+.gab-table-container {
+    max-width: 100%;
+    overflow-x: auto;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
 /* Tabla de reportes con scroll horizontal */
 #stock-report-table {
-    min-width: 800px;
+    min-width: 1200px;
 }
 
 #stock-report-table th,
 #stock-report-table td {
-    white-space: nowrap;
+    white-space: pre-wrap;
     padding: 8px 12px;
 }
 
@@ -428,13 +436,6 @@
 
 .stock-number-out {
     color: #999;
-}
-
-/* Contenedor con scroll horizontal */
-.gab-table-container {
-    overflow-x: auto;
-    border: 1px solid #ddd;
-    border-radius: 6px;
 }
 
 /* Mejoras para filtros */
@@ -760,4 +761,28 @@ tr.all-stock-depleted:hover {
     white-space: nowrap;
     z-index: 1000;
     margin-bottom: 5px;
+}
+
+/* Indicador de stock en lista de productos */
+.gab-stock-indicator {
+    margin-left: 10px;
+}
+
+.gab-has-stock {
+    position: relative;
+}
+
+.gab-has-stock:hover::before {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    background: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 3px;
+    white-space: pre-line;
+    z-index: 1000;
+    font-size: 12px;
+    min-width: 200px;
 }
