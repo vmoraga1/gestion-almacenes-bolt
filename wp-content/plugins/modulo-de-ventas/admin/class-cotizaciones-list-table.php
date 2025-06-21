@@ -187,20 +187,32 @@ class Cotizaciones_List_Table extends WP_List_Table {
      * Columna fecha vencimiento
      */
     public function column_fecha_vencimiento($item) {
-        if (empty($item['fecha_vencimiento'])) {
-            return '-';
+        if (!empty($item['fecha_vencimiento'])) {
+            $fecha = strtotime($item['fecha_vencimiento']);
+            $hoy = strtotime(date('Y-m-d'));
+            
+            // Calcular días restantes
+            $dias_restantes = floor(($fecha - $hoy) / (60 * 60 * 24));
+            
+            $clase = '';
+            if ($dias_restantes < 0) {
+                $clase = 'vencida';
+                $texto = __('Vencida', 'modulo-ventas');
+            } elseif ($dias_restantes <= 3) {
+                $clase = 'por-vencer';
+                $texto = sprintf(_n('%d día', '%d días', $dias_restantes, 'modulo-ventas'), $dias_restantes);
+            } else {
+                $texto = date_i18n(get_option('date_format'), $fecha);
+            }
+            
+            return sprintf(
+                '<span class="fecha-vencimiento %s">%s</span>',
+                esc_attr($clase),
+                esc_html($texto)
+            );
         }
         
-        $fecha_venc = strtotime($item['fecha_vencimiento']);
-        $hoy = strtotime(date('Y-m-d'));
-        
-        $fecha_formateada = date_i18n(get_option('date_format'), $fecha_venc);
-        
-        if ($fecha_venc < $hoy && $item['estado'] !== 'aceptada' && $item['estado'] !== 'convertida') {
-            return '<span style="color: #d63638;">' . $fecha_formateada . '</span>';
-        }
-        
-        return $fecha_formateada;
+        return '-';
     }
     
     /**
@@ -287,6 +299,15 @@ class Cotizaciones_List_Table extends WP_List_Table {
         // Filtro por estado
         if (isset($_REQUEST['estado']) && !empty($_REQUEST['estado'])) {
             $args['estado'] = sanitize_text_field($_REQUEST['estado']);
+        }
+
+        // Filtro por fechas
+        if (isset($_REQUEST['fecha_desde']) && !empty($_REQUEST['fecha_desde'])) {
+            $args['fecha_desde'] = sanitize_text_field($_REQUEST['fecha_desde']);
+        }
+
+        if (isset($_REQUEST['fecha_hasta']) && !empty($_REQUEST['fecha_hasta'])) {
+            $args['fecha_hasta'] = sanitize_text_field($_REQUEST['fecha_hasta']);
         }
         
         // Obtener cotizaciones

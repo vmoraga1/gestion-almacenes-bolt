@@ -146,7 +146,7 @@ class Modulo_Ventas_Ajax {
         
         if ($sku_exacto) {
             $product = wc_get_product($sku_exacto);
-            if ($product && $product->is_purchasable() && $product->is_in_stock()) {
+            if ($product) {
                 $productos_encontrados[] = $product;
                 $ids_procesados[] = $product->get_id();
             }
@@ -156,31 +156,23 @@ class Modulo_Ventas_Ajax {
         if (count($productos_encontrados) < $limite) {
             $sku_search = '%' . $wpdb->esc_like(strtolower($busqueda)) . '%';
             
+            // Buscar sin filtro de stock
             $productos_sku = $wpdb->get_col($wpdb->prepare("
                 SELECT DISTINCT p.ID 
                 FROM {$wpdb->posts} p
                 INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
-                INNER JOIN {$wpdb->postmeta} pm2 ON p.ID = pm2.post_id
                 WHERE p.post_type IN ('product', 'product_variation')
                 AND p.post_status = 'publish'
                 AND pm.meta_key = '_sku' 
                 AND LOWER(pm.meta_value) LIKE %s
-                AND pm2.meta_key = '_stock_status'
-                AND pm2.meta_value = 'instock'
                 AND p.ID NOT IN (" . implode(',', array_map('intval', $ids_procesados ?: [0])) . ")
-                ORDER BY 
-                    CASE 
-                        WHEN LOWER(pm.meta_value) = LOWER(%s) THEN 1
-                        WHEN LOWER(pm.meta_value) LIKE %s THEN 2
-                        ELSE 3 
-                    END,
-                    p.post_title
+                ORDER BY p.post_title
                 LIMIT %d
-            ", $sku_search, $busqueda, $busqueda . '%', $limite - count($productos_encontrados)));
+            ", $sku_search, $limite - count($productos_encontrados)));
             
             foreach ($productos_sku as $product_id) {
                 $product = wc_get_product($product_id);
-                if ($product && $product->is_purchasable()) {
+                if ($product) {
                     // Para variaciones, obtener el producto padre
                     if ($product->get_type() === 'variation') {
                         $parent_id = $product->get_parent_id();
@@ -199,21 +191,15 @@ class Modulo_Ventas_Ajax {
             }
         }
         
-        // 3. Buscar por nombre
+        // 3. Buscar por nombre (sin filtro de stock)
         if (count($productos_encontrados) < $limite) {
             $args = array(
                 'post_type' => 'product',
                 'posts_per_page' => $limite - count($productos_encontrados),
                 'post_status' => 'publish',
                 's' => $busqueda,
-                'post__not_in' => $ids_procesados ?: [0],
-                'meta_query' => array(
-                    array(
-                        'key' => '_stock_status',
-                        'value' => 'instock',
-                        'compare' => '='
-                    )
-                )
+                'post__not_in' => $ids_procesados ?: [0]
+                // REMOVIDO el meta_query de stock_status
             );
             
             $query = new WP_Query($args);
@@ -222,7 +208,7 @@ class Modulo_Ventas_Ajax {
                 while ($query->have_posts()) {
                     $query->the_post();
                     $product = wc_get_product(get_the_ID());
-                    if ($product && $product->is_purchasable()) {
+                    if ($product) {
                         $productos_encontrados[] = $product;
                         $ids_procesados[] = $product->get_id();
                     }
@@ -242,8 +228,9 @@ class Modulo_Ventas_Ajax {
             return;
         }
         
-        // Formatear productos para Select2
-        $productos = array();
+        // Separar productos con stock y sin stock
+        $productos_con_stock = array();
+        $productos_sin_stock = array();
         
         foreach ($productos_encontrados as $product) {
             // Obtener stock
@@ -254,52 +241,89 @@ class Modulo_Ventas_Ajax {
                 $stock_disponible = mv_get_stock_almacen($product->get_id(), $almacen_id);
             }
             
+            // Determinar si tiene stock
+            $tiene_stock = ($product->is_in_stock() && $stock_disponible > 0) || 
+                        (!$product->managing_stock() && $product->is_in_stock());
+            
             $precio = $product->get_price();
-            $precio_formateado = number_format($precio, 0, ',', '.');
+            $precio_formateado = $precio ? number_format($precio, 0, ',', '.') : '0';
+            
+            // Agregar indicador de estado de stock al nombre
+            $nombre_display = $product->get_name();
+            if (!$tiene_stock) {
+                $nombre_display .= ' (Agotado)';
+            }
             
             $producto_data = array(
                 'id' => $product->get_id(),
-                'text' => $product->get_name() . ' - $' . $precio_formateado,
+                'text' => $nombre_display . ' - $' . $precio_formateado,
                 'nombre' => $product->get_name(),
                 'sku' => $product->get_sku() ?: 'N/A',
-                'precio' => $precio,
+                'precio' => $precio ?: 0,
                 'precio_regular' => $product->get_regular_price() ?: $precio,
                 'precio_oferta' => $product->get_sale_price() ?: '',
                 'stock' => $stock_disponible ?: 0,
                 'variacion_id' => 0,
-                'es_variable' => $product->is_type('variable')
+                'es_variable' => $product->is_type('variable'),
+                'en_stock' => $tiene_stock,
+                'gestion_stock' => $product->managing_stock()
             );
             
-            // Si es un producto variable, obtener la primera variación
+            // Si es un producto variable, obtener la primera variación disponible
             if ($product->is_type('variable')) {
                 $variaciones = $product->get_available_variations();
                 if (!empty($variaciones)) {
-                    $primera_variacion = reset($variaciones);
-                    $var_obj = wc_get_product($primera_variacion['variation_id']);
+                    // Buscar primera variación con stock
+                    $variacion_seleccionada = null;
+                    foreach ($variaciones as $variacion) {
+                        $var_obj = wc_get_product($variacion['variation_id']);
+                        if ($var_obj && $var_obj->is_in_stock()) {
+                            $variacion_seleccionada = $variacion;
+                            break;
+                        }
+                    }
                     
-                    if ($var_obj && $var_obj->is_in_stock()) {
-                        $producto_data['variacion_id'] = $primera_variacion['variation_id'];
-                        $producto_data['precio'] = $var_obj->get_price() ?: $precio;
-                        $producto_data['precio_regular'] = $var_obj->get_regular_price() ?: $producto_data['precio_regular'];
-                        $producto_data['precio_oferta'] = $var_obj->get_sale_price() ?: '';
-                        
-                        if ($almacen_id && function_exists('mv_get_stock_almacen')) {
-                            $producto_data['stock'] = mv_get_stock_almacen($primera_variacion['variation_id'], $almacen_id);
-                        } else {
-                            $producto_data['stock'] = $var_obj->get_stock_quantity() ?: 0;
+                    // Si no hay ninguna con stock, tomar la primera
+                    if (!$variacion_seleccionada && !empty($variaciones)) {
+                        $variacion_seleccionada = reset($variaciones);
+                    }
+                    
+                    if ($variacion_seleccionada) {
+                        $var_obj = wc_get_product($variacion_seleccionada['variation_id']);
+                        if ($var_obj) {
+                            $producto_data['variacion_id'] = $variacion_seleccionada['variation_id'];
+                            $producto_data['precio'] = $var_obj->get_price() ?: $precio;
+                            $producto_data['precio_regular'] = $var_obj->get_regular_price() ?: $producto_data['precio_regular'];
+                            $producto_data['precio_oferta'] = $var_obj->get_sale_price() ?: '';
+                            
+                            if ($almacen_id && function_exists('mv_get_stock_almacen')) {
+                                $producto_data['stock'] = mv_get_stock_almacen($variacion_seleccionada['variation_id'], $almacen_id);
+                            } else {
+                                $producto_data['stock'] = $var_obj->get_stock_quantity() ?: 0;
+                            }
                         }
                     }
                 }
             }
             
-            $productos[] = $producto_data;
+            // Separar por disponibilidad de stock
+            if ($tiene_stock) {
+                $productos_con_stock[] = $producto_data;
+            } else {
+                $productos_sin_stock[] = $producto_data;
+            }
         }
         
-        // Siempre incluir estos campos en la respuesta
+        // Combinar arrays: primero con stock, luego sin stock
+        $productos = array_merge($productos_con_stock, $productos_sin_stock);
+        
+        // Respuesta con todos los productos
         wp_send_json_success(array(
             'productos' => $productos,
             'total' => count($productos),
-            'busqueda' => $busqueda
+            'busqueda' => $busqueda,
+            'con_stock' => count($productos_con_stock),
+            'sin_stock' => count($productos_sin_stock)
         ));
     }
     

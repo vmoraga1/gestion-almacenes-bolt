@@ -25,22 +25,18 @@ if (!$cotizacion_id) {
 }
 
 // Obtener instancia de la base de datos
-$db = Modulo_Ventas_DB::get_instance();
-$cotizacion = $db->get_cotizacion($cotizacion_id);
+$db = new Modulo_Ventas_DB();
+$cotizacion = $db->obtener_cotizacion($cotizacion_id);
 
 if (!$cotizacion) {
     wp_die(__('Cotización no encontrada.', 'modulo-ventas'));
 }
 
 // Obtener items de la cotización
-$items = $db->get_items_cotizacion($cotizacion_id);
+$items = $db->obtener_items_cotizacion($cotizacion_id);
 
 // Obtener datos del cliente
-global $wpdb;
-$tabla_clientes = $wpdb->prefix . 'sm_clientes';
-$cliente = $wpdb->get_row($wpdb->prepare("
-    SELECT * FROM $tabla_clientes WHERE id = %d
-", $cotizacion->cliente_id));
+$cliente = $db->obtener_cliente($cotizacion->cliente_id);
 
 // Verificar si el plugin de gestión de almacenes está activo
 $gestion_almacenes_activo = class_exists('Gestion_Almacenes_DB');
@@ -164,20 +160,36 @@ if (!empty($cotizacion->vendedor_id)) {
                             <tbody>
                                 <?php if ($items): ?>
                                     <?php foreach ($items as $index => $item): 
-                                        // Obtener producto de la tabla de productos
-                                        $tabla_productos = $wpdb->prefix . 'sm_productos';
-                                        $producto = $wpdb->get_row($wpdb->prepare("
-                                            SELECT * FROM $tabla_productos WHERE id = %d
-                                        ", $item->producto_id));
+                                        // Obtener producto de WooCommerce
+                                        $producto = null;
+                                        $nombre_producto = '';
+                                        $sku_producto = '';
+                                        
+                                        if ($item->producto_id) {
+                                            $producto = wc_get_product($item->producto_id);
+                                            
+                                            if ($producto) {
+                                                $nombre_producto = $producto->get_name();
+                                                $sku_producto = $producto->get_sku();
+                                            } else {
+                                                // Si no se encuentra en WooCommerce, usar los datos guardados
+                                                $nombre_producto = $item->nombre ?: 'Producto #' . $item->producto_id;
+                                                $sku_producto = $item->sku ?: 'N/A';
+                                            }
+                                        } else {
+                                            // Producto personalizado (sin ID de WooCommerce)
+                                            $nombre_producto = $item->nombre ?: 'Producto personalizado';
+                                            $sku_producto = $item->sku ?: 'N/A';
+                                        }
                                     ?>
                                         <tr>
                                             <td class="column-item">
                                                 <?php echo $index + 1; ?>
                                             </td>
                                             <td class="column-descripcion">
-                                                <strong><?php echo esc_html($producto ? $producto->nombre : $item->nombre ?? 'Producto'); ?></strong>
-                                                <?php if ($producto && $producto->codigo): ?>
-                                                    <br><small>SKU: <?php echo esc_html($producto->codigo); ?></small>
+                                                <strong><?php echo esc_html($nombre_producto); ?></strong>
+                                                <?php if ($sku_producto && $sku_producto !== 'N/A'): ?>
+                                                    <br><small>SKU: <?php echo esc_html($sku_producto); ?></small>
                                                 <?php endif; ?>
                                                 <?php if (!empty($item->descripcion)): ?>
                                                     <br><small><?php echo esc_html($item->descripcion); ?></small>
@@ -201,38 +213,17 @@ if (!empty($cotizacion->vendedor_id)) {
                                                 </td>
                                                 <td class="column-stock">
                                                     <?php
-                                                    if ($producto && $gestion_almacenes_activo) {
-                                                        $stock_info = array();
-                                                        $stock_total = 0;
-                                                        
-                                                        // Si hay un almacén específico seleccionado
-                                                        if (!empty($item->almacen_id)) {
-                                                            $stock_almacen = $gestion_almacenes_db->get_warehouse_stock($item->almacen_id, $item->producto_id);
-                                                            echo '<strong>' . intval($stock_almacen) . '</strong>';
+                                                    $stock_disponible = 0;
+                                                    
+                                                    if ($producto && $producto->managing_stock()) {
+                                                        if (!empty($item->almacen_id) && function_exists('mv_get_stock_almacen')) {
+                                                            $stock_disponible = mv_get_stock_almacen($item->producto_id, $item->almacen_id);
                                                         } else {
-                                                            // Mostrar stock total de todos los almacenes
-                                                            $stock_por_almacen = $gestion_almacenes_db->get_product_warehouse_stock($item->producto_id);
-                                                            
-                                                            foreach ($almacenes as $almacen) {
-                                                                $stock_cantidad = isset($stock_por_almacen[$almacen->id]) ? $stock_por_almacen[$almacen->id] : 0;
-                                                                if ($stock_cantidad > 0) {
-                                                                    $stock_info[] = $almacen->name . ': ' . $stock_cantidad;
-                                                                    $stock_total += $stock_cantidad;
-                                                                }
-                                                            }
-                                                            
-                                                            if (!empty($stock_info)) {
-                                                                echo '<span class="mv-stock-info" title="' . esc_attr(implode("\n", $stock_info)) . '">';
-                                                                echo '<strong>' . $stock_total . '</strong>';
-                                                                echo ' <span class="dashicons dashicons-info"></span>';
-                                                                echo '</span>';
-                                                            } else {
-                                                                echo '<span class="mv-text-danger">0</span>';
-                                                            }
+                                                            $stock_disponible = $producto->get_stock_quantity();
                                                         }
-                                                    } else {
-                                                        echo '-';
                                                     }
+                                                    
+                                                    echo '<strong>' . number_format($stock_disponible, 2) . '</strong>';
                                                     ?>
                                                 </td>
                                             <?php endif; ?>
@@ -241,8 +232,17 @@ if (!empty($cotizacion->vendedor_id)) {
                                             <td class="column-precio"><?php echo wc_price($item->precio_unitario); ?></td>
                                             <td class="column-descuento">
                                                 <?php 
-                                                if ($item->descuento > 0) {
-                                                    echo wc_price($item->descuento);
+                                                $descuento_item = 0;
+                                                if (isset($item->descuento_monto) && $item->descuento_monto > 0) {
+                                                    $descuento_item = $item->descuento_monto;
+                                                    echo wc_price($descuento_item);
+                                                    if (isset($item->tipo_descuento) && $item->tipo_descuento == 'monto') {
+                                                        echo ' <small>($)</small>';
+                                                    }
+                                                } elseif (isset($item->descuento_porcentaje) && $item->descuento_porcentaje > 0) {
+                                                    echo esc_html($item->descuento_porcentaje) . '%';
+                                                    $descuento_item = ($item->precio_unitario * $item->cantidad * $item->descuento_porcentaje) / 100;
+                                                    echo '<br><small>(' . wc_price($descuento_item) . ')</small>';
                                                 } else {
                                                     echo '-';
                                                 }
@@ -267,61 +267,69 @@ if (!empty($cotizacion->vendedor_id)) {
                                         <?php _e('Subtotal:', 'modulo-ventas'); ?>
                                     </td>
                                     <td class="column-total">
-                                        <?php echo wc_price($cotizacion->subtotal); ?>
+                                        <?php echo wc_price($cotizacion->subtotal ?? 0); ?>
                                     </td>
                                 </tr>
                                 
-                                <?php if ($cotizacion->descuento_global > 0): ?>
+                                <?php 
+                                // Calcular descuento global
+                                $descuento_global_monto = 0;
+                                $tiene_descuento = false;
+                                
+                                if (isset($cotizacion->descuento_monto) && $cotizacion->descuento_monto > 0) {
+                                    $descuento_global_monto = $cotizacion->descuento_monto;
+                                    $tiene_descuento = true;
+                                } elseif (isset($cotizacion->descuento_porcentaje) && $cotizacion->descuento_porcentaje > 0) {
+                                    $descuento_global_monto = ($cotizacion->subtotal * $cotizacion->descuento_porcentaje) / 100;
+                                    $tiene_descuento = true;
+                                }
+                                ?>
+                                
+                                <?php if ($tiene_descuento): ?>
                                 <tr class="mv-totales-row">
                                     <td colspan="<?php echo $gestion_almacenes_activo ? '7' : '5'; ?>" class="text-right">
                                         <?php 
-                                        if ($cotizacion->tipo_descuento_global == 'porcentaje') {
-                                            echo sprintf(__('Descuento (%s%%):', 'modulo-ventas'), number_format($cotizacion->descuento_global, 0));
+                                        if (isset($cotizacion->descuento_porcentaje) && $cotizacion->descuento_porcentaje > 0) {
+                                            echo sprintf(__('Descuento (%s%%):', 'modulo-ventas'), number_format($cotizacion->descuento_porcentaje, 0));
                                         } else {
                                             _e('Descuento:', 'modulo-ventas');
                                         }
                                         ?>
                                     </td>
                                     <td class="column-total">
-                                        -<?php 
-                                        if ($cotizacion->tipo_descuento_global == 'porcentaje') {
-                                            echo wc_price($cotizacion->subtotal * ($cotizacion->descuento_global / 100));
-                                        } else {
-                                            echo wc_price($cotizacion->descuento_global);
-                                        }
-                                        ?>
+                                        -<?php echo wc_price($descuento_global_monto); ?>
                                     </td>
                                 </tr>
                                 <?php endif; ?>
                                 
-                                <?php if ($cotizacion->incluye_iva): ?>
+                                <?php if (isset($cotizacion->incluye_iva) && $cotizacion->incluye_iva): ?>
                                 <tr class="mv-totales-row">
                                     <td colspan="<?php echo $gestion_almacenes_activo ? '7' : '5'; ?>" class="text-right">
                                         <?php _e('IVA (19%):', 'modulo-ventas'); ?>
                                     </td>
                                     <td class="column-total">
                                         <?php 
-                                        $base_imponible = $cotizacion->subtotal;
-                                        if ($cotizacion->descuento_global > 0) {
-                                            if ($cotizacion->tipo_descuento_global == 'porcentaje') {
-                                                $base_imponible -= ($cotizacion->subtotal * ($cotizacion->descuento_global / 100));
-                                            } else {
-                                                $base_imponible -= $cotizacion->descuento_global;
-                                            }
+                                        $base_imponible = $cotizacion->subtotal ?? 0;
+                                        if ($tiene_descuento) {
+                                            $base_imponible -= $descuento_global_monto;
                                         }
-                                        echo wc_price($base_imponible * 0.19);
+                                        if (isset($cotizacion->costo_envio) && $cotizacion->costo_envio > 0) {
+                                            $base_imponible += $cotizacion->costo_envio;
+                                        }
+                                        $iva = $cotizacion->impuesto_monto ?? ($base_imponible * 0.19);
+                                        echo wc_price($iva);
                                         ?>
                                     </td>
                                 </tr>
                                 <?php endif; ?>
                                 
-                                <?php if ($cotizacion->envio > 0): ?>
+                                <?php if (isset($cotizacion->costo_envio) && $cotizacion->costo_envio > 0): ?>
                                 <tr class="mv-totales-row">
                                     <td colspan="<?php echo $gestion_almacenes_activo ? '7' : '5'; ?>" class="text-right">
                                         <?php _e('Envío:', 'modulo-ventas'); ?>
                                     </td>
                                     <td class="column-total">
-                                        <?php echo wc_price($cotizacion->envio); ?>
+                                        <?php echo wc_price($cotizacion->costo_envio); ?>
                                     </td>
                                 </tr>
                                 <?php endif; ?>
@@ -331,7 +339,7 @@ if (!empty($cotizacion->vendedor_id)) {
                                         <strong><?php _e('TOTAL:', 'modulo-ventas'); ?></strong>
                                     </td>
                                     <td class="column-total">
-                                        <strong class="mv-total-amount"><?php echo wc_price($cotizacion->total); ?></strong>
+                                        <strong class="mv-total-amount"><?php echo wc_price($cotizacion->total ?? 0); ?></strong>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -424,53 +432,78 @@ if (!empty($cotizacion->vendedor_id)) {
             <!-- Resumen de Totales -->
             <div class="postbox">
                 <h2 class="hndle">
-                    <span><?php _e('Resumen de Totales', 'modulo-ventas'); ?></span>
+                    <span><?php _e('Resumen', 'modulo-ventas'); ?></span>
                 </h2>
                 <div class="inside">
-                    <div class="mv-resumen-totales">
-                        <div class="mv-total-row">
-                            <span><?php _e('Subtotal:', 'modulo-ventas'); ?></span>
-                            <span><?php echo wc_price($cotizacion->subtotal); ?></span>
-                        </div>
-                        <?php if ($cotizacion->descuento_global > 0): ?>
-                        <div class="mv-total-row">
-                            <span><?php _e('Descuento:', 'modulo-ventas'); ?></span>
-                            <span>-<?php 
-                                if ($cotizacion->tipo_descuento_global == 'porcentaje') {
-                                    echo wc_price($cotizacion->subtotal * ($cotizacion->descuento_global / 100));
-                                } else {
-                                    echo wc_price($cotizacion->descuento_global);
-                                }
-                            ?></span>
-                        </div>
-                        <?php endif; ?>
-                        <?php if ($cotizacion->incluye_iva): ?>
-                        <div class="mv-total-row">
-                            <span><?php _e('IVA:', 'modulo-ventas'); ?></span>
-                            <span><?php 
-                                $base_imponible = $cotizacion->subtotal;
-                                if ($cotizacion->descuento_global > 0) {
-                                    if ($cotizacion->tipo_descuento_global == 'porcentaje') {
-                                        $base_imponible -= ($cotizacion->subtotal * ($cotizacion->descuento_global / 100));
-                                    } else {
-                                        $base_imponible -= $cotizacion->descuento_global;
-                                    }
-                                }
-                                echo wc_price($base_imponible * 0.19);
-                            ?></span>
-                        </div>
-                        <?php endif; ?>
-                        <?php if ($cotizacion->envio > 0): ?>
-                        <div class="mv-total-row">
-                            <span><?php _e('Envío:', 'modulo-ventas'); ?></span>
-                            <span><?php echo wc_price($cotizacion->envio); ?></span>
-                        </div>
-                        <?php endif; ?>
-                        <div class="mv-total-row mv-total-final">
-                            <span><?php _e('TOTAL:', 'modulo-ventas'); ?></span>
-                            <span><?php echo wc_price($cotizacion->total); ?></span>
-                        </div>
-                    </div>
+                    <table class="mv-totales-table">
+                        <tbody>
+                            <?php 
+                            // Calcular subtotal
+                            $subtotal = $cotizacion->subtotal ?? 0;
+                            
+                            // Calcular descuento global
+                            $descuento_global = 0;
+                            if (isset($cotizacion->descuento_monto) && $cotizacion->descuento_monto > 0) {
+                                $descuento_global = $cotizacion->descuento_monto;
+                            } elseif (isset($cotizacion->descuento_porcentaje) && $cotizacion->descuento_porcentaje > 0) {
+                                $descuento_global = ($subtotal * $cotizacion->descuento_porcentaje) / 100;
+                            }
+                            
+                            // Subtotal con descuento
+                            $subtotal_con_descuento = $subtotal - $descuento_global;
+                            
+                            // Costo de envío
+                            $costo_envio = $cotizacion->costo_envio ?? 0;
+                            
+                            // Subtotal con envío
+                            $subtotal_con_envio = $subtotal_con_descuento + $costo_envio;
+                            
+                            // IVA
+                            $iva = 0;
+                            if (isset($cotizacion->incluye_iva) && $cotizacion->incluye_iva) {
+                                $iva = $cotizacion->impuesto_monto ?? ($subtotal_con_envio * 0.19);
+                            }
+                            
+                            // Total
+                            $total = $cotizacion->total ?? ($subtotal_con_envio + $iva);
+                            ?>
+                            
+                            <tr>
+                                <th><?php _e('Subtotal:', 'modulo-ventas'); ?></th>
+                                <td><?php echo wc_price($subtotal); ?></td>
+                            </tr>
+                            
+                            <?php if ($descuento_global > 0): ?>
+                            <tr>
+                                <th><?php _e('Descuento:', 'modulo-ventas'); ?></th>
+                                <td>-<?php echo wc_price($descuento_global); ?></td>
+                            </tr>
+                            <tr>
+                                <th><?php _e('Subtotal con descuento:', 'modulo-ventas'); ?></th>
+                                <td><?php echo wc_price($subtotal_con_descuento); ?></td>
+                            </tr>
+                            <?php endif; ?>
+                            
+                            <?php if ($costo_envio > 0): ?>
+                            <tr>
+                                <th><?php _e('Envío:', 'modulo-ventas'); ?></th>
+                                <td><?php echo wc_price($costo_envio); ?></td>
+                            </tr>
+                            <?php endif; ?>
+                            
+                            <?php if ($iva > 0): ?>
+                            <tr>
+                                <th><?php _e('IVA (19%):', 'modulo-ventas'); ?></th>
+                                <td><?php echo wc_price($iva); ?></td>
+                            </tr>
+                            <?php endif; ?>
+                            
+                            <tr class="total">
+                                <th><?php _e('Total:', 'modulo-ventas'); ?></th>
+                                <td><strong><?php echo wc_price($total); ?></strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -549,24 +582,54 @@ if (!empty($cotizacion->vendedor_id)) {
                 </h2>
                 <div class="inside">
                     <div class="mv-historial">
+                        <!-- Creación -->
                         <div class="mv-historial-item">
-                            <strong><?php _e('Creada:', 'modulo-ventas'); ?></strong><br>
-                            <?php echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($cotizacion->fecha)); ?>
+                            <span class="dashicons dashicons-plus-alt"></span>
+                            <div class="mv-historial-content">
+                                <strong><?php _e('Cotización creada', 'modulo-ventas'); ?></strong>
+                                <p>
+                                    <?php 
+                                    if (isset($cotizacion->creado_por) && $cotizacion->creado_por) {
+                                        $creador = get_user_by('id', $cotizacion->creado_por);
+                                        if ($creador) {
+                                            echo sprintf(__('Por %s', 'modulo-ventas'), $creador->display_name);
+                                        }
+                                    }
+                                    ?>
+                                </p>
+                                <small><?php echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($cotizacion->fecha_creacion ?? $cotizacion->fecha)); ?></small>
+                            </div>
                         </div>
                         
-                        <?php if (!empty($cotizacion->updated_at) && $cotizacion->updated_at !== $cotizacion->fecha): ?>
+                        <!-- Estado actual -->
+                        <?php if ($cotizacion->estado !== 'borrador'): ?>
                         <div class="mv-historial-item">
-                            <strong><?php _e('Última modificación:', 'modulo-ventas'); ?></strong><br>
-                            <?php echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($cotizacion->updated_at)); ?>
+                            <span class="dashicons dashicons-flag"></span>
+                            <div class="mv-historial-content">
+                                <strong><?php _e('Estado actual', 'modulo-ventas'); ?></strong>
+                                <p><?php echo esc_html($estados[$cotizacion->estado] ?? ucfirst($cotizacion->estado)); ?></p>
+                            </div>
                         </div>
                         <?php endif; ?>
                         
-                        <?php if ($cotizacion->orden_id): ?>
+                        <!-- Conversión a pedido -->
+                        <?php if (isset($cotizacion->venta_id) && $cotizacion->venta_id): ?>
                         <div class="mv-historial-item">
-                            <strong><?php _e('Convertida a venta:', 'modulo-ventas'); ?></strong><br>
-                            <a href="<?php echo admin_url('admin.php?page=ventas-ver-venta&id=' . $cotizacion->orden_id); ?>">
-                                <?php echo sprintf(__('Orden #%d', 'modulo-ventas'), $cotizacion->orden_id); ?>
-                            </a>
+                            <span class="dashicons dashicons-cart"></span>
+                            <div class="mv-historial-content">
+                                <strong><?php _e('Convertida a pedido', 'modulo-ventas'); ?></strong>
+                                <p>
+                                    <?php echo sprintf(
+                                        __('Pedido #%s creado', 'modulo-ventas'), 
+                                        '<a href="' . admin_url('post.php?post=' . $cotizacion->venta_id . '&action=edit') . '" target="_blank">' . 
+                                        $cotizacion->venta_id . 
+                                        '</a>'
+                                    ); ?>
+                                </p>
+                                <?php if (isset($cotizacion->fecha_conversion) && $cotizacion->fecha_conversion): ?>
+                                    <small><?php echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($cotizacion->fecha_conversion)); ?></small>
+                                <?php endif; ?>
+                            </div>
                         </div>
                         <?php endif; ?>
                     </div>

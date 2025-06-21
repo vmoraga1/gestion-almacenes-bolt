@@ -1,0 +1,859 @@
+[21-Jun-2025 04:51:12 UTC] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 312
+[21-Jun-2025 04:51:23 UTC] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 312
+[21-Jun-2025 04:59:58 UTC] PHP Parse error:  syntax error, unexpected ';', expecting ')' in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 238
+[21-Jun-2025 05:14:28 UTC] WordPress database error FUNCTION bolt.REGEXP_SUBSTR does not exist for query 
+					SELECT meta_value, FROM_UNIXTIME(REGEXP_SUBSTR(meta_value,'(?<=update_date";i:).+?(?=;)')) AS update_datetime
+					FROM wp_postmeta
+					WHERE post_id = 69 AND meta_key = '_alg_wc_cog_cost_archive'
+				ORDER BY update_datetime DESC made by require('wp-admin/edit-form-advanced.php'), do_meta_boxes, Alg_WC_Cost_of_Goods_Products_Cost_Archive->display_product_cost_archive_metabox, Alg_WC_Cost_of_Goods_Products_Cost_Archive->get_product_cost_archive_table, Alg_WC_Cost_of_Goods_Products_Cost_Archive->get_product_cost_archive
+[21-Jun-2025 05:15:20 UTC] WordPress database error FUNCTION bolt.REGEXP_SUBSTR does not exist for query 
+					SELECT meta_value, FROM_UNIXTIME(REGEXP_SUBSTR(meta_value,'(?<=update_date";i:).+?(?=;)')) AS update_datetime
+					FROM wp_postmeta
+					WHERE post_id = 69 AND meta_key = '_alg_wc_cog_cost_archive'
+				ORDER BY update_datetime DESC made by require('wp-admin/edit-form-advanced.php'), do_meta_boxes, Alg_WC_Cost_of_Goods_Products_Cost_Archive->display_product_cost_archive_metabox, Alg_WC_Cost_of_Goods_Products_Cost_Archive->get_product_cost_archive_table, Alg_WC_Cost_of_Goods_Products_Cost_Archive->get_product_cost_archive
+[21-Jun-2025 05:17:23 UTC] WordPress database error FUNCTION bolt.REGEXP_SUBSTR does not exist for query 
+					SELECT meta_value, FROM_UNIXTIME(REGEXP_SUBSTR(meta_value,'(?<=update_date";i:).+?(?=;)')) AS update_datetime
+					FROM wp_postmeta
+					WHERE post_id = 71 AND meta_key = '_alg_wc_cog_cost_archive'
+				ORDER BY update_datetime DESC made by require('wp-admin/edit-form-advanced.php'), do_meta_boxes, Alg_WC_Cost_of_Goods_Products_Cost_Archive->display_product_cost_archive_metabox, Alg_WC_Cost_of_Goods_Products_Cost_Archive->get_product_cost_archive_table, Alg_WC_Cost_of_Goods_Products_Cost_Archive->get_product_cost_archive
+[21-Jun-2025 05:17:35 UTC] WordPress database error FUNCTION bolt.REGEXP_SUBSTR does not exist for query 
+					SELECT meta_value, FROM_UNIXTIME(REGEXP_SUBSTR(meta_value,'(?<=update_date";i:).+?(?=;)')) AS update_datetime
+					FROM wp_postmeta
+					WHERE post_id = 71 AND meta_key = '_alg_wc_cog_cost_archive'
+				ORDER BY update_datetime DESC made by require('wp-admin/edit-form-advanced.php'), do_meta_boxes, Alg_WC_Cost_of_Goods_Products_Cost_Archive->display_product_cost_archive_metabox, Alg_WC_Cost_of_Goods_Products_Cost_Archive->get_product_cost_archive_table, Alg_WC_Cost_of_Goods_Products_Cost_Archive->get_product_cost_archive
+[21-Jun-2025 06:05:36 UTC] Automatic updates starting...
+[21-Jun-2025 06:05:36 UTC]   Automatic plugin updates starting...
+[21-Jun-2025 06:05:36 UTC]   Automatic plugin updates complete.
+[21-Jun-2025 06:05:37 UTC] Automatic updates complete.
+[21-Jun-2025 16:55:02 UTC] PHP Notice:  Undefined index: items in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-cotizaciones-list-table.php on line 295
+[21-Jun-2025 16:55:02 UTC] PHP Stack trace:
+[21-Jun-2025 16:55:02 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 16:55:02 UTC] PHP   2. do_action($hook_name = 'ventas_page_modulo-ventas-cotizaciones') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 16:55:02 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 16:55:02 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 16:55:02 UTC] PHP   5. Modulo_Ventas_Admin->pagina_cotizaciones('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 16:55:02 UTC] PHP   6. Cotizaciones_List_Table->prepare_items() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:267
+[21-Jun-2025 16:55:02 UTC] PHP Notice:  Undefined index: total in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-cotizaciones-list-table.php on line 298
+[21-Jun-2025 16:55:02 UTC] PHP Stack trace:
+[21-Jun-2025 16:55:02 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 16:55:02 UTC] PHP   2. do_action($hook_name = 'ventas_page_modulo-ventas-cotizaciones') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 16:55:02 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 16:55:02 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 16:55:02 UTC] PHP   5. Modulo_Ventas_Admin->pagina_cotizaciones('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 16:55:02 UTC] PHP   6. Cotizaciones_List_Table->prepare_items() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:267
+[21-Jun-2025 16:55:02 UTC] PHP Notice:  Undefined index: total in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-cotizaciones-list-table.php on line 300
+[21-Jun-2025 16:55:02 UTC] PHP Stack trace:
+[21-Jun-2025 16:55:02 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 16:55:02 UTC] PHP   2. do_action($hook_name = 'ventas_page_modulo-ventas-cotizaciones') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 16:55:02 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 16:55:02 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 16:55:02 UTC] PHP   5. Modulo_Ventas_Admin->pagina_cotizaciones('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 16:55:02 UTC] PHP   6. Cotizaciones_List_Table->prepare_items() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:267
+[21-Jun-2025 16:55:02 UTC] PHP Notice:  Undefined index: items in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-cotizaciones-list-table.php on line 295
+[21-Jun-2025 16:55:02 UTC] PHP Stack trace:
+[21-Jun-2025 16:55:02 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 16:55:02 UTC] PHP   2. do_action($hook_name = 'ventas_page_modulo-ventas-cotizaciones') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 16:55:02 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 16:55:02 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 16:55:02 UTC] PHP   5. Modulo_Ventas_Admin->pagina_cotizaciones('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 16:55:02 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:270
+[21-Jun-2025 16:55:02 UTC] PHP   7. Cotizaciones_List_Table->prepare_items() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php:22
+[21-Jun-2025 16:55:02 UTC] PHP Notice:  Undefined index: total in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-cotizaciones-list-table.php on line 298
+[21-Jun-2025 16:55:02 UTC] PHP Stack trace:
+[21-Jun-2025 16:55:02 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 16:55:02 UTC] PHP   2. do_action($hook_name = 'ventas_page_modulo-ventas-cotizaciones') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 16:55:02 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 16:55:02 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 16:55:02 UTC] PHP   5. Modulo_Ventas_Admin->pagina_cotizaciones('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 16:55:02 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:270
+[21-Jun-2025 16:55:02 UTC] PHP   7. Cotizaciones_List_Table->prepare_items() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php:22
+[21-Jun-2025 16:55:02 UTC] PHP Notice:  Undefined index: total in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-cotizaciones-list-table.php on line 300
+[21-Jun-2025 16:55:02 UTC] PHP Stack trace:
+[21-Jun-2025 16:55:02 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 16:55:02 UTC] PHP   2. do_action($hook_name = 'ventas_page_modulo-ventas-cotizaciones') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 16:55:02 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 16:55:02 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 16:55:02 UTC] PHP   5. Modulo_Ventas_Admin->pagina_cotizaciones('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 16:55:02 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:270
+[21-Jun-2025 16:55:02 UTC] PHP   7. Cotizaciones_List_Table->prepare_items() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php:22
+[21-Jun-2025 16:55:02 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Modulo_Ventas_DB::obtener_estadisticas_cotizaciones() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php:26
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(270): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_cotizaciones('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php on line 26
+[21-Jun-2025 17:02:55 UTC] WordPress database error Duplicate column name 'vendedor_nombre' for query SELECT COUNT(*) FROM (SELECT c.*, cl.razon_social, cl.rut, cl.email, cl.telefono,
+                u.display_name as vendedor_nombre
+                FROM wp_mv_cotizaciones c
+                LEFT JOIN wp_mv_clientes cl ON c.cliente_id = cl.id
+                LEFT JOIN wp_users u ON c.vendedor_id = u.ID
+                WHERE 1=1) as temp made by do_action('ventas_page_modulo-ventas-cotizaciones'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_cotizaciones, Cotizaciones_List_Table->prepare_items, Modulo_Ventas_DB->obtener_cotizaciones
+[21-Jun-2025 17:02:55 UTC] WordPress database error Duplicate column name 'vendedor_nombre' for query SELECT COUNT(*) FROM (SELECT c.*, cl.razon_social, cl.rut, cl.email, cl.telefono,
+                u.display_name as vendedor_nombre
+                FROM wp_mv_cotizaciones c
+                LEFT JOIN wp_mv_clientes cl ON c.cliente_id = cl.id
+                LEFT JOIN wp_users u ON c.vendedor_id = u.ID
+                WHERE 1=1) as temp made by do_action('ventas_page_modulo-ventas-cotizaciones'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_cotizaciones, require_once('/plugins/modulo-de-ventas/admin/views/cotizaciones-list.php'), Cotizaciones_List_Table->prepare_items, Modulo_Ventas_DB->obtener_cotizaciones
+[21-Jun-2025 17:02:55 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Modulo_Ventas_DB::obtener_estadisticas_cotizaciones() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php:26
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(270): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_cotizaciones('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php on line 26
+[21-Jun-2025 17:04:36 UTC] WordPress database error Duplicate column name 'vendedor_nombre' for query SELECT COUNT(*) FROM (SELECT c.*, cl.razon_social, cl.rut, cl.email, cl.telefono,
+                u.display_name as vendedor_nombre
+                FROM wp_mv_cotizaciones c
+                LEFT JOIN wp_mv_clientes cl ON c.cliente_id = cl.id
+                LEFT JOIN wp_users u ON c.vendedor_id = u.ID
+                WHERE 1=1) as temp made by do_action('ventas_page_modulo-ventas-cotizaciones'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_cotizaciones, Cotizaciones_List_Table->prepare_items, Modulo_Ventas_DB->obtener_cotizaciones
+[21-Jun-2025 17:04:36 UTC] WordPress database error Duplicate column name 'vendedor_nombre' for query SELECT COUNT(*) FROM (SELECT c.*, cl.razon_social, cl.rut, cl.email, cl.telefono,
+                u.display_name as vendedor_nombre
+                FROM wp_mv_cotizaciones c
+                LEFT JOIN wp_mv_clientes cl ON c.cliente_id = cl.id
+                LEFT JOIN wp_users u ON c.vendedor_id = u.ID
+                WHERE 1=1) as temp made by do_action('ventas_page_modulo-ventas-cotizaciones'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_cotizaciones, require_once('/plugins/modulo-de-ventas/admin/views/cotizaciones-list.php'), Cotizaciones_List_Table->prepare_items, Modulo_Ventas_DB->obtener_cotizaciones
+[21-Jun-2025 17:04:36 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ventas_get_estados_cotizacion() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php:80
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(270): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_cotizaciones('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php on line 80
+[21-Jun-2025 17:08:01 UTC] WordPress database error Duplicate column name 'vendedor_nombre' for query SELECT COUNT(*) FROM (SELECT c.*, cl.razon_social, cl.rut, cl.email, cl.telefono,
+                u.display_name as vendedor_nombre
+                FROM wp_mv_cotizaciones c
+                LEFT JOIN wp_mv_clientes cl ON c.cliente_id = cl.id
+                LEFT JOIN wp_users u ON c.vendedor_id = u.ID
+                WHERE 1=1) as temp made by do_action('ventas_page_modulo-ventas-cotizaciones'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_cotizaciones, Cotizaciones_List_Table->prepare_items, Modulo_Ventas_DB->obtener_cotizaciones
+[21-Jun-2025 17:08:01 UTC] WordPress database error Duplicate column name 'vendedor_nombre' for query SELECT COUNT(*) FROM (SELECT c.*, cl.razon_social, cl.rut, cl.email, cl.telefono,
+                u.display_name as vendedor_nombre
+                FROM wp_mv_cotizaciones c
+                LEFT JOIN wp_mv_clientes cl ON c.cliente_id = cl.id
+                LEFT JOIN wp_users u ON c.vendedor_id = u.ID
+                WHERE 1=1) as temp made by do_action('ventas_page_modulo-ventas-cotizaciones'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_cotizaciones, require_once('/plugins/modulo-de-ventas/admin/views/cotizaciones-list.php'), Cotizaciones_List_Table->prepare_items, Modulo_Ventas_DB->obtener_cotizaciones
+[21-Jun-2025 17:08:01 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ventas_get_estados_cotizacion() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php:80
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(270): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_cotizaciones('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php on line 80
+[21-Jun-2025 17:08:19 UTC] WordPress database error Duplicate column name 'vendedor_nombre' for query SELECT COUNT(*) FROM (SELECT c.*, cl.razon_social, cl.rut, cl.email, cl.telefono,
+                u.display_name as vendedor_nombre
+                FROM wp_mv_cotizaciones c
+                LEFT JOIN wp_mv_clientes cl ON c.cliente_id = cl.id
+                LEFT JOIN wp_users u ON c.vendedor_id = u.ID
+                WHERE 1=1) as temp made by do_action('ventas_page_modulo-ventas-cotizaciones'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_cotizaciones, Cotizaciones_List_Table->prepare_items, Modulo_Ventas_DB->obtener_cotizaciones
+[21-Jun-2025 17:08:19 UTC] WordPress database error Duplicate column name 'vendedor_nombre' for query SELECT COUNT(*) FROM (SELECT c.*, cl.razon_social, cl.rut, cl.email, cl.telefono,
+                u.display_name as vendedor_nombre
+                FROM wp_mv_cotizaciones c
+                LEFT JOIN wp_mv_clientes cl ON c.cliente_id = cl.id
+                LEFT JOIN wp_users u ON c.vendedor_id = u.ID
+                WHERE 1=1) as temp made by do_action('ventas_page_modulo-ventas-cotizaciones'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_cotizaciones, require_once('/plugins/modulo-de-ventas/admin/views/cotizaciones-list.php'), Cotizaciones_List_Table->prepare_items, Modulo_Ventas_DB->obtener_cotizaciones
+[21-Jun-2025 17:08:19 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ventas_get_estados_cotizacion() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php:80
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(270): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_cotizaciones('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php on line 80
+[21-Jun-2025 17:09:47 UTC] WordPress database error Duplicate column name 'vendedor_nombre' for query SELECT COUNT(*) FROM (SELECT c.*, cl.razon_social, cl.rut, cl.email, cl.telefono,
+                u.display_name as vendedor_nombre
+                FROM wp_mv_cotizaciones c
+                LEFT JOIN wp_mv_clientes cl ON c.cliente_id = cl.id
+                LEFT JOIN wp_users u ON c.vendedor_id = u.ID
+                WHERE 1=1) as temp made by do_action('ventas_page_modulo-ventas-cotizaciones'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_cotizaciones, Cotizaciones_List_Table->prepare_items, Modulo_Ventas_DB->obtener_cotizaciones
+[21-Jun-2025 17:09:47 UTC] WordPress database error Duplicate column name 'vendedor_nombre' for query SELECT COUNT(*) FROM (SELECT c.*, cl.razon_social, cl.rut, cl.email, cl.telefono,
+                u.display_name as vendedor_nombre
+                FROM wp_mv_cotizaciones c
+                LEFT JOIN wp_mv_clientes cl ON c.cliente_id = cl.id
+                LEFT JOIN wp_users u ON c.vendedor_id = u.ID
+                WHERE 1=1) as temp made by do_action('ventas_page_modulo-ventas-cotizaciones'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_cotizaciones, require_once('/plugins/modulo-de-ventas/admin/views/cotizaciones-list.php'), Cotizaciones_List_Table->prepare_items, Modulo_Ventas_DB->obtener_cotizaciones
+[21-Jun-2025 17:09:47 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ventas_get_estados_cotizacion() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php:80
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(270): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_cotizaciones('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php on line 80
+[21-Jun-2025 17:13:26 UTC] WordPress database error Unknown column 'c.fecha_vencimiento' in 'field list' for query SELECT COUNT(*) FROM (SELECT c.id, c.folio, c.fecha, c.cliente_id, c.vendedor_id, 
+                c.total, c.estado, c.fecha_vencimiento, c.almacen_id,
+                c.subtotal, c.descuento_monto, c.descuento_porcentaje,
+                c.impuesto_monto, c.impuesto_porcentaje, c.costo_envio,
+                c.notas, c.notas_internas, c.condiciones_pago,
+                cl.razon_social, cl.rut, cl.email, cl.telefono,
+                u.display_name as usuario_vendedor
+                FROM wp_mv_cotizaciones c
+                LEFT JOIN wp_mv_clientes cl ON c.cliente_id = cl.id
+                LEFT JOIN wp_users u ON c.vendedor_id = u.ID
+                WHERE 1=1) as temp made by do_action('ventas_page_modulo-ventas-cotizaciones'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_cotizaciones, Cotizaciones_List_Table->prepare_items, Modulo_Ventas_DB->obtener_cotizaciones
+[21-Jun-2025 17:13:26 UTC] WordPress database error Unknown column 'c.fecha_vencimiento' in 'field list' for query SELECT c.id, c.folio, c.fecha, c.cliente_id, c.vendedor_id, 
+                c.total, c.estado, c.fecha_vencimiento, c.almacen_id,
+                c.subtotal, c.descuento_monto, c.descuento_porcentaje,
+                c.impuesto_monto, c.impuesto_porcentaje, c.costo_envio,
+                c.notas, c.notas_internas, c.condiciones_pago,
+                cl.razon_social, cl.rut, cl.email, cl.telefono,
+                u.display_name as usuario_vendedor
+                FROM wp_mv_cotizaciones c
+                LEFT JOIN wp_mv_clientes cl ON c.cliente_id = cl.id
+                LEFT JOIN wp_users u ON c.vendedor_id = u.ID
+                WHERE 1=1 ORDER BY c.fecha DESC LIMIT 20 OFFSET 0 made by do_action('ventas_page_modulo-ventas-cotizaciones'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_cotizaciones, Cotizaciones_List_Table->prepare_items, Modulo_Ventas_DB->obtener_cotizaciones
+[21-Jun-2025 17:13:26 UTC] WordPress database error Unknown column 'c.fecha_vencimiento' in 'field list' for query SELECT COUNT(*) FROM (SELECT c.id, c.folio, c.fecha, c.cliente_id, c.vendedor_id, 
+                c.total, c.estado, c.fecha_vencimiento, c.almacen_id,
+                c.subtotal, c.descuento_monto, c.descuento_porcentaje,
+                c.impuesto_monto, c.impuesto_porcentaje, c.costo_envio,
+                c.notas, c.notas_internas, c.condiciones_pago,
+                cl.razon_social, cl.rut, cl.email, cl.telefono,
+                u.display_name as usuario_vendedor
+                FROM wp_mv_cotizaciones c
+                LEFT JOIN wp_mv_clientes cl ON c.cliente_id = cl.id
+                LEFT JOIN wp_users u ON c.vendedor_id = u.ID
+                WHERE 1=1) as temp made by do_action('ventas_page_modulo-ventas-cotizaciones'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_cotizaciones, require_once('/plugins/modulo-de-ventas/admin/views/cotizaciones-list.php'), Cotizaciones_List_Table->prepare_items, Modulo_Ventas_DB->obtener_cotizaciones
+[21-Jun-2025 17:13:26 UTC] WordPress database error Unknown column 'c.fecha_vencimiento' in 'field list' for query SELECT c.id, c.folio, c.fecha, c.cliente_id, c.vendedor_id, 
+                c.total, c.estado, c.fecha_vencimiento, c.almacen_id,
+                c.subtotal, c.descuento_monto, c.descuento_porcentaje,
+                c.impuesto_monto, c.impuesto_porcentaje, c.costo_envio,
+                c.notas, c.notas_internas, c.condiciones_pago,
+                cl.razon_social, cl.rut, cl.email, cl.telefono,
+                u.display_name as usuario_vendedor
+                FROM wp_mv_cotizaciones c
+                LEFT JOIN wp_mv_clientes cl ON c.cliente_id = cl.id
+                LEFT JOIN wp_users u ON c.vendedor_id = u.ID
+                WHERE 1=1 ORDER BY c.fecha DESC LIMIT 20 OFFSET 0 made by do_action('ventas_page_modulo-ventas-cotizaciones'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_cotizaciones, require_once('/plugins/modulo-de-ventas/admin/views/cotizaciones-list.php'), Cotizaciones_List_Table->prepare_items, Modulo_Ventas_DB->obtener_cotizaciones
+[21-Jun-2025 17:13:26 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ventas_get_estados_cotizacion() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php:80
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(270): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_cotizaciones('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php on line 80
+[21-Jun-2025 17:19:32 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ventas_get_estados_cotizacion() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php:80
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(270): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_cotizaciones('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php on line 80
+[21-Jun-2025 17:30:55 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function ventas_get_estados_cotizacion() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php:83
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(270): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_cotizaciones('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\cotizaciones-list.php on line 83
+[21-Jun-2025 19:31:39 UTC] PHP Warning:  wp_version_check(): Ha ocurrido un error inesperado. Puede que algo vaya mal con WordPress.org o la configuración de este servidor. Si sigues teniendo problemas, por favor, prueba en los <a href="https://es.wordpress.org/support/">foros de soporte</a>. (WordPress no ha podido establecer una conexión segura con WordPress.org. Por favor, contacta con el administrador de tu servidor). in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php on line 6121
+[21-Jun-2025 19:31:39 UTC] PHP Stack trace:
+[21-Jun-2025 19:31:39 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-cron.php:0
+[21-Jun-2025 19:31:39 UTC] PHP   2. do_action_ref_array($hook_name = 'wp_version_check', $args = []) C:\wamp64\www\gestion-almacenes-bolt\wp-cron.php:191
+[21-Jun-2025 19:31:39 UTC] PHP   3. WP_Hook->do_action($args = []) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:565
+[21-Jun-2025 19:31:39 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = []) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 19:31:39 UTC] PHP   5. wp_version_check($extra_stats = *uninitialized*, $force_check = *uninitialized*) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 19:31:39 UTC] PHP   6. wp_trigger_error($function_name = 'wp_version_check', $message = 'Ha ocurrido un error inesperado. Puede que algo vaya mal con WordPress.org o la configuración de este servidor. Si sigues teniendo problemas, por favor, prueba en los <a href="https://es.wordpress.org/support/">foros de soporte</a>. (WordPress no ha podido establecer una conexión segura con WordPress.org. Por favor, contacta con el administrador de tu servidor).', $error_level = 512) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\update.php:223
+[21-Jun-2025 19:31:39 UTC] PHP   7. trigger_error($message = 'wp_version_check(): Ha ocurrido un error inesperado. Puede que algo vaya mal con WordPress.org o la configuración de este servidor. Si sigues teniendo problemas, por favor, prueba en los <a href="https://es.wordpress.org/support/">foros de soporte</a>. (WordPress no ha podido establecer una conexión segura con WordPress.org. Por favor, contacta con el administrador de tu servidor).', $error_type = 512) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6121
+[21-Jun-2025 19:31:39 UTC] PHP Warning:  wp_update_plugins(): Ha ocurrido un error inesperado. Puede que algo vaya mal con WordPress.org o la configuración de este servidor. Si sigues teniendo problemas, por favor, prueba en los <a href="https://es.wordpress.org/support/">foros de soporte</a>. (WordPress no ha podido establecer una conexión segura con WordPress.org. Por favor, contacta con el administrador de tu servidor). in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php on line 6121
+[21-Jun-2025 19:31:39 UTC] PHP Stack trace:
+[21-Jun-2025 19:31:39 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-cron.php:0
+[21-Jun-2025 19:31:39 UTC] PHP   2. do_action_ref_array($hook_name = 'wp_update_plugins', $args = []) C:\wamp64\www\gestion-almacenes-bolt\wp-cron.php:191
+[21-Jun-2025 19:31:39 UTC] PHP   3. WP_Hook->do_action($args = []) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:565
+[21-Jun-2025 19:31:39 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = []) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 19:31:39 UTC] PHP   5. wp_update_plugins($extra_stats = *uninitialized*) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 19:31:39 UTC] PHP   6. wp_trigger_error($function_name = 'wp_update_plugins', $message = 'Ha ocurrido un error inesperado. Puede que algo vaya mal con WordPress.org o la configuración de este servidor. Si sigues teniendo problemas, por favor, prueba en los <a href="https://es.wordpress.org/support/">foros de soporte</a>. (WordPress no ha podido establecer una conexión segura con WordPress.org. Por favor, contacta con el administrador de tu servidor).', $error_level = 512) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\update.php:451
+[21-Jun-2025 19:31:39 UTC] PHP   7. trigger_error($message = 'wp_update_plugins(): Ha ocurrido un error inesperado. Puede que algo vaya mal con WordPress.org o la configuración de este servidor. Si sigues teniendo problemas, por favor, prueba en los <a href="https://es.wordpress.org/support/">foros de soporte</a>. (WordPress no ha podido establecer una conexión segura con WordPress.org. Por favor, contacta con el administrador de tu servidor).', $error_type = 512) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6121
+[21-Jun-2025 19:31:39 UTC] PHP Warning:  wp_update_themes(): Ha ocurrido un error inesperado. Puede que algo vaya mal con WordPress.org o la configuración de este servidor. Si sigues teniendo problemas, por favor, prueba en los <a href="https://es.wordpress.org/support/">foros de soporte</a>. (WordPress no ha podido establecer una conexión segura con WordPress.org. Por favor, contacta con el administrador de tu servidor). in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php on line 6121
+[21-Jun-2025 19:31:39 UTC] PHP Stack trace:
+[21-Jun-2025 19:31:39 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-cron.php:0
+[21-Jun-2025 19:31:39 UTC] PHP   2. do_action_ref_array($hook_name = 'wp_update_themes', $args = []) C:\wamp64\www\gestion-almacenes-bolt\wp-cron.php:191
+[21-Jun-2025 19:31:39 UTC] PHP   3. WP_Hook->do_action($args = []) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:565
+[21-Jun-2025 19:31:39 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = []) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 19:31:39 UTC] PHP   5. wp_update_themes($extra_stats = *uninitialized*) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 19:31:39 UTC] PHP   6. wp_trigger_error($function_name = 'wp_update_themes', $message = 'Ha ocurrido un error inesperado. Puede que algo vaya mal con WordPress.org o la configuración de este servidor. Si sigues teniendo problemas, por favor, prueba en los <a href="https://es.wordpress.org/support/">foros de soporte</a>. (WordPress no ha podido establecer una conexión segura con WordPress.org. Por favor, contacta con el administrador de tu servidor).', $error_level = 512) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\update.php:739
+[21-Jun-2025 19:31:39 UTC] PHP   7. trigger_error($message = 'wp_update_themes(): Ha ocurrido un error inesperado. Puede que algo vaya mal con WordPress.org o la configuración de este servidor. Si sigues teniendo problemas, por favor, prueba en los <a href="https://es.wordpress.org/support/">foros de soporte</a>. (WordPress no ha podido establecer una conexión segura con WordPress.org. Por favor, contacta con el administrador de tu servidor).', $error_type = 512) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6121
+[21-Jun-2025 19:50:13 UTC] PHP Fatal error:  Cannot redeclare Modulo_Ventas_Admin::agregar_mensaje_admin() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php on line 1270
+[21-Jun-2025 19:50:13 UTC] PHP Stack trace:
+[21-Jun-2025 19:50:13 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:0
+[21-Jun-2025 19:50:13 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:22
+[21-Jun-2025 19:50:13 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[21-Jun-2025 19:50:13 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[21-Jun-2025 19:50:13 UTC] PHP   5. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[21-Jun-2025 19:50:13 UTC] PHP   6. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 19:50:13 UTC] PHP   7. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 19:50:13 UTC] PHP   8. Modulo_Ventas->verificar_dependencias('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 19:50:13 UTC] PHP   9. Modulo_Ventas->cargar_archivos() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:127
+[21-Jun-2025 19:50:13 UTC] PHP Notice:  La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para más información. (Este mensaje fue añadido en la versión 6.7.0). in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php on line 6121
+[21-Jun-2025 19:50:13 UTC] PHP Stack trace:
+[21-Jun-2025 19:50:13 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:0
+[21-Jun-2025 19:50:13 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:22
+[21-Jun-2025 19:50:13 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[21-Jun-2025 19:50:13 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[21-Jun-2025 19:50:13 UTC] PHP   5. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[21-Jun-2025 19:50:13 UTC] PHP   6. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 19:50:13 UTC] PHP   7. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 19:50:13 UTC] PHP   8. Modulo_Ventas->verificar_dependencias('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 19:50:13 UTC] PHP   9. Modulo_Ventas->cargar_archivos() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:127
+[21-Jun-2025 19:50:13 UTC] PHP  10. WooCommerce->log_errors() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:0
+[21-Jun-2025 19:50:13 UTC] PHP  11. WC_Logger->critical($message = 'Cannot redeclare Modulo_Ventas_Admin::agregar_mensaje_admin()', $context = ['source' => 'fatal-errors', 'error' => ['type' => 64, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-admin.php', 'line' => 1270], 'remote-logging' => TRUE, 'backtrace' => TRUE]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:422
+[21-Jun-2025 19:50:13 UTC] PHP  12. WC_Logger->log($level = 'critical', $message = 'Cannot redeclare Modulo_Ventas_Admin::agregar_mensaje_admin()', $context = ['source' => 'fatal-errors', 'error' => ['type' => 64, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-admin.php', 'line' => 1270], 'remote-logging' => TRUE, 'backtrace' => TRUE]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:236
+[21-Jun-2025 19:50:13 UTC] PHP  13. Automattic\WooCommerce\Internal\Logging\RemoteLogger->handle($timestamp = 1750535413, $level = 'critical', $message = 'Cannot redeclare Modulo_Ventas_Admin::agregar_mensaje_admin()', $context = ['source' => 'fatal-errors', 'error' => ['type' => 64, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-admin.php', 'line' => 1270], 'remote-logging' => TRUE, 'backtrace' => TRUE]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:189
+[21-Jun-2025 19:50:13 UTC] PHP  14. Automattic\WooCommerce\Internal\Logging\RemoteLogger->should_handle($level = 'critical', $message = 'Cannot redeclare Modulo_Ventas_Admin::agregar_mensaje_admin()', $context = ['source' => 'fatal-errors', 'error' => ['type' => 64, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-admin.php', 'line' => 1270], 'remote-logging' => TRUE, 'backtrace' => TRUE]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:46
+[21-Jun-2025 19:50:13 UTC] PHP  15. Automattic\WooCommerce\Internal\Logging\RemoteLogger->is_remote_logging_allowed() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:177
+[21-Jun-2025 19:50:13 UTC] PHP  16. Automattic\WooCommerce\Utilities\FeaturesUtil::feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:147
+[21-Jun-2025 19:50:13 UTC] PHP  17. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Utilities\FeaturesUtil.php:42
+[21-Jun-2025 19:50:13 UTC] PHP  18. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_exists($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:593
+[21-Jun-2025 19:50:13 UTC] PHP  19. Automattic\WooCommerce\Internal\Features\FeaturesController->get_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:697
+[21-Jun-2025 19:50:13 UTC] PHP  20. Automattic\WooCommerce\Internal\Features\FeaturesController->init_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:214
+[21-Jun-2025 19:50:13 UTC] PHP  21. __($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:248
+[21-Jun-2025 19:50:13 UTC] PHP  22. translate($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:307
+[21-Jun-2025 19:50:13 UTC] PHP  23. get_translations_for_domain($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:195
+[21-Jun-2025 19:50:13 UTC] PHP  24. _load_textdomain_just_in_time($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1409
+[21-Jun-2025 19:50:13 UTC] PHP  25. _doing_it_wrong($function_name = '_load_textdomain_just_in_time', $message = 'La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde.', $version = '6.7.0') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1379
+[21-Jun-2025 19:50:13 UTC] PHP  26. wp_trigger_error($function_name = '', $message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_level = *uninitialized*) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6061
+[21-Jun-2025 19:50:13 UTC] PHP  27. trigger_error($message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_type = 1024) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6121
+[21-Jun-2025 19:50:56 UTC] PHP Fatal error:  Cannot redeclare Modulo_Ventas_Admin::agregar_mensaje_admin() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php on line 1270
+[21-Jun-2025 19:50:56 UTC] PHP Stack trace:
+[21-Jun-2025 19:50:56 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 19:50:56 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:35
+[21-Jun-2025 19:50:56 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[21-Jun-2025 19:50:56 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[21-Jun-2025 19:50:56 UTC] PHP   5. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[21-Jun-2025 19:50:56 UTC] PHP   6. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 19:50:56 UTC] PHP   7. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 19:50:56 UTC] PHP   8. Modulo_Ventas->verificar_dependencias('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 19:50:56 UTC] PHP   9. Modulo_Ventas->cargar_archivos() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:127
+[21-Jun-2025 19:50:56 UTC] PHP Notice:  La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para más información. (Este mensaje fue añadido en la versión 6.7.0). in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php on line 6121
+[21-Jun-2025 19:50:56 UTC] PHP Stack trace:
+[21-Jun-2025 19:50:56 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 19:50:56 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:35
+[21-Jun-2025 19:50:56 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[21-Jun-2025 19:50:56 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[21-Jun-2025 19:50:56 UTC] PHP   5. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[21-Jun-2025 19:50:56 UTC] PHP   6. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 19:50:56 UTC] PHP   7. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 19:50:56 UTC] PHP   8. Modulo_Ventas->verificar_dependencias('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 19:50:56 UTC] PHP   9. Modulo_Ventas->cargar_archivos() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:127
+[21-Jun-2025 19:50:56 UTC] PHP  10. WooCommerce->log_errors() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:0
+[21-Jun-2025 19:50:56 UTC] PHP  11. WC_Logger->critical($message = 'Cannot redeclare Modulo_Ventas_Admin::agregar_mensaje_admin()', $context = ['source' => 'fatal-errors', 'error' => ['type' => 64, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-admin.php', 'line' => 1270], 'remote-logging' => TRUE, 'backtrace' => TRUE]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:422
+[21-Jun-2025 19:50:56 UTC] PHP  12. WC_Logger->log($level = 'critical', $message = 'Cannot redeclare Modulo_Ventas_Admin::agregar_mensaje_admin()', $context = ['source' => 'fatal-errors', 'error' => ['type' => 64, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-admin.php', 'line' => 1270], 'remote-logging' => TRUE, 'backtrace' => TRUE]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:236
+[21-Jun-2025 19:50:56 UTC] PHP  13. Automattic\WooCommerce\Internal\Logging\RemoteLogger->handle($timestamp = 1750535456, $level = 'critical', $message = 'Cannot redeclare Modulo_Ventas_Admin::agregar_mensaje_admin()', $context = ['source' => 'fatal-errors', 'error' => ['type' => 64, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-admin.php', 'line' => 1270], 'remote-logging' => TRUE, 'backtrace' => TRUE]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:189
+[21-Jun-2025 19:50:56 UTC] PHP  14. Automattic\WooCommerce\Internal\Logging\RemoteLogger->should_handle($level = 'critical', $message = 'Cannot redeclare Modulo_Ventas_Admin::agregar_mensaje_admin()', $context = ['source' => 'fatal-errors', 'error' => ['type' => 64, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-admin.php', 'line' => 1270], 'remote-logging' => TRUE, 'backtrace' => TRUE]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:46
+[21-Jun-2025 19:50:56 UTC] PHP  15. Automattic\WooCommerce\Internal\Logging\RemoteLogger->is_remote_logging_allowed() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:177
+[21-Jun-2025 19:50:56 UTC] PHP  16. Automattic\WooCommerce\Utilities\FeaturesUtil::feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:147
+[21-Jun-2025 19:50:56 UTC] PHP  17. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Utilities\FeaturesUtil.php:42
+[21-Jun-2025 19:50:56 UTC] PHP  18. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_exists($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:593
+[21-Jun-2025 19:50:56 UTC] PHP  19. Automattic\WooCommerce\Internal\Features\FeaturesController->get_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:697
+[21-Jun-2025 19:50:56 UTC] PHP  20. Automattic\WooCommerce\Internal\Features\FeaturesController->init_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:214
+[21-Jun-2025 19:50:56 UTC] PHP  21. __($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:248
+[21-Jun-2025 19:50:56 UTC] PHP  22. translate($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:307
+[21-Jun-2025 19:50:56 UTC] PHP  23. get_translations_for_domain($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:195
+[21-Jun-2025 19:50:56 UTC] PHP  24. _load_textdomain_just_in_time($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1409
+[21-Jun-2025 19:50:56 UTC] PHP  25. _doing_it_wrong($function_name = '_load_textdomain_just_in_time', $message = 'La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde.', $version = '6.7.0') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1379
+[21-Jun-2025 19:50:56 UTC] PHP  26. wp_trigger_error($function_name = '', $message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_level = *uninitialized*) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6061
+[21-Jun-2025 19:50:56 UTC] PHP  27. trigger_error($message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_type = 1024) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6121
+[21-Jun-2025 19:51:43 UTC] PHP Fatal error:  Cannot redeclare Modulo_Ventas_Admin::agregar_mensaje_admin() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php on line 1270
+[21-Jun-2025 19:51:43 UTC] PHP Stack trace:
+[21-Jun-2025 19:51:43 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:0
+[21-Jun-2025 19:51:43 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:22
+[21-Jun-2025 19:51:43 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[21-Jun-2025 19:51:43 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[21-Jun-2025 19:51:43 UTC] PHP   5. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[21-Jun-2025 19:51:43 UTC] PHP   6. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 19:51:43 UTC] PHP   7. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 19:51:43 UTC] PHP   8. Modulo_Ventas->verificar_dependencias('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 19:51:43 UTC] PHP   9. Modulo_Ventas->cargar_archivos() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:127
+[21-Jun-2025 19:51:43 UTC] PHP Notice:  La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para más información. (Este mensaje fue añadido en la versión 6.7.0). in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php on line 6121
+[21-Jun-2025 19:51:43 UTC] PHP Stack trace:
+[21-Jun-2025 19:51:43 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:0
+[21-Jun-2025 19:51:43 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:22
+[21-Jun-2025 19:51:43 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[21-Jun-2025 19:51:43 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[21-Jun-2025 19:51:43 UTC] PHP   5. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[21-Jun-2025 19:51:43 UTC] PHP   6. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 19:51:43 UTC] PHP   7. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 19:51:43 UTC] PHP   8. Modulo_Ventas->verificar_dependencias('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 19:51:43 UTC] PHP   9. Modulo_Ventas->cargar_archivos() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:127
+[21-Jun-2025 19:51:43 UTC] PHP  10. WooCommerce->log_errors() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:0
+[21-Jun-2025 19:51:43 UTC] PHP  11. WC_Logger->critical($message = 'Cannot redeclare Modulo_Ventas_Admin::agregar_mensaje_admin()', $context = ['source' => 'fatal-errors', 'error' => ['type' => 64, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-admin.php', 'line' => 1270], 'remote-logging' => TRUE, 'backtrace' => TRUE]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:422
+[21-Jun-2025 19:51:43 UTC] PHP  12. WC_Logger->log($level = 'critical', $message = 'Cannot redeclare Modulo_Ventas_Admin::agregar_mensaje_admin()', $context = ['source' => 'fatal-errors', 'error' => ['type' => 64, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-admin.php', 'line' => 1270], 'remote-logging' => TRUE, 'backtrace' => TRUE]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:236
+[21-Jun-2025 19:51:43 UTC] PHP  13. Automattic\WooCommerce\Internal\Logging\RemoteLogger->handle($timestamp = 1750535503, $level = 'critical', $message = 'Cannot redeclare Modulo_Ventas_Admin::agregar_mensaje_admin()', $context = ['source' => 'fatal-errors', 'error' => ['type' => 64, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-admin.php', 'line' => 1270], 'remote-logging' => TRUE, 'backtrace' => TRUE]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:189
+[21-Jun-2025 19:51:43 UTC] PHP  14. Automattic\WooCommerce\Internal\Logging\RemoteLogger->should_handle($level = 'critical', $message = 'Cannot redeclare Modulo_Ventas_Admin::agregar_mensaje_admin()', $context = ['source' => 'fatal-errors', 'error' => ['type' => 64, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-admin.php', 'line' => 1270], 'remote-logging' => TRUE, 'backtrace' => TRUE]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:46
+[21-Jun-2025 19:51:43 UTC] PHP  15. Automattic\WooCommerce\Internal\Logging\RemoteLogger->is_remote_logging_allowed() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:177
+[21-Jun-2025 19:51:43 UTC] PHP  16. Automattic\WooCommerce\Utilities\FeaturesUtil::feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:147
+[21-Jun-2025 19:51:43 UTC] PHP  17. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Utilities\FeaturesUtil.php:42
+[21-Jun-2025 19:51:43 UTC] PHP  18. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_exists($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:593
+[21-Jun-2025 19:51:43 UTC] PHP  19. Automattic\WooCommerce\Internal\Features\FeaturesController->get_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:697
+[21-Jun-2025 19:51:43 UTC] PHP  20. Automattic\WooCommerce\Internal\Features\FeaturesController->init_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:214
+[21-Jun-2025 19:51:43 UTC] PHP  21. __($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:248
+[21-Jun-2025 19:51:43 UTC] PHP  22. translate($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:307
+[21-Jun-2025 19:51:43 UTC] PHP  23. get_translations_for_domain($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:195
+[21-Jun-2025 19:51:43 UTC] PHP  24. _load_textdomain_just_in_time($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1409
+[21-Jun-2025 19:51:43 UTC] PHP  25. _doing_it_wrong($function_name = '_load_textdomain_just_in_time', $message = 'La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde.', $version = '6.7.0') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1379
+[21-Jun-2025 19:51:43 UTC] PHP  26. wp_trigger_error($function_name = '', $message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_level = *uninitialized*) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6061
+[21-Jun-2025 19:51:43 UTC] PHP  27. trigger_error($message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_type = 1024) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6121
+[21-Jun-2025 19:55:01 UTC] PHP Notice:  Undefined index: condiciones_pago in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php on line 317
+[21-Jun-2025 19:55:01 UTC] PHP Stack trace:
+[21-Jun-2025 19:55:01 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 19:55:01 UTC] PHP   2. do_action($hook_name = 'ventas_page_modulo-ventas-nueva-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 19:55:01 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 19:55:01 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 19:55:01 UTC] PHP   5. Modulo_Ventas_Admin->pagina_nueva_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 19:55:01 UTC] PHP   6. Modulo_Ventas_Admin->procesar_nueva_cotizacion() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:284
+[21-Jun-2025 19:55:01 UTC] PHP Notice:  Undefined index: descuento_monto in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php on line 322
+[21-Jun-2025 19:55:01 UTC] PHP Stack trace:
+[21-Jun-2025 19:55:01 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 19:55:01 UTC] PHP   2. do_action($hook_name = 'ventas_page_modulo-ventas-nueva-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 19:55:01 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 19:55:01 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 19:55:01 UTC] PHP   5. Modulo_Ventas_Admin->pagina_nueva_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 19:55:01 UTC] PHP   6. Modulo_Ventas_Admin->procesar_nueva_cotizacion() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:284
+[21-Jun-2025 19:55:01 UTC] PHP Notice:  Undefined index: descuento_porcentaje in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php on line 323
+[21-Jun-2025 19:55:01 UTC] PHP Stack trace:
+[21-Jun-2025 19:55:01 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 19:55:01 UTC] PHP   2. do_action($hook_name = 'ventas_page_modulo-ventas-nueva-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 19:55:01 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 19:55:01 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 19:55:01 UTC] PHP   5. Modulo_Ventas_Admin->pagina_nueva_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 19:55:01 UTC] PHP   6. Modulo_Ventas_Admin->procesar_nueva_cotizacion() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:284
+[21-Jun-2025 19:55:01 UTC] Modulo Ventas: Error al crear cotización: Debe agregar al menos un producto
+[21-Jun-2025 20:16:27 UTC] Datos POST recibidos: Array
+(
+    [mv_cotizacion_nonce] => fca6fffb95
+    [_wp_http_referer] => /gestion-almacenes-bolt/wp-admin/admin.php?page=modulo-ventas-nueva-cotizacion
+    [cliente_id] => 3
+    [fecha] => 2025-06-21
+    [fecha_expiracion] => 2025-07-21
+    [plazo_pago] => 30_dias
+    [vendedor_id] => 1
+    [almacen_id] => 
+    [incluye_iva] => 1
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [producto_id] => 75
+                    [variacion_id] => 0
+                    [sku] => T3X3
+                    [nombre] => Toldo 3x3m
+                    [descripcion] => 
+                    [almacen_id] => 1
+                    [cantidad] => 2
+                    [precio_unitario] => 25000
+                    [precio_original] => 25000
+                    [tipo_descuento] => monto
+                    [descuento_monto] => 0
+                    [subtotal] => 50000.00
+                )
+
+        )
+
+    [observaciones] => Observaciones (Visible para el cliente)
+
+    [notas_internas] => Notas internas (Solo uso interno)
+
+    [terminos_condiciones] => Términos y condiciones
+
+    [tipo_descuento_global] => monto
+    [descuento_global] => 0
+    [costo_envio] => 0
+    [subtotal] => 50000.00
+    [total] => 59500.00
+    [descuento_monto] => 0
+    [descuento_porcentaje] => 0
+    [condiciones_pago] => 
+    [producto_id_0] => undefined
+    [variacion_id_0] => 0
+    [sku_0] => 
+    [nombre_0] => 
+    [cantidad_0] => undefined
+    [precio_0] => undefined
+    [almacen_id_0] => 1
+    [descuento_0] => 0
+    [subtotal_0] => 0
+)
+
+[21-Jun-2025 20:16:27 UTC] Items a guardar: Array
+(
+    [0] => Array
+        (
+            [producto_id] => 0
+            [variacion_id] => 0
+            [almacen_id] => 1
+            [sku] => 
+            [nombre] => 
+            [cantidad] => 0
+            [precio_unitario] => 0
+            [descuento_monto] => 0
+            [descuento_porcentaje] => 0
+            [subtotal] => 0
+        )
+
+)
+
+[21-Jun-2025 20:16:27 UTC] Cotización creada exitosamente con ID: 1
+[21-Jun-2025 20:16:28 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method Modulo_Ventas_DB::get_instance() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php:28
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(453): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_ver_cotizacion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('admin_page_modu...')
+#5 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 28
+[21-Jun-2025 20:21:59 UTC] WordPress database error Table 'bolt.wp_sm_clientes' doesn't exist for query 
+    SELECT * FROM wp_sm_clientes WHERE id = 3
+ made by do_action('admin_page_modulo-ventas-ver-cotizacion'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_ver_cotizacion, require_once('/plugins/modulo-de-ventas/admin/views/ver-cotizacion.php')
+[21-Jun-2025 20:21:59 UTC] WordPress database error Table 'bolt.wp_sm_productos' doesn't exist for query 
+                                            SELECT * FROM wp_sm_productos WHERE id = 0
+                                         made by do_action('admin_page_modulo-ventas-ver-cotizacion'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_ver_cotizacion, require_once('/plugins/modulo-de-ventas/admin/views/ver-cotizacion.php')
+[21-Jun-2025 20:21:59 UTC] PHP Notice:  Undefined property: stdClass::$descuento in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 244
+[21-Jun-2025 20:21:59 UTC] PHP Stack trace:
+[21-Jun-2025 20:21:59 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:21:59 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:21:59 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:21:59 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:21:59 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:21:59 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:21:59 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 274
+[21-Jun-2025 20:21:59 UTC] PHP Stack trace:
+[21-Jun-2025 20:21:59 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:21:59 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:21:59 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:21:59 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:21:59 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:21:59 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:21:59 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 305
+[21-Jun-2025 20:21:59 UTC] PHP Stack trace:
+[21-Jun-2025 20:21:59 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:21:59 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:21:59 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:21:59 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:21:59 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:21:59 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:21:59 UTC] PHP Notice:  Undefined property: stdClass::$envio in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 318
+[21-Jun-2025 20:21:59 UTC] PHP Stack trace:
+[21-Jun-2025 20:21:59 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:21:59 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:21:59 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:21:59 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:21:59 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:21:59 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:21:59 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 435
+[21-Jun-2025 20:21:59 UTC] PHP Stack trace:
+[21-Jun-2025 20:21:59 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:21:59 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:21:59 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:21:59 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:21:59 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:21:59 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:21:59 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 452
+[21-Jun-2025 20:21:59 UTC] PHP Stack trace:
+[21-Jun-2025 20:21:59 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:21:59 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:21:59 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:21:59 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:21:59 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:21:59 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:21:59 UTC] PHP Notice:  Undefined property: stdClass::$envio in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 463
+[21-Jun-2025 20:21:59 UTC] PHP Stack trace:
+[21-Jun-2025 20:21:59 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:21:59 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:21:59 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:21:59 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:21:59 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:21:59 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:21:59 UTC] PHP Notice:  Undefined property: stdClass::$orden_id in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 564
+[21-Jun-2025 20:21:59 UTC] PHP Stack trace:
+[21-Jun-2025 20:21:59 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:21:59 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:21:59 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:21:59 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:21:59 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:21:59 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:26:56 UTC] PHP Notice:  Undefined variable: tabla_clientes in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 42
+[21-Jun-2025 20:26:56 UTC] PHP Stack trace:
+[21-Jun-2025 20:26:56 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:26:56 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:26:56 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:26:56 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:26:56 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:26:56 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:26:56 UTC] WordPress database error You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'WHERE id = 3' at line 1 for query 
+    SELECT * FROM  WHERE id = 3
+ made by do_action('admin_page_modulo-ventas-ver-cotizacion'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_ver_cotizacion, require_once('/plugins/modulo-de-ventas/admin/views/ver-cotizacion.php')
+[21-Jun-2025 20:26:56 UTC] WordPress database error Table 'bolt.wp_mv_productos' doesn't exist for query 
+                                            SELECT * FROM wp_mv_productos WHERE id = 0
+                                         made by do_action('admin_page_modulo-ventas-ver-cotizacion'), WP_Hook->do_action, WP_Hook->apply_filters, Modulo_Ventas_Admin->pagina_ver_cotizacion, require_once('/plugins/modulo-de-ventas/admin/views/ver-cotizacion.php')
+[21-Jun-2025 20:26:56 UTC] PHP Notice:  Undefined property: stdClass::$descuento in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 244
+[21-Jun-2025 20:26:56 UTC] PHP Stack trace:
+[21-Jun-2025 20:26:56 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:26:56 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:26:56 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:26:56 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:26:56 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:26:56 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:26:56 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 274
+[21-Jun-2025 20:26:56 UTC] PHP Stack trace:
+[21-Jun-2025 20:26:56 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:26:56 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:26:56 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:26:56 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:26:56 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:26:56 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:26:56 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 305
+[21-Jun-2025 20:26:56 UTC] PHP Stack trace:
+[21-Jun-2025 20:26:56 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:26:56 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:26:56 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:26:56 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:26:56 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:26:56 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:26:56 UTC] PHP Notice:  Undefined property: stdClass::$envio in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 318
+[21-Jun-2025 20:26:56 UTC] PHP Stack trace:
+[21-Jun-2025 20:26:56 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:26:56 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:26:56 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:26:56 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:26:56 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:26:56 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:26:56 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 435
+[21-Jun-2025 20:26:56 UTC] PHP Stack trace:
+[21-Jun-2025 20:26:56 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:26:56 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:26:56 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:26:56 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:26:56 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:26:56 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:26:56 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 452
+[21-Jun-2025 20:26:56 UTC] PHP Stack trace:
+[21-Jun-2025 20:26:56 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:26:56 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:26:56 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:26:56 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:26:56 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:26:56 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:26:56 UTC] PHP Notice:  Undefined property: stdClass::$envio in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 463
+[21-Jun-2025 20:26:56 UTC] PHP Stack trace:
+[21-Jun-2025 20:26:56 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:26:56 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:26:56 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:26:56 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:26:56 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:26:56 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:26:56 UTC] PHP Notice:  Undefined property: stdClass::$orden_id in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 564
+[21-Jun-2025 20:26:56 UTC] PHP Stack trace:
+[21-Jun-2025 20:26:56 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:26:56 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:26:56 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:26:56 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:26:56 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:26:56 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:34:22 UTC] PHP Notice:  Undefined property: stdClass::$descuento in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 246
+[21-Jun-2025 20:34:22 UTC] PHP Stack trace:
+[21-Jun-2025 20:34:22 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:34:22 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:34:22 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:34:22 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:34:22 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:34:22 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:34:22 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 276
+[21-Jun-2025 20:34:22 UTC] PHP Stack trace:
+[21-Jun-2025 20:34:22 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:34:22 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:34:22 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:34:22 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:34:22 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:34:22 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:34:22 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 307
+[21-Jun-2025 20:34:22 UTC] PHP Stack trace:
+[21-Jun-2025 20:34:22 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:34:22 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:34:22 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:34:22 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:34:22 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:34:22 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:34:22 UTC] PHP Notice:  Undefined property: stdClass::$envio in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 320
+[21-Jun-2025 20:34:22 UTC] PHP Stack trace:
+[21-Jun-2025 20:34:22 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:34:22 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:34:22 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:34:22 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:34:22 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:34:22 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:34:22 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 437
+[21-Jun-2025 20:34:22 UTC] PHP Stack trace:
+[21-Jun-2025 20:34:22 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:34:22 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:34:22 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:34:22 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:34:22 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:34:22 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:34:22 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 454
+[21-Jun-2025 20:34:22 UTC] PHP Stack trace:
+[21-Jun-2025 20:34:22 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:34:22 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:34:22 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:34:22 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:34:22 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:34:22 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:34:22 UTC] PHP Notice:  Undefined property: stdClass::$envio in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 465
+[21-Jun-2025 20:34:22 UTC] PHP Stack trace:
+[21-Jun-2025 20:34:22 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:34:22 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:34:22 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:34:22 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:34:22 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:34:22 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:34:22 UTC] PHP Notice:  Undefined property: stdClass::$orden_id in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 566
+[21-Jun-2025 20:34:22 UTC] PHP Stack trace:
+[21-Jun-2025 20:34:22 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:34:22 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:34:22 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:34:22 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:34:22 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:34:22 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:43:23 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 271
+[21-Jun-2025 20:43:23 UTC] PHP Stack trace:
+[21-Jun-2025 20:43:23 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:43:23 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:43:23 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:43:23 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:43:23 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:43:23 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:43:23 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 302
+[21-Jun-2025 20:43:23 UTC] PHP Stack trace:
+[21-Jun-2025 20:43:23 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:43:23 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:43:23 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:43:23 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:43:23 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:43:23 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:43:23 UTC] PHP Notice:  Undefined property: stdClass::$envio in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 315
+[21-Jun-2025 20:43:23 UTC] PHP Stack trace:
+[21-Jun-2025 20:43:23 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:43:23 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:43:23 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:43:23 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:43:23 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:43:23 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:43:23 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 432
+[21-Jun-2025 20:43:23 UTC] PHP Stack trace:
+[21-Jun-2025 20:43:23 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:43:23 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:43:23 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:43:23 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:43:23 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:43:23 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:43:23 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 449
+[21-Jun-2025 20:43:23 UTC] PHP Stack trace:
+[21-Jun-2025 20:43:23 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:43:23 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:43:23 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:43:23 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:43:23 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:43:23 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:43:23 UTC] PHP Notice:  Undefined property: stdClass::$envio in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 460
+[21-Jun-2025 20:43:23 UTC] PHP Stack trace:
+[21-Jun-2025 20:43:23 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:43:23 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:43:23 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:43:23 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:43:23 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:43:23 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 20:43:23 UTC] PHP Notice:  Undefined property: stdClass::$orden_id in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 561
+[21-Jun-2025 20:43:23 UTC] PHP Stack trace:
+[21-Jun-2025 20:43:23 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 20:43:23 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 20:43:23 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 20:43:23 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 20:43:23 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 20:43:23 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 21:11:00 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 271
+[21-Jun-2025 21:11:00 UTC] PHP Stack trace:
+[21-Jun-2025 21:11:00 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 21:11:00 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 21:11:00 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 21:11:00 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 21:11:00 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 21:11:00 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 21:11:00 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 302
+[21-Jun-2025 21:11:00 UTC] PHP Stack trace:
+[21-Jun-2025 21:11:00 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 21:11:00 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 21:11:00 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 21:11:00 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 21:11:00 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 21:11:00 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 21:11:00 UTC] PHP Notice:  Undefined property: stdClass::$envio in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 315
+[21-Jun-2025 21:11:00 UTC] PHP Stack trace:
+[21-Jun-2025 21:11:00 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 21:11:00 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 21:11:00 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 21:11:00 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 21:11:00 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 21:11:00 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 21:11:00 UTC] PHP Notice:  Undefined property: stdClass::$orden_id in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 586
+[21-Jun-2025 21:11:00 UTC] PHP Stack trace:
+[21-Jun-2025 21:11:00 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 21:11:00 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 21:11:00 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 21:11:00 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 21:11:00 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 21:11:00 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 21:13:24 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 278
+[21-Jun-2025 21:13:24 UTC] PHP Stack trace:
+[21-Jun-2025 21:13:24 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 21:13:24 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 21:13:24 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 21:13:24 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 21:13:24 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 21:13:24 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 21:13:24 UTC] PHP Notice:  Undefined property: stdClass::$descuento_global in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 309
+[21-Jun-2025 21:13:24 UTC] PHP Stack trace:
+[21-Jun-2025 21:13:24 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 21:13:24 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 21:13:24 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 21:13:24 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 21:13:24 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 21:13:24 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 21:13:24 UTC] PHP Notice:  Undefined property: stdClass::$envio in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 322
+[21-Jun-2025 21:13:24 UTC] PHP Stack trace:
+[21-Jun-2025 21:13:24 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 21:13:24 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 21:13:24 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 21:13:24 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 21:13:24 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 21:13:24 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 21:13:24 UTC] PHP Notice:  Undefined property: stdClass::$orden_id in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 593
+[21-Jun-2025 21:13:24 UTC] PHP Stack trace:
+[21-Jun-2025 21:13:24 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 21:13:24 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 21:13:24 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 21:13:24 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 21:13:24 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 21:13:24 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 21:18:27 UTC] PHP Notice:  Undefined property: stdClass::$orden_id in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\ver-cotizacion.php on line 601
+[21-Jun-2025 21:18:27 UTC] PHP Stack trace:
+[21-Jun-2025 21:18:27 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[21-Jun-2025 21:18:27 UTC] PHP   2. do_action($hook_name = 'admin_page_modulo-ventas-ver-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[21-Jun-2025 21:18:27 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[21-Jun-2025 21:18:27 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[21-Jun-2025 21:18:27 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[21-Jun-2025 21:18:27 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453

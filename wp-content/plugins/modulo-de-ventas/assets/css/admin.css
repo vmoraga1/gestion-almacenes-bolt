@@ -176,3 +176,92 @@ h2.hndle {
         grid-template-columns: 1fr;
     }
 }
+
+/* Estadísticas en listado de cotizaciones */
+.mv-stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.mv-stat-box {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.mv-stat-number {
+    display: block;
+    font-size: 32px;
+    font-weight: 600;
+    color: #1d2327;
+    margin-bottom: 5px;
+}
+
+.mv-stat-label {
+    display: block;
+    color: #646970;
+    font-size: 14px;
+}
+
+/* Estados de cotización */
+.estado-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-left: 10px;
+}
+
+.estado-borrador { background: #dfe1e1; color: #50575e; }
+.estado-enviada { background: #e5f5fa; color: #006ba1; }
+.estado-aceptada { background: #edfaef; color: #008a20; }
+.estado-rechazada { background: #fef1f1; color: #d63638; }
+.estado-vencida { background: #fcf9e8; color: #996800; }
+.estado-convertida { background: #f0f0f1; color: #3858e9; }
+
+.fecha-vencimiento.vencida {
+    color: #d63638;
+    font-weight: 600;
+}
+
+.fecha-vencimiento.por-vencer {
+    color: #dba617;
+    font-weight: 600;
+}
+
+/* Filtros de cotizaciones */
+.tablenav input[type="date"] {
+    margin: 0 4px;
+    vertical-align: middle;
+}
+
+.tablenav .alignright {
+    margin-top: 0;
+}
+
+.tablenav .button .dashicons {
+    vertical-align: text-bottom;
+    margin-right: 2px;
+}
+
+/* Mensaje cuando no hay cotizaciones */
+.no-items {
+    text-align: center;
+    padding: 40px 0;
+    color: #666;
+}
+
+/* Estados en la tabla */
+.column-estado .estado-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+}

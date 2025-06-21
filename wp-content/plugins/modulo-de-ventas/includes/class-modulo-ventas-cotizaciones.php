@@ -35,7 +35,6 @@ class Modulo_Ventas_Cotizaciones {
         add_action('modulo_ventas_verificar_cotizaciones_expiradas', array($this, 'verificar_cotizaciones_expiradas'));
         
         // Ajax handlers
-        add_action('wp_ajax_mv_buscar_productos', array($this, 'ajax_buscar_productos'));
         add_action('wp_ajax_mv_obtener_stock_producto', array($this, 'ajax_obtener_stock_producto'));
         add_action('wp_ajax_mv_guardar_cotizacion', array($this, 'ajax_guardar_cotizacion'));
         add_action('wp_ajax_mv_actualizar_estado_cotizacion', array($this, 'ajax_actualizar_estado_cotizacion'));
@@ -644,102 +643,6 @@ class Modulo_Ventas_Cotizaciones {
         );
         
         wp_mail($emails_notificacion, $asunto, $mensaje);
-    }
-    
-    /**
-     * AJAX: Buscar productos
-     */
-    public function ajax_buscar_productos() {
-        check_ajax_referer('modulo_ventas_nonce', 'nonce');
-        
-        if (!current_user_can('create_cotizaciones')) {
-            wp_send_json_error(array('message' => __('Sin permisos', 'modulo-ventas')));
-        }
-        
-        $busqueda = isset($_POST['busqueda']) ? sanitize_text_field($_POST['busqueda']) : '';
-        $almacen_id = isset($_POST['almacen_id']) ? intval($_POST['almacen_id']) : 0;
-        
-        // Buscar productos
-        $args = array(
-            'post_type' => 'product',
-            'posts_per_page' => 20,
-            's' => $busqueda,
-            'post_status' => 'publish',
-            'meta_query' => array(
-                array(
-                    'key' => '_stock_status',
-                    'value' => 'instock',
-                    'compare' => '='
-                )
-            )
-        );
-        
-        $query = new WP_Query($args);
-        $productos = array();
-        
-        if ($query->have_posts()) {
-            while ($query->have_posts()) {
-                $query->the_post();
-                $producto = wc_get_product(get_the_ID());
-                
-                if (!$producto) {
-                    continue;
-                }
-                
-                // Obtener stock según almacén si está disponible
-                $stock_disponible = $producto->get_stock_quantity();
-                
-                if ($almacen_id && class_exists('Gestion_Almacenes_DB')) {
-                    global $gestion_almacenes_db;
-                    $stock_almacen = $gestion_almacenes_db->get_product_warehouse_stock($producto->get_id());
-                    $stock_disponible = isset($stock_almacen[$almacen_id]) ? $stock_almacen[$almacen_id] : 0;
-                }
-                
-                $producto_data = array(
-                    'id' => $producto->get_id(),
-                    'text' => $producto->get_name() . ' - ' . wc_price($producto->get_price()),
-                    'nombre' => $producto->get_name(),
-                    'sku' => $producto->get_sku(),
-                    'precio' => $producto->get_price(),
-                    'precio_regular' => $producto->get_regular_price(),
-                    'stock' => $stock_disponible,
-                    'tipo' => $producto->get_type()
-                );
-                
-                // Si es variable, obtener variaciones
-                if ($producto->is_type('variable')) {
-                    $variaciones = array();
-                    $variable_product = new WC_Product_Variable($producto->get_id());
-                    $variations = $variable_product->get_available_variations();
-                    
-                    foreach ($variations as $variation) {
-                        $variation_obj = wc_get_product($variation['variation_id']);
-                        
-                        // Stock de la variación
-                        $stock_variacion = $variation_obj->get_stock_quantity();
-                        if ($almacen_id && class_exists('Gestion_Almacenes_DB')) {
-                            $stock_var_almacen = $gestion_almacenes_db->get_product_warehouse_stock($variation['variation_id']);
-                            $stock_variacion = isset($stock_var_almacen[$almacen_id]) ? $stock_var_almacen[$almacen_id] : 0;
-                        }
-                        
-                        $variaciones[] = array(
-                            'id' => $variation['variation_id'],
-                            'nombre' => implode(' - ', $variation['attributes']),
-                            'precio' => $variation_obj->get_price(),
-                            'stock' => $stock_variacion,
-                            'sku' => $variation_obj->get_sku()
-                        );
-                    }
-                    
-                    $producto_data['variaciones'] = $variaciones;
-                }
-                
-                $productos[] = $producto_data;
-            }
-            wp_reset_postdata();
-        }
-        
-        wp_send_json_success(array('productos' => $productos));
     }
     
     /**

@@ -820,44 +820,61 @@ class Modulo_Ventas_DB {
      * Obtener cotizaciones con filtros
      */
     public function obtener_cotizaciones($args = array()) {
+        // Valores por defecto
         $defaults = array(
-            'limit' => 20,
+            'limite' => 20,
             'offset' => 0,
-            'orderby' => 'fecha',
-            'order' => 'DESC',
+            'orden' => 'fecha',
+            'orden_dir' => 'DESC',
+            'buscar' => '',
             'estado' => '',
             'cliente_id' => 0,
             'vendedor_id' => 0,
             'fecha_desde' => '',
-            'fecha_hasta' => '',
-            'buscar' => ''
+            'fecha_hasta' => ''
         );
         
         $args = wp_parse_args($args, $defaults);
         
-        $sql = "SELECT c.*, cl.razon_social, cl.rut 
+        // Usar SELECT * para evitar listar todas las columnas
+        $sql = "SELECT c.*, 
+                cl.razon_social, cl.rut, cl.email, cl.telefono,
+                u.display_name as usuario_vendedor
                 FROM {$this->tabla_cotizaciones} c
                 LEFT JOIN {$this->tabla_clientes} cl ON c.cliente_id = cl.id
+                LEFT JOIN {$this->wpdb->users} u ON c.vendedor_id = u.ID
                 WHERE 1=1";
         
         $params = array();
         
-        // Filtros
+        // Filtro por búsqueda
+        if (!empty($args['buscar'])) {
+            $sql .= " AND (c.folio LIKE %s OR cl.razon_social LIKE %s OR cl.rut LIKE %s)";
+            $like = '%' . $this->wpdb->esc_like($args['buscar']) . '%';
+            $params[] = $like;
+            $params[] = $like;
+            $params[] = $like;
+        }
+        
+        // Filtro por estado
         if (!empty($args['estado'])) {
             $sql .= " AND c.estado = %s";
             $params[] = $args['estado'];
         }
         
-        if ($args['cliente_id'] > 0) {
+        // Filtro por cliente
+        if (!empty($args['cliente_id'])) {
             $sql .= " AND c.cliente_id = %d";
             $params[] = $args['cliente_id'];
         }
         
-        if ($args['vendedor_id'] > 0) {
+        // Filtro por vendedor
+        if (!empty($args['vendedor_id'])) {
             $sql .= " AND c.vendedor_id = %d";
             $params[] = $args['vendedor_id'];
         }
         
+        // Filtro por fechas
         if (!empty($args['fecha_desde'])) {
             $sql .= " AND DATE(c.fecha) >= %s";
             $params[] = $args['fecha_desde'];
@@ -868,29 +885,50 @@ class Modulo_Ventas_DB {
             $params[] = $args['fecha_hasta'];
         }
         
-        if (!empty($args['buscar'])) {
-            $sql .= " AND (c.folio LIKE %s OR cl.razon_social LIKE %s OR cl.rut LIKE %s)";
-            $like_term = '%' . $this->wpdb->esc_like($args['buscar']) . '%';
-            $params[] = $like_term;
-            $params[] = $like_term;
-            $params[] = $like_term;
-        }
-        
-        // Ordenamiento
-        $sql .= " ORDER BY c.{$args['orderby']} {$args['order']}";
-        
-        // Límite
-        if ($args['limit'] > 0) {
-            $sql .= " LIMIT %d OFFSET %d";
-            $params[] = $args['limit'];
-            $params[] = $args['offset'];
-        }
-        
+        // Preparar consulta si hay parámetros
         if (!empty($params)) {
             $sql = $this->wpdb->prepare($sql, $params);
         }
         
-        return $this->wpdb->get_results($sql);
+        // Obtener total antes de aplicar límites
+        $total_sql = "SELECT COUNT(*) FROM ({$sql}) as temp";
+        $total = $this->wpdb->get_var($total_sql);
+        
+        // Ordenamiento - validar que la columna existe
+        $columnas_validas = array('fecha', 'folio', 'total', 'estado', 'fecha_expiracion');
+        if (!in_array($args['orden'], $columnas_validas)) {
+            $args['orden'] = 'fecha';
+        }
+        
+        $sql .= " ORDER BY c.{$args['orden']} {$args['orden_dir']}";
+        
+        // Límites
+        $sql .= $this->wpdb->prepare(" LIMIT %d OFFSET %d", $args['limite'], $args['offset']);
+        
+        // Obtener resultados
+        $cotizaciones = $this->wpdb->get_results($sql);
+        
+        // Formatear resultados para la tabla
+        $items = array();
+        foreach ($cotizaciones as $cotizacion) {
+            $items[] = array(
+                'id' => $cotizacion->id,
+                'numero' => $cotizacion->folio,
+                'fecha' => $cotizacion->fecha,
+                'cliente' => $cotizacion->razon_social ?: 'Sin cliente',
+                'cliente_id' => $cotizacion->cliente_id,
+                'total' => $cotizacion->total,
+                'estado' => $cotizacion->estado,
+                'fecha_vencimiento' => $cotizacion->fecha_expiracion, // Mapear el nombre correcto
+                'vendedor' => $cotizacion->usuario_vendedor ?: $cotizacion->vendedor_nombre ?: 'Sin vendedor'
+            );
+        }
+        
+        // IMPORTANTE: Devolver array con la estructura correcta
+        return array(
+            'items' => $items,
+            'total' => intval($total)
+        );
     }
     
     /**
@@ -956,12 +994,97 @@ class Modulo_Ventas_DB {
         return $this->wpdb->get_var($sql);
     }
 
-    public function obtener_estadisticas_dashboard() {
-        return array(
-            'cotizaciones_mes' => 0,
-            'monto_mes' => 0,
-            'conversion_rate' => 0
+    /**
+     * Obtener estadísticas de cotizaciones
+     */
+    public function obtener_estadisticas_cotizaciones() {
+        $estadisticas = array(
+            'total' => 0,
+            'pendientes' => 0,
+            'aceptadas' => 0,
+            'rechazadas' => 0,
+            'vencidas' => 0,
+            'convertidas' => 0,
+            'monto_total' => 0
         );
+        
+        // Total de cotizaciones
+        $estadisticas['total'] = $this->wpdb->get_var(
+            "SELECT COUNT(*) FROM {$this->tabla_cotizaciones}"
+        );
+        
+        // Por estado
+        $estados = $this->wpdb->get_results(
+            "SELECT estado, COUNT(*) as cantidad, SUM(total) as monto 
+            FROM {$this->tabla_cotizaciones} 
+            GROUP BY estado"
+        );
+        
+        foreach ($estados as $estado) {
+            switch ($estado->estado) {
+                case 'pendiente':
+                case 'enviada':
+                    $estadisticas['pendientes'] += $estado->cantidad;
+                    break;
+                case 'aceptada':
+                    $estadisticas['aceptadas'] = $estado->cantidad;
+                    break;
+                case 'rechazada':
+                    $estadisticas['rechazadas'] = $estado->cantidad;
+                    break;
+                case 'vencida':
+                case 'expirada':
+                    $estadisticas['vencidas'] += $estado->cantidad;
+                    break;
+                case 'convertida':
+                    $estadisticas['convertidas'] = $estado->cantidad;
+                    break;
+            }
+            $estadisticas['monto_total'] += floatval($estado->monto);
+        }
+        
+        return $estadisticas;
+    }
+
+    /**
+     * Obtener estadísticas del dashboard
+     */
+    public function obtener_estadisticas_dashboard() {
+        $stats = array();
+        
+        // Cotizaciones del mes actual
+        $fecha_inicio = date('Y-m-01');
+        $fecha_fin = date('Y-m-d');
+        
+        $stats['cotizaciones_mes'] = $this->wpdb->get_var($this->wpdb->prepare(
+            "SELECT COUNT(*) FROM {$this->tabla_cotizaciones} 
+            WHERE DATE(fecha) >= %s AND DATE(fecha) <= %s",
+            $fecha_inicio,
+            $fecha_fin
+        ));
+        
+        // Monto del mes
+        $stats['monto_mes'] = $this->wpdb->get_var($this->wpdb->prepare(
+            "SELECT SUM(total) FROM {$this->tabla_cotizaciones} 
+            WHERE DATE(fecha) >= %s AND DATE(fecha) <= %s",
+            $fecha_inicio,
+            $fecha_fin
+        )) ?: 0;
+        
+        // Tasa de conversión
+        $total_cotizaciones = $this->wpdb->get_var(
+            "SELECT COUNT(*) FROM {$this->tabla_cotizaciones}"
+        );
+        
+        $cotizaciones_convertidas = $this->wpdb->get_var(
+            "SELECT COUNT(*) FROM {$this->tabla_cotizaciones} WHERE estado = 'convertida'"
+        );
+        
+        $stats['conversion_rate'] = $total_cotizaciones > 0 
+            ? round(($cotizaciones_convertidas / $total_cotizaciones) * 100, 2)
+            : 0;
+        
+        return $stats;
     }
     
     /**

@@ -67,10 +67,13 @@ $estadisticas = $db->obtener_estadisticas_cotizaciones();
             <span class="mv-stat-label"><?php _e('Monto Total', 'modulo-ventas'); ?></span>
         </div>
     </div>
-    
+
     <!-- Filtros -->
     <form method="get">
         <input type="hidden" name="page" value="modulo-ventas-cotizaciones">
+        
+        <!-- Búsqueda -->
+        <?php $cotizaciones_table->search_box(__('Buscar cotizaciones', 'modulo-ventas'), 'buscar'); ?>
         
         <div class="tablenav top">
             <div class="alignleft actions">
@@ -79,22 +82,74 @@ $estadisticas = $db->obtener_estadisticas_cotizaciones();
                     <?php
                     $estados = ventas_get_estados_cotizacion();
                     $estado_actual = isset($_REQUEST['estado']) ? $_REQUEST['estado'] : '';
-                    foreach ($estados as $key => $label):
-                    ?>
+                    foreach ($estados as $key => $label) : ?>
                         <option value="<?php echo esc_attr($key); ?>" <?php selected($estado_actual, $key); ?>>
                             <?php echo esc_html($label); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
                 
+                <!-- Filtro por fecha -->
+                <label for="fecha_desde" class="screen-reader-text"><?php _e('Fecha desde', 'modulo-ventas'); ?></label>
+                <input type="date" id="fecha_desde" name="fecha_desde" value="<?php echo esc_attr(isset($_REQUEST['fecha_desde']) ? $_REQUEST['fecha_desde'] : ''); ?>" placeholder="<?php esc_attr_e('Fecha desde', 'modulo-ventas'); ?>">
+                
+                <label for="fecha_hasta" class="screen-reader-text"><?php _e('Fecha hasta', 'modulo-ventas'); ?></label>
+                <input type="date" id="fecha_hasta" name="fecha_hasta" value="<?php echo esc_attr(isset($_REQUEST['fecha_hasta']) ? $_REQUEST['fecha_hasta'] : ''); ?>" placeholder="<?php esc_attr_e('Fecha hasta', 'modulo-ventas'); ?>">
+                
                 <input type="submit" class="button" value="<?php esc_attr_e('Filtrar', 'modulo-ventas'); ?>">
+                
+                <?php if (isset($_REQUEST['estado']) || isset($_REQUEST['fecha_desde']) || isset($_REQUEST['fecha_hasta']) || isset($_REQUEST['s'])) : ?>
+                    <a href="<?php echo admin_url('admin.php?page=modulo-ventas-cotizaciones'); ?>" class="button">
+                        <?php _e('Limpiar filtros', 'modulo-ventas'); ?>
+                    </a>
+                <?php endif; ?>
             </div>
             
-            <?php $cotizaciones_table->search_box(__('Buscar cotizaciones', 'modulo-ventas'), 'cotizacion'); ?>
+            <!-- Acciones adicionales -->
+            <div class="alignright">
+                <a href="#" class="button" id="exportar-cotizaciones">
+                    <span class="dashicons dashicons-download"></span>
+                    <?php _e('Exportar', 'modulo-ventas'); ?>
+                </a>
+            </div>
         </div>
-        
-        <?php $cotizaciones_table->display(); ?>
     </form>
+
+    <!-- Tabla de cotizaciones -->
+    <form id="cotizaciones-form" method="post">
+        <?php 
+        $cotizaciones_table->views();
+        $cotizaciones_table->display(); 
+        ?>
+    </form>
+
+    <script type="text/javascript">
+    jQuery(document).ready(function($) {
+        // Exportar cotizaciones
+        $('#exportar-cotizaciones').on('click', function(e) {
+            e.preventDefault();
+            
+            var filtros = {
+                estado: $('#filter-by-estado').val(),
+                fecha_desde: $('#fecha_desde').val(),
+                fecha_hasta: $('#fecha_hasta').val(),
+                busqueda: $('input[name="s"]').val()
+            };
+            
+            // Agregar parámetros a la URL
+            var url = ajaxurl + '?action=mv_exportar_cotizaciones&nonce=' + '<?php echo wp_create_nonce('modulo_ventas_nonce'); ?>';
+            
+            $.each(filtros, function(key, value) {
+                if (value) {
+                    url += '&' + key + '=' + encodeURIComponent(value);
+                }
+            });
+            
+            window.location.href = url;
+        });
+    });
+    </script>
+
 </div>
 
 <style>

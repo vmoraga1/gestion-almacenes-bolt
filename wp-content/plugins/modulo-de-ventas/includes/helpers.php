@@ -242,6 +242,21 @@ if (!function_exists('mv_get_estados_cotizacion')) {
 }
 
 /**
+ * Obtener estados de cotización
+ */
+function ventas_get_estados_cotizacion() {
+    return array(
+        'borrador' => __('Borrador', 'modulo-ventas'),
+        'pendiente' => __('Pendiente', 'modulo-ventas'),
+        'enviada' => __('Enviada', 'modulo-ventas'),
+        'aceptada' => __('Aceptada', 'modulo-ventas'),
+        'rechazada' => __('Rechazada', 'modulo-ventas'),
+        'expirada' => __('Expirada', 'modulo-ventas'),
+        'convertida' => __('Convertida', 'modulo-ventas')
+    );
+}
+
+/**
  * Obtener badge HTML para estado
  */
 if (!function_exists('mv_get_estado_badge')) {

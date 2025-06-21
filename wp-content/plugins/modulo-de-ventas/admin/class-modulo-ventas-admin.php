@@ -279,6 +279,11 @@ class Modulo_Ventas_Admin {
             wp_die(__('No tiene permisos suficientes para acceder a esta página.', 'modulo-ventas'));
         }
         
+        // AGREGAR: Procesar el formulario si se envió
+        if (isset($_POST['mv_cotizacion_nonce']) && wp_verify_nonce($_POST['mv_cotizacion_nonce'], 'mv_crear_cotizacion')) {
+            $this->procesar_nueva_cotizacion();
+        }
+
         // Obtener datos necesarios
         $clientes = new Modulo_Ventas_Clientes();
         $lista_clientes = $clientes->obtener_clientes_para_select();
@@ -295,6 +300,125 @@ class Modulo_Ventas_Admin {
         
         // Cargar vista
         require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/views/nueva-cotizacion.php';
+    }
+
+    /**
+     * Procesar el formulario de nueva cotización
+     */
+    private function procesar_nueva_cotizacion() {
+        // Recopilar datos generales con valores por defecto para campos opcionales
+        $datos_generales = array(
+            'cliente_id' => isset($_POST['cliente_id']) ? intval($_POST['cliente_id']) : 0,
+            'vendedor_id' => get_current_user_id(),
+            'almacen_id' => isset($_POST['almacen_id']) ? intval($_POST['almacen_id']) : 0,
+            'fecha' => isset($_POST['fecha']) ? sanitize_text_field($_POST['fecha']) : date('Y-m-d'),
+            'fecha_expiracion' => isset($_POST['fecha_expiracion']) ? sanitize_text_field($_POST['fecha_expiracion']) : '',
+            'plazo_pago' => isset($_POST['plazo_pago']) ? sanitize_text_field($_POST['plazo_pago']) : '',
+            'condiciones_pago' => isset($_POST['condiciones_pago']) ? sanitize_textarea_field($_POST['condiciones_pago']) : '',
+            'observaciones' => isset($_POST['observaciones']) ? sanitize_textarea_field($_POST['observaciones']) : '',
+            'notas_internas' => isset($_POST['notas_internas']) ? sanitize_textarea_field($_POST['notas_internas']) : '',
+            'terminos_condiciones' => isset($_POST['terminos_condiciones']) ? sanitize_textarea_field($_POST['terminos_condiciones']) : '',
+            'incluye_iva' => isset($_POST['incluye_iva']) ? 1 : 0,
+            'descuento_monto' => isset($_POST['descuento_monto']) ? floatval($_POST['descuento_monto']) : 0,
+            'descuento_porcentaje' => isset($_POST['descuento_porcentaje']) ? floatval($_POST['descuento_porcentaje']) : 0,
+            'costo_envio' => isset($_POST['costo_envio']) ? floatval($_POST['costo_envio']) : 0,
+            'subtotal' => isset($_POST['subtotal']) ? floatval($_POST['subtotal']) : 0,
+            'total' => isset($_POST['total']) ? floatval($_POST['total']) : 0
+        );
+        
+        // Debug para ver qué campos están llegando
+        error_log('Datos POST recibidos: ' . print_r($_POST, true));
+        
+        // Validar datos requeridos
+        if (!$datos_generales['cliente_id']) {
+            $this->agregar_mensaje_admin('error', __('Debe seleccionar un cliente', 'modulo-ventas'));
+            return;
+        }
+        
+        // Recopilar items - estructura mejorada
+        $items = array();
+        
+        // Los productos pueden venir en diferentes formatos según cómo se agreguen al formulario
+        // Verificar si vienen como array de productos
+        if (isset($_POST['productos']) && is_array($_POST['productos'])) {
+            foreach ($_POST['productos'] as $index => $producto) {
+                if (isset($producto['id']) && !empty($producto['id'])) {
+                    $items[] = array(
+                        'producto_id' => intval($producto['id']),
+                        'variacion_id' => isset($producto['variacion_id']) ? intval($producto['variacion_id']) : 0,
+                        'almacen_id' => isset($producto['almacen_id']) ? intval($producto['almacen_id']) : $datos_generales['almacen_id'],
+                        'sku' => isset($producto['sku']) ? sanitize_text_field($producto['sku']) : '',
+                        'nombre' => isset($producto['nombre']) ? sanitize_text_field($producto['nombre']) : '',
+                        'descripcion' => isset($producto['descripcion']) ? sanitize_textarea_field($producto['descripcion']) : '',
+                        'cantidad' => isset($producto['cantidad']) ? floatval($producto['cantidad']) : 1,
+                        'precio_unitario' => isset($producto['precio']) ? floatval($producto['precio']) : 0,
+                        'descuento_monto' => isset($producto['descuento']) ? floatval($producto['descuento']) : 0,
+                        'descuento_porcentaje' => 0,
+                        'subtotal' => isset($producto['subtotal']) ? floatval($producto['subtotal']) : 0
+                    );
+                }
+            }
+        }
+        // Alternativa: productos pueden venir con índices numéricos
+        else {
+            $i = 0;
+            while (isset($_POST['producto_id_' . $i])) {
+                $items[] = array(
+                    'producto_id' => intval($_POST['producto_id_' . $i]),
+                    'variacion_id' => isset($_POST['variacion_id_' . $i]) ? intval($_POST['variacion_id_' . $i]) : 0,
+                    'almacen_id' => isset($_POST['almacen_id_' . $i]) ? intval($_POST['almacen_id_' . $i]) : $datos_generales['almacen_id'],
+                    'sku' => isset($_POST['sku_' . $i]) ? sanitize_text_field($_POST['sku_' . $i]) : '',
+                    'nombre' => isset($_POST['nombre_' . $i]) ? sanitize_text_field($_POST['nombre_' . $i]) : '',
+                    'descripcion' => isset($_POST['descripcion_' . $i]) ? sanitize_textarea_field($_POST['descripcion_' . $i]) : '',
+                    'cantidad' => isset($_POST['cantidad_' . $i]) ? floatval($_POST['cantidad_' . $i]) : 1,
+                    'precio_unitario' => isset($_POST['precio_' . $i]) ? floatval($_POST['precio_' . $i]) : 0,
+                    'descuento_monto' => isset($_POST['descuento_' . $i]) ? floatval($_POST['descuento_' . $i]) : 0,
+                    'descuento_porcentaje' => 0,
+                    'subtotal' => isset($_POST['subtotal_' . $i]) ? floatval($_POST['subtotal_' . $i]) : 0
+                );
+                $i++;
+            }
+        }
+        
+        // Validar que hay productos
+        if (empty($items)) {
+            $this->agregar_mensaje_admin('error', __('Debe agregar al menos un producto', 'modulo-ventas'));
+            return;
+        }
+        
+        // Debug items
+        error_log('Items a guardar: ' . print_r($items, true));
+        
+        // Crear cotización
+        $cotizacion_id = $this->db->crear_cotizacion($datos_generales, $items);
+        
+        if (is_wp_error($cotizacion_id)) {
+            // Agregar mensaje de error
+            $this->agregar_mensaje_admin('error', $cotizacion_id->get_error_message());
+            error_log('Error al crear cotización: ' . $cotizacion_id->get_error_message());
+        } else {
+            // Éxito - log
+            error_log('Cotización creada exitosamente con ID: ' . $cotizacion_id);
+            
+            // Redirigir según la acción
+            if (isset($_POST['action']) && $_POST['action'] == 'save_and_new') {
+                wp_redirect(admin_url('admin.php?page=modulo-ventas-nueva-cotizacion&message=created'));
+            } else {
+                wp_redirect(admin_url('admin.php?page=modulo-ventas-ver-cotizacion&id=' . $cotizacion_id));
+            }
+            exit;
+        }
+    }
+
+    /**
+     * Agregar mensaje administrativo
+     */
+    private function agregar_mensaje_admin($tipo, $mensaje) {
+        add_action('admin_notices', function() use ($tipo, $mensaje) {
+            echo '<div class="notice notice-' . esc_attr($tipo) . ' is-dismissible">';
+            echo '<p>' . esc_html($mensaje) . '</p>';
+            echo '</div>';
+        });
     }
     
     /**
@@ -1189,9 +1313,9 @@ class Modulo_Ventas_Admin {
         );
     }
     
-    /**
+    /*
      * Agregar mensaje administrativo
-     */
+     
     private function agregar_mensaje_admin($tipo, $mensaje) {
         add_settings_error(
             'modulo_ventas_messages',
@@ -1199,7 +1323,7 @@ class Modulo_Ventas_Admin {
             $mensaje,
             $tipo
         );
-    }
+    }*/
     
     /**
      * Mostrar avisos administrativos

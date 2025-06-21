@@ -256,7 +256,7 @@ if (!function_exists('mv_tooltip')) {
         <div class="mv-form-container">    
 
             <!-- Observaciones -->
-            <div class="postbox">
+            <div class="postbox" id="box-observaciones">
                 <h2 class="hndle">
                     <span style="margin: 1em;"><?php _e('Información Adicional', 'modulo-ventas'); ?></span>
                 </h2>
@@ -298,7 +298,7 @@ if (!function_exists('mv_tooltip')) {
             </div>
 
             <!-- Resumen de totales -->
-            <div class="postbox">
+            <div class="postbox" id="box-totales">
                 <h2 class="hndle">
                     <span style="margin: 1em;"><?php _e('Resumen', 'modulo-ventas'); ?></span>
                 </h2>
@@ -368,6 +368,9 @@ if (!function_exists('mv_tooltip')) {
                     
                     <input type="hidden" name="subtotal" id="input-subtotal" value="0">
                     <input type="hidden" name="total" id="input-total" value="0">
+                    <input type="hidden" name="descuento_monto" id="descuento_monto" value="0">
+                    <input type="hidden" name="descuento_porcentaje" id="descuento_porcentaje" value="0">
+                    <input type="hidden" name="condiciones_pago" id="condiciones_pago" value="">
                 </div>
             </div>
         </div>
@@ -375,7 +378,7 @@ if (!function_exists('mv_tooltip')) {
         <div class="mv-form-container">
 
             <!-- Acciones -->
-            <div class="postbox">
+            <div class="postbox" id="box-acciones">
                 <h2 class="hndle">
                     <span style="margin: 1em;"><?php _e('Acciones', 'modulo-ventas'); ?></span>
                 </h2>
@@ -404,7 +407,7 @@ if (!function_exists('mv_tooltip')) {
                 
             <!-- Plantillas rápidas -->
             <?php if (apply_filters('mv_mostrar_plantillas', true)) : ?>
-            <div class="postbox">
+            <div class="postbox" id="box-plantillas">
                 <h2 class="hndle">
                     <span style="margin: 1em;"><?php _e('Plantillas Rápidas', 'modulo-ventas'); ?></span>
                 </h2>
@@ -579,7 +582,7 @@ if (!function_exists('mv_tooltip')) {
                     value="0" 
                     min="0" 
                     step="0.01" 
-                    class="mv-input-descuento small-text">
+                    class="mv-input-descuento small-text-dcto">
             </div>
         </td>
         
@@ -603,6 +606,29 @@ if (!function_exists('mv_tooltip')) {
     grid-template-columns: 2fr 1fr;
     gap: 20px;
     margin-top: 20px;
+    grid-template-areas: "box-observaciones box-totales" ;
+}
+
+#box-observaciones {
+    grid-area: box-observaciones;
+}
+
+#box-totales {
+    grid-area: box-totales;
+}
+
+/* Responsive */
+@media screen and (max-width: 800px) {
+    .mv-form-container {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "box-totales"
+            "box-observaciones"
+    }
+    
+    .mv-form-sidebar {
+        order: -1;
+    }
 }
 
 .mv-form-main .postbox {
@@ -675,10 +701,11 @@ if (!function_exists('mv_tooltip')) {
 }
 
 .column-producto {
+    width: 30%;
 }
 
 .column-almacen {
-    width: 15%;
+    width: 12%;
 }
 
 .column-cantidad {
@@ -686,16 +713,16 @@ if (!function_exists('mv_tooltip')) {
 }
 
 .column-precio {
-    width: 10%;
+    width: 14%;
 }
 
 .column-descuento {
-    width: 15%;
+    width: 14%;
 }
 
 .column-subtotal {
-    width: 12%;
-    text-align: right;
+    width: 8%;
+    text-align: left;
 }
 
 .column-acciones {
@@ -703,33 +730,22 @@ if (!function_exists('mv_tooltip')) {
     text-align: center;
 }
 
-/*.mv-producto-info {
-    margin-bottom: 5px;
-}
-
-.mv-producto-nombre {
-    display: block;
-}
-
-.mv-producto-sku {
-    color: #646970;
-}
-
-.mv-producto-descripcion textarea {
-    width: 100%;
-    font-size: 12px;
+select.mv-select-almacen, input.mv-input-cantidad.small-text, input.mv-input-precio.regular-text {
+    width: -webkit-fill-available;
 }
 
 .mv-descuento-item {
-    display: flex;
-    gap: 5px;
+    display: flex
+;
 }
 
-.mv-stock-info {
-    display: block;
-    color: #646970;
-    margin-top: 5px;
-}*/
+input.mv-input-descuento.small-text-dcto {
+    width: 100%;
+}
+
+input#costo_envio, input#descuento_global {
+    width: 80px;
+}
 
 /* Sidebar */
 .mv-actions {
@@ -842,29 +858,6 @@ if (!function_exists('mv_tooltip')) {
     gap: 10px;
 }
 
-/* Responsive */
-@media screen and (max-width: 1200px) {
-    .mv-form-container {
-        grid-template-columns: 1fr;
-    }
-    
-    .mv-form-sidebar {
-        order: -1;
-    }
-}
-
-@media screen and (max-width: 782px) {
-    .mv-form-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .mv-descuento-controls {
-        display: block;
-        margin-left: 0;
-        margin-top: 5px;
-    }
-}
-
 /* Estados de validación */
 .mv-input-error {
     border-color: #d63638 !important;
@@ -927,11 +920,7 @@ jQuery(document).ready(function($) {
                 type: 'POST',
                 dataType: 'json',
                 delay: 250,
-                data: function(params) {
-                    console.log('=== ENVIANDO BÚSQUEDA ===');
-                    console.log('Término buscado:', params.term);
-                    console.log('Almacén ID:', $('#almacen_id').val());
-                    
+                data: function(params) {                    
                     return {
                         action: 'mv_buscar_productos',
                         busqueda: params.term,
@@ -940,18 +929,11 @@ jQuery(document).ready(function($) {
                     };
                 },
                 processResults: function(data) {
-                    console.log('=== RESPUESTA DEL SERVIDOR ===');
-                    console.log('Respuesta completa:', data);
-                    
                     if (data.data) {
-                        console.log('Búsqueda recibida por el servidor:', data.data.busqueda);
-                        console.log('Total de resultados:', data.data.total);
-                        console.log('Productos:', data.data.productos);
                     }
                     
                     if (data.success) {
                         if (!data.data.productos || data.data.productos.length === 0) {
-                            console.log('No se encontraron productos');
                             return {
                                 results: [{
                                     id: 0,
@@ -966,7 +948,6 @@ jQuery(document).ready(function($) {
                         };
                     }
                     
-                    console.error('Error en la respuesta:', data);
                     return { 
                         results: [{
                             id: 0,
@@ -976,10 +957,6 @@ jQuery(document).ready(function($) {
                     };
                 },
                 error: function(xhr, textStatus, errorThrown) {
-                    console.error('=== ERROR AJAX ===');
-                    console.error('Status:', textStatus);
-                    console.error('Error:', errorThrown);
-                    console.error('Response:', xhr.responseText);
                 },
                 cache: false
             },
@@ -1017,17 +994,26 @@ jQuery(document).ready(function($) {
             return $('<div class="select2-no-results">' + producto.text + '</div>');
         }
         
-        var stockClass = producto.stock > 0 ? 'in-stock' : 'out-of-stock';
-        var stockText = producto.stock > 0 ? 'Stock: ' + producto.stock : 'Sin stock';
+        var stockClass = producto.en_stock ? 'in-stock' : 'out-of-stock';
+        var stockText = '';
+        
+        if (producto.gestion_stock) {
+            stockText = producto.stock > 0 ? 
+                '<?php _e('Stock:', 'modulo-ventas'); ?> ' + producto.stock : 
+                '<?php _e('Agotado', 'modulo-ventas'); ?>';
+        } else {
+            stockText = producto.en_stock ? 
+                '<?php _e('Disponible', 'modulo-ventas'); ?>' : 
+                '<?php _e('Agotado', 'modulo-ventas'); ?>';
+        }
         
         var $producto = $(
-            '<div class="mv-producto-result">' +
+            '<div class="mv-producto-result ' + (producto.en_stock ? '' : 'producto-agotado') + '">' +
                 '<div class="mv-producto-nombre">' + producto.nombre + '</div>' +
                 '<div class="mv-producto-meta">' +
-                    '<span class="sku">SKU: ' + (producto.sku || 'N/A') + '</span> | ' +
-                    '<span class="stock ' + stockClass + '">' + stockText + '</span> | ' +
-                    '<span class="precio">Precio: ' + moduloVentasAjax.currency_symbol + ' ' + 
-                    new Intl.NumberFormat('es-CL').format(producto.precio) + '</span>' +
+                    'SKU: ' + producto.sku + ' | ' +
+                    '<span class="stock-status ' + stockClass + '">' + stockText + '</span> | ' +
+                    '$' + Number(producto.precio).toLocaleString('es-CL') +
                 '</div>' +
             '</div>'
         );
@@ -1077,6 +1063,25 @@ jQuery(document).ready(function($) {
         color: #fff;
         opacity: 0.9;
     }
+
+    .mv-producto-result.producto-agotado {
+        opacity: 0.7;
+        background-color: #f8f8f8;
+    }
+
+    .mv-producto-result.producto-agotado .mv-producto-nombre {
+        color: #666;
+    }
+
+    .stock-status.out-of-stock {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+
+    .stock-status.in-stock {
+        color: #27ae60;
+    }
+
     </style>
     `;
 
@@ -1227,7 +1232,6 @@ jQuery(document).ready(function($) {
         // Limpiar select de productos
         $('.mv-select2-productos').val(null).trigger('change');
         
-        console.log('Producto agregado:', datos);
     }
     
     // Agregar línea personalizada
@@ -1400,6 +1404,52 @@ jQuery(document).ready(function($) {
                    maximumFractionDigits: 0
                }).format(valor);
     }
+
+    // Antes del submit, agregar campos hidden para cada producto
+    $('#mv-form-cotizacion').on('submit', function(e) {
+        // Primero, limpiar productos anteriores
+        $(this).find('input[name^="producto_id_"]').remove();
+        
+        // Agregar campos hidden para cada producto en la tabla
+        var index = 0;
+        $('#mv-productos-lista .mv-producto-row').each(function() {
+            var $row = $(this);
+            var $form = $('#mv-form-cotizacion');
+            
+            // Producto ID
+            $form.append('<input type="hidden" name="producto_id_' + index + '" value="' + $row.data('producto-id') + '">');
+            
+            // Variación ID
+            $form.append('<input type="hidden" name="variacion_id_' + index + '" value="' + ($row.data('variacion-id') || 0) + '">');
+            
+            // SKU
+            $form.append('<input type="hidden" name="sku_' + index + '" value="' + $row.find('.producto-sku').text() + '">');
+            
+            // Nombre
+            $form.append('<input type="hidden" name="nombre_' + index + '" value="' + $row.find('.producto-nombre').text() + '">');
+            
+            // Cantidad
+            $form.append('<input type="hidden" name="cantidad_' + index + '" value="' + $row.find('.producto-cantidad').val() + '">');
+            
+            // Precio
+            $form.append('<input type="hidden" name="precio_' + index + '" value="' + $row.find('.producto-precio').val() + '">');
+            
+            // Almacén
+            var almacenId = $row.find('.mv-select-almacen').val() || $('#almacen_id').val() || 0;
+            $form.append('<input type="hidden" name="almacen_id_' + index + '" value="' + almacenId + '">');
+            
+            // Descuento
+            var descuento = $row.find('.producto-descuento').val() || 0;
+            $form.append('<input type="hidden" name="descuento_' + index + '" value="' + descuento + '">');
+            
+            // Subtotal
+            var subtotal = parseFloat($row.find('.producto-subtotal').text().replace(/[^0-9.-]+/g, '')) || 0;
+            $form.append('<input type="hidden" name="subtotal_' + index + '" value="' + subtotal + '">');
+            
+            index++;
+        });
+    
+    });
     
     // Vista previa
     $('.mv-btn-preview').on('click', function() {
