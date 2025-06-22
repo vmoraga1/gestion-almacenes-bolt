@@ -321,10 +321,20 @@ class Modulo_Ventas_Admin {
             'incluye_iva' => isset($_POST['incluye_iva']) ? 1 : 0,
             'descuento_monto' => isset($_POST['descuento_monto']) ? floatval($_POST['descuento_monto']) : 0,
             'descuento_porcentaje' => isset($_POST['descuento_porcentaje']) ? floatval($_POST['descuento_porcentaje']) : 0,
+            'tipo_descuento' => isset($_POST['tipo_descuento_global']) ? sanitize_text_field($_POST['tipo_descuento_global']) : 'monto',
             'costo_envio' => isset($_POST['costo_envio']) ? floatval($_POST['costo_envio']) : 0,
             'subtotal' => isset($_POST['subtotal']) ? floatval($_POST['subtotal']) : 0,
             'total' => isset($_POST['total']) ? floatval($_POST['total']) : 0
         );
+        
+        // Aplicar descuento global según tipo
+        if ($datos_generales['tipo_descuento'] === 'porcentaje') {
+            $datos_generales['descuento_porcentaje'] = isset($_POST['descuento_global']) ? floatval($_POST['descuento_global']) : 0;
+            $datos_generales['descuento_monto'] = 0;
+        } else {
+            $datos_generales['descuento_monto'] = isset($_POST['descuento_global']) ? floatval($_POST['descuento_global']) : 0;
+            $datos_generales['descuento_porcentaje'] = 0;
+        }
         
         // Debug para ver qué campos están llegando
         error_log('Datos POST recibidos: ' . print_r($_POST, true));
@@ -335,48 +345,73 @@ class Modulo_Ventas_Admin {
             return;
         }
         
-        // Recopilar items - estructura mejorada
+        // Recopilar items - NUEVA estructura correcta
         $items = array();
         
-        // Los productos pueden venir en diferentes formatos según cómo se agreguen al formulario
-        // Verificar si vienen como array de productos
-        if (isset($_POST['productos']) && is_array($_POST['productos'])) {
-            foreach ($_POST['productos'] as $index => $producto) {
-                if (isset($producto['id']) && !empty($producto['id'])) {
+        // Los productos vienen en el array $_POST['items']
+        if (isset($_POST['items']) && is_array($_POST['items'])) {
+            foreach ($_POST['items'] as $item) {
+                // Solo procesar si tiene producto_id válido
+                if (isset($item['producto_id']) && !empty($item['producto_id'])) {
+                    // Obtener datos del producto de WooCommerce si es necesario
+                    $producto_id = intval($item['producto_id']);
+                    $variacion_id = isset($item['variacion_id']) ? intval($item['variacion_id']) : 0;
+                    
+                    // Si el nombre está vacío y es un producto de WooCommerce, obtenerlo
+                    $nombre = isset($item['nombre']) ? sanitize_text_field($item['nombre']) : '';
+                    $sku = isset($item['sku']) ? sanitize_text_field($item['sku']) : '';
+                    
+                    if (empty($nombre) && $producto_id > 0) {
+                        // Es un producto de WooCommerce, obtener sus datos
+                        $product = wc_get_product($variacion_id ? $variacion_id : $producto_id);
+                        if ($product) {
+                            $nombre = $product->get_name();
+                            if (empty($sku)) {
+                                $sku = $product->get_sku();
+                            }
+                        }
+                    }
+                    
+                    // Si aún no tiene nombre, usar un valor por defecto
+                    if (empty($nombre)) {
+                        $nombre = 'Producto personalizado';
+                    }
+                    
+                    // Calcular descuento
+                    $precio_unitario = isset($item['precio_unitario']) ? floatval($item['precio_unitario']) : 0;
+                    $cantidad = isset($item['cantidad']) ? floatval($item['cantidad']) : 1;
+                    $tipo_descuento = isset($item['tipo_descuento']) ? $item['tipo_descuento'] : 'monto';
+                    $descuento_valor = isset($item['descuento_monto']) ? floatval($item['descuento_monto']) : 0;
+                    
+                    // Calcular montos de descuento
+                    if ($tipo_descuento === 'porcentaje') {
+                        $descuento_porcentaje = $descuento_valor;
+                        $descuento_monto = ($precio_unitario * $cantidad) * ($descuento_porcentaje / 100);
+                    } else {
+                        $descuento_monto = $descuento_valor;
+                        $descuento_porcentaje = ($precio_unitario > 0) ? ($descuento_monto / ($precio_unitario * $cantidad)) * 100 : 0;
+                    }
+                    
+                    // Calcular subtotal del item
+                    $subtotal_item = ($precio_unitario * $cantidad) - $descuento_monto;
+                    
                     $items[] = array(
-                        'producto_id' => intval($producto['id']),
-                        'variacion_id' => isset($producto['variacion_id']) ? intval($producto['variacion_id']) : 0,
-                        'almacen_id' => isset($producto['almacen_id']) ? intval($producto['almacen_id']) : $datos_generales['almacen_id'],
-                        'sku' => isset($producto['sku']) ? sanitize_text_field($producto['sku']) : '',
-                        'nombre' => isset($producto['nombre']) ? sanitize_text_field($producto['nombre']) : '',
-                        'descripcion' => isset($producto['descripcion']) ? sanitize_textarea_field($producto['descripcion']) : '',
-                        'cantidad' => isset($producto['cantidad']) ? floatval($producto['cantidad']) : 1,
-                        'precio_unitario' => isset($producto['precio']) ? floatval($producto['precio']) : 0,
-                        'descuento_monto' => isset($producto['descuento']) ? floatval($producto['descuento']) : 0,
-                        'descuento_porcentaje' => 0,
-                        'subtotal' => isset($producto['subtotal']) ? floatval($producto['subtotal']) : 0
+                        'producto_id' => $producto_id,
+                        'variacion_id' => $variacion_id,
+                        'almacen_id' => isset($item['almacen_id']) ? intval($item['almacen_id']) : $datos_generales['almacen_id'],
+                        'sku' => $sku,
+                        'nombre' => $nombre,
+                        'descripcion' => isset($item['descripcion']) ? sanitize_textarea_field($item['descripcion']) : '',
+                        'cantidad' => $cantidad,
+                        'precio_unitario' => $precio_unitario,
+                        'precio_original' => isset($item['precio_original']) ? floatval($item['precio_original']) : $precio_unitario,
+                        'descuento_monto' => $descuento_monto,
+                        'descuento_porcentaje' => $descuento_porcentaje,
+                        'tipo_descuento' => $tipo_descuento,
+                        'subtotal' => $subtotal_item,
+                        'stock_disponible' => isset($item['stock_disponible']) ? intval($item['stock_disponible']) : null
                     );
                 }
-            }
-        }
-        // Alternativa: productos pueden venir con índices numéricos
-        else {
-            $i = 0;
-            while (isset($_POST['producto_id_' . $i])) {
-                $items[] = array(
-                    'producto_id' => intval($_POST['producto_id_' . $i]),
-                    'variacion_id' => isset($_POST['variacion_id_' . $i]) ? intval($_POST['variacion_id_' . $i]) : 0,
-                    'almacen_id' => isset($_POST['almacen_id_' . $i]) ? intval($_POST['almacen_id_' . $i]) : $datos_generales['almacen_id'],
-                    'sku' => isset($_POST['sku_' . $i]) ? sanitize_text_field($_POST['sku_' . $i]) : '',
-                    'nombre' => isset($_POST['nombre_' . $i]) ? sanitize_text_field($_POST['nombre_' . $i]) : '',
-                    'descripcion' => isset($_POST['descripcion_' . $i]) ? sanitize_textarea_field($_POST['descripcion_' . $i]) : '',
-                    'cantidad' => isset($_POST['cantidad_' . $i]) ? floatval($_POST['cantidad_' . $i]) : 1,
-                    'precio_unitario' => isset($_POST['precio_' . $i]) ? floatval($_POST['precio_' . $i]) : 0,
-                    'descuento_monto' => isset($_POST['descuento_' . $i]) ? floatval($_POST['descuento_' . $i]) : 0,
-                    'descuento_porcentaje' => 0,
-                    'subtotal' => isset($_POST['subtotal_' . $i]) ? floatval($_POST['subtotal_' . $i]) : 0
-                );
-                $i++;
             }
         }
         
@@ -389,8 +424,9 @@ class Modulo_Ventas_Admin {
         // Debug items
         error_log('Items a guardar: ' . print_r($items, true));
         
-        // Crear cotización
-        $cotizacion_id = $this->db->crear_cotizacion($datos_generales, $items);
+        // Crear cotización usando la clase de cotizaciones
+        $cotizaciones = new Modulo_Ventas_Cotizaciones();
+        $cotizacion_id = $cotizaciones->crear_cotizacion($datos_generales, $items);
         
         if (is_wp_error($cotizacion_id)) {
             // Agregar mensaje de error

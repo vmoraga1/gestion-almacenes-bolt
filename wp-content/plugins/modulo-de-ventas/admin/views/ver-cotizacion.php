@@ -302,6 +302,17 @@ if (!empty($cotizacion->vendedor_id)) {
                                 </tr>
                                 <?php endif; ?>
                                 
+                                <?php if (isset($cotizacion->costo_envio) && $cotizacion->costo_envio > 0): ?>
+                                <tr class="mv-totales-row">
+                                    <td colspan="<?php echo $gestion_almacenes_activo ? '7' : '5'; ?>" class="text-right">
+                                        <?php _e('Envío:', 'modulo-ventas'); ?>
+                                    </td>
+                                    <td class="column-total">
+                                        <?php echo wc_price($cotizacion->costo_envio); ?>
+                                    </td>
+                                </tr>
+                                <?php endif; ?>
+
                                 <?php if (isset($cotizacion->incluye_iva) && $cotizacion->incluye_iva): ?>
                                 <tr class="mv-totales-row">
                                     <td colspan="<?php echo $gestion_almacenes_activo ? '7' : '5'; ?>" class="text-right">
@@ -319,17 +330,6 @@ if (!empty($cotizacion->vendedor_id)) {
                                         $iva = $cotizacion->impuesto_monto ?? ($base_imponible * 0.19);
                                         echo wc_price($iva);
                                         ?>
-                                    </td>
-                                </tr>
-                                <?php endif; ?>
-                                
-                                <?php if (isset($cotizacion->costo_envio) && $cotizacion->costo_envio > 0): ?>
-                                <tr class="mv-totales-row">
-                                    <td colspan="<?php echo $gestion_almacenes_activo ? '7' : '5'; ?>" class="text-right">
-                                        <?php _e('Envío:', 'modulo-ventas'); ?>
-                                    </td>
-                                    <td class="column-total">
-                                        <?php echo wc_price($cotizacion->costo_envio); ?>
                                     </td>
                                 </tr>
                                 <?php endif; ?>

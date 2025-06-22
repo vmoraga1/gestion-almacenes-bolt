@@ -857,3 +857,235 @@ Stack trace:
 [21-Jun-2025 21:18:27 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
 [21-Jun-2025 21:18:27 UTC] PHP   5. Modulo_Ventas_Admin->pagina_ver_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
 [21-Jun-2025 21:18:27 UTC] PHP   6. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:453
+[21-Jun-2025 22:21:51 UTC] Datos POST recibidos: Array
+(
+    [mv_cotizacion_nonce] => fca6fffb95
+    [_wp_http_referer] => /gestion-almacenes-bolt/wp-admin/admin.php?page=modulo-ventas-nueva-cotizacion
+    [cliente_id] => 4
+    [fecha] => 2025-06-22
+    [fecha_expiracion] => 2025-06-27
+    [plazo_pago] => 60_dias
+    [vendedor_id] => 1
+    [almacen_id] => 
+    [incluye_iva] => 1
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [producto_id] => 70
+                    [variacion_id] => 0
+                    [sku] => GY-0003
+                    [nombre] => Malla Papal 2x1m
+                    [descripcion] => 
+                    [almacen_id] => 1
+                    [cantidad] => 2
+                    [precio_unitario] => 60000
+                    [precio_original] => 60000
+                    [tipo_descuento] => porcentaje
+                    [descuento_monto] => 10
+                    [subtotal] => 108000.00
+                )
+
+        )
+
+    [observaciones] => 
+    [notas_internas] => 
+    [terminos_condiciones] => 
+    [tipo_descuento_global] => monto
+    [descuento_global] => 8000
+    [costo_envio] => 1000
+    [subtotal] => 108000.00
+    [total] => 120190.00
+    [descuento_monto] => 0
+    [descuento_porcentaje] => 0
+    [condiciones_pago] => 
+    [producto_id_0] => undefined
+    [variacion_id_0] => 0
+    [sku_0] => 
+    [nombre_0] => 
+    [cantidad_0] => undefined
+    [precio_0] => undefined
+    [almacen_id_0] => 1
+    [descuento_0] => 0
+    [subtotal_0] => 0
+)
+
+[21-Jun-2025 22:21:51 UTC] Items a guardar: Array
+(
+    [0] => Array
+        (
+            [producto_id] => 70
+            [variacion_id] => 0
+            [almacen_id] => 1
+            [sku] => GY-0003
+            [nombre] => Malla Papal 2x1m
+            [descripcion] => 
+            [cantidad] => 2
+            [precio_unitario] => 60000
+            [precio_original] => 60000
+            [descuento_monto] => 12000
+            [descuento_porcentaje] => 10
+            [tipo_descuento] => porcentaje
+            [subtotal] => 108000
+            [stock_disponible] => 
+        )
+
+)
+
+[21-Jun-2025 22:21:51 UTC] Cotización creada exitosamente con ID: 2
+[21-Jun-2025 23:02:09 UTC] Datos POST recibidos: Array
+(
+    [mv_cotizacion_nonce] => fca6fffb95
+    [_wp_http_referer] => /gestion-almacenes-bolt/wp-admin/admin.php?page=modulo-ventas-nueva-cotizacion
+    [cliente_id] => 1
+    [fecha] => 2025-06-22
+    [fecha_expiracion] => 2025-06-30
+    [plazo_pago] => 45_dias
+    [vendedor_id] => 1
+    [almacen_id] => 
+    [incluye_iva] => 1
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [producto_id] => 69
+                    [variacion_id] => 0
+                    [sku] => SP-001
+                    [nombre] => Silla Plástica roja
+                    [descripcion] => 
+                    [almacen_id] => 2
+                    [cantidad] => 5
+                    [precio_unitario] => 12000
+                    [precio_original] => 12000
+                    [tipo_descuento] => porcentaje
+                    [descuento_monto] => 20
+                    [subtotal] => 48000.00
+                )
+
+        )
+
+    [observaciones] => 
+    [notas_internas] => 
+    [terminos_condiciones] => 
+    [tipo_descuento_global] => monto
+    [descuento_global] => 10000
+    [costo_envio] => 12000
+    [subtotal] => 48000.00
+    [total] => 59500.00
+    [descuento_monto] => 0
+    [descuento_porcentaje] => 0
+    [condiciones_pago] => 
+    [producto_id_0] => undefined
+    [variacion_id_0] => 0
+    [sku_0] => 
+    [nombre_0] => 
+    [cantidad_0] => undefined
+    [precio_0] => undefined
+    [almacen_id_0] => 2
+    [descuento_0] => 0
+    [subtotal_0] => 0
+)
+
+[21-Jun-2025 23:02:09 UTC] Items a guardar: Array
+(
+    [0] => Array
+        (
+            [producto_id] => 69
+            [variacion_id] => 0
+            [almacen_id] => 2
+            [sku] => SP-001
+            [nombre] => Silla Plástica roja
+            [descripcion] => 
+            [cantidad] => 5
+            [precio_unitario] => 12000
+            [precio_original] => 12000
+            [descuento_monto] => 12000
+            [descuento_porcentaje] => 20
+            [tipo_descuento] => porcentaje
+            [subtotal] => 48000
+            [stock_disponible] => 
+        )
+
+)
+
+[21-Jun-2025 23:02:09 UTC] Cotización creada exitosamente con ID: 3
+[22-Jun-2025 00:33:19 UTC] Datos POST recibidos: Array
+(
+    [mv_cotizacion_nonce] => 18ea543b37
+    [_wp_http_referer] => /gestion-almacenes-bolt/wp-admin/admin.php?page=modulo-ventas-nueva-cotizacion
+    [cliente_id] => 4
+    [fecha] => 2025-06-22
+    [fecha_expiracion] => 2025-07-22
+    [plazo_pago] => contado
+    [vendedor_id] => 1
+    [almacen_id] => 
+    [incluye_iva] => 1
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [producto_id] => 75
+                    [variacion_id] => 0
+                    [sku] => T3X3
+                    [nombre] => Toldo 3x3m
+                    [descripcion] => Lona azul
+                    [almacen_id] => 2
+                    [cantidad] => 4
+                    [precio_unitario] => 25000
+                    [precio_original] => 25000
+                    [tipo_descuento] => porcentaje
+                    [descuento_monto] => 10
+                    [subtotal] => 90000.00
+                )
+
+        )
+
+    [observaciones] => 
+    [notas_internas] => 
+    [terminos_condiciones] => 
+    [tipo_descuento_global] => monto
+    [descuento_global] => 5000
+    [costo_envio] => 15000
+    [subtotal] => 90000.00
+    [total] => 119000.00
+    [descuento_monto] => 0
+    [descuento_porcentaje] => 0
+    [condiciones_pago] => 
+    [producto_id_0] => undefined
+    [variacion_id_0] => 0
+    [sku_0] => 
+    [nombre_0] => 
+    [cantidad_0] => undefined
+    [precio_0] => undefined
+    [almacen_id_0] => 2
+    [descuento_0] => 0
+    [subtotal_0] => 0
+)
+
+[22-Jun-2025 00:33:19 UTC] Items a guardar: Array
+(
+    [0] => Array
+        (
+            [producto_id] => 75
+            [variacion_id] => 0
+            [almacen_id] => 2
+            [sku] => T3X3
+            [nombre] => Toldo 3x3m
+            [descripcion] => Lona azul
+            [cantidad] => 4
+            [precio_unitario] => 25000
+            [precio_original] => 25000
+            [descuento_monto] => 10000
+            [descuento_porcentaje] => 10
+            [tipo_descuento] => porcentaje
+            [subtotal] => 90000
+            [stock_disponible] => 
+        )
+
+)
+
+[22-Jun-2025 00:33:19 UTC] Cotización creada exitosamente con ID: 4
+[22-Jun-2025 06:05:49 UTC] Automatic updates starting...
+[22-Jun-2025 06:05:50 UTC]   Automatic plugin updates starting...
+[22-Jun-2025 06:05:50 UTC]   Automatic plugin updates complete.
+[22-Jun-2025 06:05:50 UTC] Automatic updates complete.

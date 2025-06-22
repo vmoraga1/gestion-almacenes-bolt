@@ -204,15 +204,6 @@ if (!function_exists('mv_tooltip')) {
                     <span style="margin: 1em;"><?php _e('Productos / Servicios', 'modulo-ventas'); ?></span>
                 </h2>
                 <div class="inside">
-                    <!-- Buscador de productos -->
-                    <div class="mv-product-search">
-                        <label for="buscar_producto" class="screen-reader-text">
-                            <?php _e('Buscar producto', 'modulo-ventas'); ?>
-                        </label>
-                        <select id="buscar_producto" class="mv-select2-productos" style="width: 100%;">
-                            <option value=""><?php _e('Buscar productos por nombre, SKU o categoría...', 'modulo-ventas'); ?></option>
-                        </select>
-                    </div>
                     
                     <!-- Tabla de productos -->
                     <div class="mv-productos-tabla-wrapper">
@@ -238,6 +229,18 @@ if (!function_exists('mv_tooltip')) {
                                 </tr>
                             </tbody>
                             <tfoot>
+                                <!-- Buscador en tfoot -->
+                                <tr>
+                                    <td colspan="<?php echo mv_almacenes_activo() ? '7' : '6'; ?>">
+                                        <label for="buscar_producto" class="screen-reader-text">
+                                            <?php _e('Buscar producto', 'modulo-ventas'); ?>
+                                        </label>
+                                        <select id="buscar_producto" class="mv-select2-productos" style="width: 100%;">
+                                            <option value=""><?php _e('Buscar productos por Nombre o SKU', 'modulo-ventas'); ?></option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <!-- Linea personalizada --
                                 <tr>
                                     <td colspan="<?php echo mv_almacenes_activo() ? '7' : '6'; ?>">
                                         <button type="button" class="button mv-btn-agregar-linea">
@@ -245,7 +248,7 @@ if (!function_exists('mv_tooltip')) {
                                             <?php _e('Agregar línea personalizada', 'modulo-ventas'); ?>
                                         </button>
                                     </td>
-                                </tr>
+                                </tr>-->
                             </tfoot>
                         </table>
                     </div>
@@ -913,7 +916,7 @@ jQuery(document).ready(function($) {
         
         // Productos
         $('.mv-select2-productos').select2({
-            placeholder: '<?php _e('Buscar productos...', 'modulo-ventas'); ?>',
+            placeholder: '<?php _e('Buscar productos por Nombre o SKU', 'modulo-ventas'); ?>',
             minimumInputLength: 2,
             ajax: {
                 url: ajaxurl,
@@ -964,8 +967,10 @@ jQuery(document).ready(function($) {
             templateSelection: function(producto) {
                 if (producto.id && producto.id !== '0') {
                     agregarProducto(producto);
+                    return '<?php _e('Buscar productos por Nombre o SKU', 'modulo-ventas'); ?>';
                 }
-                return null;
+
+                return '<?php _e('Buscar productos por Nombre o SKU', 'modulo-ventas'); ?>';
             },
             language: {
                 searching: function() {
@@ -1176,10 +1181,12 @@ jQuery(document).ready(function($) {
     // Agregar producto a la tabla
     function agregarProducto(producto) {
         // Verificar que el producto tenga los datos necesarios
-        if (!producto || !producto.id) {
+        if (!producto || (!producto.id && producto.id !== 0)) {
             console.error('Producto inválido:', producto);
             return;
         }
+        
+        console.log('Agregando producto:', producto); // Debug
         
         // Eliminar mensaje de "no hay productos"
         $('.mv-no-productos').remove();
@@ -1195,17 +1202,19 @@ jQuery(document).ready(function($) {
         // Obtener template
         var template = $('#mv-template-producto').html();
         
-        // Usar valores por defecto si faltan algunos campos
+        // Asegurarse de que todos los campos tengan valores
         var datos = {
             index: productoIndex,
             producto_id: producto.id || 0,
             variacion_id: producto.variacion_id || 0,
-            nombre: producto.nombre || producto.text || '',
+            nombre: producto.nombre || producto.text || producto.name || '',
             sku: producto.sku || '',
             precio: producto.precio || 0,
             precio_original: producto.precio_regular || producto.precio || 0,
             opciones_almacen: opcionesAlmacen
         };
+        
+        console.log('Datos para el template:', datos); // Debug
         
         // Reemplazar variables en el template
         var html = template;
@@ -1231,7 +1240,6 @@ jQuery(document).ready(function($) {
         
         // Limpiar select de productos
         $('.mv-select2-productos').val(null).trigger('change');
-        
     }
     
     // Agregar línea personalizada
@@ -1376,7 +1384,7 @@ jQuery(document).ready(function($) {
         // Subtotal con envío
         var subtotalConEnvio = subtotalConDescuento + envio;
         
-        // IVA (se calcula después del envío)
+        // IVA (se calcula sobre el total incluyendo envío)
         var iva = incluyeIva ? subtotalConEnvio * 0.19 : 0;
         
         // Total
@@ -1399,10 +1407,10 @@ jQuery(document).ready(function($) {
     // Formatear precio
     function formatearPrecio(valor) {
         return moduloVentasAjax.currency_symbol + ' ' + 
-               new Intl.NumberFormat('es-CL', {
-                   minimumFractionDigits: 0,
-                   maximumFractionDigits: 0
-               }).format(valor);
+            new Intl.NumberFormat('es-CL', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(valor);
     }
 
     // Antes del submit, agregar campos hidden para cada producto
@@ -1500,5 +1508,41 @@ jQuery(document).ready(function($) {
             });
         }, 3000);
     }
+
+    // CÓDIGO DE DEPURACIÓN - ELIMINAR DESPUÉS DE RESOLVER EL PROBLEMA
+    // Interceptar el envío del formulario para depuración
+    $('#mv-form-cotizacion').on('submit', function(e) {
+        console.log('=== DEPURACIÓN DE ENVÍO DE FORMULARIO ===');
+        
+        // Obtener todos los campos del formulario
+        var formData = $(this).serializeArray();
+        console.log('Datos del formulario:', formData);
+        
+        // Mostrar específicamente los items
+        var items = {};
+        formData.forEach(function(field) {
+            if (field.name.startsWith('items[')) {
+                if (!items[field.name]) {
+                    items[field.name] = field.value;
+                }
+            }
+        });
+        console.log('Items encontrados:', items);
+        
+        // Verificar campos específicos
+        console.log('=== Verificación de campos de productos ===');
+        $('#mv-productos-lista .mv-producto-row').each(function(index) {
+            var $row = $(this);
+            console.log('Producto ' + index + ':');
+            console.log('  - producto_id:', $row.find('input[name*="[producto_id]"]').val());
+            console.log('  - nombre (hidden):', $row.find('input[name*="[nombre]"]').val());
+            console.log('  - nombre (visible):', $row.find('.mv-producto-nombre').text());
+            console.log('  - sku:', $row.find('input[name*="[sku]"]').val());
+            console.log('  - precio:', $row.find('input[name*="[precio_unitario]"]').val());
+        });
+        
+        // No cancelar el envío, solo depurar
+        // e.preventDefault(); // Descomentar para evitar el envío y revisar la consola
+    });
 });
 </script>

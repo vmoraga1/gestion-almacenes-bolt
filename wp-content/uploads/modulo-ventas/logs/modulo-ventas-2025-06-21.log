@@ -99,3 +99,5 @@ Stack trace:
 #4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('admin_page_modu...')
 #5 {main}
   thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\ver-cotizacion.php","line":28,"type":1}
+[2025-06-21 22:21:51] INFO: Cotización creada: COT-2025-000002 (ID: 2) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-06-21 23:02:09] INFO: Cotización creada: COT-2025-000003 (ID: 3) | Usuario: hostpanish (ID: 1) | IP: ::1

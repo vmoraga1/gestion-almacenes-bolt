@@ -634,29 +634,39 @@ class Modulo_Ventas_DB {
             
             // Calcular totales
             $subtotal = 0;
-            $impuesto_total = 0;
-            
+
+            // Primero calcular el subtotal de todos los items
             foreach ($items as $item) {
                 $subtotal += floatval($item['subtotal']);
-                if ($datos_cotizacion['incluye_iva']) {
-                    $impuesto_total += floatval($item['subtotal']) * 0.19; // IVA Chile
-                }
             }
-            
+
             // Aplicar descuento global
             if ($datos_cotizacion['tipo_descuento'] === 'porcentaje') {
                 $descuento = $subtotal * ($datos_cotizacion['descuento_porcentaje'] / 100);
+                $datos_cotizacion['descuento_monto'] = $descuento;
             } else {
                 $descuento = $datos_cotizacion['descuento_monto'];
             }
-            
+
             $subtotal_con_descuento = $subtotal - $descuento;
-            
-            // Calcular total
-            $total = $subtotal_con_descuento + $impuesto_total + $datos_cotizacion['costo_envio'];
-            
+
+            // Agregar costo de envío
+            $subtotal_con_envio = $subtotal_con_descuento + $datos_cotizacion['costo_envio'];
+
+            // Calcular IVA sobre el monto final (subtotal con descuento + envío)
+            $impuesto_total = 0;
+            if ($datos_cotizacion['incluye_iva']) {
+                // IVA se aplica sobre el total incluyendo envío
+                $impuesto_total = $subtotal_con_envio * 0.19;
+            }
+
+            // Calcular total final
+            $total = $subtotal_con_envio + $impuesto_total;
+
+            // Actualizar los valores en el array de datos
             $datos_cotizacion['subtotal'] = $subtotal;
             $datos_cotizacion['impuesto_monto'] = $impuesto_total;
+            $datos_cotizacion['impuesto_porcentaje'] = $datos_cotizacion['incluye_iva'] ? 19 : 0;
             $datos_cotizacion['total'] = $total;
             
             // Insertar cotización
