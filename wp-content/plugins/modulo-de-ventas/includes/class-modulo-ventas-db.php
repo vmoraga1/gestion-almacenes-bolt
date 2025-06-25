@@ -556,6 +556,140 @@ class Modulo_Ventas_DB {
             )
         );
     }
+
+    /**
+     * Eliminar cliente
+     */
+    public function eliminar_cliente($cliente_id) {
+        // Verificar que no tenga cotizaciones
+        $cotizaciones = $this->contar_cotizaciones_cliente($cliente_id);
+        if ($cotizaciones > 0) {
+            return new WP_Error('tiene_cotizaciones', __('No se puede eliminar un cliente con cotizaciones asociadas', 'modulo-ventas'));
+        }
+        
+        // Eliminar metadatos
+        $this->wpdb->delete(
+            $this->tabla_clientes_meta,
+            array('cliente_id' => $cliente_id)
+        );
+        
+        // Eliminar cliente
+        $resultado = $this->wpdb->delete(
+            $this->tabla_clientes,
+            array('id' => $cliente_id)
+        );
+        
+        return $resultado !== false;
+    }
+
+    /**
+     * Obtener clientes con estadísticas
+     */
+    public function obtener_clientes_con_estadisticas($args = array()) {
+        $defaults = array(
+            'limite' => 20,
+            'offset' => 0,
+            'orden' => 'razon_social',
+            'orden_dir' => 'ASC',
+            'buscar' => '',
+            'estado' => ''
+        );
+        
+        $args = wp_parse_args($args, $defaults);
+        
+        // Query base
+        $sql = "SELECT c.*, 
+                COUNT(DISTINCT cot.id) as cotizaciones
+                FROM {$this->tabla_clientes} c
+                LEFT JOIN {$this->tabla_cotizaciones} cot ON c.id = cot.cliente_id
+                WHERE 1=1";
+        
+        $count_sql = "SELECT COUNT(DISTINCT c.id) 
+                    FROM {$this->tabla_clientes} c
+                    WHERE 1=1";
+        
+        $where_conditions = array();
+        
+        // Búsqueda
+        if (!empty($args['buscar'])) {
+            $buscar = '%' . $this->wpdb->esc_like($args['buscar']) . '%';
+            $where_conditions[] = $this->wpdb->prepare(
+                "(c.razon_social LIKE %s OR c.rut LIKE %s OR c.email LIKE %s OR c.telefono LIKE %s)",
+                $buscar, $buscar, $buscar, $buscar
+            );
+        }
+        
+        // Filtro por estado
+        if (!empty($args['estado'])) {
+            $where_conditions[] = $this->wpdb->prepare("c.estado = %s", $args['estado']);
+        }
+        
+        // Aplicar condiciones WHERE
+        if (!empty($where_conditions)) {
+            $where = ' AND ' . implode(' AND ', $where_conditions);
+            $sql .= $where;
+            $count_sql .= $where;
+        }
+        
+        // GROUP BY
+        $sql .= " GROUP BY c.id";
+        
+        // ORDER BY
+        $orden_columnas_validas = array('razon_social', 'rut', 'email', 'estado', 'fecha_modificacion');
+        $orden = in_array($args['orden'], $orden_columnas_validas) ? $args['orden'] : 'razon_social';
+        $orden_dir = in_array(strtoupper($args['orden_dir']), array('ASC', 'DESC')) ? $args['orden_dir'] : 'ASC';
+        
+        $sql .= " ORDER BY c.{$orden} {$orden_dir}";
+        
+        // LIMIT y OFFSET
+        if ($args['limite'] > 0) {
+            $sql .= $this->wpdb->prepare(" LIMIT %d OFFSET %d", $args['limite'], $args['offset']);
+        }
+        
+        // Ejecutar queries
+        $items = $this->wpdb->get_results($sql, ARRAY_A);
+        $total = $this->wpdb->get_var($count_sql);
+        
+        return array(
+            'items' => $items,
+            'total' => $total
+        );
+    }
+
+    /**
+     * Obtener estadísticas de clientes
+     */
+    public function obtener_estadisticas_clientes() {
+        $stats = array();
+        
+        // Total de clientes
+        $stats['total_clientes'] = $this->wpdb->get_var(
+            "SELECT COUNT(*) FROM {$this->tabla_clientes}"
+        );
+        
+        // Clientes activos
+        $stats['clientes_activos'] = $this->wpdb->get_var(
+            "SELECT COUNT(*) FROM {$this->tabla_clientes} WHERE estado = 'activo'"
+        );
+        
+        // Nuevos este mes
+        $primer_dia_mes = date('Y-m-01');
+        $stats['nuevos_mes'] = $this->wpdb->get_var($this->wpdb->prepare(
+            "SELECT COUNT(*) FROM {$this->tabla_clientes} 
+            WHERE fecha_creacion >= %s",
+            $primer_dia_mes
+        ));
+        
+        // Con cotizaciones
+        $stats['con_cotizaciones'] = $this->wpdb->get_var(
+            "SELECT COUNT(DISTINCT cliente_id) FROM {$this->tabla_cotizaciones}"
+        );
+        
+        return $stats;
+    }
+
+
+
     
     /**
      * FUNCIONES CRUD PARA COTIZACIONES
@@ -1005,6 +1139,16 @@ class Modulo_Ventas_DB {
     }
 
     /**
+     * Contar cotizaciones de un cliente
+     */
+    public function contar_cotizaciones_cliente($cliente_id) {
+        return $this->wpdb->get_var($this->wpdb->prepare(
+            "SELECT COUNT(*) FROM {$this->tabla_cotizaciones} WHERE cliente_id = %d",
+            $cliente_id
+        ));
+    }
+
+    /**
      * Obtener estadísticas de cotizaciones
      */
     public function obtener_estadisticas_cotizaciones() {
@@ -1095,6 +1239,34 @@ class Modulo_Ventas_DB {
             : 0;
         
         return $stats;
+    }
+
+    /**
+     * Obtener valor total cotizado por cliente
+     */
+    public function obtener_valor_total_cotizado_cliente($cliente_id) {
+        $sql = $this->wpdb->prepare(
+            "SELECT SUM(total) FROM {$this->tabla_cotizaciones} 
+            WHERE cliente_id = %d AND estado NOT IN ('cancelada', 'expirada')",
+            $cliente_id
+        );
+        
+        return floatval($this->wpdb->get_var($sql)) ?: 0;
+    }
+
+    /**
+     * Obtener última cotización de un cliente
+     */
+    public function obtener_ultima_cotizacion_cliente($cliente_id) {
+        $sql = $this->wpdb->prepare(
+            "SELECT * FROM {$this->tabla_cotizaciones} 
+            WHERE cliente_id = %d 
+            ORDER BY fecha DESC 
+            LIMIT 1",
+            $cliente_id
+        );
+        
+        return $this->wpdb->get_row($sql);
     }
     
     /**

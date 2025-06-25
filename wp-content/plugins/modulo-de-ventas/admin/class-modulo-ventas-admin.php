@@ -485,7 +485,7 @@ class Modulo_Ventas_Admin {
         
         // Verificar si puede editar
         $puede_editar = current_user_can('edit_cotizaciones') && 
-                       !in_array($cotizacion->estado, array('convertida', 'expirada'));
+                    !in_array($cotizacion->estado, array('convertida', 'expirada'));
         
         // Cargar vista
         require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/views/ver-cotizacion.php';
@@ -882,33 +882,22 @@ class Modulo_Ventas_Admin {
         $nonce = $_REQUEST['_wpnonce'];
         
         // Acciones individuales
-        if (isset($_REQUEST['cliente_id'])) {
-            $cliente_id = intval($_REQUEST['cliente_id']);
+        if (isset($_REQUEST['id'])) {  // Cambiar de 'cliente_id' a 'id' para consistencia con la tabla
+            $cliente_id = intval($_REQUEST['id']);
             
             switch ($action) {
                 case 'delete':
                     if (wp_verify_nonce($nonce, 'delete_cliente_' . $cliente_id)) {
                         if (current_user_can('manage_clientes_ventas')) {
-                            // Verificar si tiene cotizaciones
-                            $cotizaciones = $this->db->obtener_cotizaciones(array(
-                                'cliente_id' => $cliente_id,
-                                'limit' => 1
-                            ));
+                            // Usar el nuevo método eliminar_cliente que ya incluye la verificación
+                            $resultado = $this->db->eliminar_cliente($cliente_id);
                             
-                            if (empty($cotizaciones)) {
-                                global $wpdb;
-                                $resultado = $wpdb->delete(
-                                    $this->db->get_tabla_clientes(),
-                                    array('id' => $cliente_id)
-                                );
-                                
-                                if ($resultado !== false) {
-                                    $this->agregar_mensaje_admin('success', __('Cliente eliminado correctamente.', 'modulo-ventas'));
-                                } else {
-                                    $this->agregar_mensaje_admin('error', __('Error al eliminar el cliente.', 'modulo-ventas'));
-                                }
+                            if (is_wp_error($resultado)) {
+                                $this->agregar_mensaje_admin('error', $resultado->get_error_message());
+                            } elseif ($resultado) {
+                                $this->agregar_mensaje_admin('success', __('Cliente eliminado correctamente.', 'modulo-ventas'));
                             } else {
-                                $this->agregar_mensaje_admin('error', __('No se puede eliminar un cliente con cotizaciones asociadas.', 'modulo-ventas'));
+                                $this->agregar_mensaje_admin('error', __('Error al eliminar el cliente.', 'modulo-ventas'));
                             }
                         }
                     }
@@ -1261,9 +1250,9 @@ class Modulo_Ventas_Admin {
         // Cotizaciones por estado
         $stats['por_estado'] = $wpdb->get_results($wpdb->prepare(
             "SELECT estado, COUNT(*) as cantidad
-             FROM {$tabla}
-             WHERE cliente_id = %d
-             GROUP BY estado",
+            FROM {$tabla}
+            WHERE cliente_id = %d
+            GROUP BY estado",
             $cliente_id
         ));
         
@@ -1276,17 +1265,17 @@ class Modulo_Ventas_Admin {
         // Valor convertido en ventas
         $stats['valor_convertido'] = $wpdb->get_var($wpdb->prepare(
             "SELECT SUM(total) FROM {$tabla} 
-             WHERE cliente_id = %d AND estado = 'convertida'",
+            WHERE cliente_id = %d AND estado = 'convertida'",
             $cliente_id
         )) ?: 0;
         
         // Última cotización
         $stats['ultima_cotizacion'] = $wpdb->get_row($wpdb->prepare(
             "SELECT fecha, folio, total, estado
-             FROM {$tabla}
-             WHERE cliente_id = %d
-             ORDER BY fecha DESC
-             LIMIT 1",
+            FROM {$tabla}
+            WHERE cliente_id = %d
+            ORDER BY fecha DESC
+            LIMIT 1",
             $cliente_id
         ));
         

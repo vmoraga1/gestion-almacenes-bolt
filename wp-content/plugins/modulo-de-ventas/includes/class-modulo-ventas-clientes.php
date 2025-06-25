@@ -76,10 +76,10 @@ class Modulo_Ventas_Clientes {
                 </th>
                 <td>
                     <input type="text" 
-                           name="mv_cliente[razon_social]" 
-                           id="mv_cliente_razon_social" 
-                           value="<?php echo esc_attr($cliente ? $cliente->razon_social : $user->display_name); ?>" 
-                           class="regular-text" />
+                        name="mv_cliente[razon_social]" 
+                        id="mv_cliente_razon_social" 
+                        value="<?php echo esc_attr($cliente ? $cliente->razon_social : $user->display_name); ?>" 
+                        class="regular-text" />
                     <p class="description"><?php _e('Nombre del cliente o empresa', 'modulo-ventas'); ?></p>
                 </td>
             </tr>
@@ -90,11 +90,11 @@ class Modulo_Ventas_Clientes {
                 </th>
                 <td>
                     <input type="text" 
-                           name="mv_cliente[rut]" 
-                           id="mv_cliente_rut" 
-                           value="<?php echo esc_attr($cliente ? $cliente->rut : ''); ?>" 
-                           class="regular-text" 
-                           placeholder="12.345.678-9" />
+                        name="mv_cliente[rut]" 
+                        id="mv_cliente_rut" 
+                        value="<?php echo esc_attr($cliente ? $cliente->rut : ''); ?>" 
+                        class="regular-text" 
+                        placeholder="12.345.678-9" />
                     <span id="mv_rut_validacion" class="description"></span>
                 </td>
             </tr>
@@ -105,10 +105,10 @@ class Modulo_Ventas_Clientes {
                 </th>
                 <td>
                     <input type="text" 
-                           name="mv_cliente[giro_comercial]" 
-                           id="mv_cliente_giro" 
-                           value="<?php echo esc_attr($cliente ? $cliente->giro_comercial : ''); ?>" 
-                           class="regular-text" />
+                        name="mv_cliente[giro_comercial]" 
+                        id="mv_cliente_giro" 
+                        value="<?php echo esc_attr($cliente ? $cliente->giro_comercial : ''); ?>" 
+                        class="regular-text" />
                 </td>
             </tr>
             
@@ -118,10 +118,10 @@ class Modulo_Ventas_Clientes {
                 </th>
                 <td>
                     <input type="tel" 
-                           name="mv_cliente[telefono]" 
-                           id="mv_cliente_telefono" 
-                           value="<?php echo esc_attr($cliente ? $cliente->telefono : ''); ?>" 
-                           class="regular-text" />
+                        name="mv_cliente[telefono]" 
+                        id="mv_cliente_telefono" 
+                        value="<?php echo esc_attr($cliente ? $cliente->telefono : ''); ?>" 
+                        class="regular-text" />
                 </td>
             </tr>
             
@@ -131,10 +131,10 @@ class Modulo_Ventas_Clientes {
                 </th>
                 <td>
                     <input type="email" 
-                           name="mv_cliente[email]" 
-                           id="mv_cliente_email" 
-                           value="<?php echo esc_attr($cliente ? $cliente->email : $user->user_email); ?>" 
-                           class="regular-text" />
+                        name="mv_cliente[email]" 
+                        id="mv_cliente_email" 
+                        value="<?php echo esc_attr($cliente ? $cliente->email : $user->user_email); ?>" 
+                        class="regular-text" />
                 </td>
             </tr>
             
@@ -144,10 +144,10 @@ class Modulo_Ventas_Clientes {
                 </th>
                 <td>
                     <input type="email" 
-                           name="mv_cliente[email_dte]" 
-                           id="mv_cliente_email_dte" 
-                           value="<?php echo esc_attr($cliente ? $cliente->email_dte : ''); ?>" 
-                           class="regular-text" />
+                        name="mv_cliente[email_dte]" 
+                        id="mv_cliente_email_dte" 
+                        value="<?php echo esc_attr($cliente ? $cliente->email_dte : ''); ?>" 
+                        class="regular-text" />
                     <p class="description"><?php _e('Email para recepción de documentos tributarios electrónicos', 'modulo-ventas'); ?></p>
                 </td>
             </tr>
@@ -162,10 +162,10 @@ class Modulo_Ventas_Clientes {
                 </th>
                 <td>
                     <input type="text" 
-                           name="mv_cliente[direccion_facturacion]" 
-                           id="mv_cliente_direccion_fact" 
-                           value="<?php echo esc_attr($cliente ? $cliente->direccion_facturacion : ''); ?>" 
-                           class="large-text" />
+                        name="mv_cliente[direccion_facturacion]" 
+                        id="mv_cliente_direccion_fact" 
+                        value="<?php echo esc_attr($cliente ? $cliente->direccion_facturacion : ''); ?>" 
+                        class="large-text" />
                 </td>
             </tr>
             
@@ -217,10 +217,10 @@ class Modulo_Ventas_Clientes {
                 </th>
                 <td>
                     <input type="text" 
-                           name="mv_cliente[ciudad_facturacion]" 
-                           id="mv_cliente_ciudad_fact" 
-                           value="<?php echo esc_attr($cliente ? $cliente->ciudad_facturacion : ''); ?>" 
-                           class="regular-text" />
+                        name="mv_cliente[ciudad_facturacion]" 
+                        id="mv_cliente_ciudad_fact" 
+                        value="<?php echo esc_attr($cliente ? $cliente->ciudad_facturacion : ''); ?>" 
+                        class="regular-text" />
                 </td>
             </tr>
         </table>
@@ -235,10 +235,10 @@ class Modulo_Ventas_Clientes {
                 <td>
                     <label>
                         <input type="checkbox" 
-                               name="mv_cliente[usar_direccion_facturacion_para_envio]" 
-                               id="mv_cliente_mismo_envio" 
-                               value="1" 
-                               <?php checked($cliente ? $cliente->usar_direccion_facturacion_para_envio : 1, 1); ?> />
+                            name="mv_cliente[usar_direccion_facturacion_para_envio]" 
+                            id="mv_cliente_mismo_envio" 
+                            value="1" 
+                            <?php checked($cliente ? $cliente->usar_direccion_facturacion_para_envio : 1, 1); ?> />
                         <?php _e('La dirección de envío es la misma que la de facturación', 'modulo-ventas'); ?>
                     </label>
                 </td>
@@ -253,10 +253,10 @@ class Modulo_Ventas_Clientes {
                     </th>
                     <td>
                         <input type="text" 
-                               name="mv_cliente[direccion_envio]" 
-                               id="mv_cliente_direccion_envio" 
-                               value="<?php echo esc_attr($cliente ? $cliente->direccion_envio : ''); ?>" 
-                               class="large-text" />
+                            name="mv_cliente[direccion_envio]" 
+                            id="mv_cliente_direccion_envio" 
+                            value="<?php echo esc_attr($cliente ? $cliente->direccion_envio : ''); ?>" 
+                            class="large-text" />
                     </td>
                 </tr>
                 
@@ -308,10 +308,10 @@ class Modulo_Ventas_Clientes {
                     </th>
                     <td>
                         <input type="text" 
-                               name="mv_cliente[ciudad_envio]" 
-                               id="mv_cliente_ciudad_envio" 
-                               value="<?php echo esc_attr($cliente ? $cliente->ciudad_envio : ''); ?>" 
-                               class="regular-text" />
+                            name="mv_cliente[ciudad_envio]" 
+                            id="mv_cliente_ciudad_envio" 
+                            value="<?php echo esc_attr($cliente ? $cliente->ciudad_envio : ''); ?>" 
+                            class="regular-text" />
                     </td>
                 </tr>
             </table>
