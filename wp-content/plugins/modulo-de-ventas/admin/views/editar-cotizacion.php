@@ -1142,11 +1142,11 @@ jQuery(document).ready(function($) {
     // Inicializar Select2
     if ($.fn.select2) {
         // Cliente
-        $('.mv-select2-cliente').select2({
+        /* Duplicada $('.mv-select2-cliente').select2({
             placeholder: '<?php _e('Seleccione un cliente', 'modulo-ventas'); ?>',
             allowClear: true,
             width: '100%'
-        });
+        });*/
         
         // Productos
         $('.mv-select2-productos').select2({

@@ -46,7 +46,7 @@ class Modulo_Ventas_Clientes {
         
         // Ajax handlers
         add_action('wp_ajax_mv_buscar_cliente', array($this, 'ajax_buscar_cliente'));
-        add_action('wp_ajax_mv_crear_cliente_rapido', array($this, 'ajax_crear_cliente_rapido'));
+        //add_action('wp_ajax_mv_crear_cliente_rapido', array($this, 'ajax_crear_cliente_rapido'));
         add_action('wp_ajax_mv_obtener_cliente', array($this, 'ajax_obtener_cliente'));
         add_action('wp_ajax_mv_validar_rut', array($this, 'ajax_validar_rut'));
     }
@@ -628,9 +628,9 @@ class Modulo_Ventas_Clientes {
         wp_send_json_success(array('results' => $resultados));
     }
     
-    /**
+    /*
      * AJAX: Crear cliente rápido
-     */
+    
     public function ajax_crear_cliente_rapido() {
         check_ajax_referer('modulo_ventas_nonce', 'nonce');
         
@@ -662,7 +662,7 @@ class Modulo_Ventas_Clientes {
             'cliente' => $cliente,
             'message' => __('Cliente creado exitosamente', 'modulo-ventas')
         ));
-    }
+    }*/
     
     /**
      * AJAX: Obtener datos de cliente
@@ -853,18 +853,141 @@ class Modulo_Ventas_Clientes {
     }
     
     /**
-     * Obtener lista de clientes para mostrar en select
+     * Obtener usuarios para selector de clientes en cotizaciones
      */
-    public function obtener_clientes_para_select($args = array()) {
-        $defaults = array(
-            'orderby' => 'razon_social',
+    public function obtener_clientes_para_select() {
+        $args = array(
+            'role__in' => array('customer', 'subscriber', 'administrator', 'shop_manager'),
+            'orderby' => 'display_name',
             'order' => 'ASC',
-            'limit' => -1
+            'meta_query' => array(
+                'relation' => 'OR',
+                array(
+                    'key' => 'mv_cliente_rut',
+                    'compare' => 'EXISTS'
+                ),
+                array(
+                    'key' => 'billing_company',
+                    'compare' => 'EXISTS'
+                )
+            )
         );
         
-        $args = wp_parse_args($args, $defaults);
+        $usuarios = get_users($args);
+        $clientes = array();
         
-        return $this->db->obtener_clientes_para_select();
+        foreach ($usuarios as $usuario) {
+            // Obtener datos del cliente
+            $cliente_data = $this->obtener_datos_cliente_de_usuario($usuario->ID);
+            
+            if ($cliente_data) {
+                $clientes[] = (object) array(
+                    'id' => $usuario->ID, // Usar user_id como ID principal
+                    'user_id' => $usuario->ID,
+                    'razon_social' => $cliente_data['razon_social'],
+                    'rut' => $cliente_data['rut'],
+                    'email' => $usuario->user_email,
+                    'telefono' => $cliente_data['telefono'],
+                    'direccion_facturacion' => $cliente_data['direccion_facturacion'],
+                    'giro_comercial' => $cliente_data['giro_comercial']
+                );
+            }
+        }
+        
+        return $clientes;
+    }
+
+    /**
+     * Nuevo método para obtener/crear cliente->usuario
+     */
+    public function obtener_o_crear_cliente_de_usuario($user_id) {
+        // Primero buscar si ya existe
+        $cliente = $this->obtener_cliente_por_usuario($user_id);
+        
+        if ($cliente) {
+            return $cliente;
+        }
+        
+        // Si no existe, crear desde los datos del usuario
+        $usuario = get_user_by('id', $user_id);
+        if (!$usuario) {
+            return new WP_Error('usuario_no_existe', __('El usuario no existe', 'modulo-ventas'));
+        }
+        
+        // Obtener datos del usuario y metadatos
+        $datos_cliente = array(
+            'user_id' => $user_id,
+            'razon_social' => get_user_meta($user_id, 'mv_cliente_razon_social', true) ?: 
+                            get_user_meta($user_id, 'billing_company', true) ?: 
+                            $usuario->display_name,
+            'rut' => get_user_meta($user_id, 'mv_cliente_rut', true) ?: 
+                    get_user_meta($user_id, 'billing_rut', true) ?: '',
+            'email' => $usuario->user_email,
+            'telefono' => get_user_meta($user_id, 'billing_phone', true) ?: '',
+            'giro_comercial' => get_user_meta($user_id, 'mv_cliente_giro', true) ?: '',
+            'direccion_facturacion' => get_user_meta($user_id, 'billing_address_1', true) ?: '',
+            'ciudad_facturacion' => get_user_meta($user_id, 'billing_city', true) ?: '',
+            'region_facturacion' => get_user_meta($user_id, 'billing_state', true) ?: '',
+            'pais_facturacion' => get_user_meta($user_id, 'billing_country', true) ?: 'CL'
+        );
+        
+        // Validar que tenga RUT
+        if (empty($datos_cliente['rut'])) {
+            return new WP_Error('rut_requerido', __('El cliente debe tener RUT configurado', 'modulo-ventas'));
+        }
+        
+        // Crear el cliente
+        $cliente_id = $this->db->crear_cliente($datos_cliente);
+        
+        if (is_wp_error($cliente_id)) {
+            return $cliente_id;
+        }
+        
+        return $this->db->obtener_cliente($cliente_id);
+    }
+
+    /**
+     * Obtener datos del cliente desde usuario
+     */
+    public function obtener_datos_cliente_de_usuario($user_id) {
+        $usuario = get_user_by('id', $user_id);
+        if (!$usuario) return false;
+        
+        // Primero buscar en la tabla de clientes
+        $cliente = $this->obtener_cliente_por_usuario($user_id);
+        
+        if ($cliente) {
+            return array(
+                'razon_social' => $cliente->razon_social,
+                'rut' => $cliente->rut,
+                'telefono' => $cliente->telefono,
+                'direccion_facturacion' => $cliente->direccion_facturacion,
+                'giro_comercial' => $cliente->giro_comercial
+            );
+        }
+        
+        // Si no existe en la tabla, obtener de user_meta y WooCommerce
+        $razon_social = get_user_meta($user_id, 'mv_cliente_razon_social', true);
+        if (empty($razon_social)) {
+            $razon_social = get_user_meta($user_id, 'billing_company', true);
+            if (empty($razon_social)) {
+                $first_name = get_user_meta($user_id, 'billing_first_name', true);
+                $last_name = get_user_meta($user_id, 'billing_last_name', true);
+                if ($first_name || $last_name) {
+                    $razon_social = trim($first_name . ' ' . $last_name);
+                } else {
+                    $razon_social = $usuario->display_name;
+                }
+            }
+        }
+        
+        return array(
+            'razon_social' => $razon_social,
+            'rut' => get_user_meta($user_id, 'mv_cliente_rut', true) ?: get_user_meta($user_id, 'billing_rut', true) ?: '',
+            'telefono' => get_user_meta($user_id, 'billing_phone', true) ?: '',
+            'direccion_facturacion' => get_user_meta($user_id, 'billing_address_1', true) ?: '',
+            'giro_comercial' => get_user_meta($user_id, 'mv_cliente_giro', true) ?: ''
+        );
     }
     
     /**

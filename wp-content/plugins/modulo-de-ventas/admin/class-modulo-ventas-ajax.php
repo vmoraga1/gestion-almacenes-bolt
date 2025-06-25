@@ -66,6 +66,7 @@ class Modulo_Ventas_Ajax {
             'mv_buscar_cotizaciones' => 'buscar_cotizaciones',
             
             // Clientes
+            'mv_buscar_usuarios_clientes' => 'buscar_usuarios_clientes',
             'mv_buscar_cliente' => 'buscar_cliente',
             'mv_crear_cliente_rapido' => 'crear_cliente_rapido',
             'mv_obtener_cliente' => 'obtener_cliente',
@@ -897,60 +898,116 @@ class Modulo_Ventas_Ajax {
     }
     
     /**
-     * Crear cliente rápido
+     * AJAX: Crear cliente rápido (crear como usuario de WordPress)
      */
     public function crear_cliente_rapido() {
-        mv_ajax_check_permissions('manage_clientes_ventas', 'modulo_ventas_nonce');
+        mv_ajax_check_permissions('create_cotizaciones', 'modulo_ventas_nonce');
         
-        if (!isset($_POST['cliente'])) {
-            wp_send_json_error(array('message' => __('Datos del cliente no proporcionados', 'modulo-ventas')));
+        if (!isset($_POST['cliente']) || !is_array($_POST['cliente'])) {
+            wp_send_json_error(array('message' => __('Datos del cliente incompletos', 'modulo-ventas')));
         }
         
         $datos = $_POST['cliente'];
         
-        // Validaciones básicas
+        // Validar campos requeridos
         if (empty($datos['razon_social']) || empty($datos['rut'])) {
             wp_send_json_error(array('message' => __('Razón social y RUT son obligatorios', 'modulo-ventas')));
         }
         
-        // Validar formato RUT
-        if (!mv_validar_rut($datos['rut'])) {
+        // Validar RUT
+        $rut_limpio = mv_limpiar_rut($datos['rut']);
+        if (!mv_validar_rut($rut_limpio)) {
             wp_send_json_error(array('message' => __('RUT inválido', 'modulo-ventas')));
         }
         
-        // Sanitizar datos
-        $datos_cliente = array(
-            'razon_social' => sanitize_text_field($datos['razon_social']),
-            'rut' => mv_limpiar_rut($datos['rut']),
-            'giro_comercial' => sanitize_text_field($datos['giro_comercial'] ?? ''),
-            'telefono' => sanitize_text_field($datos['telefono'] ?? ''),
-            'email' => sanitize_email($datos['email'] ?? ''),
-            'email_dte' => sanitize_email($datos['email_dte'] ?? ''),
-            'direccion_facturacion' => sanitize_textarea_field($datos['direccion_facturacion'] ?? ''),
-            'comuna_facturacion' => sanitize_text_field($datos['comuna_facturacion'] ?? ''),
-            'ciudad_facturacion' => sanitize_text_field($datos['ciudad_facturacion'] ?? ''),
-            'region_facturacion' => sanitize_text_field($datos['region_facturacion'] ?? ''),
-            'pais_facturacion' => sanitize_text_field($datos['pais_facturacion'] ?? 'Chile')
-        );
+        // Verificar si ya existe un usuario con este RUT
+        $usuarios_con_rut = get_users(array(
+            'meta_key' => 'mv_cliente_rut',
+            'meta_value' => $rut_limpio,
+            'number' => 1
+        ));
         
-        $cliente_id = $this->db->crear_cliente($datos_cliente);
-        
-        if (is_wp_error($cliente_id)) {
-            wp_send_json_error(array('message' => $cliente_id->get_error_message()));
+        if (!empty($usuarios_con_rut)) {
+            wp_send_json_error(array('message' => __('Ya existe un cliente con este RUT', 'modulo-ventas')));
         }
         
-        $cliente = $this->db->obtener_cliente($cliente_id);
+        // Crear usuario de WordPress
+        $email = !empty($datos['email']) ? sanitize_email($datos['email']) : $rut_limpio . '@cliente.local';
+        $username = sanitize_user(strtolower(str_replace(' ', '', $datos['razon_social'])) . '_' . substr($rut_limpio, -4));
         
-        $this->logger->log("Cliente creado rápidamente: {$cliente->razon_social} (ID: {$cliente_id})", 'info');
+        // Limitar longitud del username
+        $username = substr($username, 0, 60);
+        
+        // Asegurar que el username sea único
+        $base_username = $username;
+        $counter = 1;
+        while (username_exists($username)) {
+            $username = $base_username . '_' . $counter;
+            $counter++;
+        }
+        
+        $user_data = array(
+            'user_login' => $username,
+            'user_email' => $email,
+            'user_pass' => wp_generate_password(),
+            'display_name' => sanitize_text_field($datos['razon_social']),
+            'role' => 'customer'
+        );
+        
+        $user_id = wp_insert_user($user_data);
+        
+        if (is_wp_error($user_id)) {
+            $this->logger->log("Error al crear usuario: " . $user_id->get_error_message(), 'error');
+            wp_send_json_error(array('message' => $user_id->get_error_message()));
+        }
+        
+        // Guardar metadatos del cliente
+        update_user_meta($user_id, 'mv_cliente_rut', $rut_limpio);
+        update_user_meta($user_id, 'mv_cliente_razon_social', sanitize_text_field($datos['razon_social']));
+        update_user_meta($user_id, 'mv_cliente_giro', sanitize_text_field($datos['giro_comercial'] ?? ''));
+        
+        // Actualizar datos de facturación de WooCommerce
+        update_user_meta($user_id, 'billing_company', sanitize_text_field($datos['razon_social']));
+        update_user_meta($user_id, 'billing_rut', $rut_limpio);
+        update_user_meta($user_id, 'billing_phone', sanitize_text_field($datos['telefono'] ?? ''));
+        update_user_meta($user_id, 'billing_email', $email);
+        update_user_meta($user_id, 'billing_address_1', sanitize_text_field($datos['direccion_facturacion'] ?? ''));
+        
+        // Crear entrada en tabla de clientes para compatibilidad
+        $cliente_id = $this->db->crear_cliente(array(
+            'user_id' => $user_id,
+            'razon_social' => sanitize_text_field($datos['razon_social']),
+            'rut' => $rut_limpio,
+            'giro_comercial' => sanitize_text_field($datos['giro_comercial'] ?? ''),
+            'telefono' => sanitize_text_field($datos['telefono'] ?? ''),
+            'email' => $email,
+            'direccion_facturacion' => sanitize_text_field($datos['direccion_facturacion'] ?? '')
+        ));
+        
+        if (is_wp_error($cliente_id)) {
+            $this->logger->log("Error al crear registro de cliente: " . $cliente_id->get_error_message(), 'error');
+        }
+        
+        // Enviar email de bienvenida si tiene email real
+        if (!empty($datos['email']) && filter_var($datos['email'], FILTER_VALIDATE_EMAIL) && $datos['email'] !== $rut_limpio . '@cliente.local') {
+            wp_new_user_notification($user_id, null, 'user');
+        }
+        
+        // Preparar respuesta - IMPORTANTE: usar el user_id como ID principal
+        $cliente_response = array(
+            'id' => $user_id, // Usar user_id para el selector
+            'razon_social' => sanitize_text_field($datos['razon_social']),
+            'rut' => mv_formatear_rut($rut_limpio),
+            'email' => $email,
+            'telefono' => sanitize_text_field($datos['telefono'] ?? ''),
+            'direccion_facturacion' => sanitize_text_field($datos['direccion_facturacion'] ?? ''),
+            'giro_comercial' => sanitize_text_field($datos['giro_comercial'] ?? '')
+        );
+        
+        $this->logger->log("Cliente/Usuario creado: {$datos['razon_social']} (User ID: {$user_id}, Cliente ID: {$cliente_id})", 'info');
         
         wp_send_json_success(array(
-            'cliente' => array(
-                'id' => $cliente->id,
-                'razon_social' => $cliente->razon_social,
-                'rut' => mv_formatear_rut($cliente->rut),
-                'email' => $cliente->email,
-                'telefono' => $cliente->telefono
-            ),
+            'cliente' => $cliente_response,
             'message' => __('Cliente creado exitosamente', 'modulo-ventas')
         ));
     }
@@ -1050,6 +1107,115 @@ class Modulo_Ventas_Ajax {
         $this->logger->log("Cliente actualizado: ID {$cliente_id}", 'info');
         
         wp_send_json_success(array('message' => __('Cliente actualizado exitosamente', 'modulo-ventas')));
+    }
+
+    /**
+     * Buscar usuarios que pueden ser clientes
+     */
+    public function buscar_usuarios_clientes() {
+        // Verificar nonce
+        if (!check_ajax_referer('modulo_ventas_nonce', 'nonce', false)) {
+            wp_send_json_error(array('message' => __('Error de seguridad', 'modulo-ventas')));
+        }
+        
+        // Verificar permisos
+        if (!current_user_can('create_cotizaciones')) {
+            wp_send_json_error(array('message' => __('Sin permisos', 'modulo-ventas')));
+        }
+        
+        $search = isset($_POST['search']) ? sanitize_text_field($_POST['search']) : '';
+        
+        if (strlen($search) < 2) {
+            wp_send_json_success(array('usuarios' => array()));
+            return;
+        }
+        
+        // Buscar usuarios
+        $args = array(
+            'search' => '*' . $search . '*',
+            'search_columns' => array('user_login', 'user_email', 'user_nicename', 'display_name'),
+            'number' => 20,
+            'orderby' => 'display_name',
+            'order' => 'ASC'
+        );
+        
+        // También buscar por metadatos
+        $meta_query = array(
+            'relation' => 'OR',
+            array(
+                'key' => 'mv_cliente_rut',
+                'value' => $search,
+                'compare' => 'LIKE'
+            ),
+            array(
+                'key' => 'billing_company',
+                'value' => $search,
+                'compare' => 'LIKE'
+            ),
+            array(
+                'key' => 'mv_cliente_razon_social',
+                'value' => $search,
+                'compare' => 'LIKE'
+            )
+        );
+        
+        // Buscar usuarios por meta
+        $users_by_meta = get_users(array(
+            'meta_query' => $meta_query,
+            'number' => 20
+        ));
+        
+        // Buscar usuarios normales
+        $users = get_users($args);
+        
+        // Combinar resultados únicos
+        $all_users = array();
+        $user_ids = array();
+        
+        // Agregar usuarios encontrados por búsqueda normal
+        foreach ($users as $user) {
+            if (!in_array($user->ID, $user_ids)) {
+                $all_users[] = $user;
+                $user_ids[] = $user->ID;
+            }
+        }
+        
+        // Agregar usuarios encontrados por metadatos
+        foreach ($users_by_meta as $user) {
+            if (!in_array($user->ID, $user_ids)) {
+                $all_users[] = $user;
+                $user_ids[] = $user->ID;
+            }
+        }
+        
+        // Formatear resultados
+        $resultados = array();
+        $clientes_obj = new Modulo_Ventas_Clientes();
+        
+        foreach ($all_users as $user) {
+            // Obtener datos del cliente
+            $cliente_data = $clientes_obj->obtener_datos_cliente_de_usuario($user->ID);
+            
+            // Solo incluir usuarios que tengan RUT o sean administradores
+            if (!empty($cliente_data['rut']) || in_array('administrator', $user->roles)) {
+                $resultados[] = array(
+                    'id' => $user->ID,
+                    'text' => $cliente_data['razon_social'] . 
+                            (!empty($cliente_data['rut']) ? ' - ' . mv_formatear_rut($cliente_data['rut']) : ''),
+                    'razon_social' => $cliente_data['razon_social'],
+                    'rut' => !empty($cliente_data['rut']) ? mv_formatear_rut($cliente_data['rut']) : '',
+                    'email' => $user->user_email,
+                    'telefono' => $cliente_data['telefono'] ?? '',
+                    'direccion' => $cliente_data['direccion_facturacion'] ?? '',
+                    'giro' => $cliente_data['giro_comercial'] ?? ''
+                );
+            }
+        }
+        
+        wp_send_json_success(array(
+            'usuarios' => $resultados,
+            'total' => count($resultados)
+        ));
     }
     
     /**

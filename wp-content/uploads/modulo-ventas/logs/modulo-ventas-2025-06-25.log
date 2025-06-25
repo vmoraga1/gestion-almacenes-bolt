@@ -7,3 +7,15 @@ Stack trace:
 #4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('admin_page_modu...')
 #5 {main}
   thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\editar-cotizacion.php","line":28,"type":1}
+[2025-06-25 01:53:32] INFO: Cliente creado: ID 5, RUT 173843187 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-06-25 02:19:53] INFO: Cliente creado: ID 6, RUT 173843186 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-06-25 02:24:16] INFO: Cliente creado: ID 7, RUT 11.111.111-1 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-06-25 02:24:16] INFO: Cotización creada: COT-2025-000005 (ID: 5) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-06-25 02:29:45] INFO: Cliente creado: ID 8, RUT 777777777 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-06-25 02:45:55] INFO: Cliente creado: ID 9, RUT 77777777-7 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-06-25 03:00:32] INFO: Cliente creado: ID 10, RUT 77.777.777-7 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-06-25 03:16:30] INFO: Cliente creado: ID 11, RUT 12.777.777-7 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-06-25 04:28:08] INFO: Cliente creado: ID 12, RUT 122761649 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-06-25 04:28:08] INFO: Cliente/Usuario creado: Andrés Moraga (User ID: 3, Cliente ID: 12) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-06-25 04:57:51] INFO: Cotización creada: COT-2025-000006 (ID: 6) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-06-25 05:00:31] INFO: Cotización creada: COT-2025-000007 (ID: 7) | Usuario: hostpanish (ID: 1) | IP: ::1

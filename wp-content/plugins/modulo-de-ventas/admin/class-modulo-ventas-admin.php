@@ -306,9 +306,26 @@ class Modulo_Ventas_Admin {
      * Procesar el formulario de nueva cotización
      */
     private function procesar_nueva_cotizacion() {
+        // Obtener el user_id/cliente_id del formulario
+        $user_id = isset($_POST['cliente_id']) ? intval($_POST['cliente_id']) : 0;
+        $cliente_id = 0;
+        
+        // Si viene un user_id, buscar o crear el cliente asociado
+        if ($user_id > 0) {
+            $clientes = new Modulo_Ventas_Clientes();
+            $cliente = $clientes->obtener_o_crear_cliente_de_usuario($user_id);
+            
+            if ($cliente && !is_wp_error($cliente)) {
+                $cliente_id = $cliente->id;
+            } else {
+                $this->agregar_mensaje_admin('error', __('Error al obtener datos del cliente', 'modulo-ventas'));
+                return;
+            }
+        }
+        
         // Recopilar datos generales con valores por defecto para campos opcionales
         $datos_generales = array(
-            'cliente_id' => isset($_POST['cliente_id']) ? intval($_POST['cliente_id']) : 0,
+            'cliente_id' => $cliente_id, // Ahora usamos el cliente_id de la tabla mv_clientes
             'vendedor_id' => get_current_user_id(),
             'almacen_id' => isset($_POST['almacen_id']) ? intval($_POST['almacen_id']) : 0,
             'fecha' => isset($_POST['fecha']) ? sanitize_text_field($_POST['fecha']) : date('Y-m-d'),
@@ -338,9 +355,10 @@ class Modulo_Ventas_Admin {
         
         // Debug para ver qué campos están llegando
         error_log('Datos POST recibidos: ' . print_r($_POST, true));
+        error_log('User ID: ' . $user_id . ', Cliente ID: ' . $cliente_id);
         
         // Validar datos requeridos
-        if (!$datos_generales['cliente_id']) {
+        if (!$cliente_id) {
             $this->agregar_mensaje_admin('error', __('Debe seleccionar un cliente', 'modulo-ventas'));
             return;
         }
@@ -444,6 +462,55 @@ class Modulo_Ventas_Admin {
             }
             exit;
         }
+    }
+
+    /**
+     * Nuevo método en class-modulo-ventas-clientes.php
+     */
+    public function obtener_o_crear_cliente_de_usuario($user_id) {
+        // Primero buscar si ya existe
+        $cliente = $this->obtener_cliente_por_usuario($user_id);
+        
+        if ($cliente) {
+            return $cliente;
+        }
+        
+        // Si no existe, crear desde los datos del usuario
+        $usuario = get_user_by('id', $user_id);
+        if (!$usuario) {
+            return new WP_Error('usuario_no_existe', __('El usuario no existe', 'modulo-ventas'));
+        }
+        
+        // Obtener datos del usuario y metadatos
+        $datos_cliente = array(
+            'user_id' => $user_id,
+            'razon_social' => get_user_meta($user_id, 'mv_cliente_razon_social', true) ?: 
+                            get_user_meta($user_id, 'billing_company', true) ?: 
+                            $usuario->display_name,
+            'rut' => get_user_meta($user_id, 'mv_cliente_rut', true) ?: 
+                    get_user_meta($user_id, 'billing_rut', true) ?: '',
+            'email' => $usuario->user_email,
+            'telefono' => get_user_meta($user_id, 'billing_phone', true) ?: '',
+            'giro_comercial' => get_user_meta($user_id, 'mv_cliente_giro', true) ?: '',
+            'direccion_facturacion' => get_user_meta($user_id, 'billing_address_1', true) ?: '',
+            'ciudad_facturacion' => get_user_meta($user_id, 'billing_city', true) ?: '',
+            'region_facturacion' => get_user_meta($user_id, 'billing_state', true) ?: '',
+            'pais_facturacion' => get_user_meta($user_id, 'billing_country', true) ?: 'CL'
+        );
+        
+        // Validar que tenga RUT
+        if (empty($datos_cliente['rut'])) {
+            return new WP_Error('rut_requerido', __('El cliente debe tener RUT configurado', 'modulo-ventas'));
+        }
+        
+        // Crear el cliente
+        $cliente_id = $this->db->crear_cliente($datos_cliente);
+        
+        if (is_wp_error($cliente_id)) {
+            return $cliente_id;
+        }
+        
+        return $this->db->obtener_cliente($cliente_id);
     }
 
     /**

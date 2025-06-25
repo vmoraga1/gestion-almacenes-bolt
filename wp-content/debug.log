@@ -11,3 +11,172 @@ Stack trace:
 #4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('admin_page_modu...')
 #5 {main}
   thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\editar-cotizacion.php on line 28
+[25-Jun-2025 01:54:23 UTC] PHP Notice:  Undefined variable: user_id in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php on line 310
+[25-Jun-2025 01:54:23 UTC] PHP Stack trace:
+[25-Jun-2025 01:54:23 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[25-Jun-2025 01:54:23 UTC] PHP   2. do_action($hook_name = 'ventas_page_modulo-ventas-nueva-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[25-Jun-2025 01:54:23 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[25-Jun-2025 01:54:23 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[25-Jun-2025 01:54:23 UTC] PHP   5. Modulo_Ventas_Admin->pagina_nueva_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[25-Jun-2025 01:54:23 UTC] PHP   6. Modulo_Ventas_Admin->procesar_nueva_cotizacion() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:284
+[25-Jun-2025 01:54:23 UTC] PHP Notice:  Undefined variable: cliente_id in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php on line 318
+[25-Jun-2025 01:54:23 UTC] PHP Stack trace:
+[25-Jun-2025 01:54:23 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[25-Jun-2025 01:54:23 UTC] PHP   2. do_action($hook_name = 'ventas_page_modulo-ventas-nueva-cotizacion') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:260
+[25-Jun-2025 01:54:23 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[25-Jun-2025 01:54:23 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[25-Jun-2025 01:54:23 UTC] PHP   5. Modulo_Ventas_Admin->pagina_nueva_cotizacion('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[25-Jun-2025 01:54:23 UTC] PHP   6. Modulo_Ventas_Admin->procesar_nueva_cotizacion() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:284
+[25-Jun-2025 01:54:23 UTC] Datos POST recibidos: Array
+(
+    [mv_cotizacion_nonce] => 94496bd502
+    [_wp_http_referer] => /gestion-almacenes-bolt/wp-admin/admin.php?page=modulo-ventas-nueva-cotizacion
+    [cliente_id] => 5
+    [fecha] => 2025-06-25
+    [fecha_expiracion] => 2025-07-25
+    [plazo_pago] => contado
+    [vendedor_id] => 1
+    [almacen_id] => 
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [producto_id] => 75
+                    [variacion_id] => 0
+                    [sku] => T3X3
+                    [nombre] => Toldo 3x3m
+                    [descripcion] => 
+                    [almacen_id] => 2
+                    [cantidad] => 1
+                    [precio_unitario] => 25000
+                    [precio_original] => 25000
+                    [tipo_descuento] => monto
+                    [descuento_monto] => 0
+                    [subtotal] => 25000.00
+                )
+
+            [1] => Array
+                (
+                    [producto_id] => 70
+                    [variacion_id] => 0
+                    [sku] => GY-0003
+                    [nombre] => Malla Papal 2x1m
+                    [descripcion] => 
+                    [almacen_id] => 
+                    [cantidad] => 1
+                    [precio_unitario] => 60000
+                    [precio_original] => 60000
+                    [tipo_descuento] => monto
+                    [descuento_monto] => 0
+                    [subtotal] => 60000.00
+                )
+
+        )
+
+    [observaciones] => Sin iva
+    [notas_internas] => 
+    [terminos_condiciones] => 
+    [tipo_descuento_global] => monto
+    [descuento_global] => 0
+    [costo_envio] => 0
+    [subtotal] => 85000.00
+    [total] => 85000.00
+    [descuento_monto] => 0
+    [descuento_porcentaje] => 0
+    [condiciones_pago] => 
+    [producto_id_0] => undefined
+    [variacion_id_0] => 0
+    [sku_0] => 
+    [nombre_0] => 
+    [cantidad_0] => undefined
+    [precio_0] => undefined
+    [almacen_id_0] => 2
+    [descuento_0] => 0
+    [subtotal_0] => 0
+    [producto_id_1] => undefined
+    [variacion_id_1] => 0
+    [sku_1] => 
+    [nombre_1] => 
+    [cantidad_1] => undefined
+    [precio_1] => undefined
+    [almacen_id_1] => 0
+    [descuento_1] => 0
+    [subtotal_1] => 0
+)
+
+[25-Jun-2025 02:24:16 UTC] Datos POST recibidos: Array
+(
+    [mv_cotizacion_nonce] => 94496bd502
+    [_wp_http_referer] => /gestion-almacenes-bolt/wp-admin/admin.php?page=modulo-ventas-nueva-cotizacion
+    [cliente_id] => 2
+    [fecha] => 2025-06-25
+    [fecha_expiracion] => 2025-07-25
+    [plazo_pago] => contado
+    [vendedor_id] => 1
+    [almacen_id] => 
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [producto_id] => 75
+                    [variacion_id] => 0
+                    [sku] => T3X3
+                    [nombre] => Toldo 3x3m
+                    [descripcion] => 
+                    [almacen_id] => 
+                    [cantidad] => 1
+                    [precio_unitario] => 25000
+                    [precio_original] => 25000
+                    [tipo_descuento] => monto
+                    [descuento_monto] => 0
+                    [subtotal] => 25000.00
+                )
+
+        )
+
+    [observaciones] => 
+    [notas_internas] => 
+    [terminos_condiciones] => 
+    [tipo_descuento_global] => monto
+    [descuento_global] => 0
+    [costo_envio] => 0
+    [subtotal] => 25000.00
+    [total] => 25000.00
+    [descuento_monto] => 0
+    [descuento_porcentaje] => 0
+    [condiciones_pago] => 
+    [producto_id_0] => undefined
+    [variacion_id_0] => 0
+    [sku_0] => 
+    [nombre_0] => 
+    [cantidad_0] => undefined
+    [precio_0] => undefined
+    [almacen_id_0] => 0
+    [descuento_0] => 0
+    [subtotal_0] => 0
+)
+
+[25-Jun-2025 02:24:16 UTC] User ID: 2, Cliente ID: 7
+[25-Jun-2025 02:24:16 UTC] Items a guardar: Array
+(
+    [0] => Array
+        (
+            [producto_id] => 75
+            [variacion_id] => 0
+            [almacen_id] => 0
+            [sku] => T3X3
+            [nombre] => Toldo 3x3m
+            [descripcion] => 
+            [cantidad] => 1
+            [precio_unitario] => 25000
+            [precio_original] => 25000
+            [descuento_monto] => 0
+            [descuento_porcentaje] => 0
+            [tipo_descuento] => monto
+            [subtotal] => 25000
+            [stock_disponible] => 
+        )
+
+)
+
+[25-Jun-2025 02:24:16 UTC] Cotización creada exitosamente con ID: 5

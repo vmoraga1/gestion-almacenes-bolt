@@ -44,7 +44,7 @@ if (!function_exists('mv_tooltip')) {
     </h1>
     
     <form method="post" id="mv-form-cotizacion" class="mv-form-cotizacion">
-        <?php wp_nonce_field('mv_crear_cotizacion', 'mv_cotizacion_nonce'); ?>
+        <?php wp_nonce_field('modulo_ventas_nonce', 'mv_cotizacion_nonce'); ?>
         
         <!-- Columna principal -->
         <div class="mv-form-main">
@@ -674,7 +674,84 @@ if (!function_exists('mv_tooltip')) {
 }
 
 /* Info del cliente */
+.mv-cliente-result {
+    padding: 2px 0;
+}
+
+.mv-cliente-option {
+    padding: 2px 0;
+}
+
+.mv-cliente-nombre {
+    font-weight: 600;
+    line-height: 1.3;
+    color: #23282d;
+}
+
+.mv-cliente-meta {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.3;
+}
+
+.mv-cliente-email {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.3;
+}
+
+.select2-results__option--highlighted .mv-cliente-nombre {
+    color: #fff;
+}
+
+.select2-results__option--highlighted .mv-cliente-meta {
+    color: #f0f0f0;
+}
+
+/* Fix para el ancho del dropdown */
+.select2-container--default .select2-dropdown {
+    min-width: 350px;
+}
+
+/* Loading spinner */
+.select2-container--default .select2-results__option.loading-results:before {
+    content: '<?php _e('Buscando...', 'modulo-ventas'); ?>';
+}
+
+/*.select2-results__option--highlighted .mv-cliente-email {
+    color: #fff;
+    opacity: 0.9;
+}*/
+
 .mv-cliente-info {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+}
+
+.mv-info-row {
+    display: flex;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.mv-info-row:last-child {
+    margin-bottom: 0;
+}
+
+.mv-info-label {
+    font-weight: 600;
+    width: 100px;
+    color: #555;
+}
+
+.mv-info-value {
+    flex: 1;
+    color: #333;
+}
+/*.mv-cliente-info {
     margin-top: 10px;
     padding: 10px;
     background: #f6f7f7;
@@ -691,7 +768,7 @@ if (!function_exists('mv_tooltip')) {
     font-weight: 600;
     margin-right: 10px;
     min-width: 80px;
-}
+}*/
 
 /* Tabla de productos */
 .mv-productos-tabla-wrapper {
@@ -905,16 +982,249 @@ jQuery(document).ready(function($) {
     var productoIndex = 0;
     var almacenesDisponibles = <?php echo json_encode(mv_almacenes_activo() ? $almacenes : array()); ?>;
     
-    // Inicializar Select2
-    if ($.fn.select2) {
-        // Cliente
-        $('.mv-select2-cliente').select2({
-            placeholder: '<?php _e('Seleccione un cliente', 'modulo-ventas'); ?>',
+    console.log('=== OVERRIDE SELECT2 ===');
+    
+    // Paso 1: Destruir CUALQUIER inicialización previa
+    function destruirSelect2Cliente() {
+        if ($('#cliente_id').data('select2')) {
+            console.log('Destruyendo Select2 previo...');
+            $('#cliente_id').select2('destroy');
+        }
+    }
+    
+    // Paso 2: Nuestra inicialización
+    function inicializarSelect2Cliente() {
+        console.log('Inicializando Select2 con AJAX (override)...');
+        
+        // Limpiar opciones excepto placeholder
+        $('#cliente_id').find('option:not(:first)').remove();
+        
+        $('#cliente_id').select2({
+            placeholder: 'Digite para buscar cliente...',
             allowClear: true,
-            width: '100%'
+            width: '100%',
+            minimumInputLength: 2,
+            ajax: {
+                url: ajaxurl,
+                type: 'POST',
+                dataType: 'json',
+                delay: 250,
+                data: function(params) {
+                    return {
+                        action: 'mv_buscar_cliente',
+                        termino: params.term || '',
+                        nonce: '<?php echo wp_create_nonce('modulo_ventas_nonce'); ?>'
+                    };
+                },
+                processResults: function(response) {
+                    console.log('Respuesta AJAX recibida');
+                    if (response.success && response.data && response.data.results) {
+                        return {
+                            results: response.data.results.map(function(cliente) {
+                                return {
+                                    id: cliente.id,
+                                    text: cliente.text || (cliente.razon_social + ' - ' + cliente.rut),
+                                    rut: cliente.rut,
+                                    email: cliente.email,
+                                    telefono: cliente.telefono,
+                                    direccion: cliente.direccion,
+                                    giro: cliente.giro_comercial || cliente.giro
+                                };
+                            })
+                        };
+                    }
+                    return { results: [] };
+                }
+            }
         });
         
-        // Productos
+        // Manejar selección
+        $('#cliente_id').on('select2:select', function(e) {
+            var data = e.params.data;
+            var $option = $(this).find('option[value="' + data.id + '"]');
+            if ($option.length === 0) {
+                $option = $('<option></option>').attr('value', data.id).text(data.text);
+                $(this).append($option);
+            }
+            $option.attr({
+                'selected': true,
+                'data-rut': data.rut || '',
+                'data-email': data.email || '',
+                'data-telefono': data.telefono || '',
+                'data-direccion': data.direccion || '',
+                'data-giro': data.giro || ''
+            });
+            $(this).val(data.id).trigger('change');
+        });
+        
+        console.log('Select2 AJAX configurado');
+    }
+    
+    // Paso 3: Ejecutar inmediatamente
+    destruirSelect2Cliente();
+    inicializarSelect2Cliente();
+    
+    // Paso 4: Ejecutar de nuevo después de un delay para sobrescribir cualquier inicialización tardía
+    setTimeout(function() {
+        console.log('Verificando si Select2 fue sobrescrito...');
+        var instance = $('#cliente_id').data('select2');
+        if (instance && instance.options && instance.options.options) {
+            if (!instance.options.options.ajax) {
+                console.log('¡Select2 fue sobrescrito! Re-inicializando...');
+                destruirSelect2Cliente();
+                inicializarSelect2Cliente();
+            } else {
+                console.log('✅ Select2 mantiene configuración AJAX');
+            }
+        }
+    }, 500);
+    
+    // Paso 5: Otro check más tarde
+    setTimeout(function() {
+        var instance = $('#cliente_id').data('select2');
+        if (instance && instance.options && instance.options.options && instance.options.options.ajax) {
+            console.log('✅ FINAL: Select2 con AJAX funcionando');
+        } else {
+            console.log('❌ FINAL: Select2 sin AJAX - ejecute manualmente: inicializarSelect2ClienteAjax()');
+        }
+    }, 1000);
+    
+    // Exponer función global para reinicializar manualmente
+    window.inicializarSelect2ClienteAjax = inicializarSelect2Cliente;
+
+    function formatClienteResult(cliente) {
+        if (!cliente.id || cliente.disabled) {
+            return $('<span>' + cliente.text + '</span>');
+        }
+        
+        var $container = $(
+            '<div class="mv-cliente-result">' +
+                '<div class="mv-cliente-nombre">' + (cliente.razon_social || cliente.text) + '</div>' +
+                '<div class="mv-cliente-meta">' +
+                    (cliente.rut ? 'RUT: ' + cliente.rut : '') +
+                    (cliente.email ? ' | Email: ' + cliente.email : '') +
+                '</div>' +
+            '</div>'
+        );
+        
+        return $container;
+    }
+
+    // Función para formatear la selección
+    function formatClienteSelection(cliente) {
+        return cliente.text || (cliente.razon_social + ' - ' + cliente.rut) || cliente.id;
+    }
+
+    // Función para formatear la visualización de clientes
+    function formatCliente(cliente) {
+        if (!cliente.id) {
+            return cliente.text;
+        }
+        
+        var $option = $(cliente.element);
+        var rut = $option.attr('data-rut') || '';
+        var email = $option.attr('data-email') || '';
+        
+        var $container = $(
+            '<div class="mv-cliente-option">' +
+                '<div class="mv-cliente-nombre">' + cliente.text + '</div>' +
+                (email ? '<div class="mv-cliente-email">' + email + '</div>' : '') +
+            '</div>'
+        );
+        
+        return $container;
+    }
+
+    // Función de emergencia para resetear todo
+    window.resetearSelectCliente = function() {
+        var $select = $('#cliente_id');
+        
+        // Destruir Select2
+        if ($select.data('select2')) {
+            $select.select2('destroy');
+        }
+        
+        // Limpiar y agregar solo placeholder
+        $select.empty().append('<option value="">Seleccione un cliente</option>');
+        
+        // Convertir en input normal temporalmente para debug
+        $select.show();
+        
+        console.log('Select reseteado. Ahora es un select normal.');
+    };
+
+    // Test manual de búsqueda de clientes
+    window.testBusquedaClientes = function(termino) {
+        console.log('=== TEST BÚSQUEDA DE CLIENTES ===');
+        $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            data: {
+                action: 'mv_buscar_cliente',
+                termino: termino || 'test',
+                nonce: '<?php echo wp_create_nonce('modulo_ventas_nonce'); ?>'
+            },
+            success: function(response) {
+                console.log('Respuesta:', response);
+                if (response.success && response.data) {
+                    console.log('Clientes encontrados:', response.data.results || response.data.clientes);
+                } else {
+                    console.error('No se encontraron clientes o error en respuesta');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error AJAX:', error);
+                console.error('Respuesta:', xhr.responseText);
+            }
+        });
+    };
+    
+    console.log('Para probar búsqueda de clientes, ejecuta: testBusquedaClientes("término")');
+
+    // CSS adicional para mejorar la visualización
+    if (!$('#mv-cliente-search-styles').length) {
+        $('head').append(`
+            <style id="mv-cliente-search-styles">
+            .mv-cliente-result {
+                padding: 2px 0;
+            }
+            
+            .mv-cliente-nombre {
+                font-weight: 600;
+                line-height: 1.3;
+                color: #23282d;
+            }
+            
+            .mv-cliente-meta {
+                font-size: 12px;
+                color: #666;
+                line-height: 1.3;
+            }
+            
+            .select2-results__option--highlighted .mv-cliente-nombre {
+                color: #fff;
+            }
+            
+            .select2-results__option--highlighted .mv-cliente-meta {
+                color: #f0f0f0;
+            }
+            
+            /* Fix para el ancho del dropdown */
+            .select2-container--default .select2-dropdown {
+                min-width: 350px;
+            }
+            
+            /* Estilos para cuando no hay resultados */
+            .select2-results__option--disabled {
+                color: #999;
+                font-style: italic;
+            }
+            </style>
+        `);
+    }
+
+    // Reconfigurar Select2 para productos
+    if ($.fn.select2) {
         $('.mv-select2-productos').select2({
             placeholder: '<?php _e('Buscar productos por Nombre o SKU', 'modulo-ventas'); ?>',
             minimumInputLength: 2,
@@ -923,7 +1233,8 @@ jQuery(document).ready(function($) {
                 type: 'POST',
                 dataType: 'json',
                 delay: 250,
-                data: function(params) {                    
+                data: function(params) {
+                    console.log('Enviando búsqueda:', params.term);
                     return {
                         action: 'mv_buscar_productos',
                         busqueda: params.term,
@@ -931,61 +1242,88 @@ jQuery(document).ready(function($) {
                         nonce: '<?php echo wp_create_nonce('modulo_ventas_nonce'); ?>'
                     };
                 },
-                processResults: function(data) {
-                    if (data.data) {
-                    }
+                processResults: function(response) {
+                    console.log('Respuesta completa:', response);
                     
-                    if (data.success) {
-                        if (!data.data.productos || data.data.productos.length === 0) {
+                    if (response.success) {
+                        if (response.data && response.data.productos) {
+                            console.log('Productos encontrados:', response.data.productos.length);
+                            console.log('Primer producto:', response.data.productos[0]);
+                            
+                            // Asegurar que cada producto tenga el formato correcto
+                            var productos = response.data.productos.map(function(producto) {
+                                return {
+                                    id: producto.id || producto.producto_id,
+                                    text: producto.text || producto.nombre || 'Producto sin nombre',
+                                    nombre: producto.nombre,
+                                    sku: producto.sku,
+                                    precio: producto.precio,
+                                    stock: producto.stock,
+                                    en_stock: producto.en_stock !== false,
+                                    gestion_stock: producto.gestion_stock,
+                                    variacion_id: producto.variacion_id || 0
+                                };
+                            });
+                            
+                            return { results: productos };
+                        } else {
+                            console.log('No hay productos en la respuesta');
                             return {
                                 results: [{
                                     id: 0,
-                                    text: data.data.mensaje || '<?php _e('No se encontraron productos', 'modulo-ventas'); ?>',
+                                    text: response.data.mensaje || '<?php _e('No se encontraron productos', 'modulo-ventas'); ?>',
                                     disabled: true
                                 }]
                             };
                         }
-                        
+                    } else {
+                        console.error('Error en la respuesta:', response.data);
                         return {
-                            results: data.data.productos
+                            results: [{
+                                id: 0,
+                                text: response.data ? response.data.message : '<?php _e('Error al buscar productos', 'modulo-ventas'); ?>',
+                                disabled: true
+                            }]
                         };
                     }
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    console.error('Error AJAX:', {
+                        status: textStatus,
+                        error: errorThrown,
+                        response: xhr.responseText
+                    });
                     
-                    return { 
+                    return {
                         results: [{
                             id: 0,
-                            text: '<?php _e('Error al buscar productos', 'modulo-ventas'); ?>',
+                            text: '<?php _e('Error de conexión', 'modulo-ventas'); ?>',
                             disabled: true
                         }]
                     };
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                },
-                cache: false
+                }
             },
             templateResult: formatProducto,
             templateSelection: function(producto) {
-                if (producto.id && producto.id !== '0') {
-                    agregarProducto(producto);
-                    return '<?php _e('Buscar productos por Nombre o SKU', 'modulo-ventas'); ?>';
+                if (producto.id && producto.id !== '0' && producto.id !== 0) {
+                    console.log('Producto seleccionado:', producto);
+                    
+                    // Asegurar que el producto tenga todos los datos necesarios
+                    var productoCompleto = {
+                        id: producto.id,
+                        producto_id: producto.id,
+                        variacion_id: producto.variacion_id || 0,
+                        nombre: producto.nombre || producto.text,
+                        sku: producto.sku || '',
+                        precio: producto.precio || 0,
+                        stock: producto.stock || 0,
+                        en_stock: producto.en_stock !== false
+                    };
+                    
+                    agregarProducto(productoCompleto);
                 }
-
+                // Siempre retornar el placeholder
                 return '<?php _e('Buscar productos por Nombre o SKU', 'modulo-ventas'); ?>';
-            },
-            language: {
-                searching: function() {
-                    return '<?php _e('Buscando...', 'modulo-ventas'); ?>';
-                },
-                noResults: function() {
-                    return '<?php _e('No se encontraron resultados', 'modulo-ventas'); ?>';
-                },
-                errorLoading: function() {
-                    return '<?php _e('Error al cargar los resultados', 'modulo-ventas'); ?>';
-                },
-                inputTooShort: function(args) {
-                    var remainingChars = args.minimum - args.input.length;
-                    return '<?php _e('Por favor ingrese', 'modulo-ventas'); ?> ' + remainingChars + ' <?php _e('o más caracteres', 'modulo-ventas'); ?>';
-                }
             }
         });
     }
@@ -1094,20 +1432,44 @@ jQuery(document).ready(function($) {
     $('head').append(styles);
     
     // Mostrar información del cliente seleccionado
-    $('#cliente_id').on('change', function() {
-        var $selected = $(this).find(':selected');
+    $('#cliente_id').off('change').on('change', function() {
+        var $selected = $(this).find('option:selected');
+        
+        console.log('Evento change disparado');
+        console.log('Cliente seleccionado:', $selected.val());
+        console.log('Datos disponibles:', {
+            rut: $selected.attr('data-rut'),
+            email: $selected.attr('data-email'),
+            telefono: $selected.attr('data-telefono'),
+            direccion: $selected.attr('data-direccion'),
+            giro: $selected.attr('data-giro')
+        });
         
         if ($selected.val()) {
+            // Mostrar el contenedor
             $('#mv-cliente-info').show();
-            $('#mv-cliente-info [data-field="rut"]').text($selected.data('rut') || '-');
-            $('#mv-cliente-info [data-field="email"]').text($selected.data('email') || '-');
-            $('#mv-cliente-info [data-field="telefono"]').text($selected.data('telefono') || '-');
-            $('#mv-cliente-info [data-field="direccion"]').text($selected.data('direccion') || '-');
-            $('#mv-cliente-info [data-field="giro"]').text($selected.data('giro') || '-');
+            
+            // Actualizar cada campo
+            $('#mv-cliente-info [data-field="rut"]').text($selected.attr('data-rut') || '-');
+            $('#mv-cliente-info [data-field="email"]').text($selected.attr('data-email') || '-');
+            $('#mv-cliente-info [data-field="telefono"]').text($selected.attr('data-telefono') || '-');
+            $('#mv-cliente-info [data-field="direccion"]').text($selected.attr('data-direccion') || '-');
+            $('#mv-cliente-info [data-field="giro"]').text($selected.attr('data-giro') || '-');
         } else {
             $('#mv-cliente-info').hide();
         }
     });
+
+    // Si se está usando Select2, asegurarse de que preserve los atributos data
+    if ($.fn.select2 && $('#cliente_id').hasClass('mv-select2-cliente')) {
+        $('#cliente_id').select2({
+            placeholder: '<?php _e('Seleccione un cliente', 'modulo-ventas'); ?>',
+            allowClear: true,
+            width: '100%',
+            templateResult: formatCliente,
+            templateSelection: formatCliente
+        });
+    }
     
     // Modal nuevo cliente
     $('.mv-btn-nuevo-cliente').on('click', function() {
@@ -1136,42 +1498,79 @@ jQuery(document).ready(function($) {
             }
         });
         
+        console.log('Datos a enviar:', datosCliente);
+        
         $.post(ajaxurl, {
             action: 'mv_crear_cliente_rapido',
             cliente: datosCliente,
             nonce: '<?php echo wp_create_nonce('modulo_ventas_nonce'); ?>'
         }, function(response) {
-            if (response.success) {
-                // Agregar cliente al select con todos los datos
+            console.log('Respuesta del servidor:', response);
+            
+            if (response.success && response.data && response.data.cliente) {
+                // Obtener el cliente de la respuesta
                 var nuevoCliente = response.data.cliente;
-                var option = new Option(
-                    nuevoCliente.razon_social + ' - ' + nuevoCliente.rut,
-                    nuevoCliente.id,
-                    true,
-                    true
-                );
                 
-                // Agregar atributos de datos
-                $(option).attr({
-                    'data-rut': nuevoCliente.rut || '',
-                    'data-email': nuevoCliente.email || '',
-                    'data-telefono': nuevoCliente.telefono || '',
-                    'data-direccion': nuevoCliente.direccion_facturacion || '',
-                    'data-giro': nuevoCliente.giro_comercial || ''
-                });
+                // Crear la nueva opción con jQuery directamente
+                var $newOption = $('<option></option>')
+                    .attr('value', nuevoCliente.id)
+                    .text(nuevoCliente.razon_social + ' - ' + nuevoCliente.rut)
+                    .attr('data-rut', nuevoCliente.rut || '')
+                    .attr('data-email', nuevoCliente.email || '')
+                    .attr('data-telefono', nuevoCliente.telefono || '')
+                    .attr('data-direccion', nuevoCliente.direccion_facturacion || '')
+                    .attr('data-giro', nuevoCliente.giro_comercial || '');
                 
-                $('#cliente_id').append(option).trigger('change');
+                // Agregar la opción al select
+                $('#cliente_id').append($newOption);
+                
+                // Si el select usa Select2, actualizar
+                if ($.fn.select2 && $('#cliente_id').hasClass('mv-select2-cliente')) {
+                    // Destruir Select2 temporalmente
+                    $('#cliente_id').select2('destroy');
+                    
+                    // Seleccionar la nueva opción
+                    $('#cliente_id').val(nuevoCliente.id);
+                    
+                    // Re-inicializar Select2
+                    $('#cliente_id').select2({
+                        placeholder: '<?php _e('Seleccione un cliente', 'modulo-ventas'); ?>',
+                        allowClear: true,
+                        width: '100%'
+                    });
+                } else {
+                    // Sin Select2, solo seleccionar
+                    $('#cliente_id').val(nuevoCliente.id);
+                }
+                
+                // Disparar el evento change
+                $('#cliente_id').trigger('change');
                 
                 // Cerrar modal y limpiar formulario
                 $('#mv-modal-nuevo-cliente').fadeOut();
                 $form[0].reset();
                 
                 // Mostrar mensaje
-                mvShowToast('<?php _e('Cliente creado exitosamente', 'modulo-ventas'); ?>', 'success');
+                mvShowToast(response.data.message || '<?php _e('Cliente creado exitosamente', 'modulo-ventas'); ?>', 'success');
+                
+                // Log para depuración
+                console.log('Cliente agregado al select:', {
+                    id: nuevoCliente.id,
+                    texto: nuevoCliente.razon_social + ' - ' + nuevoCliente.rut,
+                    datos: {
+                        rut: nuevoCliente.rut,
+                        email: nuevoCliente.email,
+                        telefono: nuevoCliente.telefono,
+                        direccion: nuevoCliente.direccion_facturacion,
+                        giro: nuevoCliente.giro_comercial
+                    }
+                });
             } else {
-                alert(response.data.message || '<?php _e('Error al crear el cliente', 'modulo-ventas'); ?>');
+                var errorMsg = response.data && response.data.message ? response.data.message : '<?php _e('Error al crear el cliente', 'modulo-ventas'); ?>';
+                alert(errorMsg);
             }
-        }).fail(function() {
+        }).fail(function(xhr, status, error) {
+            console.error('Error AJAX:', error);
             alert('<?php _e('Error de conexión', 'modulo-ventas'); ?>');
         }).always(function() {
             $submit.prop('disabled', false).text('<?php _e('Crear Cliente', 'modulo-ventas'); ?>');
@@ -1465,40 +1864,163 @@ jQuery(document).ready(function($) {
     });
     
     // Validación del formulario
-    $('#mv-form-cotizacion').on('submit', function(e) {
+    $('#mv-form-cotizacion').off('submit').on('submit', function(e) {
+        e.preventDefault();
+        
+        console.log('=== ENVÍO DE COTIZACIÓN CON NONCE CORRECTO ===');
+        
+        var $form = $(this);
         var valido = true;
         var errores = [];
         
-        // Validar cliente
+        // Validaciones
         if (!$('#cliente_id').val()) {
             valido = false;
-            errores.push('<?php _e('Debe seleccionar un cliente', 'modulo-ventas'); ?>');
+            errores.push('Debe seleccionar un cliente');
             $('#cliente_id').addClass('mv-input-error');
         }
         
-        // Validar productos
         if ($('#mv-productos-lista .mv-producto-row').length === 0) {
             valido = false;
-            errores.push('<?php _e('Debe agregar al menos un producto', 'modulo-ventas'); ?>');
+            errores.push('Debe agregar al menos un producto');
         }
         
         if (!valido) {
-            e.preventDefault();
             alert(errores.join('\n'));
             return false;
         }
         
-        // Deshabilitar botón de envío
-        $('#mv-btn-guardar').prop('disabled', true).html(
-            '<span class="dashicons dashicons-update spin"></span> <?php _e('Guardando...', 'modulo-ventas'); ?>'
+        // Mostrar loading
+        var $btnGuardar = $('#mv-btn-guardar');
+        var textoOriginal = $btnGuardar.html();
+        $btnGuardar.prop('disabled', true).html(
+            '<span class="dashicons dashicons-update spin"></span> Guardando...'
         );
+        
+        // Obtener el nonce del formulario
+        var nonce = $('#mv_cotizacion_nonce').val();
+        console.log('Nonce encontrado:', nonce);
+        
+        // Organizar datos en el formato esperado
+        var datos_generales = {
+            cliente_id: $('#cliente_id').val(),
+            fecha: $('#fecha').val() || new Date().toISOString().split('T')[0],
+            fecha_expiracion: $('#fecha_expiracion').val() || '',
+            vendedor_id: $('#vendedor_id').val() || '',
+            almacen_id: $('#almacen_id').val() || '',
+            incluye_iva: $('#incluye_iva').is(':checked') ? 1 : 0,
+            descuento_monto: $('#descuento_global').val() || 0,
+            descuento_porcentaje: 0,
+            tipo_descuento: 'monto',
+            costo_envio: $('#costo_envio').val() || 0,
+            observaciones: $('#observaciones').val() || '',
+            notas_internas: $('#notas_internas').val() || '',
+            terminos_condiciones: $('#terminos_condiciones').val() || '',
+            plazo_pago: $('#plazo_pago').val() || '',
+            condiciones_pago: $('#condiciones_pago').val() || ''
+        };
+        
+        // Recopilar items
+        var items = [];
+        $('#mv-productos-lista .mv-producto-row').each(function(index) {
+            var $row = $(this);
+            items.push({
+                producto_id: $row.find('input[name*="[producto_id]"]').val(),
+                variacion_id: $row.find('input[name*="[variacion_id]"]').val() || 0,
+                sku: $row.find('input[name*="[sku]"]').val(),
+                nombre: $row.find('input[name*="[nombre]"]').val(),
+                descripcion: $row.find('textarea[name*="[descripcion]"]').val() || '',
+                cantidad: $row.find('input[name*="[cantidad]"]').val() || 1,
+                precio_unitario: $row.find('input[name*="[precio_unitario]"]').val() || 0,
+                descuento_tipo: $row.find('select[name*="[descuento_tipo]"]').val() || 'monto',
+                descuento_valor: $row.find('input[name*="[descuento_valor]"]').val() || 0,
+                subtotal: $row.find('input[name*="[subtotal]"]').val() || 0,
+                almacen_id: $row.find('select[name*="[almacen_id]"]').val() || datos_generales.almacen_id
+            });
+        });
+        
+        console.log('Datos generales:', datos_generales);
+        console.log('Items:', items);
+        
+        // IMPORTANTE: Usar el nombre correcto del nonce
+        // El formulario tiene wp_nonce_field('mv_crear_cotizacion', 'mv_cotizacion_nonce')
+        // Pero necesitamos enviarlo con el nombre que espera el handler
+        var datosEnvio = {
+            action: 'mv_guardar_cotizacion',
+            nonce: nonce,  // El handler busca $_POST['nonce']
+            _wpnonce: nonce,  // Por si acaso busca este nombre
+            mv_cotizacion_nonce: nonce,  // El nombre del campo
+            datos_generales: datos_generales,
+            items: items
+        };
+        
+        // Enviar por AJAX
+        $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            data: datosEnvio,
+            dataType: 'json',
+            success: function(response) {
+                console.log('Respuesta:', response);
+                
+                if (response.success) {
+                    mvShowToast(response.data.message || 'Cotización creada exitosamente', 'success');
+                    
+                    setTimeout(function() {
+                        if (response.data.redirect_url) {
+                            window.location.href = response.data.redirect_url;
+                        } else if (response.data.cotizacion_id) {
+                            window.location.href = '<?php echo admin_url('admin.php?page=modulo-ventas-ver-cotizacion&id='); ?>' + response.data.cotizacion_id;
+                        } else {
+                            window.location.href = '<?php echo admin_url('admin.php?page=modulo-ventas-cotizaciones'); ?>';
+                        }
+                    }, 1500);
+                } else {
+                    console.error('Error:', response);
+                    var mensaje = response.data && response.data.message ? response.data.message : 'Error al crear la cotización';
+                    if (response.data && response.data.errors) {
+                        mensaje += '\n\n' + response.data.errors.join('\n');
+                    }
+                    alert(mensaje);
+                    mvShowToast(mensaje, 'error');
+                    $btnGuardar.prop('disabled', false).html(textoOriginal);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error AJAX:', {
+                    status: xhr.status,
+                    statusText: xhr.statusText,
+                    responseText: xhr.responseText,
+                    error: error
+                });
+                
+                var errorMessage = 'Error de conexión';
+                if (xhr.status === 403 || xhr.responseText === '-1' || xhr.responseText === '0') {
+                    errorMessage = 'Error de seguridad. El nonce no coincide. Por favor, recarga la página.';
+                }
+                
+                alert(errorMessage);
+                mvShowToast(errorMessage, 'error');
+                $btnGuardar.prop('disabled', false).html(textoOriginal);
+            }
+        });
+        
+        return false;
+    });
+
+    // Asegurar que el botón de guardar no tenga comportamiento por defecto
+    $('#mv-btn-guardar').on('click', function(e) {
+        if ($(this).attr('type') !== 'submit') {
+            e.preventDefault();
+            $('#mv-form-cotizacion').submit();
+        }
     });
     
     // Función toast (simple implementación)
     function mvShowToast(message, type) {
         var $toast = $('<div class="notice notice-' + type + ' is-dismissible mv-toast">' +
-                      '<p>' + message + '</p>' +
-                      '</div>');
+                    '<p>' + message + '</p>' +
+                    '</div>');
         
         $('h1').after($toast);
         
@@ -1509,40 +2031,26 @@ jQuery(document).ready(function($) {
         }, 3000);
     }
 
-    // CÓDIGO DE DEPURACIÓN - ELIMINAR DESPUÉS DE RESOLVER EL PROBLEMA
-    // Interceptar el envío del formulario para depuración
-    $('#mv-form-cotizacion').on('submit', function(e) {
-        console.log('=== DEPURACIÓN DE ENVÍO DE FORMULARIO ===');
+    window.verificarNonces = function() {
+        console.log('=== VERIFICACIÓN DE NONCES ===');
         
-        // Obtener todos los campos del formulario
-        var formData = $(this).serializeArray();
-        console.log('Datos del formulario:', formData);
+        var nonce = $('#mv_cotizacion_nonce').val();
+        console.log('Nonce en el formulario:', nonce);
         
-        // Mostrar específicamente los items
-        var items = {};
-        formData.forEach(function(field) {
-            if (field.name.startsWith('items[')) {
-                if (!items[field.name]) {
-                    items[field.name] = field.value;
-                }
-            }
+        // Probar con diferentes acciones de nonce
+        var acciones = ['mv_crear_cotizacion', 'modulo_ventas_nonce', 'mv_guardar_cotizacion'];
+        
+        acciones.forEach(function(accion) {
+            $.post(ajaxurl, {
+                action: 'wp_ajax_nopriv_test',
+                test_nonce: nonce,
+                test_action: accion
+            }, function(response) {
+                console.log('Test nonce con acción "' + accion + '":', response);
+            });
         });
-        console.log('Items encontrados:', items);
-        
-        // Verificar campos específicos
-        console.log('=== Verificación de campos de productos ===');
-        $('#mv-productos-lista .mv-producto-row').each(function(index) {
-            var $row = $(this);
-            console.log('Producto ' + index + ':');
-            console.log('  - producto_id:', $row.find('input[name*="[producto_id]"]').val());
-            console.log('  - nombre (hidden):', $row.find('input[name*="[nombre]"]').val());
-            console.log('  - nombre (visible):', $row.find('.mv-producto-nombre').text());
-            console.log('  - sku:', $row.find('input[name*="[sku]"]').val());
-            console.log('  - precio:', $row.find('input[name*="[precio_unitario]"]').val());
-        });
-        
-        // No cancelar el envío, solo depurar
-        // e.preventDefault(); // Descomentar para evitar el envío y revisar la consola
-    });
+    };
+
+    
 });
 </script>
