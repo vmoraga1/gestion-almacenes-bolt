@@ -89,7 +89,6 @@ class Modulo_Ventas {
     }*/
     
     // Verificar dependencias del plugin
-    // Verificar dependencias del plugin
     public function verificar_dependencias() {
         $dependencias_cumplidas = true;
         $mensajes_error = array();
@@ -135,6 +134,7 @@ class Modulo_Ventas {
         // Clases base
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/helpers.php';
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-db.php';
+        //require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-updater.php';
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-logger.php';
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-messages.php';
         
@@ -425,3 +425,70 @@ add_action('plugins_loaded', function() {
         $updater->run();
     }
 }, 20);
+
+/**
+ * Verificar tablas en cada carga del admin
+ */
+add_action('admin_init', 'modulo_ventas_verificar_tablas');
+
+function modulo_ventas_verificar_tablas() {
+    // Solo verificar una vez por sesión
+    if (get_transient('mv_tables_checked')) {
+        return;
+    }
+    
+    $db = new Modulo_Ventas_DB();
+    $tablas_faltantes = $db->verificar_tablas();
+    
+    if (!empty($tablas_faltantes)) {
+        // Si faltan tablas, crearlas
+        $db->crear_tablas();
+        
+        // Agregar mensaje de administrador
+        add_action('admin_notices', function() {
+            echo '<div class="notice notice-info is-dismissible">';
+            echo '<p>' . __('Las tablas del Módulo de Ventas han sido creadas/actualizadas.', 'modulo-ventas') . '</p>';
+            echo '</div>';
+        });
+    }
+    
+    // Marcar como verificado por 12 horas
+    set_transient('mv_tables_checked', true, 12 * HOUR_IN_SECONDS);
+}
+
+/**
+ * Crear roles y capacidades
+ */
+function modulo_ventas_crear_roles() {
+    // Obtener el rol de administrador
+    $admin = get_role('administrator');
+    
+    if ($admin) {
+        // Capacidades de cotizaciones
+        $admin->add_cap('view_cotizaciones');
+        $admin->add_cap('create_cotizaciones');
+        $admin->add_cap('edit_cotizaciones');
+        $admin->add_cap('delete_cotizaciones');
+        $admin->add_cap('convert_cotizaciones');
+        
+        // Capacidades de clientes
+        $admin->add_cap('manage_clientes_ventas');
+        
+        // Capacidades de reportes
+        $admin->add_cap('view_reportes_ventas');
+        
+        // Capacidades de configuración
+        $admin->add_cap('manage_modulo_ventas');
+    }
+    
+    // Crear rol de vendedor si no existe
+    if (!get_role('vendedor')) {
+        add_role('vendedor', __('Vendedor', 'modulo-ventas'), array(
+            'read' => true,
+            'view_cotizaciones' => true,
+            'create_cotizaciones' => true,
+            'edit_cotizaciones' => true,
+            'manage_clientes_ventas' => true
+        ));
+    }
+}

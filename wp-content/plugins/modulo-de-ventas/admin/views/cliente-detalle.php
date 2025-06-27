@@ -1,0 +1,721 @@
+<?php
+/**
+ * Vista de detalle de cliente
+ *
+ * @package ModuloVentas
+ * @subpackage Views
+ * @since 2.0.0
+ */
+
+// Evitar acceso directo
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+// Variables disponibles: $cliente, $estadisticas, $cotizaciones_recientes, $pedidos, $actividad
+?>
+
+<div class="wrap mv-cliente-detalle">
+    <h1>
+        <?php echo esc_html($cliente->razon_social); ?>
+        <a href="<?php echo admin_url('admin.php?page=modulo-ventas-editar-cliente&id=' . $cliente->id); ?>" 
+        class="page-title-action">
+            <?php _e('Editar', 'modulo-ventas'); ?>
+        </a>
+        <a href="<?php echo admin_url('admin.php?page=modulo-ventas-nueva-cotizacion&cliente_id=' . $cliente->id); ?>" 
+        class="page-title-action">
+            <?php _e('Nueva Cotización', 'modulo-ventas'); ?>
+        </a>
+        <a href="<?php echo admin_url('admin.php?page=modulo-ventas-clientes'); ?>" 
+        class="page-title-action">
+            <?php _e('Volver al listado', 'modulo-ventas'); ?>
+        </a>
+    </h1>
+    
+    <!-- Información básica del cliente -->
+    <div class="mv-cliente-header">
+        <div class="mv-cliente-info-box">
+            <div class="mv-info-row">
+                <strong><?php _e('RUT:', 'modulo-ventas'); ?></strong>
+                <?php echo esc_html($cliente->rut); ?>
+            </div>
+            <?php if ($cliente->giro_comercial): ?>
+            <div class="mv-info-row">
+                <strong><?php _e('Giro:', 'modulo-ventas'); ?></strong>
+                <?php echo esc_html($cliente->giro_comercial); ?>
+            </div>
+            <?php endif; ?>
+            <?php if ($cliente->email): ?>
+            <div class="mv-info-row">
+                <strong><?php _e('Email:', 'modulo-ventas'); ?></strong>
+                <a href="mailto:<?php echo esc_attr($cliente->email); ?>">
+                    <?php echo esc_html($cliente->email); ?>
+                </a>
+            </div>
+            <?php endif; ?>
+            <?php if ($cliente->telefono): ?>
+            <div class="mv-info-row">
+                <strong><?php _e('Teléfono:', 'modulo-ventas'); ?></strong>
+                <a href="tel:<?php echo esc_attr($cliente->telefono); ?>">
+                    <?php echo esc_html($cliente->telefono); ?>
+                </a>
+            </div>
+            <?php endif; ?>
+        </div>
+        
+        <div class="mv-cliente-status">
+            <span class="mv-badge mv-badge-<?php echo $cliente->estado === 'activo' ? 'success' : 'warning'; ?>">
+                <?php echo $cliente->estado === 'activo' ? __('Activo', 'modulo-ventas') : __('Inactivo', 'modulo-ventas'); ?>
+            </span>
+            <?php if ($cliente->credito_autorizado > 0): ?>
+            <div class="mv-credito-info">
+                <strong><?php _e('Crédito:', 'modulo-ventas'); ?></strong>
+                <?php echo wc_price($cliente->credito_autorizado); ?>
+            </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    
+    <!-- Estadísticas principales -->
+    <div class="mv-stats-grid">
+        <div class="mv-stat-card">
+            <h3><?php echo number_format($estadisticas['total_cotizaciones'], 0, ',', '.'); ?></h3>
+            <p><?php _e('Cotizaciones Totales', 'modulo-ventas'); ?></p>
+            <div class="mv-stat-details">
+                <span class="pendientes"><?php echo $estadisticas['cotizaciones_pendientes']; ?> pendientes</span>
+                <span class="aprobadas"><?php echo $estadisticas['cotizaciones_aprobadas']; ?> aprobadas</span>
+            </div>
+        </div>
+        
+        <div class="mv-stat-card">
+            <h3><?php echo wc_price($estadisticas['monto_total_cotizado']); ?></h3>
+            <p><?php _e('Monto Total Cotizado', 'modulo-ventas'); ?></p>
+            <div class="mv-stat-details">
+                <span><?php _e('Promedio:', 'modulo-ventas'); ?> <?php echo wc_price($estadisticas['monto_promedio_cotizacion']); ?></span>
+            </div>
+        </div>
+        
+        <div class="mv-stat-card">
+            <h3><?php echo number_format($estadisticas['tasa_conversion'], 1, ',', '.'); ?>%</h3>
+            <p><?php _e('Tasa de Conversión', 'modulo-ventas'); ?></p>
+            <div class="mv-stat-details">
+                <span><?php echo $estadisticas['cotizaciones_convertidas']; ?> convertidas</span>
+            </div>
+        </div>
+        
+        <div class="mv-stat-card">
+            <h3><?php echo $estadisticas['tiempo_promedio_decision']; ?> <?php _e('días', 'modulo-ventas'); ?></h3>
+            <p><?php _e('Tiempo de Decisión', 'modulo-ventas'); ?></p>
+            <div class="mv-stat-details">
+                <span><?php _e('Promedio', 'modulo-ventas'); ?></span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contenido en tabs -->
+    <div class="mv-tabs-container">
+        <h2 class="nav-tab-wrapper">
+            <a href="#cotizaciones" class="nav-tab nav-tab-active" data-tab="cotizaciones">
+                <?php _e('Cotizaciones Recientes', 'modulo-ventas'); ?>
+            </a>
+            <?php if (!empty($pedidos)): ?>
+            <a href="#pedidos" class="nav-tab" data-tab="pedidos">
+                <?php _e('Pedidos', 'modulo-ventas'); ?>
+            </a>
+            <?php endif; ?>
+            <a href="#productos" class="nav-tab" data-tab="productos">
+                <?php _e('Productos Más Cotizados', 'modulo-ventas'); ?>
+            </a>
+            <a href="#estadisticas" class="nav-tab" data-tab="estadisticas">
+                <?php _e('Estadísticas', 'modulo-ventas'); ?>
+            </a>
+            <a href="#actividad" class="nav-tab" data-tab="actividad">
+                <?php _e('Actividad', 'modulo-ventas'); ?>
+            </a>
+        </h2>
+        
+        <!-- Tab: Cotizaciones Recientes -->
+        <div id="tab-cotizaciones" class="tab-content active">
+            <?php if (!empty($cotizaciones_recientes)): ?>
+            <table class="wp-list-table widefat fixed striped">
+                <thead>
+                    <tr>
+                        <th><?php _e('Número', 'modulo-ventas'); ?></th>
+                        <th><?php _e('Fecha', 'modulo-ventas'); ?></th>
+                        <th><?php _e('Total', 'modulo-ventas'); ?></th>
+                        <th><?php _e('Estado', 'modulo-ventas'); ?></th>
+                        <th><?php _e('Vencimiento', 'modulo-ventas'); ?></th>
+                        <th><?php _e('Acciones', 'modulo-ventas'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($cotizaciones_recientes)): ?>
+                        <?php foreach ($cotizaciones_recientes as $cotizacion): ?>
+                        <tr>
+                            <td>
+                                <a href="<?php echo admin_url('admin.php?page=modulo-ventas-ver-cotizacion&id=' . $cotizacion['id']); ?>">
+                                    <strong><?php echo esc_html($cotizacion['numero']); ?></strong>
+                                </a>
+                            </td>
+                            <td><?php echo date_i18n(get_option('date_format'), strtotime($cotizacion['fecha'])); ?></td>
+                            <td><?php echo wc_price($cotizacion['total']); ?></td>
+                            <td>
+                                <?php
+                                $estado_class = '';
+                                switch($cotizacion['estado']) {
+                                    case 'aprobada': $estado_class = 'success'; break;
+                                    case 'rechazada': $estado_class = 'error'; break;
+                                    case 'pendiente': $estado_class = 'warning'; break;
+                                    case 'convertida': $estado_class = 'info'; break;
+                                    default: $estado_class = 'default';
+                                }
+                                ?>
+                                <span class="mv-badge mv-badge-<?php echo esc_attr($estado_class); ?>">
+                                    <?php echo esc_html(mv_obtener_nombre_estado($cotizacion['estado'])); ?>
+                                </span>
+                            </td>
+                            <td>
+                                <?php
+                                if (!empty($cotizacion['fecha_vencimiento']) && $cotizacion['fecha_vencimiento'] != '0000-00-00') {
+                                    echo date_i18n(get_option('date_format'), strtotime($cotizacion['fecha_vencimiento']));
+                                } else {
+                                    echo '-';
+                                }
+                                ?>
+                            </td>
+                            <td>
+                                <a href="<?php echo admin_url('admin.php?page=modulo-ventas-ver-cotizacion&id=' . $cotizacion['id']); ?>"
+                                    class="button button-small">
+                                    <?php _e('Ver', 'modulo-ventas'); ?>
+                                </a>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="6" style="text-align: center;">
+                                <?php _e('No hay cotizaciones registradas', 'modulo-ventas'); ?>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+            
+            <p class="mv-ver-todas">
+                <a href="<?php echo admin_url('admin.php?page=modulo-ventas-cotizaciones&cliente_id=' . $cliente->id); ?>" 
+                    class="button">
+                    <?php _e('Ver todas las cotizaciones', 'modulo-ventas'); ?>
+                </a>
+            </p>
+            <?php else: ?>
+            <p class="mv-no-items"><?php _e('No hay cotizaciones registradas para este cliente.', 'modulo-ventas'); ?></p>
+            <?php endif; ?>
+        </div>
+        
+        <!-- Tab: Pedidos (si aplica) -->
+        <?php if (!empty($pedidos)): ?>
+        <div id="tab-pedidos" class="tab-content">
+            <table class="wp-list-table widefat fixed striped">
+                <thead>
+                    <tr>
+                        <th><?php _e('Pedido', 'modulo-ventas'); ?></th>
+                        <th><?php _e('Fecha', 'modulo-ventas'); ?></th>
+                        <th><?php _e('Total', 'modulo-ventas'); ?></th>
+                        <th><?php _e('Estado', 'modulo-ventas'); ?></th>
+                        <th><?php _e('Acciones', 'modulo-ventas'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($pedidos as $pedido): ?>
+                    <tr>
+                        <td>
+                            <a href="<?php echo $pedido->get_edit_order_url(); ?>">
+                                <strong>#<?php echo $pedido->get_order_number(); ?></strong>
+                            </a>
+                        </td>
+                        <td><?php echo $pedido->get_date_created()->date_i18n(get_option('date_format')); ?></td>
+                        <td><?php echo $pedido->get_formatted_order_total(); ?></td>
+                        <td><?php echo wc_get_order_status_name($pedido->get_status()); ?></td>
+                        <td>
+                            <a href="<?php echo $pedido->get_edit_order_url(); ?>" class="button button-small">
+                                <?php _e('Ver', 'modulo-ventas'); ?>
+                            </a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php endif; ?>
+        
+        <!-- Tab: Productos Más Cotizados -->
+        <div id="tab-productos" class="tab-content">
+            <?php if (!empty($estadisticas['productos_mas_cotizados'])): ?>
+            <table class="wp-list-table widefat fixed striped">
+                <thead>
+                    <tr>
+                        <th><?php _e('Producto', 'modulo-ventas'); ?></th>
+                        <th><?php _e('Veces Cotizado', 'modulo-ventas'); ?></th>
+                        <th><?php _e('Cantidad Total', 'modulo-ventas'); ?></th>
+                        <th><?php _e('Monto Total', 'modulo-ventas'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($estadisticas['productos_mas_cotizados'] as $producto): ?>
+                    <tr>
+                        <td>
+                            <?php if ($producto['producto_id']): ?>
+                            <a href="<?php echo get_edit_post_link($producto['producto_id']); ?>">
+                                <?php echo esc_html($producto['producto_nombre']); ?>
+                            </a>
+                            <?php else: ?>
+                            <?php echo esc_html($producto['producto_nombre']); ?>
+                            <?php endif; ?>
+                        </td>
+                        <td><?php echo number_format($producto['veces_cotizado'], 0, ',', '.'); ?></td>
+                        <td><?php echo number_format($producto['cantidad_total'], 0, ',', '.'); ?></td>
+                        <td><?php echo wc_price($producto['monto_total']); ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php else: ?>
+            <p class="mv-no-items"><?php _e('No hay información de productos cotizados.', 'modulo-ventas'); ?></p>
+            <?php endif; ?>
+        </div>
+        
+        <!-- Tab: Estadísticas -->
+        <div id="tab-estadisticas" class="tab-content">
+            <div class="mv-charts-container">
+                <?php if (!empty($estadisticas['cotizaciones_por_mes'])): ?>
+                <div class="mv-chart-box">
+                    <h3><?php _e('Cotizaciones por Mes', 'modulo-ventas'); ?></h3>
+                    <canvas id="chart-cotizaciones-mes" width="400" height="200"></canvas>
+                </div>
+                <?php endif; ?>
+                
+                <div class="mv-stats-summary">
+                    <h3><?php _e('Resumen de Estadísticas', 'modulo-ventas'); ?></h3>
+                    <ul>
+                        <li>
+                            <strong><?php _e('Total cotizaciones:', 'modulo-ventas'); ?></strong>
+                            <?php echo number_format($estadisticas['total_cotizaciones'], 0, ',', '.'); ?>
+                        </li>
+                        <li>
+                            <strong><?php _e('Monto promedio:', 'modulo-ventas'); ?></strong>
+                            <?php echo wc_price($estadisticas['monto_promedio_cotizacion']); ?>
+                        </li>
+                        <li>
+                            <strong><?php _e('Tasa de conversión:', 'modulo-ventas'); ?></strong>
+                            <?php echo number_format($estadisticas['tasa_conversion'], 1, ',', '.'); ?>%
+                        </li>
+                        <li>
+                            <strong><?php _e('Tiempo promedio de decisión:', 'modulo-ventas'); ?></strong>
+                            <?php echo $estadisticas['tiempo_promedio_decision']; ?> <?php _e('días', 'modulo-ventas'); ?>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tab: Actividad -->
+        <div id="tab-actividad" class="tab-content">
+            <?php if (!empty($actividad)): ?>
+                <?php 
+                // Agrupar actividades por cotización
+                $actividades_agrupadas = array();
+                foreach ($actividad as $evento) {
+                    if (isset($evento['referencia_id'])) {
+                        $actividades_agrupadas[$evento['referencia_id']][] = $evento;
+                    }
+                }
+                ?>
+                
+                <div class="mv-actividad-agrupada">
+                    <?php foreach ($actividades_agrupadas as $cotizacion_id => $eventos): ?>
+                        <div class="mv-grupo-actividad">
+                            <h4 class="mv-grupo-titulo">
+                                <?php 
+                                // Obtener el número de cotización del primer evento
+                                $numero_cotizacion = '';
+                                if (preg_match('/COT-\d{4}-\d{6}/', $eventos[0]['descripcion'], $matches)) {
+                                    $numero_cotizacion = $matches[0];
+                                }
+                                ?>
+                                <span class="dashicons dashicons-media-document"></span>
+                                <?php echo esc_html($numero_cotizacion); ?>
+                                <span class="mv-evento-count">(<?php echo count($eventos); ?> eventos)</span>
+                            </h4>
+                            
+                            <div class="mv-timeline-grupo">
+                                <?php foreach ($eventos as $evento): ?>
+                                    <div class="mv-timeline-item">
+                                        <div class="mv-timeline-date">
+                                            <?php echo date_i18n(get_option('date_format') . ' ' . get_option('time_format'), 
+                                                strtotime($evento['fecha_actividad'])); ?>
+                                        </div>
+                                        <div class="mv-timeline-content">
+                                            <?php echo wp_kses_post($evento['descripcion']); ?>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                
+            <?php else: ?>
+                <p class="mv-no-items"><?php _e('No hay actividad registrada.', 'modulo-ventas'); ?></p>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Header del cliente */
+.mv-cliente-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    margin: 20px 0;
+}
+
+.mv-cliente-info-box {
+    flex: 1;
+}
+
+.mv-info-row {
+    margin-bottom: 8px;
+}
+
+.mv-info-row strong {
+    display: inline-block;
+    min-width: 100px;
+    color: #666;
+}
+
+.mv-cliente-status {
+    text-align: right;
+}
+
+.mv-credito-info {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* Grid de estadísticas */
+.mv-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.mv-stat-card {
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.mv-stat-card h3 {
+    margin: 0 0 5px 0;
+    font-size: 32px;
+    color: #23282d;
+    font-weight: 400;
+}
+
+.mv-stat-card p {
+    margin: 0 0 10px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.mv-stat-details {
+    font-size: 12px;
+    color: #999;
+}
+
+.mv-stat-details span {
+    margin: 0 5px;
+}
+
+.mv-stat-details .pendientes {
+    color: #996800;
+}
+
+.mv-stat-details .aprobadas {
+    color: #00a32a;
+}
+
+/* Tabs */
+.mv-tabs-container {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    margin-top: 20px;
+}
+
+.nav-tab-wrapper {
+    margin: 0;
+    padding-left: 10px;
+    border-bottom: 1px solid #ccd0d4;
+}
+
+.tab-content {
+    display: none;
+    padding: 20px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Tab Actividad */
+.mv-actividad-agrupada {
+    margin-top: 20px;
+}
+
+.mv-grupo-actividad {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.mv-grupo-titulo {
+    background: #fff;
+    margin: 0;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mv-evento-count {
+    font-size: 14px;
+    color: #666;
+    font-weight: normal;
+}
+
+.mv-timeline-grupo {
+    padding: 20px;
+}
+
+.mv-timeline-grupo .mv-timeline-item {
+    margin-bottom: 15px;
+    padding-left: 40px;
+    position: relative;
+}
+
+.mv-timeline-grupo .mv-timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #007cba;
+}
+
+.mv-timeline-grupo .mv-timeline-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 16px;
+    bottom: -15px;
+    width: 2px;
+    background: #e0e0e0;
+}
+
+/* Timeline anterior *
+.mv-timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.mv-timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e0e0e0;
+}
+
+.mv-timeline-item {
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.mv-timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #007cba;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px #e0e0e0;
+}
+
+.mv-timeline-date {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.mv-timeline-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}*/
+
+/* Badges */
+.mv-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.mv-badge-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.mv-badge-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.mv-badge-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.mv-badge-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+/* Otros */
+.mv-ver-todas {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.mv-no-items {
+    text-align: center;
+    color: #666;
+    padding: 40px 0;
+}
+
+.mv-charts-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.mv-chart-box {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.mv-stats-summary ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mv-stats-summary li {
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.mv-stats-summary li:last-child {
+    border-bottom: none;
+}
+
+/* Responsive */
+@media screen and (max-width: 1200px) {
+    .mv-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .mv-charts-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 782px) {
+    .mv-cliente-header {
+        flex-direction: column;
+    }
+    
+    .mv-cliente-status {
+        text-align: left;
+        margin-top: 20px;
+    }
+    
+    .mv-stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+jQuery(document).ready(function($) {
+    // Manejo de tabs
+    $('.nav-tab').on('click', function(e) {
+        e.preventDefault();
+        
+        var tab = $(this).data('tab');
+        
+        // Actualizar tabs activos
+        $('.nav-tab').removeClass('nav-tab-active');
+        $(this).addClass('nav-tab-active');
+        
+        // Mostrar contenido
+        $('.tab-content').removeClass('active');
+        $('#tab-' + tab).addClass('active');
+    });
+    
+    // Gráfico de cotizaciones por mes (si hay datos)
+    <?php if (!empty($estadisticas['cotizaciones_por_mes'])): ?>
+    var ctx = document.getElementById('chart-cotizaciones-mes');
+    if (ctx) {
+        ctx = ctx.getContext('2d');
+        
+        var labels = [];
+        var cantidades = [];
+        var montos = [];
+        
+        <?php foreach (array_reverse($estadisticas['cotizaciones_por_mes']) as $mes): ?>
+        labels.push('<?php echo $mes['mes']; ?>');
+        cantidades.push(<?php echo $mes['cantidad']; ?>);
+        montos.push(<?php echo $mes['monto']; ?>);
+        <?php endforeach; ?>
+        
+        // Aquí iría la configuración de Chart.js
+        // Por ahora es un placeholder
+        console.log('Datos para gráfico:', {labels, cantidades, montos});
+    }
+    <?php endif; ?>
+});
+</script>

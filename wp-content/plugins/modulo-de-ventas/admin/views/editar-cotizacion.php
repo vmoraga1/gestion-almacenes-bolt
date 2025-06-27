@@ -42,7 +42,7 @@ $items = $db->get_items_cotizacion($cotizacion_id);
 
 // Obtener lista de clientes
 global $wpdb;
-$tabla_clientes = $wpdb->prefix . 'sm_clientes';
+$tabla_clientes = $wpdb->prefix . 'mv_clientes';
 $lista_clientes = $wpdb->get_results("SELECT * FROM $tabla_clientes ORDER BY razon_social ASC");
 
 // Obtener almacenes si el plugin está activo
@@ -293,7 +293,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mv_cotizacion_nonce']
                                     <?php if ($items && count($items) > 0): ?>
                                         <?php foreach ($items as $index => $item): 
                                             // Obtener información del producto
-                                            $tabla_productos = $wpdb->prefix . 'sm_productos';
+                                            $tabla_productos = $wpdb->prefix . 'mv_productos';
                                             $producto = $wpdb->get_row($wpdb->prepare("
                                                 SELECT * FROM $tabla_productos WHERE id = %d
                                             ", $item->producto_id));

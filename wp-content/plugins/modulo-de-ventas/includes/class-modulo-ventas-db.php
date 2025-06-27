@@ -16,7 +16,7 @@ class Modulo_Ventas_DB {
     /**
      * Versión de la base de datos
      */
-    private $db_version = '2.0.0';
+    private $db_version = '2.1.0';
     
     /**
      * Instancia de wpdb
@@ -46,6 +46,39 @@ class Modulo_Ventas_DB {
     }
     
     /**
+     * Verificar y actualizar estructura de base de datos
+     */
+    public function verificar_y_actualizar_db() {
+        $version_actual = get_option('modulo_ventas_db_version', '0');
+        
+        if (version_compare($version_actual, $this->db_version, '<')) {
+            $this->ejecutar_migraciones($version_actual);
+            update_option('modulo_ventas_db_version', $this->db_version);
+        }
+    }
+    
+    /**
+     * Ejecutar migraciones necesarias
+     */
+    private function ejecutar_migraciones($desde_version) {
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        
+        // Migración inicial - Crear todas las tablas
+        if (version_compare($desde_version, '2.0.0', '<')) {
+            $this->crear_tablas();
+        }
+        
+        // Migración 2.1.0 - Agregar campos faltantes
+        if (version_compare($desde_version, '2.1.0', '<')) {
+            $this->migrar_a_2_1_0();
+        }
+        
+        // Log de migración completada
+        $logger = Modulo_Ventas_Logger::get_instance();
+        $logger->log("Base de datos actualizada a versión {$this->db_version}", 'info');
+    }
+    
+    /**
      * Crear todas las tablas necesarias
      */
     public function crear_tablas() {
@@ -55,9 +88,6 @@ class Modulo_Ventas_DB {
         $this->crear_tabla_clientes_meta();
         $this->crear_tabla_cotizaciones();
         $this->crear_tabla_cotizaciones_items();
-        
-        // Actualizar versión de BD
-        update_option('modulo_ventas_db_version', $this->db_version);
         
         // Log
         $logger = Modulo_Ventas_Logger::get_instance();
@@ -78,8 +108,12 @@ class Modulo_Ventas_DB {
             giro_comercial varchar(255) DEFAULT NULL,
             telefono varchar(50) DEFAULT NULL,
             email varchar(100) DEFAULT NULL,
+            sitio_web varchar(255) DEFAULT NULL,
             email_dte varchar(100) DEFAULT NULL COMMENT 'Email para documentos tributarios',
             direccion_facturacion text DEFAULT NULL,
+            ciudad varchar(100) DEFAULT NULL,
+            region varchar(100) DEFAULT NULL,
+            codigo_postal varchar(20) DEFAULT NULL,
             comuna_facturacion varchar(100) DEFAULT NULL,
             ciudad_facturacion varchar(100) DEFAULT NULL,
             region_facturacion varchar(100) DEFAULT NULL,
@@ -90,10 +124,11 @@ class Modulo_Ventas_DB {
             region_envio varchar(100) DEFAULT NULL,
             pais_envio varchar(100) DEFAULT 'Chile',
             usar_direccion_facturacion_para_envio tinyint(1) DEFAULT 1,
+            credito_autorizado decimal(10,2) DEFAULT 0.00,
             notas text DEFAULT NULL,
             estado varchar(20) DEFAULT 'activo',
             fecha_creacion datetime DEFAULT CURRENT_TIMESTAMP,
-            fecha_modificacion datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            fecha_actualizacion datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             creado_por bigint(20) UNSIGNED DEFAULT NULL,
             modificado_por bigint(20) UNSIGNED DEFAULT NULL,
             PRIMARY KEY (id),
@@ -215,6 +250,212 @@ class Modulo_Ventas_DB {
         ) $charset_collate;";
         
         dbDelta($sql);
+    }
+
+    /**
+     * Migración a versión 2.1.0 - AJUSTADA para tu estructura
+     */
+    private function migrar_a_2_1_0() {
+        // Log inicio de migración
+        error_log('Módulo Ventas: Iniciando migración a 2.1.0');
+        
+        // ========================================
+        // ACTUALIZAR TABLA DE CLIENTES
+        // ========================================
+        
+        // Los campos que necesitamos agregar a clientes (si no existen)
+        $this->agregar_columna_si_no_existe(
+            $this->tabla_clientes,
+            'sitio_web',
+            'VARCHAR(255) DEFAULT NULL AFTER email'
+        );
+        
+        $this->agregar_columna_si_no_existe(
+            $this->tabla_clientes,
+            'ciudad',
+            'VARCHAR(100) DEFAULT NULL AFTER direccion_facturacion'
+        );
+        
+        $this->agregar_columna_si_no_existe(
+            $this->tabla_clientes,
+            'region',
+            'VARCHAR(100) DEFAULT NULL AFTER ciudad'
+        );
+        
+        $this->agregar_columna_si_no_existe(
+            $this->tabla_clientes,
+            'codigo_postal',
+            'VARCHAR(20) DEFAULT NULL AFTER region'
+        );
+        
+        $this->agregar_columna_si_no_existe(
+            $this->tabla_clientes,
+            'credito_autorizado',
+            'DECIMAL(10,2) DEFAULT 0.00 AFTER usar_direccion_facturacion_para_envio'
+        );
+        
+        // Manejar fecha_actualizacion/fecha_modificacion en clientes
+        $columnas_clientes = $this->wpdb->get_col("SHOW COLUMNS FROM {$this->tabla_clientes}");
+        if (!in_array('fecha_actualizacion', $columnas_clientes) && !in_array('fecha_modificacion', $columnas_clientes)) {
+            $this->agregar_columna_si_no_existe(
+                $this->tabla_clientes,
+                'fecha_actualizacion',
+                'DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'
+            );
+        }
+        
+        // ========================================
+        // ACTUALIZAR TABLA DE COTIZACIONES
+        // ========================================
+        
+        // Tu estructura ya tiene fecha_modificacion, necesitamos crear un alias fecha_actualizacion
+        // para compatibilidad con el código que busca fecha_actualizacion
+        $columnas_cotizaciones = $this->wpdb->get_col("SHOW COLUMNS FROM {$this->tabla_cotizaciones}");
+        
+        if (!in_array('fecha_actualizacion', $columnas_cotizaciones) && in_array('fecha_modificacion', $columnas_cotizaciones)) {
+            // Crear una vista o columna virtual fecha_actualizacion que apunte a fecha_modificacion
+            // O mejor aún, actualizar el código para usar fecha_modificacion
+            // Por ahora, agreguemos un alias
+            $this->wpdb->query("ALTER TABLE {$this->tabla_cotizaciones} ADD COLUMN fecha_actualizacion DATETIME GENERATED ALWAYS AS (fecha_modificacion) VIRTUAL");
+            
+            // Si la BD no soporta columnas virtuales, entonces copiar el valor
+            if ($this->wpdb->last_error) {
+                $this->wpdb->query("ALTER TABLE {$this->tabla_cotizaciones} ADD COLUMN fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+                $this->wpdb->query("UPDATE {$this->tabla_cotizaciones} SET fecha_actualizacion = fecha_modificacion");
+            }
+        }
+        
+        // ========================================
+        // ACTUALIZAR TABLA DE ITEMS
+        // ========================================
+        
+        // Tu estructura usa 'nombre' en lugar de 'producto_nombre'
+        // Necesitamos crear un alias o actualizar las consultas
+        $columnas_items = $this->wpdb->get_col("SHOW COLUMNS FROM {$this->tabla_cotizaciones_items}");
+        
+        if (!in_array('producto_nombre', $columnas_items) && in_array('nombre', $columnas_items)) {
+            // El campo existe como 'nombre', no necesitamos agregarlo
+            // Pero debemos actualizar las consultas para usar 'nombre' en lugar de 'producto_nombre'
+            error_log('Nota: La tabla usa "nombre" en lugar de "producto_nombre"');
+        }
+        
+        // Verificar que los campos de totales existan (tu estructura ya los tiene)
+        $campos_requeridos = array(
+            'cantidad' => true,
+            'precio_unitario' => true,
+            'subtotal' => true,
+            'total' => true
+        );
+        
+        foreach ($campos_requeridos as $campo => $requerido) {
+            if (!in_array($campo, $columnas_items)) {
+                error_log("ADVERTENCIA: Campo $campo no encontrado en items de cotización");
+            }
+        }
+        
+        // Copiar datos de columnas _facturacion a columnas simples si es necesario
+        $this->copiar_datos_facturacion_si_necesario();
+        
+        // Llenar nombres de productos si están vacíos
+        $this->actualizar_nombres_productos_con_campo_correcto();
+        
+        error_log('Módulo Ventas: Migración a 2.1.0 completada');
+    }
+
+    /**
+     * Actualizar nombres de productos usando el campo correcto
+     */
+    private function actualizar_nombres_productos_con_campo_correcto() {
+        // Verificar qué campo existe
+        $columnas = $this->wpdb->get_col("SHOW COLUMNS FROM {$this->tabla_cotizaciones_items}");
+        
+        $campo_nombre = in_array('nombre', $columnas) ? 'nombre' : 'producto_nombre';
+        
+        $items_sin_nombre = $this->wpdb->get_results(
+            "SELECT DISTINCT producto_id 
+            FROM {$this->tabla_cotizaciones_items} 
+            WHERE $campo_nombre IS NULL OR $campo_nombre = ''"
+        );
+        
+        foreach ($items_sin_nombre as $item) {
+            if ($item->producto_id > 0) {
+                $producto = wc_get_product($item->producto_id);
+                if ($producto) {
+                    $this->wpdb->update(
+                        $this->tabla_cotizaciones_items,
+                        array($campo_nombre => $producto->get_name()),
+                        array('producto_id' => $item->producto_id),
+                        array('%s'),
+                        array('%d')
+                    );
+                }
+            }
+        }
+    }
+    
+    /**
+     * Helper para agregar columna si no existe
+     */
+    private function agregar_columna_si_no_existe($tabla, $columna, $definicion) {
+        $columnas = $this->wpdb->get_col("SHOW COLUMNS FROM $tabla");
+        
+        if (!in_array($columna, $columnas)) {
+            $sql = "ALTER TABLE $tabla ADD COLUMN $columna $definicion";
+            $resultado = $this->wpdb->query($sql);
+            
+            if ($this->wpdb->last_error) {
+                error_log("Error agregando columna $columna a $tabla: " . $this->wpdb->last_error);
+            } else {
+                error_log("Columna $columna agregada exitosamente a $tabla");
+            }
+        }
+    }
+    
+    /**
+     * Copiar datos de columnas _facturacion a columnas simples
+     */
+    private function copiar_datos_facturacion_si_necesario() {
+        // Copiar ciudad_facturacion a ciudad si está vacía
+        $this->wpdb->query(
+            "UPDATE {$this->tabla_clientes} 
+            SET ciudad = ciudad_facturacion 
+            WHERE (ciudad IS NULL OR ciudad = '') 
+            AND ciudad_facturacion IS NOT NULL"
+        );
+        
+        // Copiar region_facturacion a region si está vacía
+        $this->wpdb->query(
+            "UPDATE {$this->tabla_clientes} 
+            SET region = region_facturacion 
+            WHERE (region IS NULL OR region = '') 
+            AND region_facturacion IS NOT NULL"
+        );
+    }
+    
+    /**
+     * Actualizar nombres de productos vacíos
+     */
+    private function actualizar_nombres_productos() {
+        $items_sin_nombre = $this->wpdb->get_results(
+            "SELECT DISTINCT producto_id 
+            FROM {$this->tabla_cotizaciones_items} 
+            WHERE producto_nombre IS NULL OR producto_nombre = ''"
+        );
+        
+        foreach ($items_sin_nombre as $item) {
+            if ($item->producto_id > 0) {
+                $producto = wc_get_product($item->producto_id);
+                if ($producto) {
+                    $this->wpdb->update(
+                        $this->tabla_cotizaciones_items,
+                        array('producto_nombre' => $producto->get_name()),
+                        array('producto_id' => $item->producto_id),
+                        array('%s'),
+                        array('%d')
+                    );
+                }
+            }
+        }
     }
     
     /**
@@ -355,6 +596,31 @@ class Modulo_Ventas_DB {
         $cliente = $this->wpdb->get_row($sql);
         
         if ($cliente) {
+            // Asegurar que todos los campos esperados existan
+            $campos_predeterminados = array(
+                'sitio_web' => '',
+                'ciudad' => '',
+                'codigo_postal' => '',
+                'credito_autorizado' => 0,
+                'fecha_actualizacion' => null
+            );
+            
+            foreach ($campos_predeterminados as $campo => $valor_predeterminado) {
+                if (!property_exists($cliente, $campo)) {
+                    $cliente->$campo = $valor_predeterminado;
+                }
+            }
+            
+            // Si existe ciudad_facturacion pero no ciudad, usar ciudad_facturacion
+            if (empty($cliente->ciudad) && !empty($cliente->ciudad_facturacion)) {
+                $cliente->ciudad = $cliente->ciudad_facturacion;
+            }
+            
+            // Si existe fecha_modificacion pero no fecha_actualizacion, usar fecha_modificacion
+            if (empty($cliente->fecha_actualizacion) && !empty($cliente->fecha_modificacion)) {
+                $cliente->fecha_actualizacion = $cliente->fecha_modificacion;
+            }
+            
             // Obtener metadatos
             $cliente->meta = $this->obtener_cliente_meta($cliente_id);
         }

@@ -987,3 +987,99 @@ if (!function_exists('mv_calcular_fecha_expiracion')) {
         return date('Y-m-d', strtotime($fecha_base . ' + ' . $dias . ' days'));
     }
 }
+
+/**
+ * Obtener nombre legible del estado de cotización
+ * (Esta función parece no estar en helpers.php)
+ */
+if (!function_exists('mv_obtener_nombre_estado')) {
+    function mv_obtener_nombre_estado($estado) {
+        $estados = array(
+            'borrador' => __('Borrador', 'modulo-ventas'),
+            'pendiente' => __('Pendiente', 'modulo-ventas'),
+            'enviada' => __('Enviada', 'modulo-ventas'),
+            'aprobada' => __('Aprobada', 'modulo-ventas'),
+            'rechazada' => __('Rechazada', 'modulo-ventas'),
+            'expirada' => __('Expirada', 'modulo-ventas'),
+            'convertida' => __('Convertida en Venta', 'modulo-ventas'),
+            'cancelada' => __('Cancelada', 'modulo-ventas')
+        );
+        
+        return isset($estados[$estado]) ? $estados[$estado] : $estado;
+    }
+}
+
+/**
+ * Obtener icono para tipo de actividad
+ * (Esta función parece no estar en helpers.php)
+ */
+if (!function_exists('mv_obtener_icono_actividad')) {
+    function mv_obtener_icono_actividad($tipo) {
+        $iconos = array(
+            'cotizacion' => 'dashicons-media-document',
+            'pedido' => 'dashicons-cart',
+            'nota' => 'dashicons-edit',
+            'email' => 'dashicons-email',
+            'llamada' => 'dashicons-phone',
+            'reunion' => 'dashicons-groups',
+            'tarea' => 'dashicons-clipboard',
+            'sistema' => 'dashicons-info'
+        );
+        
+        return isset($iconos[$tipo]) ? $iconos[$tipo] : 'dashicons-marker';
+    }
+}
+
+/**
+ * Obtener estadísticas del dashboard de clientes
+ * (Esta función parece no estar en helpers.php)
+ */
+if (!function_exists('mv_obtener_estadisticas_clientes')) {
+    function mv_obtener_estadisticas_clientes() {
+        global $wpdb;
+        $tabla_clientes = $wpdb->prefix . 'mv_clientes';
+        $tabla_cotizaciones = $wpdb->prefix . 'mv_cotizaciones';
+        
+        $stats = array(
+            'total' => 0,
+            'activos' => 0,
+            'nuevos_mes' => 0,
+            'con_cotizaciones' => 0
+        );
+        
+        // Total de clientes
+        $stats['total'] = $wpdb->get_var("SELECT COUNT(*) FROM $tabla_clientes");
+        
+        // Clientes activos
+        $stats['activos'] = $wpdb->get_var(
+            "SELECT COUNT(*) FROM $tabla_clientes WHERE estado = 'activo'"
+        );
+        
+        // Nuevos este mes
+        $primer_dia_mes = date('Y-m-01');
+        $stats['nuevos_mes'] = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM $tabla_clientes WHERE fecha_creacion >= %s",
+            $primer_dia_mes
+        ));
+        
+        // Con cotizaciones
+        $stats['con_cotizaciones'] = $wpdb->get_var(
+            "SELECT COUNT(DISTINCT c.id) 
+            FROM $tabla_clientes c 
+            INNER JOIN $tabla_cotizaciones cot ON c.id = cot.cliente_id"
+        );
+        
+        return $stats;
+    }
+}
+
+/**
+ * Obtener regiones de Chile (versión corregida)
+ * Nota: Ya existe mv_get_regiones_chile() pero necesitamos mv_obtener_regiones_chile()
+ * para mantener consistencia con el código existente
+ */
+if (!function_exists('mv_obtener_regiones_chile')) {
+    function mv_obtener_regiones_chile() {
+        return mv_get_regiones_chile();
+    }
+}

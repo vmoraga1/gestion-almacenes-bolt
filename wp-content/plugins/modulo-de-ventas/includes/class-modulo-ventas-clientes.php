@@ -866,6 +866,156 @@ class Modulo_Ventas_Clientes {
         
         return $this->db->obtener_clientes_para_select();
     }
+
+    /**
+     * Obtener nombre legible del estado de cotización
+     *
+     * @param string $estado Estado interno
+     * @return string Nombre legible
+     */
+    function mv_obtener_nombre_estado($estado) {
+        $estados = array(
+            'borrador' => __('Borrador', 'modulo-ventas'),
+            'pendiente' => __('Pendiente', 'modulo-ventas'),
+            'enviada' => __('Enviada', 'modulo-ventas'),
+            'aprobada' => __('Aprobada', 'modulo-ventas'),
+            'rechazada' => __('Rechazada', 'modulo-ventas'),
+            'expirada' => __('Expirada', 'modulo-ventas'),
+            'convertida' => __('Convertida en Venta', 'modulo-ventas'),
+            'cancelada' => __('Cancelada', 'modulo-ventas')
+        );
+        
+        return isset($estados[$estado]) ? $estados[$estado] : $estado;
+    }
+
+    /**
+     * Obtener icono para tipo de actividad
+     *
+     * @param string $tipo Tipo de actividad
+     * @return string Clase del icono dashicon
+     */
+    function mv_obtener_icono_actividad($tipo) {
+        $iconos = array(
+            'cotizacion' => 'dashicons-media-document',
+            'pedido' => 'dashicons-cart',
+            'nota' => 'dashicons-edit',
+            'email' => 'dashicons-email',
+            'llamada' => 'dashicons-phone',
+            'reunion' => 'dashicons-groups',
+            'tarea' => 'dashicons-clipboard',
+            'sistema' => 'dashicons-info'
+        );
+        
+        return isset($iconos[$tipo]) ? $iconos[$tipo] : 'dashicons-marker';
+    }
+
+    /**
+     * Formatear RUT chileno
+     *
+     * @param string $rut RUT sin formato
+     * @return string RUT formateado
+     */
+    function mv_formatear_rut($rut) {
+        // Limpiar RUT
+        $rut = preg_replace('/[^0-9kK]/', '', $rut);
+        
+        if (strlen($rut) < 2) {
+            return $rut;
+        }
+        
+        // Separar número y dígito verificador
+        $numero = substr($rut, 0, -1);
+        $dv = strtoupper(substr($rut, -1));
+        
+        // Formatear número con puntos
+        $numero_formateado = '';
+        $contador = 0;
+        
+        for ($i = strlen($numero) - 1; $i >= 0; $i--) {
+            if ($contador == 3) {
+                $numero_formateado = '.' . $numero_formateado;
+                $contador = 0;
+            }
+            $numero_formateado = $numero[$i] . $numero_formateado;
+            $contador++;
+        }
+        
+        return $numero_formateado . '-' . $dv;
+    }
+
+    /**
+     * Limpiar RUT (quitar formato)
+     *
+     * @param string $rut RUT con o sin formato
+     * @return string RUT sin formato
+     */
+    function mv_limpiar_rut($rut) {
+        return preg_replace('/[^0-9kK]/', '', $rut);
+    }
+
+    /**
+     * Validar RUT chileno
+     *
+     * @param string $rut RUT a validar
+     * @return bool True si es válido
+     */
+    function mv_validar_rut($rut) {
+        // Limpiar RUT
+        $rut = mv_limpiar_rut($rut);
+        
+        if (strlen($rut) < 2) {
+            return false;
+        }
+        
+        // Separar número y dígito verificador
+        $numero = substr($rut, 0, -1);
+        $dv = strtoupper(substr($rut, -1));
+        
+        // Validar que sea número
+        if (!is_numeric($numero)) {
+            return false;
+        }
+        
+        // Calcular dígito verificador
+        $suma = 0;
+        $factor = 2;
+        
+        for ($i = strlen($numero) - 1; $i >= 0; $i--) {
+            $suma += $factor * $numero[$i];
+            $factor = $factor == 7 ? 2 : $factor + 1;
+        }
+        
+        $dv_calculado = 11 - ($suma % 11);
+        
+        if ($dv_calculado == 11) {
+            $dv_calculado = '0';
+        } elseif ($dv_calculado == 10) {
+            $dv_calculado = 'K';
+        } else {
+            $dv_calculado = (string)$dv_calculado;
+        }
+        
+        return $dv === $dv_calculado;
+    }
+
+    /**
+     * Verificar permisos AJAX y nonce
+     *
+     * @param string $capability Capacidad requerida
+     * @param string $nonce_action Acción del nonce
+     * @param string $nonce_field Campo del nonce (por defecto 'nonce')
+     */
+    function mv_ajax_check_permissions($capability, $nonce_action, $nonce_field = 'nonce') {
+        // Verificar nonce
+        if (!check_ajax_referer($nonce_action, $nonce_field, false)) {
+            wp_send_json_error(array('message' => __('Error de seguridad', 'modulo-ventas')));
+        }
+        
+        // Verificar permisos
+        if (!current_user_can($capability)) {
+            wp_send_json_error(array('message' => __('Sin permisos suficientes', 'modulo-ventas')));
+        }
+    }
     
     /**
      * Sincronizar cliente con usuario de WooCommerce

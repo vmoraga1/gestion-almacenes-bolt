@@ -161,6 +161,16 @@ class Modulo_Ventas_Admin {
             'modulo-ventas-editar-cliente',
             array($this, 'pagina_editar_cliente')
         );
+
+        // Ver detalle de cliente (oculto)
+        add_submenu_page(
+            null,
+            __('Detalle de Cliente', 'modulo-ventas'),
+            __('Detalle de Cliente', 'modulo-ventas'),
+            'manage_clientes_ventas',
+            'modulo-ventas-ver-cliente',
+            array($this, 'pagina_detalle_cliente')
+        );
         
         // Separador
         add_submenu_page(
@@ -869,10 +879,298 @@ class Modulo_Ventas_Admin {
             }
         }
     }
-    
+
     /**
      * Procesar acciones de clientes
      */
+    private function procesar_acciones_clientes() {
+        // Mostrar mensajes según parámetros GET
+        $this->mostrar_mensajes_get();
+        
+        // Verificar si hay una acción
+        $accion = isset($_GET['accion']) ? $_GET['accion'] : 
+                (isset($_GET['action']) ? $_GET['action'] : '');
+        
+        if (empty($accion)) {
+            return;
+        }
+        
+        // Procesar según la acción
+        switch ($accion) {
+            case 'eliminar':
+            case 'delete':
+                $this->procesar_eliminar_cliente();
+                break;
+                
+            case 'exportar':
+            case 'export':
+                $this->procesar_exportar_clientes();
+                break;
+        }
+    }
+
+    /**
+     * Procesar eliminación de cliente
+     */
+    private function procesar_eliminar_cliente() {
+        // Verificar permisos
+        if (!current_user_can('manage_clientes_ventas')) {
+            wp_die(__('No tiene permisos para realizar esta acción.', 'modulo-ventas'));
+        }
+        
+        // Obtener ID del cliente
+        $cliente_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+        
+        if (!$cliente_id) {
+            wp_die(__('ID de cliente inválido.', 'modulo-ventas'));
+        }
+        
+        // Verificar nonce
+        check_admin_referer('eliminar_cliente_' . $cliente_id);
+        
+        // Verificar que el cliente no tenga cotizaciones
+        global $wpdb;
+        $tabla_cotizaciones = $wpdb->prefix . 'mv_cotizaciones';
+        
+        $tiene_cotizaciones = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM $tabla_cotizaciones WHERE cliente_id = %d",
+            $cliente_id
+        ));
+        
+        if ($tiene_cotizaciones > 0) {
+            // Redirigir con mensaje de error
+            wp_redirect(add_query_arg(array(
+                'page' => 'modulo-ventas-clientes',
+                'mensaje' => 'no_eliminar_con_cotizaciones'
+            ), admin_url('admin.php')));
+            exit;
+        }
+        
+        // Eliminar cliente
+        $resultado = $this->db->eliminar_cliente($cliente_id);
+        
+        if (is_wp_error($resultado)) {
+            // Redirigir con mensaje de error
+            wp_redirect(add_query_arg(array(
+                'page' => 'modulo-ventas-clientes',
+                'mensaje' => 'error_eliminar',
+                'error' => $resultado->get_error_message()
+            ), admin_url('admin.php')));
+        } else {
+            // Log
+            $this->logger->log("Cliente eliminado: ID {$cliente_id}", 'info');
+            
+            // Redirigir con mensaje de éxito
+            wp_redirect(add_query_arg(array(
+                'page' => 'modulo-ventas-clientes',
+                'mensaje' => 'cliente_eliminado'
+            ), admin_url('admin.php')));
+        }
+        exit;
+    }
+
+    /**
+     * Procesar exportación de clientes
+     */
+    private function procesar_exportar_clientes() {
+        // Verificar permisos
+        if (!current_user_can('manage_clientes_ventas')) {
+            wp_die(__('No tiene permisos para realizar esta acción.', 'modulo-ventas'));
+        }
+        
+        // Obtener formato
+        $formato = isset($_GET['formato']) ? $_GET['formato'] : 'csv';
+        
+        // Obtener clientes
+        $args = array(
+            'limite' => -1, // Sin límite
+            'orden' => 'razon_social',
+            'orden_dir' => 'ASC'
+        );
+        
+        // Aplicar filtros si existen
+        if (isset($_GET['estado'])) {
+            $args['estado'] = sanitize_text_field($_GET['estado']);
+        }
+        
+        if (isset($_GET['s'])) {
+            $args['buscar'] = sanitize_text_field($_GET['s']);
+        }
+        
+        $resultado = $this->db->obtener_clientes_con_estadisticas($args);
+        $clientes = $resultado['items'];
+        
+        if ($formato === 'csv') {
+            $this->exportar_clientes_csv($clientes);
+        } elseif ($formato === 'excel') {
+            $this->exportar_clientes_excel($clientes);
+        }
+        
+        exit;
+    }
+
+    /**
+     * Exportar clientes a CSV
+     */
+    private function exportar_clientes_csv($clientes) {
+        // Headers para descarga
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="clientes_' . date('Y-m-d_H-i-s') . '.csv"');
+        
+        // UTF-8 BOM para Excel
+        echo "\xEF\xBB\xBF";
+        
+        // Crear el archivo
+        $output = fopen('php://output', 'w');
+        
+        // Encabezados
+        fputcsv($output, array(
+            __('ID', 'modulo-ventas'),
+            __('Razón Social', 'modulo-ventas'),
+            __('RUT', 'modulo-ventas'),
+            __('Giro Comercial', 'modulo-ventas'),
+            __('Teléfono', 'modulo-ventas'),
+            __('Email', 'modulo-ventas'),
+            __('Dirección', 'modulo-ventas'),
+            __('Ciudad', 'modulo-ventas'),
+            __('Región', 'modulo-ventas'),
+            __('Código Postal', 'modulo-ventas'),
+            __('Sitio Web', 'modulo-ventas'),
+            __('Crédito Autorizado', 'modulo-ventas'),
+            __('Estado', 'modulo-ventas'),
+            __('Cotizaciones', 'modulo-ventas'),
+            __('Fecha Creación', 'modulo-ventas')
+        ));
+        
+        // Datos
+        foreach ($clientes as $cliente) {
+            fputcsv($output, array(
+                $cliente['id'],
+                $cliente['razon_social'],
+                $cliente['rut'],
+                $cliente['giro_comercial'],
+                $cliente['telefono'],
+                $cliente['email'],
+                $cliente['direccion_facturacion'],
+                $cliente['ciudad_facturacion'],
+                $cliente['region_facturacion'],
+                $cliente['codigo_postal'],
+                $cliente['sitio_web'],
+                $cliente['credito_autorizado'],
+                $cliente['estado'],
+                $cliente['cotizaciones'],
+                $cliente['fecha_creacion']
+            ));
+        }
+        
+        fclose($output);
+    }
+
+    /**
+     * Mostrar mensajes según parámetros GET
+     */
+    public function mostrar_mensajes_get() {
+        if (!isset($_GET['mensaje'])) {
+            return;
+        }
+        
+        $mensaje = $_GET['mensaje'];
+        $tipo = 'success';
+        $texto = '';
+        
+        switch ($mensaje) {
+            case 'cliente_creado':
+                $texto = __('Cliente creado exitosamente.', 'modulo-ventas');
+                break;
+                
+            case 'cliente_actualizado':
+                $texto = __('Cliente actualizado exitosamente.', 'modulo-ventas');
+                break;
+                
+            case 'cliente_eliminado':
+                $texto = __('Cliente eliminado exitosamente.', 'modulo-ventas');
+                break;
+                
+            case 'no_eliminar_con_cotizaciones':
+                $tipo = 'error';
+                $texto = __('No se puede eliminar el cliente porque tiene cotizaciones asociadas.', 'modulo-ventas');
+                break;
+                
+            case 'error_eliminar':
+                $tipo = 'error';
+                $texto = __('Error al eliminar el cliente.', 'modulo-ventas');
+                if (isset($_GET['error'])) {
+                    $texto .= ' ' . esc_html($_GET['error']);
+                }
+                break;
+        }
+        
+        if ($texto) {
+            add_action('admin_notices', function() use ($texto, $tipo) {
+                $clase = 'notice notice-' . $tipo . ' is-dismissible';
+                printf('<div class="%1$s"><p>%2$s</p></div>', 
+                    esc_attr($clase), 
+                    esc_html($texto)
+                );
+            });
+        }
+    }
+
+    /**
+     * Página de detalle de cliente
+     */
+    public function pagina_detalle_cliente() {
+        // Verificar permisos
+        if (!current_user_can('manage_clientes_ventas')) {
+            wp_die(__('No tiene permisos suficientes para acceder a esta página.', 'modulo-ventas'));
+        }
+        
+        // Obtener ID
+        $cliente_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+        
+        if (!$cliente_id) {
+            wp_die(__('ID de cliente inválido.', 'modulo-ventas'));
+        }
+        
+        // Obtener cliente
+        $cliente = $this->db->obtener_cliente($cliente_id);
+        
+        if (!$cliente) {
+            wp_die(__('Cliente no encontrado.', 'modulo-ventas'));
+        }
+        
+        // Obtener estadísticas completas del cliente
+        $estadisticas = $this->obtener_estadisticas_completas_cliente($cliente_id);
+        
+        // Obtener cotizaciones recientes
+        $resultado_cotizaciones = $this->db->obtener_cotizaciones(array(
+            'cliente_id' => $cliente_id,
+            'limite' => 10,
+            'orden' => 'fecha',
+            'orden_dir' => 'DESC'
+        ));
+        $cotizaciones_recientes = isset($resultado_cotizaciones['items']) ? $resultado_cotizaciones['items'] : array();
+        
+        // Obtener pedidos si WooCommerce está activo
+        $pedidos = wc_get_orders(array(
+            'customer_id' => $cliente->user_id,
+            'limit' => 10,
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'status' => array('completed', 'processing', 'on-hold'),
+            'return' => 'objects'
+        ));
+        
+        // Obtener actividad reciente
+        $actividad = $this->obtener_actividad_cliente($cliente_id);
+        
+        // Cargar vista
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/views/cliente-detalle.php';
+    }
+    
+    /*
+     * Procesar acciones de clientes
+     *
     private function procesar_acciones_clientes() {
         if (!isset($_REQUEST['action']) || !isset($_REQUEST['_wpnonce'])) {
             return;
@@ -904,11 +1202,11 @@ class Modulo_Ventas_Admin {
                     break;
             }
         }
-    }
+    }*/
     
-    /**
+    /*
      * Procesar formulario de cliente
-     */
+     * 
     private function procesar_formulario_cliente($cliente_id = null) {
         // Verificar nonce
         if (!wp_verify_nonce($_POST['mv_cliente_nonce'], 'mv_guardar_cliente')) {
@@ -969,8 +1267,162 @@ class Modulo_Ventas_Admin {
                 $this->agregar_mensaje_admin('error', $nuevo_id->get_error_message());
             }
         }
+    }*/
+
+    /**
+     * Procesar formulario de cliente (crear o actualizar)
+     * 
+     * @param int $cliente_id ID del cliente a actualizar (0 para crear nuevo)
+     */
+    private function procesar_formulario_cliente($cliente_id = 0) {
+        // Verificar nonce
+        if (!isset($_POST['mv_cliente_nonce']) || 
+            !wp_verify_nonce($_POST['mv_cliente_nonce'], $cliente_id ? 'mv_editar_cliente' : 'mv_crear_cliente')) {
+            wp_die(__('Error de seguridad. Por favor, intente nuevamente.', 'modulo-ventas'));
+        }
+        
+        // Recopilar y sanitizar datos
+        $datos = array(
+            'razon_social' => sanitize_text_field($_POST['razon_social']),
+            'rut' => sanitize_text_field($_POST['rut']),
+            'giro_comercial' => sanitize_text_field($_POST['giro_comercial']),
+            'telefono' => sanitize_text_field($_POST['telefono']),
+            'email' => sanitize_email($_POST['email']),
+            'direccion_facturacion' => sanitize_textarea_field($_POST['direccion_facturacion']),
+            'ciudad' => sanitize_text_field($_POST['ciudad']),
+            'region' => sanitize_text_field($_POST['region']),
+            'codigo_postal' => sanitize_text_field($_POST['codigo_postal']),
+            'sitio_web' => esc_url_raw($_POST['sitio_web']),
+            'credito_autorizado' => isset($_POST['credito_autorizado']) ? floatval($_POST['credito_autorizado']) : 0,
+            'estado' => isset($_POST['estado']) ? sanitize_text_field($_POST['estado']) : 'activo',
+            'user_id' => isset($_POST['user_id']) ? intval($_POST['user_id']) : null
+        );
+        
+        // Validación básica
+        $errores = array();
+        
+        if (empty($datos['razon_social'])) {
+            $errores[] = __('La razón social es obligatoria.', 'modulo-ventas');
+        }
+        
+        if (empty($datos['rut'])) {
+            $errores[] = __('El RUT es obligatorio.', 'modulo-ventas');
+        }
+        
+        // Validar formato de RUT (opcional pero recomendado)
+        if (!empty($datos['rut']) && !$this->validar_rut($datos['rut'])) {
+            $errores[] = __('El formato del RUT no es válido.', 'modulo-ventas');
+        }
+        
+        // Validar email si se proporciona
+        if (!empty($datos['email']) && !is_email($datos['email'])) {
+            $errores[] = __('El formato del email no es válido.', 'modulo-ventas');
+        }
+        
+        // Si hay errores, mostrarlos
+        if (!empty($errores)) {
+            $this->mostrar_mensajes_admin($errores, 'error');
+            return;
+        }
+        
+        // Procesar según sea crear o actualizar
+        if ($cliente_id) {
+            // Actualizar cliente existente
+            $resultado = $this->db->actualizar_cliente($cliente_id, $datos);
+            
+            if (is_wp_error($resultado)) {
+                $this->mostrar_mensajes_admin(array($resultado->get_error_message()), 'error');
+            } else {
+                // Redirigir con mensaje de éxito
+                wp_redirect(add_query_arg(array(
+                    'page' => 'modulo-ventas-clientes',
+                    'mensaje' => 'cliente_actualizado',
+                    'id' => $cliente_id
+                ), admin_url('admin.php')));
+                exit;
+            }
+        } else {
+            // Crear nuevo cliente
+            $nuevo_id = $this->db->crear_cliente($datos);
+            
+            if (is_wp_error($nuevo_id)) {
+                $this->mostrar_mensajes_admin(array($nuevo_id->get_error_message()), 'error');
+            } else {
+                // Redirigir con mensaje de éxito
+                wp_redirect(add_query_arg(array(
+                    'page' => 'modulo-ventas-clientes',
+                    'mensaje' => 'cliente_creado',
+                    'id' => $nuevo_id
+                ), admin_url('admin.php')));
+                exit;
+            }
+        }
+    }
+
+    /**
+     * Validar RUT chileno
+     * 
+     * @param string $rut RUT a validar
+     * @return bool True si es válido
+     */
+    private function validar_rut($rut) {
+        // Eliminar puntos y guión
+        $rut = str_replace(array('.', '-'), '', $rut);
+        
+        // Debe tener al menos 2 caracteres
+        if (strlen($rut) < 2) {
+            return false;
+        }
+        
+        // Separar número y dígito verificador
+        $numero = substr($rut, 0, -1);
+        $dv = strtoupper(substr($rut, -1));
+        
+        // Verificar que el número sea válido
+        if (!is_numeric($numero)) {
+            return false;
+        }
+        
+        // Calcular dígito verificador
+        $suma = 0;
+        $factor = 2;
+        
+        for ($i = strlen($numero) - 1; $i >= 0; $i--) {
+            $suma += $factor * $numero[$i];
+            $factor = $factor == 7 ? 2 : $factor + 1;
+        }
+        
+        $dv_calculado = 11 - ($suma % 11);
+        
+        if ($dv_calculado == 11) {
+            $dv_calculado = '0';
+        } elseif ($dv_calculado == 10) {
+            $dv_calculado = 'K';
+        } else {
+            $dv_calculado = (string)$dv_calculado;
+        }
+        
+        return $dv === $dv_calculado;
     }
     
+    /**
+     * Mostrar mensajes en el admin
+     * 
+     * @param array $mensajes Array de mensajes
+     * @param string $tipo Tipo de mensaje (error, warning, success, info)
+     */
+    private function mostrar_mensajes_admin($mensajes, $tipo = 'error') {
+        foreach ($mensajes as $mensaje) {
+            add_action('admin_notices', function() use ($mensaje, $tipo) {
+                $clase = 'notice notice-' . $tipo;
+                printf('<div class="%1$s"><p>%2$s</p></div>', 
+                    esc_attr($clase), 
+                    esc_html($mensaje)
+                );
+            });
+        }
+    }
+
     /**
      * Registrar configuración
      */
@@ -1044,12 +1496,12 @@ class Modulo_Ventas_Admin {
         // Top clientes del mes
         $stats['top_clientes'] = $wpdb->get_results($wpdb->prepare(
             "SELECT c.razon_social, COUNT(cot.id) as num_cotizaciones, SUM(cot.total) as total_cotizado
-             FROM {$tabla} cot
-             INNER JOIN {$this->db->get_tabla_clientes()} c ON cot.cliente_id = c.id
-             WHERE DATE(cot.fecha) BETWEEN %s AND %s
-             GROUP BY cot.cliente_id
-             ORDER BY total_cotizado DESC
-             LIMIT 5",
+            FROM {$tabla} cot
+            INNER JOIN {$this->db->get_tabla_clientes()} c ON cot.cliente_id = c.id
+            WHERE DATE(cot.fecha) BETWEEN %s AND %s
+            GROUP BY cot.cliente_id
+            ORDER BY total_cotizado DESC
+            LIMIT 5",
             $fecha_inicio,
             $fecha_fin
         ));
@@ -1059,12 +1511,12 @@ class Modulo_Ventas_Admin {
         $stats['top_productos'] = $wpdb->get_results($wpdb->prepare(
             "SELECT ci.nombre, COUNT(DISTINCT ci.cotizacion_id) as veces_cotizado, 
                     SUM(ci.cantidad) as cantidad_total
-             FROM {$tabla_items} ci
-             INNER JOIN {$tabla} cot ON ci.cotizacion_id = cot.id
-             WHERE DATE(cot.fecha) BETWEEN %s AND %s
-             GROUP BY ci.producto_id
-             ORDER BY veces_cotizado DESC
-             LIMIT 5",
+            FROM {$tabla_items} ci
+            INNER JOIN {$tabla} cot ON ci.cotizacion_id = cot.id
+            WHERE DATE(cot.fecha) BETWEEN %s AND %s
+            GROUP BY ci.producto_id
+            ORDER BY veces_cotizado DESC
+            LIMIT 5",
             $fecha_inicio,
             $fecha_fin
         ));
@@ -1098,10 +1550,10 @@ class Modulo_Ventas_Admin {
         
         // Reporte general
         $sql = "SELECT COUNT(*) as total_cotizaciones, 
-                       SUM(total) as valor_total,
-                       AVG(total) as ticket_promedio,
-                       SUM(CASE WHEN estado = 'convertida' THEN 1 ELSE 0 END) as convertidas,
-                       SUM(CASE WHEN estado = 'convertida' THEN total ELSE 0 END) as valor_convertido
+                    SUM(total) as valor_total,
+                    AVG(total) as ticket_promedio,
+                    SUM(CASE WHEN estado = 'convertida' THEN 1 ELSE 0 END) as convertidas,
+                    SUM(CASE WHEN estado = 'convertida' THEN total ELSE 0 END) as valor_convertido
                 FROM {$tabla}
                 WHERE {$where}";
         
@@ -1109,8 +1561,8 @@ class Modulo_Ventas_Admin {
         
         // Por vendedor
         $sql = "SELECT vendedor_nombre, COUNT(*) as cotizaciones, 
-                       SUM(total) as valor_total,
-                       SUM(CASE WHEN estado = 'convertida' THEN 1 ELSE 0 END) as convertidas
+                    SUM(total) as valor_total,
+                    SUM(CASE WHEN estado = 'convertida' THEN 1 ELSE 0 END) as convertidas
                 FROM {$tabla}
                 WHERE {$where}
                 GROUP BY vendedor_id
@@ -1120,8 +1572,8 @@ class Modulo_Ventas_Admin {
         
         // Por cliente
         $sql = "SELECT c.razon_social, COUNT(cot.id) as cotizaciones,
-                       SUM(cot.total) as valor_total,
-                       SUM(CASE WHEN cot.estado = 'convertida' THEN 1 ELSE 0 END) as convertidas
+                    SUM(cot.total) as valor_total,
+                    SUM(CASE WHEN cot.estado = 'convertida' THEN 1 ELSE 0 END) as convertidas
                 FROM {$tabla} cot
                 INNER JOIN {$this->db->get_tabla_clientes()} c ON cot.cliente_id = c.id
                 WHERE {$where}
@@ -1133,8 +1585,8 @@ class Modulo_Ventas_Admin {
         
         // Por producto
         $sql = "SELECT ci.nombre, COUNT(DISTINCT ci.cotizacion_id) as veces_cotizado,
-                       SUM(ci.cantidad) as cantidad_total,
-                       SUM(ci.total) as valor_total
+                    SUM(ci.cantidad) as cantidad_total,
+                    SUM(ci.total) as valor_total
                 FROM {$tabla_items} ci
                 INNER JOIN {$tabla} cot ON ci.cotizacion_id = cot.id
                 WHERE {$where}
@@ -1146,7 +1598,7 @@ class Modulo_Ventas_Admin {
         
         // Evolución diaria
         $sql = "SELECT DATE(fecha) as dia, COUNT(*) as cotizaciones,
-                       SUM(total) as valor_total
+                    SUM(total) as valor_total
                 FROM {$tabla}
                 WHERE {$where}
                 GROUP BY DATE(fecha)
@@ -1166,10 +1618,158 @@ class Modulo_Ventas_Admin {
         
         return $wpdb->get_results(
             "SELECT DISTINCT vendedor_id, vendedor_nombre 
-             FROM {$tabla} 
-             WHERE vendedor_id IS NOT NULL 
-             ORDER BY vendedor_nombre"
+            FROM {$tabla} 
+            WHERE vendedor_id IS NOT NULL 
+            ORDER BY vendedor_nombre"
         );
+    }
+
+    /**
+     * Obtener estadísticas completas del cliente
+     */
+    private function obtener_estadisticas_completas_cliente($cliente_id) {
+        global $wpdb;
+        
+        $tabla_cotizaciones = $wpdb->prefix . 'mv_cotizaciones';
+        $tabla_items = $wpdb->prefix . 'mv_cotizaciones_items';
+        
+        $estadisticas = array(
+            // Cotizaciones
+            'total_cotizaciones' => 0,
+            'cotizaciones_pendientes' => 0,
+            'cotizaciones_aprobadas' => 0,
+            'cotizaciones_convertidas' => 0,
+            'cotizaciones_rechazadas' => 0,
+            'cotizaciones_expiradas' => 0,
+            
+            // Montos
+            'monto_total_cotizado' => 0,
+            'monto_total_aprobado' => 0,
+            'monto_total_convertido' => 0,
+            'monto_promedio_cotizacion' => 0,
+            
+            // Productos
+            'productos_mas_cotizados' => array(),
+            'total_productos_cotizados' => 0,
+            
+            // Tendencias
+            'cotizaciones_por_mes' => array(),
+            'tasa_conversion' => 0,
+            'tiempo_promedio_decision' => 0,
+            
+            // Última actividad
+            'ultima_cotizacion' => null,
+            'ultimo_pedido' => null
+        );
+        
+        // Estadísticas por estado
+        $estados = $wpdb->get_results($wpdb->prepare(
+            "SELECT estado, COUNT(*) as cantidad, SUM(total) as monto 
+            FROM $tabla_cotizaciones 
+            WHERE cliente_id = %d 
+            GROUP BY estado",
+            $cliente_id
+        ), ARRAY_A);
+        
+        $total_cotizaciones = 0;
+        $monto_total = 0;
+        
+        foreach ($estados as $estado) {
+            $cantidad = intval($estado['cantidad']);
+            $monto = floatval($estado['monto']);
+            $total_cotizaciones += $cantidad;
+            $monto_total += $monto;
+            
+            switch ($estado['estado']) {
+                case 'pendiente':
+                    $estadisticas['cotizaciones_pendientes'] = $cantidad;
+                    break;
+                case 'aprobada':
+                    $estadisticas['cotizaciones_aprobadas'] = $cantidad;
+                    $estadisticas['monto_total_aprobado'] = $monto;
+                    break;
+                case 'convertida':
+                    $estadisticas['cotizaciones_convertidas'] = $cantidad;
+                    $estadisticas['monto_total_convertido'] = $monto;
+                    break;
+                case 'rechazada':
+                    $estadisticas['cotizaciones_rechazadas'] = $cantidad;
+                    break;
+                case 'expirada':
+                    $estadisticas['cotizaciones_expiradas'] = $cantidad;
+                    break;
+            }
+        }
+        
+        $estadisticas['total_cotizaciones'] = $total_cotizaciones;
+        $estadisticas['monto_total_cotizado'] = $monto_total;
+        
+        if ($total_cotizaciones > 0) {
+            $estadisticas['monto_promedio_cotizacion'] = $monto_total / $total_cotizaciones;
+            
+            if ($estadisticas['cotizaciones_aprobadas'] + $estadisticas['cotizaciones_convertidas'] > 0) {
+                $estadisticas['tasa_conversion'] = 
+                    (($estadisticas['cotizaciones_aprobadas'] + $estadisticas['cotizaciones_convertidas']) / $total_cotizaciones) * 100;
+            }
+        }
+        
+        // Productos más cotizados
+        $productos = $wpdb->get_results($wpdb->prepare(
+            "SELECT 
+                i.producto_id,
+                i.nombre as producto_nombre,  -- Cambio aquí: usar 'nombre' con alias
+                COUNT(DISTINCT i.cotizacion_id) as veces_cotizado,
+                SUM(i.cantidad) as cantidad_total,
+                SUM(i.subtotal) as monto_total
+            FROM $tabla_items i
+            INNER JOIN $tabla_cotizaciones c ON i.cotizacion_id = c.id
+            WHERE c.cliente_id = %d
+            GROUP BY i.producto_id, i.nombre  -- Cambio aquí también
+            ORDER BY veces_cotizado DESC, monto_total DESC
+            LIMIT 5",
+            $cliente_id
+        ), ARRAY_A);
+
+        // Para el tiempo promedio de decisión, usar fecha_modificacion:
+        $tiempo_decision = $wpdb->get_var($wpdb->prepare(
+            "SELECT AVG(DATEDIFF(fecha_modificacion, fecha))  -- Usar fecha_modificacion
+            FROM $tabla_cotizaciones
+            WHERE cliente_id = %d
+            AND estado IN ('aprobada', 'rechazada', 'convertida')
+            AND fecha_modificacion IS NOT NULL",
+            $cliente_id
+        ));
+
+        $estadisticas['productos_mas_cotizados'] = $productos;
+        $estadisticas['total_productos_cotizados'] = count($productos);
+        
+        // Cotizaciones por mes (últimos 12 meses)
+        $cotizaciones_mes = $wpdb->get_results($wpdb->prepare(
+            "SELECT 
+                DATE_FORMAT(fecha, '%%Y-%%m') as mes,
+                COUNT(*) as cantidad,
+                SUM(total) as monto
+            FROM $tabla_cotizaciones
+            WHERE cliente_id = %d
+            AND fecha >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
+            GROUP BY mes
+            ORDER BY mes DESC",
+            $cliente_id
+        ), ARRAY_A);
+        
+        $estadisticas['cotizaciones_por_mes'] = $cotizaciones_mes;        
+        $estadisticas['tiempo_promedio_decision'] = $tiempo_decision ? round($tiempo_decision, 1) : 0;
+        
+        // Última cotización
+        $estadisticas['ultima_cotizacion'] = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM $tabla_cotizaciones 
+            WHERE cliente_id = %d 
+            ORDER BY fecha DESC 
+            LIMIT 1",
+            $cliente_id
+        ));
+        
+        return $estadisticas;
     }
     
     /**
@@ -1210,76 +1810,238 @@ class Modulo_Ventas_Admin {
         
         return $this->generar_reportes($fecha_desde, $fecha_hasta);
     }
-    
+
     /**
-     * Obtener usuarios sin cliente asociado
+     * Obtener actividad reciente del cliente
      */
-    private function obtener_usuarios_sin_cliente($incluir_usuario_id = null) {
+    private function obtener_actividad_cliente($cliente_id, $limite = 20) {
         global $wpdb;
         
-        $sql = "SELECT u.ID, u.display_name, u.user_email
-                FROM {$wpdb->users} u
-                WHERE u.ID NOT IN (
-                    SELECT user_id FROM {$this->db->get_tabla_clientes()} 
-                    WHERE user_id IS NOT NULL
-                )";
+        $actividades = array();
+        $tabla_cotizaciones = $wpdb->prefix . 'mv_cotizaciones';
         
-        if ($incluir_usuario_id) {
-            $sql .= " OR u.ID = " . intval($incluir_usuario_id);
+        // Obtener cotizaciones con cambios de estado
+        $cotizaciones = $wpdb->get_results($wpdb->prepare(
+            "SELECT 
+                'cotizacion' as tipo,
+                id,
+                folio,
+                fecha as fecha_actividad,
+                'creada' as accion,
+                estado,
+                total,
+                creado_por
+            FROM $tabla_cotizaciones
+            WHERE cliente_id = %d
+            
+            UNION ALL
+            
+            SELECT 
+                'cotizacion' as tipo,
+                id,
+                folio,
+                fecha_modificacion as fecha_actividad,
+                CONCAT('cambio_estado_', estado) as accion,
+                estado,
+                total,
+                modificado_por as creado_por
+            FROM $tabla_cotizaciones
+            WHERE cliente_id = %d
+            AND fecha_modificacion IS NOT NULL
+            AND fecha_modificacion != fecha
+            
+            ORDER BY fecha_actividad DESC
+            LIMIT %d",
+            $cliente_id,
+            $cliente_id,
+            $limite
+        ), ARRAY_A);
+        
+        foreach ($cotizaciones as $cotizacion) {
+            $descripcion = '';
+            $icono = 'dashicons-media-document';
+            $tipo_evento = 'info';
+            
+            if ($cotizacion['accion'] === 'creada') {
+                // Obtener nombre del usuario que creó
+                $usuario = get_userdata($cotizacion['creado_por']);
+                $creado_por = $usuario ? $usuario->display_name : __('Sistema', 'modulo-ventas');
+                
+                $descripcion = sprintf(
+                    __('Cotización %s creada por %s - Total: %s', 'modulo-ventas'),
+                    $cotizacion['folio'],
+                    $creado_por,
+                    strip_tags(wc_price($cotizacion['total']))
+                );
+                $icono = 'dashicons-plus-alt';
+                $tipo_evento = 'creacion';
+            } else {
+                $estados_nombres = array(
+                    'pendiente' => __('pendiente', 'modulo-ventas'),
+                    'enviada' => __('enviada al cliente', 'modulo-ventas'),
+                    'aprobada' => __('aprobada', 'modulo-ventas'),
+                    'rechazada' => __('rechazada', 'modulo-ventas'),
+                    'convertida' => __('convertida en venta', 'modulo-ventas'),
+                    'expirada' => __('expirada', 'modulo-ventas')
+                );
+                
+                $estado_nombre = isset($estados_nombres[$cotizacion['estado']]) ? 
+                            $estados_nombres[$cotizacion['estado']] : 
+                            $cotizacion['estado'];
+                
+                // Determinar icono según estado
+                switch($cotizacion['estado']) {
+                    case 'aprobada':
+                        $icono = 'dashicons-yes-alt';
+                        $tipo_evento = 'exito';
+                        break;
+                    case 'rechazada':
+                        $icono = 'dashicons-dismiss';
+                        $tipo_evento = 'error';
+                        break;
+                    case 'convertida':
+                        $icono = 'dashicons-cart';
+                        $tipo_evento = 'exito';
+                        break;
+                    case 'enviada':
+                        $icono = 'dashicons-email';
+                        $tipo_evento = 'info';
+                        break;
+                    default:
+                        $icono = 'dashicons-clock';
+                        $tipo_evento = 'warning';
+                }
+                
+                $descripcion = sprintf(
+                    __('Cotización %s cambió a estado: %s', 'modulo-ventas'),
+                    $cotizacion['folio'],
+                    $estado_nombre
+                );
+            }
+            
+            $actividades[] = array(
+                'tipo' => 'cotizacion',
+                'fecha_actividad' => $cotizacion['fecha_actividad'],
+                'descripcion' => $descripcion,
+                'referencia_id' => $cotizacion['id'],
+                'referencia_tipo' => 'cotizacion',
+                'icono' => $icono,
+                'tipo_evento' => $tipo_evento,
+                'accion' => $cotizacion['accion']
+            );
         }
         
-        $sql .= " ORDER BY u.display_name";
-        
-        return $wpdb->get_results($sql);
+        return $actividades;
     }
     
     /**
-     * Obtener estadísticas de un cliente
+     * Obtener usuarios sin cliente asociado
+     * 
+     * @param int $usuario_actual ID del usuario actual del cliente (para incluirlo en la lista)
+     * @return array Lista de usuarios disponibles
+     */
+    private function obtener_usuarios_sin_cliente($usuario_actual = null) {
+        global $wpdb;
+        
+        $tabla_clientes = $wpdb->prefix . 'mv_clientes';
+        
+        // Obtener IDs de usuarios que ya tienen cliente
+        $usuarios_con_cliente = $wpdb->get_col(
+            "SELECT DISTINCT user_id FROM $tabla_clientes WHERE user_id IS NOT NULL"
+        );
+        
+        // Argumentos para WP_User_Query
+        $args = array(
+            'orderby' => 'display_name',
+            'order' => 'ASC'
+        );
+        
+        // Excluir usuarios que ya tienen cliente (excepto el actual si se proporciona)
+        if (!empty($usuarios_con_cliente)) {
+            $excluir = $usuarios_con_cliente;
+            if ($usuario_actual && in_array($usuario_actual, $excluir)) {
+                $key = array_search($usuario_actual, $excluir);
+                unset($excluir[$key]);
+            }
+            if (!empty($excluir)) {
+                $args['exclude'] = $excluir;
+            }
+        }
+        
+        // Incluir el usuario actual si se proporciona
+        if ($usuario_actual) {
+            $args['include'] = array($usuario_actual);
+            unset($args['exclude']); // No excluir si estamos incluyendo específicamente
+        }
+        
+        $user_query = new WP_User_Query($args);
+        
+        return $user_query->get_results();
+    }
+    
+    /**
+     * Obtener estadísticas del cliente
+     * 
+     * @param int $cliente_id ID del cliente
+     * @return array Estadísticas del cliente
      */
     private function obtener_estadisticas_cliente($cliente_id) {
         global $wpdb;
-        $tabla = $this->db->get_tabla_cotizaciones();
         
-        $stats = array();
+        $tabla_cotizaciones = $wpdb->prefix . 'mv_cotizaciones';
+        
+        $estadisticas = array(
+            'total_cotizaciones' => 0,
+            'cotizaciones_pendientes' => 0,
+            'cotizaciones_aprobadas' => 0,
+            'cotizaciones_convertidas' => 0,
+            'monto_total_cotizado' => 0,
+            'monto_total_aprobado' => 0,
+            'ultima_cotizacion' => null
+        );
         
         // Total de cotizaciones
-        $stats['total_cotizaciones'] = $this->db->contar_cotizaciones(array(
-            'cliente_id' => $cliente_id
+        $estadisticas['total_cotizaciones'] = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM $tabla_cotizaciones WHERE cliente_id = %d",
+            $cliente_id
         ));
         
         // Cotizaciones por estado
-        $stats['por_estado'] = $wpdb->get_results($wpdb->prepare(
-            "SELECT estado, COUNT(*) as cantidad
-            FROM {$tabla}
-            WHERE cliente_id = %d
+        $estados = $wpdb->get_results($wpdb->prepare(
+            "SELECT estado, COUNT(*) as cantidad, SUM(total) as monto 
+            FROM $tabla_cotizaciones 
+            WHERE cliente_id = %d 
             GROUP BY estado",
             $cliente_id
-        ));
+        ), ARRAY_A);
         
-        // Valor total cotizado
-        $stats['valor_total'] = $wpdb->get_var($wpdb->prepare(
-            "SELECT SUM(total) FROM {$tabla} WHERE cliente_id = %d",
-            $cliente_id
-        )) ?: 0;
-        
-        // Valor convertido en ventas
-        $stats['valor_convertido'] = $wpdb->get_var($wpdb->prepare(
-            "SELECT SUM(total) FROM {$tabla} 
-            WHERE cliente_id = %d AND estado = 'convertida'",
-            $cliente_id
-        )) ?: 0;
+        foreach ($estados as $estado) {
+            switch ($estado['estado']) {
+                case 'pendiente':
+                    $estadisticas['cotizaciones_pendientes'] = $estado['cantidad'];
+                    break;
+                case 'aprobada':
+                    $estadisticas['cotizaciones_aprobadas'] = $estado['cantidad'];
+                    $estadisticas['monto_total_aprobado'] = $estado['monto'];
+                    break;
+                case 'convertida':
+                    $estadisticas['cotizaciones_convertidas'] = $estado['cantidad'];
+                    break;
+            }
+            $estadisticas['monto_total_cotizado'] += $estado['monto'];
+        }
         
         // Última cotización
-        $stats['ultima_cotizacion'] = $wpdb->get_row($wpdb->prepare(
-            "SELECT fecha, folio, total, estado
-            FROM {$tabla}
-            WHERE cliente_id = %d
-            ORDER BY fecha DESC
+        $estadisticas['ultima_cotizacion'] = $wpdb->get_row($wpdb->prepare(
+            "SELECT folio, fecha, total, estado 
+            FROM $tabla_cotizaciones 
+            WHERE cliente_id = %d 
+            ORDER BY fecha DESC 
             LIMIT 1",
             $cliente_id
         ));
         
-        return $stats;
+        return $estadisticas;
     }
     
     /**
