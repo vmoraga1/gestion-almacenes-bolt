@@ -32,38 +32,6 @@ class Modulo_Ventas_Ajax {
         
         // Registrar todos los handlers AJAX
         $this->registrar_ajax_handlers();
-                
-        // Debug: verificar que el action está registrado
-        add_action('init', function() {
-            if (has_action('wp_ajax_mv_validar_rut')) {
-                error_log('✓ Action mv_validar_rut está registrado correctamente');
-            } else {
-                error_log('✗ ERROR: Action mv_validar_rut NO está registrado');
-            }
-            
-            // Debug adicional: verificar qué función está asociada
-            global $wp_filter;
-            if (isset($wp_filter['wp_ajax_mv_validar_rut'])) {
-                error_log('Handlers registrados para mv_validar_rut:');
-                foreach ($wp_filter['wp_ajax_mv_validar_rut']->callbacks as $priority => $callbacks) {
-                    foreach ($callbacks as $callback) {
-                        if (is_array($callback['function'])) {
-                            $class = get_class($callback['function'][0]);
-                            $method = $callback['function'][1];
-                            error_log("  - Priority $priority: $class::$method");
-                        }
-                    }
-                }
-            }
-        });
-        
-        // Para debug temporal: interceptar errores AJAX
-        add_action('wp_ajax_mv_validar_rut', function() {
-            error_log('mv_validar_rut hook triggered');
-            error_log('POST data: ' . print_r($_POST, true));
-        }, 1); // Prioridad 1 para ejecutarse antes
-
-        add_action('wp_ajax_mv_crear_cliente_rapido', array($this, 'crear_cliente_rapido'));
     }
     
     /**
@@ -932,10 +900,6 @@ class Modulo_Ventas_Ajax {
      * Crear cliente rápido
      */
     public function crear_cliente_rapido() {
-        if (method_exists($this->clientes, 'crear_cliente_rapido_logic')) {
-            return $this->clientes->crear_cliente_rapido_logic($_POST);
-        }
-
         mv_ajax_check_permissions('manage_clientes_ventas', 'modulo_ventas_nonce');
         
         if (!isset($_POST['cliente'])) {
@@ -985,7 +949,9 @@ class Modulo_Ventas_Ajax {
                 'razon_social' => $cliente->razon_social,
                 'rut' => mv_formatear_rut($cliente->rut),
                 'email' => $cliente->email,
-                'telefono' => $cliente->telefono
+                'telefono' => $cliente->telefono,
+                'direccion' => $cliente->direccion_facturacion,
+                'giro' => $cliente->giro_comercial
             ),
             'message' => __('Cliente creado exitosamente', 'modulo-ventas')
         ));

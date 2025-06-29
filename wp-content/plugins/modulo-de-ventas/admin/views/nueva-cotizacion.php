@@ -444,6 +444,9 @@ if (!function_exists('mv_tooltip')) {
         </div>
         
         <form id="mv-form-nuevo-cliente" class="mv-form">
+            <!-- Campo nonce oculto -->
+            <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('modulo_ventas_nonce'); ?>" />
+            
             <div class="mv-modal-body">
                 <div class="mv-form-row">
                     <div class="mv-form-col">
