@@ -110,6 +110,23 @@ class Clientes_List_Table extends WP_List_Table {
         );
         
         // Agregar acción de eliminar solo si no tiene cotizaciones
+        // Agregar temporalmente antes de generar el enlace:
+        error_log('=== GENERANDO ENLACE ELIMINAR ===');
+        error_log('ID cliente: ' . $item['id']);
+        error_log('Acción nonce: eliminar_cliente_' . $item['id']);
+        $url_eliminar = wp_nonce_url(
+            admin_url('admin.php?page=modulo-ventas-clientes&action=delete&id=' . $item['id']),
+            'delete_cliente_' . $item['id']
+        );
+        error_log('URL generada: ' . $url_eliminar);
+
+        $actions['delete'] = sprintf(
+            '<a href="%s" onclick="return confirm(\'%s\');">%s</a>',
+            $url_eliminar,
+            __('¿Está seguro de eliminar este cliente?', 'modulo-ventas'),
+            __('Eliminar', 'modulo-ventas')
+        );
+
         if ($item['cotizaciones'] == 0) {
             $actions['delete'] = sprintf(
                 '<a href="%s" onclick="return confirm(\'%s\');">%s</a>',

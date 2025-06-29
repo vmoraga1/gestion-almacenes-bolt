@@ -269,9 +269,9 @@ if (!defined('ABSPATH')) {
                                     <?php if ($estadisticas_cliente['total_cotizaciones'] == 0): ?>
                                     <a href="<?php echo wp_nonce_url(
                                         admin_url('admin.php?page=modulo-ventas-clientes&accion=eliminar&id=' . $cliente->id),
-                                        'eliminar_cliente_' . $cliente->id
+                                        'delete_cliente_' . $cliente->id
                                     ); ?>" class="submitdelete deletion" 
-                                       onclick="return confirm('<?php esc_attr_e('¿Está seguro de eliminar este cliente?', 'modulo-ventas'); ?>')">
+                                        onclick="return confirm('<?php esc_attr_e('¿Está seguro de eliminar este cliente?', 'modulo-ventas'); ?>')">
                                         <?php _e('Eliminar Cliente', 'modulo-ventas'); ?>
                                     </a>
                                     <?php else: ?>

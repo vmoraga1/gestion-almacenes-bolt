@@ -492,3 +492,150 @@ function modulo_ventas_crear_roles() {
         ));
     }
 }
+
+// Función para ejecutar la migración completa
+function mv_ejecutar_migracion_completa() {
+    global $wpdb;
+    
+    $tabla_clientes = $wpdb->prefix . 'mv_clientes';
+    $errores = array();
+    $exitos = array();
+    
+    // 1. Verificar que la tabla existe
+    if ($wpdb->get_var("SHOW TABLES LIKE '$tabla_clientes'") != $tabla_clientes) {
+        $errores[] = "La tabla $tabla_clientes no existe";
+        return array('errores' => $errores, 'exitos' => $exitos);
+    }
+    
+    // 2. Obtener columnas actuales
+    $columnas_actuales = $wpdb->get_col("SHOW COLUMNS FROM $tabla_clientes");
+    
+    // 3. Agregar columna credito_disponible si NO existe
+    if (!in_array('credito_disponible', $columnas_actuales)) {
+        $result = $wpdb->query("ALTER TABLE $tabla_clientes ADD COLUMN credito_disponible DECIMAL(10,2) DEFAULT 0.00 AFTER credito_autorizado");
+        if ($result !== false) {
+            $exitos[] = "Columna credito_disponible agregada";
+        } else {
+            $errores[] = "Error al agregar credito_disponible: " . $wpdb->last_error;
+        }
+    } else {
+        $exitos[] = "Columna credito_disponible ya existe";
+    }
+    
+    // 4. Migrar datos de columnas sin sufijo a columnas con _facturacion
+    $migraciones = array(
+        'ciudad' => 'ciudad_facturacion',
+        'region' => 'region_facturacion',
+        'codigo_postal' => 'codigo_postal_facturacion'
+    );
+    
+    foreach ($migraciones as $origen => $destino) {
+        if (in_array($origen, $columnas_actuales) && in_array($destino, $columnas_actuales)) {
+            // Copiar datos
+            $result = $wpdb->query("UPDATE $tabla_clientes 
+                SET $destino = $origen 
+                WHERE $destino IS NULL AND $origen IS NOT NULL");
+            
+            if ($result !== false) {
+                $exitos[] = "Datos copiados de $origen a $destino ($result registros)";
+                
+                // Eliminar columna origen
+                $result2 = $wpdb->query("ALTER TABLE $tabla_clientes DROP COLUMN $origen");
+                if ($result2 !== false) {
+                    $exitos[] = "Columna $origen eliminada";
+                } else {
+                    $errores[] = "Error al eliminar $origen: " . $wpdb->last_error;
+                }
+            }
+        }
+    }
+    
+    // 5. Agregar columnas faltantes
+    $columnas_necesarias = array(
+        'sitio_web' => "ALTER TABLE $tabla_clientes ADD COLUMN sitio_web VARCHAR(255) DEFAULT NULL AFTER email",
+        'codigo_postal_facturacion' => "ALTER TABLE $tabla_clientes ADD COLUMN codigo_postal_facturacion VARCHAR(20) DEFAULT NULL AFTER region_facturacion",
+        'codigo_postal_envio' => "ALTER TABLE $tabla_clientes ADD COLUMN codigo_postal_envio VARCHAR(20) DEFAULT NULL AFTER region_envio",
+        'fecha_actualizacion' => "ALTER TABLE $tabla_clientes ADD COLUMN fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+        'modificado_por' => "ALTER TABLE $tabla_clientes ADD COLUMN modificado_por BIGINT(20) UNSIGNED DEFAULT NULL"
+    );
+    
+    // Actualizar lista de columnas
+    $columnas_actuales = $wpdb->get_col("SHOW COLUMNS FROM $tabla_clientes");
+    
+    foreach ($columnas_necesarias as $columna => $sql) {
+        if (!in_array($columna, $columnas_actuales)) {
+            $result = $wpdb->query($sql);
+            if ($result !== false) {
+                $exitos[] = "Columna $columna agregada";
+            } else {
+                $errores[] = "Error al agregar $columna: " . $wpdb->last_error;
+            }
+        }
+    }
+    
+    // 6. Actualizar versión de base de datos
+    update_option('modulo_ventas_db_version', '2.1.0');
+    
+    return array(
+        'errores' => $errores,
+        'exitos' => $exitos
+    );
+}
+
+// Ejecutar migración si se solicita
+add_action('admin_init', function() {
+    if (isset($_GET['mv_migrate_db']) && $_GET['mv_migrate_db'] === '1' && current_user_can('manage_options')) {
+        $resultado = mv_ejecutar_migracion_completa();
+        
+        echo '<div style="margin: 20px; padding: 20px; background: white; border: 1px solid #ccc;">';
+        echo '<h2>Resultado de la migración</h2>';
+        
+        if (!empty($resultado['exitos'])) {
+            echo '<h3 style="color: green;">✓ Cambios exitosos:</h3>';
+            echo '<ul>';
+            foreach ($resultado['exitos'] as $exito) {
+                echo '<li>' . esc_html($exito) . '</li>';
+            }
+            echo '</ul>';
+        }
+        
+        if (!empty($resultado['errores'])) {
+            echo '<h3 style="color: red;">✗ Errores:</h3>';
+            echo '<ul>';
+            foreach ($resultado['errores'] as $error) {
+                echo '<li>' . esc_html($error) . '</li>';
+            }
+            echo '</ul>';
+        }
+        
+        echo '<p><a href="' . admin_url() . '">Volver al admin</a></p>';
+        echo '</div>';
+        
+        wp_die();
+    }
+});
+
+// Agregar aviso en el admin si la estructura necesita actualización
+add_action('admin_notices', function() {
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+    
+    global $wpdb;
+    $tabla_clientes = $wpdb->prefix . 'mv_clientes';
+    $columnas = $wpdb->get_col("SHOW COLUMNS FROM $tabla_clientes");
+    
+    // Verificar si existe alguna columna problemática (pero NO credito_disponible)
+    if (in_array('ciudad', $columnas) || in_array('region', $columnas) || in_array('codigo_postal', $columnas)) {
+        ?>
+        <div class="notice notice-warning">
+            <p>
+                <strong>Módulo de Ventas:</strong> La estructura de la base de datos necesita actualización.
+                <a href="<?php echo admin_url('?mv_migrate_db=1'); ?>" class="button button-primary">
+                    Ejecutar migración
+                </a>
+            </p>
+        </div>
+        <?php
+    }
+});

@@ -1180,7 +1180,7 @@ class Modulo_Ventas_Admin {
     /**
      * Procesar acciones de clientes
      */
-    private function procesar_acciones_clientes() {
+    private function procesar_acciones_clientes() {        
         // Mostrar mensajes según parámetros GET
         $this->mostrar_mensajes_get();
         
@@ -1222,8 +1222,10 @@ class Modulo_Ventas_Admin {
             wp_die(__('ID de cliente inválido.', 'modulo-ventas'));
         }
         
-        // Verificar nonce
-        check_admin_referer('eliminar_cliente_' . $cliente_id);
+        // Verificar nonce - CAMBIADO a 'delete_cliente_' para consistencia
+        if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], 'delete_cliente_' . $cliente_id)) {
+            wp_die(__('Error de seguridad. El enlace ha caducado.', 'modulo-ventas'));
+        }
         
         // Verificar que el cliente no tenga cotizaciones
         global $wpdb;
@@ -1464,107 +1466,6 @@ class Modulo_Ventas_Admin {
         // Cargar vista
         require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/views/cliente-detalle.php';
     }
-    
-    /*
-     * Procesar acciones de clientes
-     *
-    private function procesar_acciones_clientes() {
-        if (!isset($_REQUEST['action']) || !isset($_REQUEST['_wpnonce'])) {
-            return;
-        }
-        
-        $action = $_REQUEST['action'];
-        $nonce = $_REQUEST['_wpnonce'];
-        
-        // Acciones individuales
-        if (isset($_REQUEST['id'])) {  // Cambiar de 'cliente_id' a 'id' para consistencia con la tabla
-            $cliente_id = intval($_REQUEST['id']);
-            
-            switch ($action) {
-                case 'delete':
-                    if (wp_verify_nonce($nonce, 'delete_cliente_' . $cliente_id)) {
-                        if (current_user_can('manage_clientes_ventas')) {
-                            // Usar el nuevo método eliminar_cliente que ya incluye la verificación
-                            $resultado = $this->db->eliminar_cliente($cliente_id);
-                            
-                            if (is_wp_error($resultado)) {
-                                $this->agregar_mensaje_admin('error', $resultado->get_error_message());
-                            } elseif ($resultado) {
-                                $this->agregar_mensaje_admin('success', __('Cliente eliminado correctamente.', 'modulo-ventas'));
-                            } else {
-                                $this->agregar_mensaje_admin('error', __('Error al eliminar el cliente.', 'modulo-ventas'));
-                            }
-                        }
-                    }
-                    break;
-            }
-        }
-    }*/
-    
-    /*
-     * Procesar formulario de cliente
-     * 
-    private function procesar_formulario_cliente($cliente_id = null) {
-        // Verificar nonce
-        if (!wp_verify_nonce($_POST['mv_cliente_nonce'], 'mv_guardar_cliente')) {
-            $this->agregar_mensaje_admin('error', __('Error de seguridad. Intente nuevamente.', 'modulo-ventas'));
-            return;
-        }
-        
-        // Preparar datos
-        $datos_cliente = array(
-            'razon_social' => sanitize_text_field($_POST['razon_social']),
-            'rut' => sanitize_text_field($_POST['rut']),
-            'giro_comercial' => sanitize_text_field($_POST['giro_comercial']),
-            'telefono' => sanitize_text_field($_POST['telefono']),
-            'email' => sanitize_email($_POST['email']),
-            'email_dte' => sanitize_email($_POST['email_dte']),
-            'direccion_facturacion' => sanitize_textarea_field($_POST['direccion_facturacion']),
-            'comuna_facturacion' => sanitize_text_field($_POST['comuna_facturacion']),
-            'ciudad_facturacion' => sanitize_text_field($_POST['ciudad_facturacion']),
-            'region_facturacion' => sanitize_text_field($_POST['region_facturacion']),
-            'pais_facturacion' => sanitize_text_field($_POST['pais_facturacion'] ?: 'Chile'),
-            'usar_direccion_facturacion_para_envio' => isset($_POST['usar_direccion_facturacion_para_envio']) ? 1 : 0,
-            'user_id' => isset($_POST['user_id']) ? intval($_POST['user_id']) : null
-        );
-        
-        // Dirección de envío si es diferente
-        if (!$datos_cliente['usar_direccion_facturacion_para_envio']) {
-            $datos_cliente['direccion_envio'] = sanitize_textarea_field($_POST['direccion_envio']);
-            $datos_cliente['comuna_envio'] = sanitize_text_field($_POST['comuna_envio']);
-            $datos_cliente['ciudad_envio'] = sanitize_text_field($_POST['ciudad_envio']);
-            $datos_cliente['region_envio'] = sanitize_text_field($_POST['region_envio']);
-            $datos_cliente['pais_envio'] = sanitize_text_field($_POST['pais_envio'] ?: 'Chile');
-        }
-        
-        // Guardar o actualizar
-        if ($cliente_id) {
-            // Actualizar
-            $resultado = $this->db->actualizar_cliente($cliente_id, $datos_cliente);
-            
-            if (!is_wp_error($resultado)) {
-                $this->agregar_mensaje_admin('success', __('Cliente actualizado correctamente.', 'modulo-ventas'));
-                
-                // Sincronizar con WooCommerce si tiene usuario
-                if ($datos_cliente['user_id']) {
-                    $clientes = new Modulo_Ventas_Clientes();
-                    $clientes->sincronizar_con_woocommerce($cliente_id, $datos_cliente['user_id']);
-                }
-            } else {
-                $this->agregar_mensaje_admin('error', $resultado->get_error_message());
-            }
-        } else {
-            // Crear nuevo
-            $nuevo_id = $this->db->crear_cliente($datos_cliente);
-            
-            if (!is_wp_error($nuevo_id)) {
-                wp_redirect(admin_url('admin.php?page=modulo-ventas-editar-cliente&id=' . $nuevo_id . '&message=created'));
-                exit;
-            } else {
-                $this->agregar_mensaje_admin('error', $nuevo_id->get_error_message());
-            }
-        }
-    }*/
 
     /**
      * Procesar formulario de cliente (crear o actualizar)
@@ -1582,17 +1483,29 @@ class Modulo_Ventas_Admin {
         $datos = array(
             'razon_social' => sanitize_text_field($_POST['razon_social']),
             'rut' => sanitize_text_field($_POST['rut']),
-            'giro_comercial' => sanitize_text_field($_POST['giro_comercial']),
-            'telefono' => sanitize_text_field($_POST['telefono']),
-            'email' => sanitize_email($_POST['email']),
-            'direccion_facturacion' => sanitize_textarea_field($_POST['direccion_facturacion']),
-            'ciudad' => sanitize_text_field($_POST['ciudad']),
-            'region' => sanitize_text_field($_POST['region']),
-            'codigo_postal' => sanitize_text_field($_POST['codigo_postal']),
-            'sitio_web' => esc_url_raw($_POST['sitio_web']),
+            'giro_comercial' => isset($_POST['giro_comercial']) ? sanitize_text_field($_POST['giro_comercial']) : '',
+            'telefono' => isset($_POST['telefono']) ? sanitize_text_field($_POST['telefono']) : '',
+            'email' => isset($_POST['email']) ? sanitize_email($_POST['email']) : '',
+            'sitio_web' => isset($_POST['sitio_web']) ? esc_url_raw($_POST['sitio_web']) : '',
+            'email_dte' => isset($_POST['email_dte']) ? sanitize_email($_POST['email_dte']) : '',
+            
+            // Datos de facturación - usar nombres consistentes con _facturacion
+            'direccion_facturacion' => isset($_POST['direccion_facturacion']) ? sanitize_textarea_field($_POST['direccion_facturacion']) : '',
+            'comuna_facturacion' => isset($_POST['comuna_facturacion']) ? sanitize_text_field($_POST['comuna_facturacion']) : '',
+            'ciudad_facturacion' => isset($_POST['ciudad_facturacion']) ? sanitize_text_field($_POST['ciudad_facturacion']) : '',
+            'region_facturacion' => isset($_POST['region_facturacion']) ? sanitize_text_field($_POST['region_facturacion']) : '',
+            'codigo_postal_facturacion' => isset($_POST['codigo_postal_facturacion']) ? sanitize_text_field($_POST['codigo_postal_facturacion']) : '',
+            'pais_facturacion' => isset($_POST['pais_facturacion']) ? sanitize_text_field($_POST['pais_facturacion']) : 'Chile',
+            
+            // Manejo de dirección de envío
+            'usar_direccion_facturacion_para_envio' => isset($_POST['usar_direccion_facturacion_para_envio']) ? 1 : 0,
+            
+            // Otros campos
             'credito_autorizado' => isset($_POST['credito_autorizado']) ? floatval($_POST['credito_autorizado']) : 0,
+            'credito_disponible' => isset($_POST['credito_disponible']) ? floatval($_POST['credito_disponible']) : 0,
             'estado' => isset($_POST['estado']) ? sanitize_text_field($_POST['estado']) : 'activo',
-            'user_id' => isset($_POST['user_id']) ? intval($_POST['user_id']) : null
+            'user_id' => isset($_POST['user_id']) ? intval($_POST['user_id']) : 0,
+            'notas' => isset($_POST['notas']) ? sanitize_textarea_field($_POST['notas']) : ''
         );
         
         // Validación básica

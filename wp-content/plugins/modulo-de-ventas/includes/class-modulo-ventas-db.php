@@ -111,20 +111,20 @@ class Modulo_Ventas_DB {
             sitio_web varchar(255) DEFAULT NULL,
             email_dte varchar(100) DEFAULT NULL COMMENT 'Email para documentos tributarios',
             direccion_facturacion text DEFAULT NULL,
-            ciudad varchar(100) DEFAULT NULL,
-            region varchar(100) DEFAULT NULL,
-            codigo_postal varchar(20) DEFAULT NULL,
             comuna_facturacion varchar(100) DEFAULT NULL,
             ciudad_facturacion varchar(100) DEFAULT NULL,
             region_facturacion varchar(100) DEFAULT NULL,
+            codigo_postal_facturacion varchar(20) DEFAULT NULL,
             pais_facturacion varchar(100) DEFAULT 'Chile',
             direccion_envio text DEFAULT NULL,
             comuna_envio varchar(100) DEFAULT NULL,
             ciudad_envio varchar(100) DEFAULT NULL,
             region_envio varchar(100) DEFAULT NULL,
+            codigo_postal_envio varchar(20) DEFAULT NULL,
             pais_envio varchar(100) DEFAULT 'Chile',
             usar_direccion_facturacion_para_envio tinyint(1) DEFAULT 1,
             credito_autorizado decimal(10,2) DEFAULT 0.00,
+            credito_disponible decimal(10,2) DEFAULT 0.00,
             notas text DEFAULT NULL,
             estado varchar(20) DEFAULT 'activo',
             fecha_creacion datetime DEFAULT CURRENT_TIMESTAMP,
@@ -543,25 +543,39 @@ class Modulo_Ventas_DB {
             return new WP_Error('rut_duplicado', __('Ya existe un cliente con este RUT', 'modulo-ventas'));
         }
         
-        // Preparar datos para inserción
+        // Preparar datos para inserción - ESTRUCTURA SIMPLIFICADA
         $datos_insercion = array(
             'razon_social' => sanitize_text_field($datos['razon_social']),
-            'rut' => $rut_limpio, // Usar RUT limpio (sin puntos ni guión)
+            'rut' => $rut_limpio,
             'giro_comercial' => isset($datos['giro_comercial']) ? sanitize_text_field($datos['giro_comercial']) : '',
             'telefono' => isset($datos['telefono']) ? sanitize_text_field($datos['telefono']) : '',
             'email' => isset($datos['email']) ? sanitize_email($datos['email']) : '',
+            'sitio_web' => isset($datos['sitio_web']) ? esc_url_raw($datos['sitio_web']) : '',
             'email_dte' => isset($datos['email_dte']) ? sanitize_email($datos['email_dte']) : '',
             'direccion_facturacion' => isset($datos['direccion_facturacion']) ? sanitize_textarea_field($datos['direccion_facturacion']) : '',
             'comuna_facturacion' => isset($datos['comuna_facturacion']) ? sanitize_text_field($datos['comuna_facturacion']) : '',
             'ciudad_facturacion' => isset($datos['ciudad_facturacion']) ? sanitize_text_field($datos['ciudad_facturacion']) : '',
             'region_facturacion' => isset($datos['region_facturacion']) ? sanitize_text_field($datos['region_facturacion']) : '',
+            'codigo_postal_facturacion' => isset($datos['codigo_postal_facturacion']) ? sanitize_text_field($datos['codigo_postal_facturacion']) : '',
             'pais_facturacion' => isset($datos['pais_facturacion']) ? sanitize_text_field($datos['pais_facturacion']) : 'Chile',
-            'credito_disponible' => isset($datos['credito_disponible']) ? floatval($datos['credito_disponible']) : 0,
             'credito_autorizado' => isset($datos['credito_autorizado']) ? floatval($datos['credito_autorizado']) : 0,
+            'credito_disponible' => isset($datos['credito_disponible']) ? floatval($datos['credito_disponible']) : 0,
             'estado' => isset($datos['estado']) ? sanitize_text_field($datos['estado']) : 'activo',
             'creado_por' => get_current_user_id(),
             'fecha_creacion' => current_time('mysql')
         );
+        
+        // Manejar los campos de compatibilidad (ciudad, region, codigo_postal sin _facturacion)
+        // Si vienen estos campos, mapearlos a los campos _facturacion
+        if (isset($datos['ciudad']) && !isset($datos['ciudad_facturacion'])) {
+            $datos_insercion['ciudad_facturacion'] = sanitize_text_field($datos['ciudad']);
+        }
+        if (isset($datos['region']) && !isset($datos['region_facturacion'])) {
+            $datos_insercion['region_facturacion'] = sanitize_text_field($datos['region']);
+        }
+        if (isset($datos['codigo_postal']) && !isset($datos['codigo_postal_facturacion'])) {
+            $datos_insercion['codigo_postal_facturacion'] = sanitize_text_field($datos['codigo_postal']);
+        }
         
         // Si se proporciona usar_direccion_facturacion_para_envio
         if (isset($datos['usar_direccion_facturacion_para_envio'])) {
@@ -569,8 +583,8 @@ class Modulo_Ventas_DB {
         }
         
         // Si no usa la misma dirección, agregar campos de envío
-        if (empty($datos['usar_direccion_facturacion_para_envio'])) {
-            $campos_envio = array('direccion_envio', 'comuna_envio', 'ciudad_envio', 'region_envio', 'pais_envio');
+        if (isset($datos['usar_direccion_facturacion_para_envio']) && !$datos['usar_direccion_facturacion_para_envio']) {
+            $campos_envio = array('direccion_envio', 'comuna_envio', 'ciudad_envio', 'region_envio', 'codigo_postal_envio', 'pais_envio');
             foreach ($campos_envio as $campo) {
                 if (isset($datos[$campo])) {
                     $datos_insercion[$campo] = sanitize_text_field($datos[$campo]);
@@ -590,7 +604,8 @@ class Modulo_Ventas_DB {
         );
         
         if ($resultado === false) {
-            return new WP_Error('error_db', __('Error al crear el cliente en la base de datos', 'modulo-ventas'));
+            error_log('Error SQL: ' . $this->wpdb->last_error);
+            return new WP_Error('error_db', __('Error al crear el cliente en la base de datos: ', 'modulo-ventas') . $this->wpdb->last_error);
         }
         
         $cliente_id = $this->wpdb->insert_id;
@@ -972,6 +987,50 @@ class Modulo_Ventas_DB {
         );
         
         return $stats;
+    }
+
+    /**
+     * Script de migración para actualizar tablas existentes
+     */
+    public function migrar_estructura_clientes() {
+        // Obtener estructura actual
+        $columnas_actuales = $this->wpdb->get_col("SHOW COLUMNS FROM {$this->tabla_clientes}");
+        
+        // 1. Eliminar columnas problemáticas si existen
+        if (in_array('credito_disponible', $columnas_actuales)) {
+            $this->wpdb->query("ALTER TABLE {$this->tabla_clientes} DROP COLUMN credito_disponible");
+        }
+        
+        // 2. Eliminar columnas redundantes (ciudad, region, codigo_postal sin _facturacion)
+        $columnas_a_eliminar = array('ciudad', 'region', 'codigo_postal');
+        foreach ($columnas_a_eliminar as $columna) {
+            if (in_array($columna, $columnas_actuales)) {
+                // Primero copiar datos a las columnas _facturacion si no están vacías
+                $columna_destino = $columna . '_facturacion';
+                if (in_array($columna_destino, $columnas_actuales)) {
+                    $this->wpdb->query("UPDATE {$this->tabla_clientes} 
+                        SET {$columna_destino} = {$columna} 
+                        WHERE {$columna_destino} IS NULL AND {$columna} IS NOT NULL");
+                }
+                // Luego eliminar la columna
+                $this->wpdb->query("ALTER TABLE {$this->tabla_clientes} DROP COLUMN {$columna}");
+            }
+        }
+        
+        // 3. Renombrar codigo_postal a codigo_postal_facturacion si es necesario
+        if (!in_array('codigo_postal_facturacion', $columnas_actuales) && in_array('codigo_postal', $columnas_actuales)) {
+            $this->wpdb->query("ALTER TABLE {$this->tabla_clientes} 
+                CHANGE COLUMN codigo_postal codigo_postal_facturacion VARCHAR(20) DEFAULT NULL");
+        }
+        
+        // 4. Agregar codigo_postal_envio si no existe
+        if (!in_array('codigo_postal_envio', $columnas_actuales)) {
+            $this->wpdb->query("ALTER TABLE {$this->tabla_clientes} 
+                ADD COLUMN codigo_postal_envio VARCHAR(20) DEFAULT NULL AFTER region_envio");
+        }
+        
+        // 5. Asegurar que todas las columnas necesarias existan
+        $this->verificar_y_actualizar_db();
     }
 
 
