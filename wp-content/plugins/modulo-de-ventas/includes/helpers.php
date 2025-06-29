@@ -116,48 +116,6 @@ if (!function_exists('mv_formato_precio')) {
 }
 
 /**
- * Formatear RUT chileno
- */
-if (!function_exists('mv_formatear_rut')) {
-    function mv_formatear_rut($rut) {
-        // Limpiar RUT
-        $rut = preg_replace('/[^0-9kK]/', '', $rut);
-        
-        if (strlen($rut) < 2) {
-            return $rut;
-        }
-        
-        // Separar número y dígito verificador
-        $numero = substr($rut, 0, -1);
-        $dv = substr($rut, -1);
-        
-        // Formatear con puntos
-        $numero_formateado = '';
-        $contador = 0;
-        
-        for ($i = strlen($numero) - 1; $i >= 0; $i--) {
-            if ($contador == 3) {
-                $numero_formateado = '.' . $numero_formateado;
-                $contador = 0;
-            }
-            $numero_formateado = $numero[$i] . $numero_formateado;
-            $contador++;
-        }
-        
-        return $numero_formateado . '-' . strtoupper($dv);
-    }
-}
-
-/**
- * Limpiar RUT (solo números y K)
- */
-if (!function_exists('mv_limpiar_rut')) {
-    function mv_limpiar_rut($rut) {
-        return preg_replace('/[^0-9kK]/', '', strtoupper($rut));
-    }
-}
-
-/**
  * Validar RUT chileno
  */
 if (!function_exists('mv_validar_rut')) {
@@ -199,6 +157,132 @@ if (!function_exists('mv_validar_rut')) {
         
         return strtoupper($dv) === $dv_calculado;
     }
+}
+
+/**
+ * Calcular dígito verificador de RUT
+ * 
+ * @param string $numero Número del RUT sin DV
+ * @return string Dígito verificador calculado
+ */
+function mv_calcular_dv_rut($numero) {
+    $suma = 0;
+    $multiplicador = 2;
+    
+    // Recorrer número de derecha a izquierda
+    for ($i = strlen($numero) - 1; $i >= 0; $i--) {
+        $suma += intval($numero[$i]) * $multiplicador;
+        $multiplicador++;
+        if ($multiplicador > 7) {
+            $multiplicador = 2;
+        }
+    }
+    
+    $resto = $suma % 11;
+    $dv = 11 - $resto;
+    
+    if ($dv == 11) {
+        return '0';
+    } elseif ($dv == 10) {
+        return 'K';
+    } else {
+        return strval($dv);
+    }
+}
+
+/**
+ * Limpiar RUT (solo números y K)
+ */
+if (!function_exists('mv_limpiar_rut')) {
+    function mv_limpiar_rut($rut) {
+        // Convertir a mayúsculas y remover caracteres no deseados
+        $rut = strtoupper($rut);
+        $rut = str_replace(array('.', '-', ' '), '', $rut);
+        return trim($rut);
+    }
+}
+
+/**
+ * Formatear RUT chileno
+ */
+if (!function_exists('mv_formatear_rut')) {
+    function mv_formatear_rut($rut) {
+        $rut_limpio = mv_limpiar_rut($rut);
+        
+        if (empty($rut_limpio)) {
+            return '';
+        }
+        
+        // Separar número y DV
+        $numero = substr($rut_limpio, 0, -1);
+        $dv = substr($rut_limpio, -1);
+        
+        // Formatear número con puntos
+        $numero_formateado = '';
+        $contador = 0;
+        
+        for ($i = strlen($numero) - 1; $i >= 0; $i--) {
+            if ($contador == 3) {
+                $numero_formateado = '.' . $numero_formateado;
+                $contador = 0;
+            }
+            $numero_formateado = $numero[$i] . $numero_formateado;
+            $contador++;
+        }
+        
+        return $numero_formateado . '-' . $dv;
+    }
+}
+
+/**
+ * Validar formato de email
+ * 
+ * @param string $email Email a validar
+ * @return bool True si es válido
+ */
+function mv_validar_email($email) {
+    return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+}
+
+/**
+ * Formatear número de teléfono chileno
+ * 
+ * @param string $telefono Teléfono sin formato
+ * @return string Teléfono formateado
+ */
+function mv_formatear_telefono($telefono) {
+    // Remover caracteres no numéricos
+    $telefono = preg_replace('/[^0-9]/', '', $telefono);
+    
+    // Si es celular (9 dígitos comenzando con 9)
+    if (strlen($telefono) == 9 && substr($telefono, 0, 1) == '9') {
+        return '+56 9 ' . substr($telefono, 1, 4) . ' ' . substr($telefono, 5, 4);
+    }
+    
+    // Si es teléfono fijo (9 dígitos con código de área)
+    if (strlen($telefono) == 9) {
+        return '+56 ' . substr($telefono, 0, 2) . ' ' . substr($telefono, 2, 4) . ' ' . substr($telefono, 6, 3);
+    }
+    
+    // Si ya incluye código de país
+    if (strlen($telefono) == 11 && substr($telefono, 0, 2) == '56') {
+        $telefono = substr($telefono, 2);
+        return mv_formatear_telefono($telefono);
+    }
+    
+    return $telefono;
+}
+
+/**
+ * Formatear precio en pesos chilenos
+ * 
+ * @param float $precio Precio a formatear
+ * @param bool $incluir_simbolo Incluir símbolo de peso
+ * @return string Precio formateado
+ */
+function mv_formato_precio($precio, $incluir_simbolo = true) {
+    $formato = number_format($precio, 0, ',', '.');
+    return $incluir_simbolo ? '$' . $formato : $formato;
 }
 
 /**
@@ -1078,8 +1162,27 @@ if (!function_exists('mv_obtener_estadisticas_clientes')) {
  * Nota: Ya existe mv_get_regiones_chile() pero necesitamos mv_obtener_regiones_chile()
  * para mantener consistencia con el código existente
  */
-if (!function_exists('mv_obtener_regiones_chile')) {
-    function mv_obtener_regiones_chile() {
-        return mv_get_regiones_chile();
+if (!function_exists('mv_obtener_nombre_region')) {
+    function mv_obtener_nombre_region($codigo) {
+        $regiones = array(
+            'I' => 'Tarapacá',
+            'II' => 'Antofagasta',
+            'III' => 'Atacama',
+            'IV' => 'Coquimbo',
+            'V' => 'Valparaíso',
+            'VI' => 'O\'Higgins',
+            'VII' => 'Maule',
+            'VIII' => 'Biobío',
+            'IX' => 'La Araucanía',
+            'X' => 'Los Lagos',
+            'XI' => 'Aysén',
+            'XII' => 'Magallanes',
+            'RM' => 'Metropolitana',
+            'XIV' => 'Los Ríos',
+            'XV' => 'Arica y Parinacota',
+            'XVI' => 'Ñuble'
+        );
+        
+        return isset($regiones[$codigo]) ? $regiones[$codigo] : $codigo;
     }
 }

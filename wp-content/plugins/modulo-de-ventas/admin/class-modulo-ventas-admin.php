@@ -746,18 +746,39 @@ class Modulo_Ventas_Admin {
      */
     public function cargar_assets_admin($hook) {
         // Solo cargar en páginas del plugin
-        if (strpos($hook, 'modulo-ventas') === false) {
+        if (strpos($hook, 'modulo-ventas') === false && strpos($hook, 'mv-') === false) {
             return;
         }
         
-        // CSS adicional para el admin
+        // CSS principal
         wp_enqueue_style(
-            'modulo-ventas-admin-extra',
-            MODULO_VENTAS_PLUGIN_URL . 'assets/css/admin-extra.css',
-            array('modulo-ventas-admin'),
+            'modulo-ventas-admin',
+            MODULO_VENTAS_PLUGIN_URL . 'admin/css/assets/admin.css',
+            array(),
             MODULO_VENTAS_VERSION
         );
         
+        // jQuery UI para datepicker y autocomplete
+        wp_enqueue_script('jquery-ui-datepicker');
+        wp_enqueue_script('jquery-ui-autocomplete');
+        wp_enqueue_script('jquery-ui-dialog');
+        wp_enqueue_style('jquery-ui', 'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css');
+
+        // Select2 para mejorar selects
+        wp_enqueue_script(
+            'select2',
+            'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js',
+            array('jquery'),
+            '4.0.13',
+            true
+        );
+        wp_enqueue_style(
+            'select2',
+            'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css',
+            array(),
+            '4.0.13'
+        );
+
         // JavaScript adicional según la página
         if (strpos($hook, 'estadisticas') !== false) {
             // Chart.js para gráficos
@@ -801,6 +822,282 @@ class Modulo_Ventas_Admin {
                 true
             );
         }
+
+        // Script principal del admin
+        wp_enqueue_script(
+            'modulo-ventas-admin',
+            MODULO_VENTAS_PLUGIN_URL . 'admin/js/modulo-ventas-admin.js',
+            array('jquery', 'jquery-ui-datepicker', 'jquery-ui-autocomplete', 'select2'),
+            MODULO_VENTAS_VERSION,
+            true
+        );
+        
+        // IMPORTANTE: Primero localizar las variables ANTES de cargar el script de validación
+        $localization_data = array(
+            'ajaxurl' => admin_url('admin-ajax.php'),
+            'ajax_url' => admin_url('admin-ajax.php'), // Duplicado por compatibilidad
+            'nonce' => wp_create_nonce('modulo_ventas_nonce'),
+            'currency_symbol' => get_woocommerce_currency_symbol(),
+            'decimal_separator' => wc_get_price_decimal_separator(),
+            'thousand_separator' => wc_get_price_thousand_separator(),
+            'decimals' => wc_get_price_decimals(),
+            'price_format' => get_woocommerce_price_format(),
+            'messages' => array(
+                'confirm_delete' => __('¿Está seguro de eliminar este elemento?', 'modulo-ventas'),
+                'loading' => __('Cargando...', 'modulo-ventas'),
+                'error' => __('Ha ocurrido un error', 'modulo-ventas'),
+                'select_client' => __('Seleccione un cliente', 'modulo-ventas'),
+                'select_product' => __('Seleccione un producto', 'modulo-ventas'),
+                'select_warehouse' => __('Seleccione un almacén', 'modulo-ventas'),
+                'rut_invalid' => __('RUT inválido. Verifique el dígito verificador.', 'modulo-ventas'),
+                'rut_exists' => __('Este RUT ya está registrado', 'modulo-ventas'),
+                'rut_required' => __('El RUT es obligatorio', 'modulo-ventas'),
+                'connection_error' => __('Error de conexión. Por favor intente nuevamente.', 'modulo-ventas'),
+            )
+        );
+        
+        // Localizar para el script principal
+        wp_localize_script('modulo-ventas-admin', 'moduloVentasAjax', $localization_data);
+        
+        // Script de validación de RUT
+        $validacion_rut_file = MODULO_VENTAS_PLUGIN_DIR . 'admin/js/validacion-rut.js';
+        
+        // Si el archivo existe, cargarlo
+        if (file_exists($validacion_rut_file)) {
+            wp_enqueue_script(
+                'modulo-ventas-validacion-rut',
+                MODULO_VENTAS_PLUGIN_URL . 'admin/js/validacion-rut.js',
+                array('jquery', 'modulo-ventas-admin'), // Dependencia del script principal
+                MODULO_VENTAS_VERSION,
+                true
+            );
+        } else {
+            // Si no existe el archivo, agregar el código inline
+            wp_add_inline_script('modulo-ventas-admin', $this->get_inline_rut_validation_script());
+        }
+        
+        // Agregar variable global ajaxurl para compatibilidad
+        wp_add_inline_script('modulo-ventas-admin', 'var ajaxurl = moduloVentasAjax.ajaxurl;', 'before');
+        
+        // Estilos inline para validación
+        wp_add_inline_style('modulo-ventas-admin', '
+            .mv-input.error, input.error {
+                border-color: #d63638 !important;
+            }
+            .mv-input.error:focus, input.error:focus {
+                border-color: #d63638 !important;
+                box-shadow: 0 0 0 1px #d63638 !important;
+            }
+            .rut-error, .mv-error-message {
+                display: block;
+                margin-top: 5px;
+                color: #d63638;
+                font-size: 12px;
+            }
+            .mv-success-message {
+                display: block;
+                margin-top: 5px;
+                color: #00a32a;
+                font-size: 12px;
+            }
+        ');
+    }
+
+    /**
+     * Obtener script de validación de RUT inline
+     */
+    private function get_inline_rut_validation_script() {
+        return '
+    (function($) {
+        "use strict";
+        
+        console.log("Script de validación de RUT cargado");
+        
+        // Verificar que moduloVentasAjax existe
+        if (typeof moduloVentasAjax === "undefined") {
+            console.error("moduloVentasAjax no está definido");
+            return;
+        }
+        
+        // Funciones globales de RUT
+        window.mvRutUtils = {
+            limpiar: function(rut) {
+                return rut.replace(/[^0-9kK]/g, "").toUpperCase();
+            },
+            
+            formatear: function(rut) {
+                var rutLimpio = this.limpiar(rut);
+                if (rutLimpio.length < 2) return rutLimpio;
+                
+                var numero = rutLimpio.slice(0, -1);
+                var dv = rutLimpio.slice(-1);
+                var numeroFormateado = "";
+                var contador = 0;
+                
+                for (var i = numero.length - 1; i >= 0; i--) {
+                    if (contador === 3) {
+                        numeroFormateado = "." + numeroFormateado;
+                        contador = 0;
+                    }
+                    numeroFormateado = numero[i] + numeroFormateado;
+                    contador++;
+                }
+                
+                return numeroFormateado + "-" + dv;
+            },
+            
+            validar: function(rut) {
+                var rutLimpio = this.limpiar(rut);
+                if (rutLimpio.length < 2) return false;
+                
+                var numero = rutLimpio.slice(0, -1);
+                var dv = rutLimpio.slice(-1);
+                
+                if (!/^\d+$/.test(numero)) return false;
+                
+                var suma = 0;
+                var multiplicador = 2;
+                
+                for (var i = numero.length - 1; i >= 0; i--) {
+                    suma += parseInt(numero[i]) * multiplicador;
+                    multiplicador++;
+                    if (multiplicador > 7) multiplicador = 2;
+                }
+                
+                var resto = suma % 11;
+                var dvCalculado = 11 - resto;
+                
+                if (dvCalculado === 11) dvCalculado = "0";
+                else if (dvCalculado === 10) dvCalculado = "K";
+                else dvCalculado = dvCalculado.toString();
+                
+                return dv === dvCalculado;
+            }
+        };
+        
+        // Función para configurar validación en un input
+        function configurarValidacionRUT($input) {
+            if (!$input.length) return;
+            
+            console.log("Configurando validación en:", $input);
+            
+            // Limpiar eventos anteriores
+            $input.off("blur.rut input.rut");
+            
+            // Formatear mientras escribe
+            $input.on("input.rut", function() {
+                var $this = $(this);
+                var valor = $this.val();
+                
+                // Solo formatear si hay cambios significativos
+                if (valor.length > 2) {
+                    var rutFormateado = mvRutUtils.formatear(valor);
+                    if (valor !== rutFormateado) {
+                        $this.val(rutFormateado);
+                    }
+                }
+            });
+            
+            // Validar al salir del campo
+            $input.on("blur.rut", function() {
+                var $this = $(this);
+                var rut = $this.val();
+                var $error = $this.next(".rut-error");
+                
+                if (!rut) {
+                    $this.removeClass("error");
+                    $error.remove();
+                    return;
+                }
+                
+                if (!mvRutUtils.validar(rut)) {
+                    $this.addClass("error");
+                    if (!$error.length) {
+                        var mensajeError = "RUT inválido. Verifique el dígito verificador.";
+                        if (moduloVentasAjax && moduloVentasAjax.messages && moduloVentasAjax.messages.rut_invalid) {
+                            mensajeError = moduloVentasAjax.messages.rut_invalid;
+                        }
+                        $this.after(\'<span class="rut-error">\' + mensajeError + \'</span>\');
+                    }
+                } else {
+                    $this.removeClass("error");
+                    $error.remove();
+                }
+            });
+        }
+        
+        // Cuando el documento esté listo
+        $(document).ready(function() {
+            console.log("Document ready - configurando validación RUT");
+            
+            // Configurar validación en inputs existentes
+            $("input[name=\'rut\'], input[name=\'cliente[rut]\'], #rut, #cliente_rut").each(function() {
+                configurarValidacionRUT($(this));
+            });
+            
+            // Para el modal de nuevo cliente
+            $(document).on("click", ".mv-btn-nuevo-cliente", function() {
+                console.log("Abriendo modal de nuevo cliente");
+                setTimeout(function() {
+                    var $modalInput = $("#mv-modal-nuevo-cliente").find("input[name=\'cliente[rut]\']");
+                    if ($modalInput.length) {
+                        configurarValidacionRUT($modalInput);
+                    }
+                }, 300);
+            });
+            
+            // Interceptar envío de formulario
+            $(document).on("submit", "#mv-form-nuevo-cliente", function(e) {
+                console.log("Formulario de nuevo cliente enviado");
+                
+                var $form = $(this);
+                var $rutInput = $form.find("input[name=\'cliente[rut]\']");
+                var rut = $rutInput.val();
+                
+                console.log("RUT a validar:", rut);
+                
+                if (!rut) {
+                    e.preventDefault();
+                    var mensajeRequerido = "El RUT es obligatorio";
+                    if (moduloVentasAjax && moduloVentasAjax.messages && moduloVentasAjax.messages.rut_required) {
+                        mensajeRequerido = moduloVentasAjax.messages.rut_required;
+                    }
+                    alert(mensajeRequerido);
+                    $rutInput.focus();
+                    return false;
+                }
+                
+                if (!mvRutUtils.validar(rut)) {
+                    e.preventDefault();
+                    var mensajeInvalido = "RUT inválido. Verifique el dígito verificador.";
+                    if (moduloVentasAjax && moduloVentasAjax.messages && moduloVentasAjax.messages.rut_invalid) {
+                        mensajeInvalido = moduloVentasAjax.messages.rut_invalid;
+                    }
+                    alert(mensajeInvalido);
+                    $rutInput.focus();
+                    return false;
+                }
+                
+                // Asegurar que el RUT se envíe limpio
+                var rutLimpio = mvRutUtils.limpiar(rut);
+                console.log("RUT limpio a enviar:", rutLimpio);
+                $rutInput.val(rutLimpio);
+            });
+        });
+        
+        // Hacer disponible globalmente para debug
+        window.mvDebugRut = function(rut) {
+            console.log("=== Debug RUT ===");
+            console.log("RUT original:", rut);
+            console.log("RUT limpio:", mvRutUtils.limpiar(rut));
+            console.log("RUT formateado:", mvRutUtils.formatear(rut));
+            console.log("RUT válido:", mvRutUtils.validar(rut));
+            console.log("================");
+            return mvRutUtils.validar(rut);
+        };
+        
+    })(jQuery);
+        ';
     }
     
     /**

@@ -283,6 +283,18 @@ if (!current_user_can('manage_clientes_ventas')) {
 
 <script>
 jQuery(document).ready(function($) {
+    // Asegurar que el formulario tenga el nonce
+    $('#mv-form-nuevo-cliente').each(function() {
+        if (!$(this).find('input[name="nonce"]').length) {
+            $(this).append('<input type="hidden" name="nonce" value="' + moduloVentasAjax.nonce + '" />');
+        }
+    });
+    
+    // Debug: verificar datos del formulario antes de enviar
+    $(document).on('submit', '#mv-form-nuevo-cliente', function(e) {
+        console.log('Datos del formulario:', $(this).serializeArray());
+    });
+
     // Formatear RUT mientras se escribe
     $('#rut').on('blur', function() {
         var rut = $(this).val();

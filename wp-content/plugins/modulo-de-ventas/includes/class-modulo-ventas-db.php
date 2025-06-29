@@ -525,61 +525,81 @@ class Modulo_Ventas_DB {
      * Crear cliente
      */
     public function crear_cliente($datos) {
-        // Validar RUT único
-        if ($this->cliente_existe_por_rut($datos['rut'])) {
+        // Validar datos obligatorios
+        if (empty($datos['razon_social']) || empty($datos['rut'])) {
+            return new WP_Error('datos_faltantes', __('Razón social y RUT son obligatorios', 'modulo-ventas'));
+        }
+        
+        // IMPORTANTE: Limpiar y validar RUT antes de guardar
+        $rut_limpio = mv_limpiar_rut($datos['rut']);
+        
+        // Validar RUT
+        if (!mv_validar_rut($rut_limpio)) {
+            return new WP_Error('rut_invalido', __('El RUT ingresado no es válido', 'modulo-ventas'));
+        }
+        
+        // Verificar si ya existe
+        if ($this->cliente_existe_por_rut($rut_limpio)) {
             return new WP_Error('rut_duplicado', __('Ya existe un cliente con este RUT', 'modulo-ventas'));
         }
         
-        // Preparar datos
-        $datos_insertar = array(
+        // Preparar datos para inserción
+        $datos_insercion = array(
             'razon_social' => sanitize_text_field($datos['razon_social']),
-            'rut' => sanitize_text_field($datos['rut']),
-            'giro_comercial' => isset($datos['giro_comercial']) ? sanitize_text_field($datos['giro_comercial']) : null,
-            'telefono' => isset($datos['telefono']) ? sanitize_text_field($datos['telefono']) : null,
-            'email' => isset($datos['email']) ? sanitize_email($datos['email']) : null,
-            'email_dte' => isset($datos['email_dte']) ? sanitize_email($datos['email_dte']) : null,
-            'direccion_facturacion' => isset($datos['direccion_facturacion']) ? sanitize_textarea_field($datos['direccion_facturacion']) : null,
-            'comuna_facturacion' => isset($datos['comuna_facturacion']) ? sanitize_text_field($datos['comuna_facturacion']) : null,
-            'ciudad_facturacion' => isset($datos['ciudad_facturacion']) ? sanitize_text_field($datos['ciudad_facturacion']) : null,
-            'region_facturacion' => isset($datos['region_facturacion']) ? sanitize_text_field($datos['region_facturacion']) : null,
+            'rut' => $rut_limpio, // Usar RUT limpio (sin puntos ni guión)
+            'giro_comercial' => isset($datos['giro_comercial']) ? sanitize_text_field($datos['giro_comercial']) : '',
+            'telefono' => isset($datos['telefono']) ? sanitize_text_field($datos['telefono']) : '',
+            'email' => isset($datos['email']) ? sanitize_email($datos['email']) : '',
+            'email_dte' => isset($datos['email_dte']) ? sanitize_email($datos['email_dte']) : '',
+            'direccion_facturacion' => isset($datos['direccion_facturacion']) ? sanitize_textarea_field($datos['direccion_facturacion']) : '',
+            'comuna_facturacion' => isset($datos['comuna_facturacion']) ? sanitize_text_field($datos['comuna_facturacion']) : '',
+            'ciudad_facturacion' => isset($datos['ciudad_facturacion']) ? sanitize_text_field($datos['ciudad_facturacion']) : '',
+            'region_facturacion' => isset($datos['region_facturacion']) ? sanitize_text_field($datos['region_facturacion']) : '',
             'pais_facturacion' => isset($datos['pais_facturacion']) ? sanitize_text_field($datos['pais_facturacion']) : 'Chile',
-            'creado_por' => get_current_user_id()
+            'credito_disponible' => isset($datos['credito_disponible']) ? floatval($datos['credito_disponible']) : 0,
+            'credito_autorizado' => isset($datos['credito_autorizado']) ? floatval($datos['credito_autorizado']) : 0,
+            'estado' => isset($datos['estado']) ? sanitize_text_field($datos['estado']) : 'activo',
+            'creado_por' => get_current_user_id(),
+            'fecha_creacion' => current_time('mysql')
         );
         
-        // Si tiene dirección de envío diferente
-        if (isset($datos['usar_direccion_facturacion_para_envio']) && !$datos['usar_direccion_facturacion_para_envio']) {
-            $datos_insertar['usar_direccion_facturacion_para_envio'] = 0;
-            $datos_insertar['direccion_envio'] = sanitize_textarea_field($datos['direccion_envio']);
-            $datos_insertar['comuna_envio'] = sanitize_text_field($datos['comuna_envio']);
-            $datos_insertar['ciudad_envio'] = sanitize_text_field($datos['ciudad_envio']);
-            $datos_insertar['region_envio'] = sanitize_text_field($datos['region_envio']);
-            $datos_insertar['pais_envio'] = isset($datos['pais_envio']) ? sanitize_text_field($datos['pais_envio']) : 'Chile';
+        // Si se proporciona usar_direccion_facturacion_para_envio
+        if (isset($datos['usar_direccion_facturacion_para_envio'])) {
+            $datos_insercion['usar_direccion_facturacion_para_envio'] = (int) $datos['usar_direccion_facturacion_para_envio'];
         }
         
-        // Si está vinculado a un usuario de WordPress
-        if (isset($datos['user_id']) && $datos['user_id']) {
-            $datos_insertar['user_id'] = intval($datos['user_id']);
+        // Si no usa la misma dirección, agregar campos de envío
+        if (empty($datos['usar_direccion_facturacion_para_envio'])) {
+            $campos_envio = array('direccion_envio', 'comuna_envio', 'ciudad_envio', 'region_envio', 'pais_envio');
+            foreach ($campos_envio as $campo) {
+                if (isset($datos[$campo])) {
+                    $datos_insercion[$campo] = sanitize_text_field($datos[$campo]);
+                }
+            }
         }
         
-        // Insertar
-        $resultado = $this->wpdb->insert($this->tabla_clientes, $datos_insertar);
+        // Si se proporciona user_id
+        if (!empty($datos['user_id'])) {
+            $datos_insercion['user_id'] = intval($datos['user_id']);
+        }
+        
+        // Insertar en base de datos
+        $resultado = $this->wpdb->insert(
+            $this->tabla_clientes,
+            $datos_insercion
+        );
         
         if ($resultado === false) {
-            return new WP_Error('error_db', __('Error al crear el cliente', 'modulo-ventas'));
+            return new WP_Error('error_db', __('Error al crear el cliente en la base de datos', 'modulo-ventas'));
         }
         
         $cliente_id = $this->wpdb->insert_id;
         
-        // Guardar metadatos adicionales si existen
-        if (isset($datos['meta']) && is_array($datos['meta'])) {
-            foreach ($datos['meta'] as $key => $value) {
-                $this->actualizar_cliente_meta($cliente_id, $key, $value);
-            }
+        // Log de actividad
+        if (class_exists('Modulo_Ventas_Logger')) {
+            $logger = Modulo_Ventas_Logger::get_instance();
+            $logger->log("Cliente creado: {$datos_insercion['razon_social']} (ID: {$cliente_id})", 'info');
         }
-        
-        // Log
-        $logger = Modulo_Ventas_Logger::get_instance();
-        $logger->log("Cliente creado: ID {$cliente_id}, RUT {$datos['rut']}", 'info');
         
         return $cliente_id;
     }

@@ -32,6 +32,38 @@ class Modulo_Ventas_Ajax {
         
         // Registrar todos los handlers AJAX
         $this->registrar_ajax_handlers();
+                
+        // Debug: verificar que el action está registrado
+        add_action('init', function() {
+            if (has_action('wp_ajax_mv_validar_rut')) {
+                error_log('✓ Action mv_validar_rut está registrado correctamente');
+            } else {
+                error_log('✗ ERROR: Action mv_validar_rut NO está registrado');
+            }
+            
+            // Debug adicional: verificar qué función está asociada
+            global $wp_filter;
+            if (isset($wp_filter['wp_ajax_mv_validar_rut'])) {
+                error_log('Handlers registrados para mv_validar_rut:');
+                foreach ($wp_filter['wp_ajax_mv_validar_rut']->callbacks as $priority => $callbacks) {
+                    foreach ($callbacks as $callback) {
+                        if (is_array($callback['function'])) {
+                            $class = get_class($callback['function'][0]);
+                            $method = $callback['function'][1];
+                            error_log("  - Priority $priority: $class::$method");
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Para debug temporal: interceptar errores AJAX
+        add_action('wp_ajax_mv_validar_rut', function() {
+            error_log('mv_validar_rut hook triggered');
+            error_log('POST data: ' . print_r($_POST, true));
+        }, 1); // Prioridad 1 para ejecutarse antes
+
+        add_action('wp_ajax_mv_crear_cliente_rapido', array($this, 'crear_cliente_rapido'));
     }
     
     /**
@@ -900,6 +932,10 @@ class Modulo_Ventas_Ajax {
      * Crear cliente rápido
      */
     public function crear_cliente_rapido() {
+        if (method_exists($this->clientes, 'crear_cliente_rapido_logic')) {
+            return $this->clientes->crear_cliente_rapido_logic($_POST);
+        }
+
         mv_ajax_check_permissions('manage_clientes_ventas', 'modulo_ventas_nonce');
         
         if (!isset($_POST['cliente'])) {
@@ -1091,35 +1127,98 @@ class Modulo_Ventas_Ajax {
     }
     
     /**
-     * Validar RUT
+     * Validar RUT vía AJAX
      */
     public function validar_rut() {
-        check_ajax_referer('mv_validar_rut', 'nonce');
+        // Log para debug
+        error_log('Método validar_rut() ejecutado');
+        
+        // Verificar nonce de forma más flexible
+        $nonce_valid = false;
+        
+        // Primero intentar con el nonce general
+        if (isset($_POST['nonce']) && wp_verify_nonce($_POST['nonce'], 'modulo_ventas_nonce')) {
+            $nonce_valid = true;
+            error_log('Nonce válido: modulo_ventas_nonce');
+        }
+        // Si no, intentar con el nonce específico
+        else if (isset($_POST['nonce']) && wp_verify_nonce($_POST['nonce'], 'mv_validar_rut')) {
+            $nonce_valid = true;
+            error_log('Nonce válido: mv_validar_rut');
+        }
+        // Intentar otros nombres de campo de nonce
+        else {
+            $nonce_fields = array('_ajax_nonce', 'security', '_wpnonce');
+            foreach ($nonce_fields as $field) {
+                if (isset($_POST[$field])) {
+                    if (wp_verify_nonce($_POST[$field], 'modulo_ventas_nonce') || 
+                        wp_verify_nonce($_POST[$field], 'mv_validar_rut')) {
+                        $nonce_valid = true;
+                        error_log("Nonce válido en campo: $field");
+                        break;
+                    }
+                }
+            }
+        }
+        
+        if (!$nonce_valid) {
+            error_log('Error: Nonce inválido');
+            error_log('Nonces recibidos: ' . print_r(array_filter($_POST, function($key) {
+                return strpos($key, 'nonce') !== false || $key === 'security' || $key === '_wpnonce';
+            }, ARRAY_FILTER_USE_KEY), true));
+            
+            wp_send_json_error(array(
+                'message' => __('Error de seguridad', 'modulo-ventas'),
+                'debug' => 'Nonce inválido o faltante'
+            ));
+            return;
+        }
         
         $rut = isset($_POST['rut']) ? sanitize_text_field($_POST['rut']) : '';
         $cliente_id = isset($_POST['cliente_id']) ? intval($_POST['cliente_id']) : 0;
         
+        error_log("Validando RUT: $rut");
+        
         if (empty($rut)) {
             wp_send_json_error(array('message' => __('RUT vacío', 'modulo-ventas')));
+            return;
         }
         
-        // Limpiar y validar formato
+        // Limpiar RUT
         $rut_limpio = mv_limpiar_rut($rut);
+        error_log("RUT limpio: $rut_limpio");
         
-        if (!mv_validar_rut($rut_limpio)) {
-            wp_send_json_error(array('message' => __('RUT inválido', 'modulo-ventas')));
+        // Validar formato y dígito verificador
+        if (!mv_validar_rut($rut)) {
+            error_log("RUT inválido: $rut");
+            wp_send_json_error(array(
+                'message' => __('RUT inválido. Verifique el dígito verificador.', 'modulo-ventas'),
+                'rut_ingresado' => $rut,
+                'rut_limpio' => $rut_limpio
+            ));
+            return;
         }
         
-        // Verificar si ya existe (excluyendo el cliente actual si se está editando)
+        // Verificar si ya existe
         $cliente_existente = $this->db->obtener_cliente_por_rut($rut_limpio);
         
         if ($cliente_existente && $cliente_existente->id != $cliente_id) {
-            wp_send_json_error(array('message' => __('Este RUT ya está registrado', 'modulo-ventas')));
+            error_log("RUT ya existe para cliente ID: " . $cliente_existente->id);
+            wp_send_json_error(array(
+                'message' => __('Este RUT ya está registrado', 'modulo-ventas'),
+                'cliente_existente' => array(
+                    'id' => $cliente_existente->id,
+                    'razon_social' => $cliente_existente->razon_social
+                )
+            ));
+            return;
         }
         
+        // RUT válido y disponible
         wp_send_json_success(array(
             'message' => __('RUT válido', 'modulo-ventas'),
-            'rut_formateado' => mv_formatear_rut($rut_limpio)
+            'rut_formateado' => mv_formatear_rut($rut_limpio),
+            'rut_limpio' => $rut_limpio
         ));
     }
     

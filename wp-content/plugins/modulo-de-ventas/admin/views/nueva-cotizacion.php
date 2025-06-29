@@ -435,92 +435,145 @@ if (!function_exists('mv_tooltip')) {
     </form>
 </div>
 
-<!-- Modal para nuevo cliente -->
+<!-- Modal Nuevo Cliente con Validación de RUT -->
 <div id="mv-modal-nuevo-cliente" class="mv-modal" style="display: none;">
     <div class="mv-modal-content">
         <div class="mv-modal-header">
-            <h2><?php _e('Nuevo Cliente', 'modulo-ventas'); ?></h2>
+            <h3><?php _e('Nuevo Cliente Rápido', 'modulo-ventas'); ?></h3>
             <span class="mv-modal-close">&times;</span>
         </div>
-        <div class="mv-modal-body">
-            <form id="mv-form-nuevo-cliente">
-                <div class="mv-form-grid">
-                    <div class="mv-form-group">
-                        <label for="nuevo_cliente_razon_social" class="required">
-                            <?php _e('Razón Social', 'modulo-ventas'); ?>
+        
+        <form id="mv-form-nuevo-cliente" class="mv-form">
+            <div class="mv-modal-body">
+                <div class="mv-form-row">
+                    <div class="mv-form-col">
+                        <label for="cliente_razon_social">
+                            <?php _e('Razón Social', 'modulo-ventas'); ?> 
+                            <span class="required">*</span>
                         </label>
                         <input type="text" 
-                            id="nuevo_cliente_razon_social" 
                             name="cliente[razon_social]" 
-                            required
-                            class="regular-text">
+                            id="cliente_razon_social" 
+                            class="mv-input" 
+                            required>
                     </div>
                     
-                    <div class="mv-form-group">
-                        <label for="nuevo_cliente_rut" class="required">
-                            <?php _e('RUT', 'modulo-ventas'); ?>
+                    <div class="mv-form-col">
+                        <label for="cliente_rut">
+                            <?php _e('RUT', 'modulo-ventas'); ?> 
+                            <span class="required">*</span>
                         </label>
                         <input type="text" 
-                            id="nuevo_cliente_rut" 
                             name="cliente[rut]" 
-                            required
+                            id="cliente_rut" 
+                            class="mv-input" 
                             placeholder="12.345.678-9"
-                            class="regular-text">
-                    </div>
-                    
-                    <div class="mv-form-group">
-                        <label for="nuevo_cliente_giro">
-                            <?php _e('Giro Comercial', 'modulo-ventas'); ?>
-                        </label>
-                        <input type="text" 
-                            id="nuevo_cliente_giro" 
-                            name="cliente[giro_comercial]"
-                            class="regular-text">
-                    </div>
-                    
-                    <div class="mv-form-group">
-                        <label for="nuevo_cliente_telefono">
-                            <?php _e('Teléfono', 'modulo-ventas'); ?>
-                        </label>
-                        <input type="tel" 
-                            id="nuevo_cliente_telefono" 
-                            name="cliente[telefono]"
-                            class="regular-text">
-                    </div>
-                    
-                    <div class="mv-form-group">
-                        <label for="nuevo_cliente_email">
-                            <?php _e('Email', 'modulo-ventas'); ?>
-                        </label>
-                        <input type="email" 
-                            id="nuevo_cliente_email" 
-                            name="cliente[email]"
-                            class="regular-text">
-                    </div>
-                    
-                    <div class="mv-form-group">
-                        <label for="nuevo_cliente_direccion">
-                            <?php _e('Dirección', 'modulo-ventas'); ?>
-                        </label>
-                        <input type="text" 
-                            id="nuevo_cliente_direccion" 
-                            name="cliente[direccion_facturacion]"
-                            class="regular-text">
+                            required>
+                        <span class="mv-field-description">
+                            <?php _e('Se validará automáticamente', 'modulo-ventas'); ?>
+                        </span>
                     </div>
                 </div>
                 
-                <div class="mv-modal-footer">
-                    <button type="submit" class="button button-primary">
-                        <?php _e('Crear Cliente', 'modulo-ventas'); ?>
-                    </button>
-                    <button type="button" class="button mv-modal-cancel">
-                        <?php _e('Cancelar', 'modulo-ventas'); ?>
-                    </button>
+                <div class="mv-form-row">
+                    <div class="mv-form-col">
+                        <label for="cliente_email">
+                            <?php _e('Email', 'modulo-ventas'); ?>
+                        </label>
+                        <input type="email" 
+                            name="cliente[email]" 
+                            id="cliente_email" 
+                            class="mv-input">
+                    </div>
+                    
+                    <div class="mv-form-col">
+                        <label for="cliente_telefono">
+                            <?php _e('Teléfono', 'modulo-ventas'); ?>
+                        </label>
+                        <input type="tel" 
+                            name="cliente[telefono]" 
+                            id="cliente_telefono" 
+                            class="mv-input">
+                    </div>
                 </div>
-            </form>
-        </div>
+                
+                <div class="mv-form-row">
+                    <div class="mv-form-col-full">
+                        <label for="cliente_giro">
+                            <?php _e('Giro Comercial', 'modulo-ventas'); ?>
+                        </label>
+                        <input type="text" 
+                            name="cliente[giro_comercial]" 
+                            id="cliente_giro" 
+                            class="mv-input">
+                    </div>
+                </div>
+                
+                <div class="mv-form-row">
+                    <div class="mv-form-col-full">
+                        <label for="cliente_direccion">
+                            <?php _e('Dirección', 'modulo-ventas'); ?>
+                        </label>
+                        <input type="text" 
+                            name="cliente[direccion_facturacion]" 
+                            id="cliente_direccion" 
+                            class="mv-input">
+                    </div>
+                </div>
+                
+                <div class="mv-form-row">
+                    <div class="mv-form-col">
+                        <label for="cliente_comuna">
+                            <?php _e('Comuna', 'modulo-ventas'); ?>
+                        </label>
+                        <input type="text" 
+                            name="cliente[comuna_facturacion]" 
+                            id="cliente_comuna" 
+                            class="mv-input">
+                    </div>
+                    
+                    <div class="mv-form-col">
+                        <label for="cliente_ciudad">
+                            <?php _e('Ciudad', 'modulo-ventas'); ?>
+                        </label>
+                        <input type="text" 
+                            name="cliente[ciudad_facturacion]" 
+                            id="cliente_ciudad" 
+                            class="mv-input">
+                    </div>
+                    
+                    <div class="mv-form-col">
+                        <label for="cliente_region">
+                            <?php _e('Región', 'modulo-ventas'); ?>
+                        </label>
+                        <select name="cliente[region_facturacion]" 
+                                id="cliente_region" 
+                                class="mv-input">
+                            <option value=""><?php _e('Seleccione...', 'modulo-ventas'); ?></option>
+                            <?php 
+                            $regiones = mv_get_regiones_chile();
+                            foreach ($regiones as $codigo => $nombre) : ?>
+                                <option value="<?php echo esc_attr($codigo); ?>">
+                                    <?php echo esc_html($nombre); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mv-modal-footer">
+                <button type="button" class="button mv-modal-cancel">
+                    <?php _e('Cancelar', 'modulo-ventas'); ?>
+                </button>
+                <button type="submit" class="button button-primary">
+                    <?php _e('Crear Cliente', 'modulo-ventas'); ?>
+                </button>
+            </div>
+        </form>
     </div>
 </div>
+
 
 <!-- Template para línea de producto -->
 <script type="text/template" id="mv-template-producto">
@@ -804,7 +857,7 @@ input#costo_envio, input#descuento_global {
     width: 60px;
 }
 
-/* Modal */
+/* Estilos del modal */
 .mv-modal {
     position: fixed;
     z-index: 100000;
@@ -821,33 +874,38 @@ input#costo_envio, input#descuento_global {
 .mv-modal-content {
     background-color: #fff;
     width: 90%;
-    max-width: 800px;
+    max-width: 600px;
     max-height: 90vh;
     overflow-y: auto;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
 }
 
 .mv-modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid #dcdcde;
 }
 
-.mv-modal-header h2 {
+.mv-modal-header h3 {
     margin: 0;
+    font-size: 18px;
+    font-weight: 600;
 }
 
 .mv-modal-close {
     font-size: 28px;
+    font-weight: bold;
+    line-height: 20px;
     cursor: pointer;
-    color: #666;
+    color: #999;
+    transition: color 0.2s;
 }
 
 .mv-modal-close:hover {
-    color: #000;
+    color: #333;
 }
 
 .mv-modal-body {
@@ -856,9 +914,115 @@ input#costo_envio, input#descuento_global {
 
 .mv-modal-footer {
     padding: 20px;
+    border-top: 1px solid #ddd;
+    text-align: right;
+}
+
+.mv-modal-footer button {
+    margin-left: 10px;
+}
+
+.mv-form-row {
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.mv-form-col {
+    flex: 1;
+}
+
+.mv-form-col-full {
+    width: 100%;
+}
+
+.mv-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.mv-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.mv-input:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    outline: none;
+}
+
+.mv-input.error {
+    border-color: #d63638;
+}
+
+.mv-input.error:focus {
+    border-color: #d63638;
+    box-shadow: 0 0 0 1px #d63638;
+}
+
+.required {
+    color: #d63638;
+}
+
+.mv-field-description {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+}
+
+.mv-error-message {
+    display: block;
+    margin-top: 5px;
+    color: #d63638;
+    font-size: 12px;
+}
+
+.mv-success-message {
+    display: block;
+    margin-top: 5px;
+    color: #00a32a;
+    font-size: 12px;
+}
+
+/* Animación de carga */
+.mv-loading {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #2271b1;
+    border-radius: 50%;
+    animation: mv-spin 1s linear infinite;
+    margin-left: 5px;
+}
+
+@keyframes mv-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .mv-modal-content {
+        width: 95%;
+        margin: 10px;
+    }
+    
+    .mv-form-row {
+        flex-direction: column;
+    }
+    
+    .mv-form-col {
+        width: 100%;
+    }
 }
 
 /* Estados de validación */
@@ -1125,58 +1289,144 @@ jQuery(document).ready(function($) {
         var $form = $(this);
         var $submit = $form.find('button[type="submit"]');
         
+        console.log('Enviando formulario de nuevo cliente...');
+        
         $submit.prop('disabled', true).text('<?php _e('Creando...', 'modulo-ventas'); ?>');
         
         // Recopilar datos del formulario
         var datosCliente = {};
-        $form.find('input').each(function() {
-            var match = $(this).attr('name').match(/cliente\[(.+)\]/);
-            if (match) {
-                datosCliente[match[1]] = $(this).val();
+        $form.find('input, select').each(function() {
+            var name = $(this).attr('name');
+            if (name) {
+                var match = name.match(/cliente\[(.+)\]/);
+                if (match) {
+                    datosCliente[match[1]] = $(this).val();
+                }
             }
         });
         
-        $.post(ajaxurl, {
+        // Agregar el nonce si no está en los datos
+        var nonce = $form.find('input[name="nonce"]').val() || moduloVentasAjax.nonce;
+        
+        console.log('Datos a enviar:', {
             action: 'mv_crear_cliente_rapido',
             cliente: datosCliente,
-            nonce: '<?php echo wp_create_nonce('modulo_ventas_nonce'); ?>'
-        }, function(response) {
-            if (response.success) {
-                // Agregar cliente al select con todos los datos
-                var nuevoCliente = response.data.cliente;
-                var option = new Option(
-                    nuevoCliente.razon_social + ' - ' + nuevoCliente.rut,
-                    nuevoCliente.id,
-                    true,
-                    true
-                );
+            nonce: nonce
+        });
+        
+        $.ajax({
+            url: ajaxurl || moduloVentasAjax.ajaxurl,
+            type: 'POST',
+            data: {
+                action: 'mv_crear_cliente_rapido',
+                cliente: datosCliente,
+                nonce: nonce
+            },
+            success: function(response) {
+                console.log('Respuesta del servidor:', response);
                 
-                // Agregar atributos de datos
-                $(option).attr({
-                    'data-rut': nuevoCliente.rut || '',
-                    'data-email': nuevoCliente.email || '',
-                    'data-telefono': nuevoCliente.telefono || '',
-                    'data-direccion': nuevoCliente.direccion_facturacion || '',
-                    'data-giro': nuevoCliente.giro_comercial || ''
+                if (response.success) {
+                    // La respuesta exitosa tiene la estructura: response.data.cliente y response.data.message
+                    var nuevoCliente = response.data.cliente;
+                    
+                    // Crear nueva opción para el select
+                    var optionText = nuevoCliente.razon_social + ' - ' + nuevoCliente.rut;
+                    var option = new Option(optionText, nuevoCliente.id, true, true);
+                    
+                    // Agregar atributos de datos
+                    $(option).attr({
+                        'data-rut': nuevoCliente.rut || '',
+                        'data-email': nuevoCliente.email || '',
+                        'data-telefono': nuevoCliente.telefono || '',
+                        'data-direccion': nuevoCliente.direccion || '',
+                        'data-giro': nuevoCliente.giro || ''
+                    });
+                    
+                    // Agregar al select y seleccionar
+                    $('#cliente_id').append(option).trigger('change');
+                    
+                    // Cerrar modal
+                    $('#mv-modal-nuevo-cliente').fadeOut();
+                    
+                    // Limpiar formulario
+                    $form[0].reset();
+                    
+                    // Mostrar mensaje de éxito
+                    var mensaje = response.data.message || '<?php _e('Cliente creado exitosamente', 'modulo-ventas'); ?>';
+                    
+                    // Si existe la función mvShowToast, usarla
+                    if (typeof mvShowToast === 'function') {
+                        mvShowToast(mensaje, 'success');
+                    } else {
+                        // Alternativa: mostrar alerta o crear notificación simple
+                        var $notice = $('<div class="notice notice-success is-dismissible"><p>' + mensaje + '</p></div>');
+                        $('.wrap > h1').after($notice);
+                        setTimeout(function() {
+                            $notice.fadeOut(function() {
+                                $(this).remove();
+                            });
+                        }, 3000);
+                    }
+                    
+                    console.log('Cliente creado exitosamente:', nuevoCliente);
+                    
+                } else {
+                    // Error
+                    alert(response.data.message || '<?php _e('Error al crear el cliente', 'modulo-ventas'); ?>');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error AJAX:', {
+                    status: status,
+                    error: error,
+                    responseText: xhr.responseText,
+                    responseJSON: xhr.responseJSON
                 });
                 
-                $('#cliente_id').append(option).trigger('change');
+                var errorMsg = '<?php _e('Error de conexión', 'modulo-ventas'); ?>';
                 
-                // Cerrar modal y limpiar formulario
-                $('#mv-modal-nuevo-cliente').fadeOut();
-                $form[0].reset();
+                // Intentar obtener mensaje de error más específico
+                if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
+                    errorMsg = xhr.responseJSON.data.message;
+                } else if (xhr.responseText) {
+                    console.log('Respuesta del servidor:', xhr.responseText);
+                    errorMsg += '. Revise la consola para más detalles.';
+                }
                 
-                // Mostrar mensaje
-                mvShowToast('<?php _e('Cliente creado exitosamente', 'modulo-ventas'); ?>', 'success');
-            } else {
-                alert(response.data.message || '<?php _e('Error al crear el cliente', 'modulo-ventas'); ?>');
+                alert(errorMsg);
+            },
+            complete: function() {
+                $submit.prop('disabled', false).text('<?php _e('Crear Cliente', 'modulo-ventas'); ?>');
             }
-        }).fail(function() {
-            alert('<?php _e('Error de conexión', 'modulo-ventas'); ?>');
-        }).always(function() {
-            $submit.prop('disabled', false).text('<?php _e('Crear Cliente', 'modulo-ventas'); ?>');
         });
     });
+
+    // Función para mostrar toast si no existe
+    if (typeof mvShowToast === 'undefined') {
+        window.mvShowToast = function(message, type) {
+            type = type || 'info';
+            var $toast = $('<div class="notice notice-' + type + ' is-dismissible mv-toast" style="position: fixed; top: 50px; right: 20px; z-index: 9999; min-width: 300px;">' +
+                        '<p>' + message + '</p>' +
+                        '<button type="button" class="notice-dismiss"><span class="screen-reader-text">Descartar</span></button>' +
+                        '</div>');
+            
+            $('body').append($toast);
+            
+            // Auto-ocultar después de 3 segundos
+            setTimeout(function() {
+                $toast.fadeOut(function() {
+                    $(this).remove();
+                });
+            }, 3000);
+            
+            // Botón de cerrar
+            $toast.find('.notice-dismiss').on('click', function() {
+                $toast.fadeOut(function() {
+                    $(this).remove();
+                });
+            });
+        };
+    }
     
     // Agregar producto a la tabla
     function agregarProducto(producto) {

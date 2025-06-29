@@ -45,10 +45,9 @@ class Modulo_Ventas_Clientes {
         add_action('pre_user_query', array($this, 'buscar_usuarios_por_rut'));
         
         // Ajax handlers
-        add_action('wp_ajax_mv_buscar_cliente', array($this, 'ajax_buscar_cliente'));
-        add_action('wp_ajax_mv_crear_cliente_rapido', array($this, 'ajax_crear_cliente_rapido'));
-        add_action('wp_ajax_mv_obtener_cliente', array($this, 'ajax_obtener_cliente'));
-        add_action('wp_ajax_mv_validar_rut', array($this, 'ajax_validar_rut'));
+        //add_action('wp_ajax_mv_buscar_cliente', array($this, 'ajax_buscar_cliente'));
+        //add_action('wp_ajax_mv_crear_cliente_rapido', array($this, 'ajax_crear_cliente_rapido'));
+        //add_action('wp_ajax_mv_obtener_cliente', array($this, 'ajax_obtener_cliente'));
     }
     
     /**
@@ -690,125 +689,6 @@ class Modulo_Ventas_Clientes {
     }
     
     /**
-     * AJAX: Validar RUT
-     */
-    public function ajax_validar_rut() {
-        check_ajax_referer('mv_validar_rut', 'nonce');
-        
-        $rut = isset($_POST['rut']) ? sanitize_text_field($_POST['rut']) : '';
-        
-        if (empty($rut)) {
-            wp_send_json_error(array('message' => __('RUT vacío', 'modulo-ventas')));
-        }
-        
-        // Validar formato
-        if (!$this->validar_formato_rut($rut)) {
-            wp_send_json_error(array('message' => __('Formato de RUT inválido', 'modulo-ventas')));
-        }
-        
-        // Validar dígito verificador
-        if (!$this->validar_rut($rut)) {
-            wp_send_json_error(array('message' => __('RUT inválido', 'modulo-ventas')));
-        }
-        
-        // Verificar si ya existe
-        if ($this->db->cliente_existe_por_rut($rut)) {
-            wp_send_json_error(array('message' => __('Este RUT ya está registrado', 'modulo-ventas')));
-        }
-        
-        wp_send_json_success(array('message' => __('RUT válido', 'modulo-ventas')));
-    }
-    
-    /**
-     * Validar formato de RUT chileno
-     */
-    public function validar_formato_rut($rut) {
-        // Eliminar puntos y guión
-        $rut = str_replace(array('.', '-'), '', $rut);
-        
-        // Verificar que sea numérico excepto el último caracter
-        if (!preg_match('/^[0-9]+[0-9kK]$/', $rut)) {
-            return false;
-        }
-        
-        // Verificar longitud (7-9 caracteres)
-        if (strlen($rut) < 7 || strlen($rut) > 9) {
-            return false;
-        }
-        
-        return true;
-    }
-    
-    /**
-     * Validar RUT chileno (incluyendo dígito verificador)
-     */
-    public function validar_rut($rut) {
-        // Limpiar RUT
-        $rut = preg_replace('/[^0-9kK]/', '', $rut);
-        
-        if (strlen($rut) < 2) {
-            return false;
-        }
-        
-        // Separar número y dígito verificador
-        $numero = substr($rut, 0, -1);
-        $dv = strtoupper(substr($rut, -1));
-        
-        // Calcular dígito verificador
-        $suma = 0;
-        $factor = 2;
-        
-        for ($i = strlen($numero) - 1; $i >= 0; $i--) {
-            $suma += $factor * $numero[$i];
-            $factor = $factor == 7 ? 2 : $factor + 1;
-        }
-        
-        $resto = $suma % 11;
-        $dv_calculado = 11 - $resto;
-        
-        if ($dv_calculado == 11) {
-            $dv_calculado = '0';
-        } elseif ($dv_calculado == 10) {
-            $dv_calculado = 'K';
-        } else {
-            $dv_calculado = (string)$dv_calculado;
-        }
-        
-        return $dv == $dv_calculado;
-    }
-    
-    /**
-     * Formatear RUT
-     */
-    public function formatear_rut($rut) {
-        // Limpiar RUT
-        $rut = preg_replace('/[^0-9kK]/', '', $rut);
-        
-        if (strlen($rut) < 2) {
-            return $rut;
-        }
-        
-        // Separar número y dígito verificador
-        $numero = substr($rut, 0, -1);
-        $dv = substr($rut, -1);
-        
-        // Formatear con puntos
-        $numero_formateado = '';
-        $contador = 0;
-        
-        for ($i = strlen($numero) - 1; $i >= 0; $i--) {
-            if ($contador == 3) {
-                $numero_formateado = '.' . $numero_formateado;
-                $contador = 0;
-            }
-            $numero_formateado = $numero[$i] . $numero_formateado;
-            $contador++;
-        }
-        
-        return $numero_formateado . '-' . $dv;
-    }
-    
-    /**
      * Obtener regiones de Chile
      */
     public function obtener_regiones_chile() {
@@ -907,95 +787,6 @@ class Modulo_Ventas_Clientes {
         );
         
         return isset($iconos[$tipo]) ? $iconos[$tipo] : 'dashicons-marker';
-    }
-
-    /**
-     * Formatear RUT chileno
-     *
-     * @param string $rut RUT sin formato
-     * @return string RUT formateado
-     */
-    function mv_formatear_rut($rut) {
-        // Limpiar RUT
-        $rut = preg_replace('/[^0-9kK]/', '', $rut);
-        
-        if (strlen($rut) < 2) {
-            return $rut;
-        }
-        
-        // Separar número y dígito verificador
-        $numero = substr($rut, 0, -1);
-        $dv = strtoupper(substr($rut, -1));
-        
-        // Formatear número con puntos
-        $numero_formateado = '';
-        $contador = 0;
-        
-        for ($i = strlen($numero) - 1; $i >= 0; $i--) {
-            if ($contador == 3) {
-                $numero_formateado = '.' . $numero_formateado;
-                $contador = 0;
-            }
-            $numero_formateado = $numero[$i] . $numero_formateado;
-            $contador++;
-        }
-        
-        return $numero_formateado . '-' . $dv;
-    }
-
-    /**
-     * Limpiar RUT (quitar formato)
-     *
-     * @param string $rut RUT con o sin formato
-     * @return string RUT sin formato
-     */
-    function mv_limpiar_rut($rut) {
-        return preg_replace('/[^0-9kK]/', '', $rut);
-    }
-
-    /**
-     * Validar RUT chileno
-     *
-     * @param string $rut RUT a validar
-     * @return bool True si es válido
-     */
-    function mv_validar_rut($rut) {
-        // Limpiar RUT
-        $rut = mv_limpiar_rut($rut);
-        
-        if (strlen($rut) < 2) {
-            return false;
-        }
-        
-        // Separar número y dígito verificador
-        $numero = substr($rut, 0, -1);
-        $dv = strtoupper(substr($rut, -1));
-        
-        // Validar que sea número
-        if (!is_numeric($numero)) {
-            return false;
-        }
-        
-        // Calcular dígito verificador
-        $suma = 0;
-        $factor = 2;
-        
-        for ($i = strlen($numero) - 1; $i >= 0; $i--) {
-            $suma += $factor * $numero[$i];
-            $factor = $factor == 7 ? 2 : $factor + 1;
-        }
-        
-        $dv_calculado = 11 - ($suma % 11);
-        
-        if ($dv_calculado == 11) {
-            $dv_calculado = '0';
-        } elseif ($dv_calculado == 10) {
-            $dv_calculado = 'K';
-        } else {
-            $dv_calculado = (string)$dv_calculado;
-        }
-        
-        return $dv === $dv_calculado;
     }
 
     /**
