@@ -63,3 +63,5 @@ Stack trace:
 [2025-07-01 17:57:41] INFO: Plugin desactivado | Usuario: hostpanish (ID: 1) | IP: ::1
 [2025-07-01 17:57:52] INFO: Tablas de base de datos creadas/actualizadas | Usuario: hostpanish (ID: 1) | IP: ::1
 [2025-07-01 17:57:52] INFO: Plugin activado correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-01 18:21:46] INFO: Tablas de base de datos creadas/actualizadas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-01 18:21:46] INFO: Plugin activado correctamente | Usuario: hostpanish (ID: 1) | IP: ::1

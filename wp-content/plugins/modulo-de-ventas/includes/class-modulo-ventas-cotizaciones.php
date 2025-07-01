@@ -35,14 +35,14 @@ class Modulo_Ventas_Cotizaciones {
         add_action('modulo_ventas_verificar_cotizaciones_expiradas', array($this, 'verificar_cotizaciones_expiradas'));
         
         // Ajax handlers
-        add_action('wp_ajax_mv_obtener_stock_producto', array($this, 'ajax_obtener_stock_producto'));
+        /*add_action('wp_ajax_mv_obtener_stock_producto', array($this, 'ajax_obtener_stock_producto'));
         add_action('wp_ajax_mv_guardar_cotizacion', array($this, 'ajax_guardar_cotizacion'));
         add_action('wp_ajax_mv_actualizar_estado_cotizacion', array($this, 'ajax_actualizar_estado_cotizacion'));
         add_action('wp_ajax_mv_duplicar_cotizacion', array($this, 'ajax_duplicar_cotizacion'));
         add_action('wp_ajax_mv_convertir_cotizacion', array($this, 'ajax_convertir_cotizacion'));
         add_action('wp_ajax_mv_enviar_cotizacion_email', array($this, 'ajax_enviar_cotizacion_email'));
         add_action('wp_ajax_mv_obtener_almacenes', array($this, 'ajax_obtener_almacenes'));
-        add_action('wp_ajax_mv_calcular_totales', array($this, 'ajax_calcular_totales'));
+        add_action('wp_ajax_mv_calcular_totales', array($this, 'ajax_calcular_totales'));*/
     }
     
     /**

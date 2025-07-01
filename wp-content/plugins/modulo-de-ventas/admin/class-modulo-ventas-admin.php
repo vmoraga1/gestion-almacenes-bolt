@@ -61,9 +61,6 @@ class Modulo_Ventas_Admin {
      * Registrar menú del plugin
      */
     public function registrar_menu() {
-        error_log('Método registrar_menu() llamado');
-        error_log('Current user can manage_clientes_ventas: ' . (current_user_can('manage_clientes_ventas') ? 'SI' : 'NO'));
-
         // Menú principal
         add_menu_page(
             __('Módulo de Ventas', 'modulo-ventas'),
@@ -2727,9 +2724,9 @@ class Modulo_Ventas_Admin {
         }
     }
     
-    /**
+    /*
      * AJAX: Actualizar almacén de pedido
-     */
+     *
     public function ajax_actualizar_almacen_pedido() {
         check_ajax_referer('mv_actualizar_almacen_pedido', 'nonce');
         
@@ -2758,11 +2755,11 @@ class Modulo_Ventas_Admin {
         $order->save();
         
         wp_send_json_success(array('message' => __('Almacén actualizado', 'modulo-ventas')));
-    }
+    }*/
     
-    /**
+    /*
      * AJAX: Obtener comunas
-     */
+     *
     public function ajax_obtener_comunas() {
         check_ajax_referer('mv_obtener_comunas', 'nonce');
         
@@ -2776,11 +2773,11 @@ class Modulo_Ventas_Admin {
         $comunas = $clientes->obtener_comunas_por_region($region);
         
         wp_send_json_success(array('comunas' => $comunas));
-    }
+    }*/
     
-    /**
+    /*
      * AJAX: Exportar cotizaciones
-     */
+     *
     public function ajax_exportar_cotizaciones() {
         check_ajax_referer('modulo_ventas_nonce', 'nonce');
         
@@ -2790,11 +2787,11 @@ class Modulo_Ventas_Admin {
         
         // Por implementar
         wp_send_json_error(array('message' => __('Función en desarrollo', 'modulo-ventas')));
-    }
+    }*/
     
-    /**
+    /*
      * AJAX: Obtener estadísticas
-     */
+     *
     public function ajax_obtener_estadisticas() {
         check_ajax_referer('modulo_ventas_nonce', 'nonce');
         
@@ -2808,11 +2805,11 @@ class Modulo_Ventas_Admin {
         $estadisticas = $this->obtener_estadisticas_completas($periodo);
         
         wp_send_json_success(array('estadisticas' => $estadisticas));
-    }
+    }*/
 
-    /**
+    /*
      * AJAX: Agregar nota a cliente
-     */
+     *
     public function ajax_agregar_nota_cliente() {
         // Verificar nonce
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mv_agregar_nota_cliente')) {
@@ -2856,11 +2853,11 @@ class Modulo_Ventas_Admin {
         ));
         
         wp_die();
-    }
+    }*/
 
-    /**
+    /*
      * AJAX: Eliminar nota de cliente
-     */
+     *
     public function ajax_eliminar_nota_cliente() {
         // Verificar nonce
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mv_eliminar_nota')) {
@@ -2893,11 +2890,11 @@ class Modulo_Ventas_Admin {
         wp_send_json_success(array(
             'message' => __('Nota eliminada correctamente', 'modulo-ventas')
         ));
-    }
+    }*/
 
-    /**
+    /*
      * AJAX: Actualizar nota de cliente
-     */
+     *
     public function ajax_actualizar_nota_cliente() {
         // Verificar nonce
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mv_actualizar_nota')) {
@@ -2929,5 +2926,5 @@ class Modulo_Ventas_Admin {
         wp_send_json_success(array(
             'message' => __('Nota actualizada correctamente', 'modulo-ventas')
         ));
-    }
+    }*/
 }

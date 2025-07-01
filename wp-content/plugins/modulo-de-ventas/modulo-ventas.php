@@ -415,6 +415,24 @@ function modulo_ventas() {
 // Inicializar el plugin
 modulo_ventas();
 
+// Asegurar que los handlers AJAX se carguen correctamente
+add_action('init', function() {
+    // Solo cargar AJAX si estamos en una petición AJAX
+    if (wp_doing_ajax()) {
+        // Verificar que las clases necesarias estén disponibles
+        if (!class_exists('Modulo_Ventas_Ajax')) {
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-db.php';
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-logger.php';
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-clientes.php';
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-cotizaciones.php';
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/class-modulo-ventas-ajax.php';
+            
+            // Crear instancia
+            new Modulo_Ventas_Ajax();
+        }
+    }
+}, 1); // Prioridad 1 para que se ejecute temprano
+
 //Hook para verificar actualizaciones del plugin
 add_action('plugins_loaded', function() {
     $version_actual = get_option('modulo_ventas_version', '0');
