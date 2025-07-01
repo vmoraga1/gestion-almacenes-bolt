@@ -136,7 +136,7 @@ if (!defined('ABSPATH')) {
         
         <div class="mv-stat-box">
             <div class="mv-stat-number"><?php echo intval($stats['proximas_expirar']); ?></div>
-            <div class="mv-stat-label"><?php _e('Próximas a expirar', 'modulo-ventas'); ?></div>
+            <div class="mv-stat-label"><?php _e('Próximas a expirar (7 días)', 'modulo-ventas'); ?></div>
             <div class="mv-stat-action">
                 <a href="<?php echo esc_url(mv_admin_url('cotizaciones', array('estado' => 'pendiente'))); ?>">
                     <?php _e('Ver todas', 'modulo-ventas'); ?> →
@@ -195,7 +195,7 @@ if (!defined('ABSPATH')) {
                                     <td><?php echo mv_get_estado_badge($cotizacion->estado); ?></td>
                                     <td>
                                         <a href="<?php echo esc_url(mv_admin_url('ver-cotizacion', array('id' => $cotizacion->id))); ?>" 
-                                           class="button button-small">
+                                            class="button button-small">
                                             <?php _e('Ver', 'modulo-ventas'); ?>
                                         </a>
                                     </td>
@@ -231,13 +231,13 @@ if (!defined('ABSPATH')) {
                         <div class="mv-status-item">
                             <div class="mv-status-header">
                                 <span class="dashicons <?php echo esc_attr($config['icon']); ?>" 
-                                      style="color: <?php echo esc_attr($config['color']); ?>"></span>
+                                    style="color: <?php echo esc_attr($config['color']); ?>"></span>
                                 <span class="mv-status-label"><?php echo esc_html($config['label']); ?></span>
                                 <span class="mv-status-count"><?php echo intval($cantidad); ?></span>
                             </div>
                             <div class="mv-status-bar">
                                 <div class="mv-status-bar-fill" 
-                                     style="width: <?php echo esc_attr($porcentaje); ?>%; 
+                                    style="width: <?php echo esc_attr($porcentaje); ?>%; 
                                             background-color: <?php echo esc_attr($config['color']); ?>">
                                 </div>
                             </div>
@@ -248,7 +248,7 @@ if (!defined('ABSPATH')) {
             
             <!-- Top clientes -->
             <div class="mv-dashboard-widget">
-                <h3><?php _e('Top Clientes del Mes', 'modulo-ventas'); ?></h3>
+                <h3><?php _e('Top Clientes', 'modulo-ventas'); ?></h3>
                 <?php if (!empty($stats['top_clientes'])) : ?>
                     <ul class="mv-top-list">
                         <?php foreach ($stats['top_clientes'] as $index => $cliente) : ?>
@@ -325,12 +325,23 @@ if (!defined('ABSPATH')) {
 <style type="text/css">
 /* Estilos específicos del dashboard */
 .mv-dashboard {
-    margin-right: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.wrap h1.wp-heading-inline {
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .mv-welcome-panel {
     background: #fff;
     border: 1px solid #c3c4c7;
+    border-radius: 8px;
     box-shadow: 0 1px 1px rgba(0,0,0,0.04);
     margin: 16px 0;
     padding: 23px 10px 0;
@@ -360,6 +371,7 @@ if (!defined('ABSPATH')) {
 .mv-stat-box {
     background: #fff;
     border: 1px solid #c3c4c7;
+    border-radius: 8px;
     box-shadow: 0 1px 1px rgba(0,0,0,0.04);
     padding: 20px;
     position: relative;
@@ -428,6 +440,7 @@ if (!defined('ABSPATH')) {
 .mv-dashboard-widget {
     background: #fff;
     border: 1px solid #c3c4c7;
+    border-radius: 8px;
     box-shadow: 0 1px 1px rgba(0,0,0,0.04);
     margin-bottom: 20px;
     padding: 20px;
@@ -500,6 +513,7 @@ if (!defined('ABSPATH')) {
     align-items: center;
     padding: 8px 0;
     border-bottom: 1px solid #f0f0f1;
+    border-radius: 8px;
 }
 
 .mv-top-list li:last-child {
@@ -545,6 +559,7 @@ if (!defined('ABSPATH')) {
 .mv-product-list li {
     padding: 8px 0;
     border-bottom: 1px solid #f0f0f1;
+    border-radius: 8px;
 }
 
 .mv-product-list li:last-child {
@@ -579,6 +594,10 @@ if (!defined('ABSPATH')) {
     color: #646970;
     text-align: center;
     padding: 20px 0;
+}
+
+table.wp-list-table.widefat.fixed.striped {
+    border-radius: 8px;
 }
 
 /* Responsive */

@@ -1430,6 +1430,7 @@ class Modulo_Ventas_DB {
             'vendedor_id' => 0,
             'fecha_desde' => '',
             'fecha_hasta' => '',
+            'fecha_expiracion_hasta' => '', // Nuevo parámetro para próximas a expirar
             'buscar' => ''
         );
         
@@ -1444,8 +1445,15 @@ class Modulo_Ventas_DB {
         
         // Aplicar los mismos filtros que en obtener_cotizaciones
         if (!empty($args['estado'])) {
-            $sql .= " AND c.estado = %s";
-            $params[] = $args['estado'];
+            // Si el estado es un array (para múltiples estados)
+            if (is_array($args['estado'])) {
+                $placeholders = array_fill(0, count($args['estado']), '%s');
+                $sql .= " AND c.estado IN (" . implode(',', $placeholders) . ")";
+                $params = array_merge($params, $args['estado']);
+            } else {
+                $sql .= " AND c.estado = %s";
+                $params[] = $args['estado'];
+            }
         }
         
         if ($args['cliente_id'] > 0) {
@@ -1468,6 +1476,13 @@ class Modulo_Ventas_DB {
             $params[] = $args['fecha_hasta'];
         }
         
+        // Nuevo filtro para fecha de expiración (para "próximas a expirar")
+        if (!empty($args['fecha_expiracion_hasta'])) {
+            $sql .= " AND c.fecha_expiracion <= %s AND c.fecha_expiracion >= %s";
+            $params[] = $args['fecha_expiracion_hasta'];
+            $params[] = date('Y-m-d'); // Desde hoy
+        }
+        
         if (!empty($args['buscar'])) {
             $sql .= " AND (c.folio LIKE %s OR cl.razon_social LIKE %s OR cl.rut LIKE %s)";
             $like_term = '%' . $this->wpdb->esc_like($args['buscar']) . '%';
@@ -1476,11 +1491,12 @@ class Modulo_Ventas_DB {
             $params[] = $like_term;
         }
         
+        // Preparar y ejecutar consulta
         if (!empty($params)) {
             $sql = $this->wpdb->prepare($sql, $params);
         }
         
-        return $this->wpdb->get_var($sql);
+        return intval($this->wpdb->get_var($sql));
     }
 
     /**

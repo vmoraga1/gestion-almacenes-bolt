@@ -123,14 +123,14 @@ class Modulo_Ventas_Admin {
         );
         
         // Separador
-        add_submenu_page(
+        /*add_submenu_page(
             'modulo-ventas',
             '',
             '<span class="mv-menu-separator">' . __('Gestión', 'modulo-ventas') . '</span>',
             'view_cotizaciones',
             '#',
             ''
-        );
+        );*/
         
         // Clientes
         add_submenu_page(
@@ -172,7 +172,7 @@ class Modulo_Ventas_Admin {
             array($this, 'pagina_detalle_cliente')
         );
         
-        // Separador
+        /*// Separador
         add_submenu_page(
             'modulo-ventas',
             '',
@@ -240,6 +240,16 @@ class Modulo_Ventas_Admin {
             'manage_modulo_ventas',
             'modulo-ventas-logs',
             array($this, 'pagina_logs')
+        );*/
+
+        // Ventas
+        add_submenu_page(
+            'modulo-ventas',
+            __('Ventas', 'modulo-ventas'),
+            __('Ventas', 'modulo-ventas'),
+            'manage_modulo_ventas',
+            'modulo-ventas-ventas',
+            array($this, 'pagina_ventas')
         );
     }
     
@@ -1710,10 +1720,9 @@ class Modulo_Ventas_Admin {
             $mes_anterior_fin
         )) ?: 0;
         
-        // Por estado - contar TODAS las cotizaciones, no solo del mes
-        $estados = array('pendiente', 'aprobada', 'rechazada', 'expirada', 'convertida');
+        // Por estado - con inicialización completa
+        $estados = array('pendiente', 'aprobada', 'rechazada', 'expirada', 'convertida', 'enviada');
         $stats['por_estado'] = array();
-        
         foreach ($estados as $estado) {
             $stats['por_estado'][$estado] = $wpdb->get_var($wpdb->prepare(
                 "SELECT COUNT(*) FROM {$tabla} WHERE estado = %s",
@@ -1767,8 +1776,8 @@ class Modulo_Ventas_Admin {
             LIMIT 5"
         );
         
-        // Productos más cotizados (general)
-        $stats['productos_populares'] = $wpdb->get_results(
+        // Productos más cotizados (general) - CORREGIDO
+        $stats['top_productos'] = $wpdb->get_results(
             "SELECT 
                 ci.nombre, 
                 COUNT(DISTINCT ci.cotizacion_id) as veces_cotizado,

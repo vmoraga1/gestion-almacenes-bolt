@@ -69,7 +69,7 @@ $estadisticas = $db->obtener_estadisticas_cotizaciones();
     </div>
 
     <!-- Filtros -->
-    <form method="get">
+    <form class="filtros" method="get">
         <input type="hidden" name="page" value="modulo-ventas-cotizaciones">
         
         <!-- Búsqueda -->
@@ -106,12 +106,12 @@ $estadisticas = $db->obtener_estadisticas_cotizaciones();
             </div>
             
             <!-- Acciones adicionales -->
-            <div class="alignright">
+            <!--<div class="alignright">
                 <a href="#" class="button" id="exportar-cotizaciones">
                     <span class="dashicons dashicons-download"></span>
                     <?php _e('Exportar', 'modulo-ventas'); ?>
                 </a>
-            </div>
+            </div>-->
         </div>
     </form>
 
@@ -153,6 +153,14 @@ $estadisticas = $db->obtener_estadisticas_cotizaciones();
 </div>
 
 <style>
+#wpbody-content {
+    width: auto;
+    background: #fff;
+    padding: 0px 0px 20px 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin: 20px 20px 50px 0;
+}
 /* Estadísticas */
 .mv-stats-container {
     display: grid;
@@ -164,7 +172,7 @@ $estadisticas = $db->obtener_estadisticas_cotizaciones();
 .mv-stat-box {
     background: #fff;
     border: 1px solid #c3c4c7;
-    border-radius: 4px;
+    border-radius: 8px;
     padding: 20px;
     text-align: center;
 }
@@ -181,6 +189,16 @@ $estadisticas = $db->obtener_estadisticas_cotizaciones();
     display: block;
     color: #646970;
     font-size: 14px;
+}
+
+form.filtros {
+    display: flex;
+    justify-content: space-between;
+}
+
+table.fixed {
+    table-layout: fixed;
+    border-radius: 8px;
 }
 
 /* Responsive */

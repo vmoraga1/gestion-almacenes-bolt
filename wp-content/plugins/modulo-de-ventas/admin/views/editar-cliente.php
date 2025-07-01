@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
             <?php _e('Volver al listado', 'modulo-ventas'); ?>
         </a>
         <?php if ($estadisticas_cliente['total_cotizaciones'] > 0): ?>
-        <a href="<?php echo admin_url('admin.php?page=modulo-ventas-cliente-detalle&id=' . $cliente->id); ?>" class="page-title-action">
+        <a href="<?php echo admin_url('admin.php?page=modulo-ventas-ver-cliente&id=' . $cliente->id); ?>" class="page-title-action">
             <?php _e('Ver Detalle', 'modulo-ventas'); ?>
         </a>
         <?php endif; ?>
