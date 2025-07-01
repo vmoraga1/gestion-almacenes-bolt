@@ -48,15 +48,10 @@ class Modulo_Ventas_Admin {
         add_filter('pre_get_users', array($this, 'filtrar_usuarios_query'));
         
         // AJAX handlers adicionales
-        add_action('wp_ajax_mv_actualizar_almacen_pedido', array($this, 'ajax_actualizar_almacen_pedido'));
-        add_action('wp_ajax_mv_obtener_comunas', array($this, 'ajax_obtener_comunas'));
-        add_action('wp_ajax_mv_exportar_cotizaciones', array($this, 'ajax_exportar_cotizaciones'));
-        add_action('wp_ajax_mv_obtener_estadisticas', array($this, 'ajax_obtener_estadisticas'));
-
-        // Handlers de notas
-        add_action('wp_ajax_mv_agregar_nota_cliente', array($this, 'ajax_agregar_nota_cliente'));
-        add_action('wp_ajax_mv_eliminar_nota_cliente', array($this, 'ajax_eliminar_nota_cliente'));
-        add_action('wp_ajax_mv_actualizar_nota_cliente', array($this, 'ajax_actualizar_nota_cliente'));
+        //add_action('wp_ajax_mv_actualizar_almacen_pedido', array($this, 'ajax_actualizar_almacen_pedido'));
+        //add_action('wp_ajax_mv_obtener_comunas', array($this, 'ajax_obtener_comunas'));
+        //add_action('wp_ajax_mv_exportar_cotizaciones', array($this, 'ajax_exportar_cotizaciones'));
+        //add_action('wp_ajax_mv_obtener_estadisticas', array($this, 'ajax_obtener_estadisticas'));
         
         // Configuración del plugin
         add_action('admin_init', array($this, 'registrar_configuracion'));
@@ -66,6 +61,9 @@ class Modulo_Ventas_Admin {
      * Registrar menú del plugin
      */
     public function registrar_menu() {
+        error_log('Método registrar_menu() llamado');
+        error_log('Current user can manage_clientes_ventas: ' . (current_user_can('manage_clientes_ventas') ? 'SI' : 'NO'));
+
         // Menú principal
         add_menu_page(
             __('Módulo de Ventas', 'modulo-ventas'),
@@ -1429,6 +1427,15 @@ class Modulo_Ventas_Admin {
      * Página de detalle de cliente
      */
     public function pagina_detalle_cliente() {
+        // Debug temporal
+        error_log('Usuario actual: ' . get_current_user_id());
+        error_log('Permisos: ' . json_encode(wp_get_current_user()->allcaps));
+        
+        // Verificar permisos
+        if (!current_user_can('manage_clientes_ventas') && !current_user_can('manage_options')) {
+            wp_die(__('No tiene permisos suficientes para acceder a esta página. Debug: Usuario ' . get_current_user_id(), 'modulo-ventas'));
+        }
+
         // Verificar permisos
         if (!current_user_can('manage_clientes_ventas')) {
             wp_die(__('No tiene permisos suficientes para acceder a esta página.', 'modulo-ventas'));

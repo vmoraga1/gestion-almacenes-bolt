@@ -48,3 +48,18 @@ Stack trace:
 [2025-07-01 14:26:25] INFO: Cotización creada: COT-2025-000015 (ID: 15) | Usuario: hostpanish (ID: 1) | IP: ::1
 [2025-07-01 16:53:41] INFO: Cliente creado: Marcela Salas (ID: 22) | Usuario: hostpanish (ID: 1) | IP: ::1
 [2025-07-01 16:53:41] INFO: Cliente creado rápidamente: Marcela Salas (ID: 22) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-01 17:34:55] INFO: Tablas de base de datos creadas/actualizadas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-01 17:34:55] INFO: Plugin activado correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-01 17:42:15] INFO: Tablas de base de datos creadas/actualizadas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-01 17:42:15] INFO: Plugin activado correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-01 17:43:08] INFO: Nota agregada al cliente ID: 12 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-01 17:50:22] INFO: Tablas de base de datos creadas/actualizadas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-01 17:50:22] INFO: Plugin activado correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-01 17:50:34] INFO: Plugin desactivado | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-01 17:50:41] INFO: Tablas de base de datos creadas/actualizadas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-01 17:50:41] INFO: Plugin activado correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-01 17:57:31] INFO: Tablas de base de datos creadas/actualizadas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-01 17:57:31] INFO: Plugin activado correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-01 17:57:41] INFO: Plugin desactivado | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-01 17:57:52] INFO: Tablas de base de datos creadas/actualizadas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-01 17:57:52] INFO: Plugin activado correctamente | Usuario: hostpanish (ID: 1) | IP: ::1

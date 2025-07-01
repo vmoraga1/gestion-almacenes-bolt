@@ -415,21 +415,6 @@ function modulo_ventas() {
 // Inicializar el plugin
 modulo_ventas();
 
-// Hook temprano para inicializar AJAX - AGREGAR ANTES del hook de actualizaciones
-/*add_action('plugins_loaded', function() {
-    if (is_admin()) {
-        // Cargar archivos necesarios
-        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-db.php';
-        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-logger.php';
-        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-clientes.php';
-        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-cotizaciones.php';
-        require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/class-modulo-ventas-ajax.php';
-        
-        // Instanciar la clase Ajax
-        new Modulo_Ventas_Ajax();
-    }
-}, 5); DESCOMENTAR SI CREAR_CLIENTE_RAPIDO NO FUNCIONA */
-
 //Hook para verificar actualizaciones del plugin
 add_action('plugins_loaded', function() {
     $version_actual = get_option('modulo_ventas_version', '0');
@@ -441,6 +426,15 @@ add_action('plugins_loaded', function() {
         $updater->run();
     }
 }, 20);
+
+// Forzar carga de Ajax para peticiones AJAX
+if (wp_doing_ajax()) {
+    $plugin = Modulo_Ventas::get_instance();
+    // Forzar la verificación de dependencias que carga los archivos
+    if (method_exists($plugin, 'verificar_dependencias')) {
+        $plugin->verificar_dependencias();
+    }
+}
 
 /**
  * Verificar tablas en cada carga del admin
