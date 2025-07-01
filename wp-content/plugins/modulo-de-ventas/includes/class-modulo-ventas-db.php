@@ -1668,4 +1668,53 @@ class Modulo_Ventas_DB {
             return new WP_Error('error_eliminar', $e->getMessage());
         }
     }
+
+    /**
+     * Obtener cotizaciones agrupadas por mes
+     * 
+     * @param int $meses Número de meses hacia atrás
+     * @return array
+     */
+    public function obtener_cotizaciones_por_mes($meses = 6) {
+        global $wpdb;
+        
+        $resultados = array();
+        
+        // Generar datos para los últimos X meses
+        for ($i = $meses - 1; $i >= 0; $i--) {
+            $fecha_inicio = date('Y-m-01', strtotime("-$i months"));
+            $fecha_fin = date('Y-m-t', strtotime("-$i months"));
+            
+            // Contar cotizaciones del mes
+            $cantidad = $wpdb->get_var($wpdb->prepare(
+                "SELECT COUNT(*) 
+                FROM {$this->tabla_cotizaciones} 
+                WHERE DATE(fecha) >= %s 
+                AND DATE(fecha) <= %s",
+                $fecha_inicio,
+                $fecha_fin
+            ));
+            
+            // Sumar montos del mes
+            $monto = $wpdb->get_var($wpdb->prepare(
+                "SELECT COALESCE(SUM(total), 0) 
+                FROM {$this->tabla_cotizaciones} 
+                WHERE DATE(fecha) >= %s 
+                AND DATE(fecha) <= %s",
+                $fecha_inicio,
+                $fecha_fin
+            ));
+            
+            $resultados[] = array(
+                'mes' => date_i18n('M Y', strtotime($fecha_inicio)),
+                'mes_corto' => date_i18n('M', strtotime($fecha_inicio)),
+                'cantidad' => intval($cantidad),
+                'monto' => floatval($monto),
+                'fecha_inicio' => $fecha_inicio,
+                'fecha_fin' => $fecha_fin
+            );
+        }
+        
+        return $resultados;
+    }
 }

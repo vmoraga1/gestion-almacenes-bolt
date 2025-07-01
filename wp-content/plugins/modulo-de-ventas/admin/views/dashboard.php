@@ -408,11 +408,6 @@ if (!defined('ABSPATH')) {
     font-weight: 600;
 }
 
-.mv-chart-container {
-    position: relative;
-    height: 300px;
-}
-
 .mv-status-item {
     margin-bottom: 15px;
 }
@@ -523,6 +518,37 @@ if (!defined('ABSPATH')) {
     padding: 20px 0;
 }
 
+/* Mejorar la apariencia del contenedor del gráfico */
+.mv-chart-container {
+    position: relative;
+    height: 300px;
+    padding: 10px;
+}
+
+.mv-chart-container canvas {
+    max-height: 100%;
+}
+
+/* Animación para las cajas de estadísticas */
+.mv-stat-box {
+    transition: all 0.3s ease;
+}
+
+.mv-stat-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.mv-stat-number {
+    transition: transform 0.2s ease;
+}
+
+/* Leyenda del gráfico */
+.mv-chart-legend {
+    margin-top: 15px;
+    text-align: center;
+}
+
 /* Responsive */
 @media screen and (max-width: 1200px) {
     .mv-dashboard-columns {
@@ -544,10 +570,141 @@ if (!defined('ABSPATH')) {
 <script type="text/javascript">
 jQuery(document).ready(function($) {
     // Gráfico de evolución
-    if ($('#mv-chart-evolucion').length) {
-        // Aquí iría la configuración de Chart.js
-        // Por ahora es un placeholder
-        console.log('Inicializar gráfico de evolución');
+    if ($('#mv-chart-evolucion').length && typeof Chart !== 'undefined') {
+        <?php if (!empty($stats['cotizaciones_por_mes'])): ?>
+        
+        var ctx = document.getElementById('mv-chart-evolucion').getContext('2d');
+        
+        // Preparar datos
+        var labels = [];
+        var dataCantidades = [];
+        var dataMontos = [];
+        
+        <?php foreach ($stats['cotizaciones_por_mes'] as $mes): ?>
+        labels.push('<?php echo esc_js($mes['mes_corto']); ?>');
+        dataCantidades.push(<?php echo intval($mes['cantidad']); ?>);
+        dataMontos.push(<?php echo floatval($mes['monto']); ?>);
+        <?php endforeach; ?>
+        
+        // Crear gráfico
+        var chartEvolucion = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Cotizaciones',
+                    data: dataCantidades,
+                    backgroundColor: 'rgba(34, 113, 177, 0.8)',
+                    borderColor: '#2271b1',
+                    borderWidth: 1,
+                    yAxisID: 'y-cantidad',
+                    order: 2
+                }, {
+                    label: 'Monto Total',
+                    data: dataMontos,
+                    type: 'line',
+                    borderColor: '#00a32a',
+                    backgroundColor: 'rgba(0, 163, 42, 0.1)',
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#00a32a',
+                    tension: 0.3,
+                    yAxisID: 'y-monto',
+                    order: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
+                },
+                plugins: {
+                    title: {
+                        display: false
+                    },
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                var label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.datasetIndex === 1) {
+                                    // Formato para montos
+                                    label += '<?php echo get_woocommerce_currency_symbol(); ?>' + 
+                                            new Intl.NumberFormat('es-CL').format(context.parsed.y);
+                                } else {
+                                    // Formato para cantidades
+                                    label += context.parsed.y;
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    'y-cantidad': {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Cantidad de Cotizaciones'
+                        },
+                        ticks: {
+                            precision: 0
+                        }
+                    },
+                    'y-monto': {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'Monto Total'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return '<?php echo get_woocommerce_currency_symbol(); ?>' + 
+                                    new Intl.NumberFormat('es-CL', {
+                                        notation: 'compact',
+                                        compactDisplay: 'short'
+                                    }).format(value);
+                            }
+                        },
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    }
+                }
+            }
+        });
+        
+        <?php else: ?>
+        // No hay datos, mostrar mensaje
+        $('#mv-chart-evolucion').parent().html(
+            '<div style="text-align: center; padding: 80px 20px; color: #666;">' +
+            '<span class="dashicons dashicons-chart-line" style="font-size: 48px; opacity: 0.3;"></span>' +
+            '<p style="margin-top: 10px;">No hay datos suficientes para mostrar el gráfico.</p>' +
+            '<p style="font-size: 13px;">Las estadísticas aparecerán cuando haya cotizaciones registradas.</p>' +
+            '</div>'
+        );
+        <?php endif; ?>
     }
     
     // Cerrar panel de bienvenida
@@ -565,6 +722,26 @@ jQuery(document).ready(function($) {
         $(this).find('.mv-stat-number').css('transform', 'scale(1.05)');
     }).on('mouseleave', function() {
         $(this).find('.mv-stat-number').css('transform', 'scale(1)');
+    });
+
+    // Animación de números al cargar
+    $('.mv-stat-number').each(function() {
+        var $this = $(this);
+        var countTo = parseInt($this.text().replace(/[^0-9]/g, ''));
+        if (!isNaN(countTo) && countTo > 0) {
+            $({countNum: 0}).animate({
+                countNum: countTo
+            }, {
+                duration: 1000,
+                easing: 'swing',
+                step: function() {
+                    $this.text(Math.floor(this.countNum));
+                },
+                complete: function() {
+                    $this.text(this.countNum);
+                }
+            });
+        }
     });
 });
 </script>

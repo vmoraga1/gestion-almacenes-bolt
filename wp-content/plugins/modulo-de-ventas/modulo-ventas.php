@@ -59,7 +59,7 @@ class Modulo_Ventas {
         //$this->cargar_archivos_basicos();
         
         // Verificar dependencias
-        add_action('plugins_loaded', array($this, 'verificar_dependencias'), 5);
+        add_action('plugins_loaded', array($this, 'verificar_dependencias'), 1);
         
         // Cargar traducciones en el momento correcto
         add_action('init', array($this, 'cargar_textdomain'), 0);

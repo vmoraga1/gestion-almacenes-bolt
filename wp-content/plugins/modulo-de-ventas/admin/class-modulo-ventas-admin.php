@@ -254,6 +254,8 @@ class Modulo_Ventas_Admin {
         
         // Obtener estadísticas
         $stats = $this->obtener_estadisticas_dashboard();
+        // Obtener datos para el gráfico
+        $stats['cotizaciones_por_mes'] = $this->db->obtener_cotizaciones_por_mes(6); // Últimos 6 meses
         
         // Cargar vista
         require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/views/dashboard.php';
@@ -797,6 +799,16 @@ class Modulo_Ventas_Admin {
                 true
             );
         }
+
+        // Cargar Chart.js en el dashboard principal
+        if ($hook === 'toplevel_page_modulo-ventas') {
+            wp_enqueue_script(
+                'chartjs',
+                'https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js',
+                array(),
+                '3.9.1'
+            );
+        }
         
         if (strpos($hook, 'reportes') !== false) {
             // DataTables para reportes
@@ -910,9 +922,7 @@ class Modulo_Ventas_Admin {
         return '
     (function($) {
         "use strict";
-        
-        console.log("Script de validación de RUT cargado");
-        
+                
         // Verificar que moduloVentasAjax existe
         if (typeof moduloVentasAjax === "undefined") {
             console.error("moduloVentasAjax no está definido");
@@ -978,9 +988,7 @@ class Modulo_Ventas_Admin {
         // Función para configurar validación en un input
         function configurarValidacionRUT($input) {
             if (!$input.length) return;
-            
-            console.log("Configurando validación en:", $input);
-            
+                        
             // Limpiar eventos anteriores
             $input.off("blur.rut input.rut");
             
@@ -1027,9 +1035,7 @@ class Modulo_Ventas_Admin {
         }
         
         // Cuando el documento esté listo
-        $(document).ready(function() {
-            console.log("Document ready - configurando validación RUT");
-            
+        $(document).ready(function() {            
             // Configurar validación en inputs existentes
             $("input[name=\'rut\'], input[name=\'cliente[rut]\'], #rut, #cliente_rut").each(function() {
                 configurarValidacionRUT($(this));
@@ -1037,7 +1043,6 @@ class Modulo_Ventas_Admin {
             
             // Para el modal de nuevo cliente
             $(document).on("click", ".mv-btn-nuevo-cliente", function() {
-                console.log("Abriendo modal de nuevo cliente");
                 setTimeout(function() {
                     var $modalInput = $("#mv-modal-nuevo-cliente").find("input[name=\'cliente[rut]\']");
                     if ($modalInput.length) {
@@ -1048,14 +1053,11 @@ class Modulo_Ventas_Admin {
             
             // Interceptar envío de formulario
             $(document).on("submit", "#mv-form-nuevo-cliente", function(e) {
-                console.log("Formulario de nuevo cliente enviado");
                 
                 var $form = $(this);
                 var $rutInput = $form.find("input[name=\'cliente[rut]\']");
                 var rut = $rutInput.val();
-                
-                console.log("RUT a validar:", rut);
-                
+                                
                 if (!rut) {
                     e.preventDefault();
                     var mensajeRequerido = "El RUT es obligatorio";
@@ -1080,19 +1082,12 @@ class Modulo_Ventas_Admin {
                 
                 // Asegurar que el RUT se envíe limpio
                 var rutLimpio = mvRutUtils.limpiar(rut);
-                console.log("RUT limpio a enviar:", rutLimpio);
                 $rutInput.val(rutLimpio);
             });
         });
         
         // Hacer disponible globalmente para debug
         window.mvDebugRut = function(rut) {
-            console.log("=== Debug RUT ===");
-            console.log("RUT original:", rut);
-            console.log("RUT limpio:", mvRutUtils.limpiar(rut));
-            console.log("RUT formateado:", mvRutUtils.formatear(rut));
-            console.log("RUT válido:", mvRutUtils.validar(rut));
-            console.log("================");
             return mvRutUtils.validar(rut);
         };
         

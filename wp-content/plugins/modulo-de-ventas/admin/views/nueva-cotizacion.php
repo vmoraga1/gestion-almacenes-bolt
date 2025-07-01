@@ -1068,6 +1068,11 @@ input#costo_envio, input#descuento_global {
 <script type="text/javascript">
 // Esperar a que jQuery esté listo
 jQuery(document).ready(function($) {
+    // Garantizar que ajaxurl esté disponible
+    if (typeof ajaxurl === 'undefined') {
+        window.ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
+    }
+    
     // Variables globales
     var productoIndex = 0;
     var almacenesDisponibles = <?php echo json_encode(mv_almacenes_activo() ? $almacenes : array()); ?>;
@@ -1086,7 +1091,7 @@ jQuery(document).ready(function($) {
             placeholder: '<?php _e('Buscar productos por Nombre o SKU', 'modulo-ventas'); ?>',
             minimumInputLength: 2,
             ajax: {
-                url: ajaxurl,
+                url: window.ajaxurl,
                 type: 'POST',
                 dataType: 'json',
                 delay: 250,
@@ -1284,23 +1289,21 @@ jQuery(document).ready(function($) {
     $('.mv-modal-close, .mv-modal-cancel').on('click', function() {
         $('#mv-modal-nuevo-cliente').fadeOut();
     });
-    
+
     // Formulario nuevo cliente
     $('#mv-form-nuevo-cliente').on('submit', function(e) {
         e.preventDefault();
         
         var $form = $(this);
         var $submit = $form.find('button[type="submit"]');
-        
-        console.log('Enviando formulario de nuevo cliente...');
-        
-        $submit.prop('disabled', true).text('<?php _e('Creando...', 'modulo-ventas'); ?>');
+                
+        $submit.prop('disabled', true).text('Creando...');
         
         // Recopilar datos del formulario
         var datosCliente = {};
         $form.find('input, select').each(function() {
             var name = $(this).attr('name');
-            if (name) {
+            if (name && name.includes('cliente[')) {
                 var match = name.match(/cliente\[(.+)\]/);
                 if (match) {
                     datosCliente[match[1]] = $(this).val();
@@ -1308,26 +1311,24 @@ jQuery(document).ready(function($) {
             }
         });
         
-        // Agregar el nonce si no está en los datos
+        // Limpiar RUT antes de enviar
+        if (datosCliente.rut) {
+            datosCliente.rut = datosCliente.rut.replace(/\./g, '').replace(/-/g, '');
+        }
+        
+        // Agregar el nonce
         var nonce = $form.find('input[name="nonce"]').val() || moduloVentasAjax.nonce;
         
-        console.log('Datos a enviar:', {
-            action: 'mv_crear_cliente_rapido',
-            cliente: datosCliente,
-            nonce: nonce
-        });
-        
         $.ajax({
-            url: ajaxurl || moduloVentasAjax.ajaxurl,
+            url: window.ajaxurl,
             type: 'POST',
+            dataType: 'json',
             data: {
                 action: 'mv_crear_cliente_rapido',
                 cliente: datosCliente,
                 nonce: nonce
             },
-            success: function(response) {
-                console.log('Respuesta del servidor:', response);
-                
+            success: function(response) {                
                 if (response.success) {
                     // La respuesta exitosa tiene la estructura: response.data.cliente y response.data.message
                     var nuevoCliente = response.data.cliente;
@@ -1355,51 +1356,25 @@ jQuery(document).ready(function($) {
                     $form[0].reset();
                     
                     // Mostrar mensaje de éxito
-                    var mensaje = response.data.message || '<?php _e('Cliente creado exitosamente', 'modulo-ventas'); ?>';
-                    
-                    // Si existe la función mvShowToast, usarla
+                    var mensaje = response.data.message || 'Cliente creado exitosamente';
                     if (typeof mvShowToast === 'function') {
                         mvShowToast(mensaje, 'success');
                     } else {
-                        // Alternativa: mostrar alerta o crear notificación simple
-                        var $notice = $('<div class="notice notice-success is-dismissible"><p>' + mensaje + '</p></div>');
-                        $('.wrap > h1').after($notice);
-                        setTimeout(function() {
-                            $notice.fadeOut(function() {
-                                $(this).remove();
-                            });
-                        }, 3000);
+                        alert(mensaje);
                     }
-                    
-                    console.log('Cliente creado exitosamente:', nuevoCliente);
-                    
                 } else {
-                    // Error
-                    alert(response.data.message || '<?php _e('Error al crear el cliente', 'modulo-ventas'); ?>');
+                    var errorMsg = response.data.message || 'Error al crear el cliente';
+                    alert(errorMsg);
+                    console.error('Error al crear cliente:', errorMsg);
                 }
             },
             error: function(xhr, status, error) {
-                console.error('Error AJAX:', {
-                    status: status,
-                    error: error,
-                    responseText: xhr.responseText,
-                    responseJSON: xhr.responseJSON
-                });
-                
-                var errorMsg = '<?php _e('Error de conexión', 'modulo-ventas'); ?>';
-                
-                // Intentar obtener mensaje de error más específico
-                if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
-                    errorMsg = xhr.responseJSON.data.message;
-                } else if (xhr.responseText) {
-                    console.log('Respuesta del servidor:', xhr.responseText);
-                    errorMsg += '. Revise la consola para más detalles.';
-                }
-                
-                alert(errorMsg);
+                console.error('Error AJAX:', error);
+                console.error('Respuesta:', xhr.responseText);
+                alert('Error de conexión al crear el cliente');
             },
             complete: function() {
-                $submit.prop('disabled', false).text('<?php _e('Crear Cliente', 'modulo-ventas'); ?>');
+                $submit.prop('disabled', false).text('Crear Cliente');
             }
         });
     });
@@ -1438,9 +1413,7 @@ jQuery(document).ready(function($) {
             console.error('Producto inválido:', producto);
             return;
         }
-        
-        console.log('Agregando producto:', producto); // Debug
-        
+                
         // Eliminar mensaje de "no hay productos"
         $('.mv-no-productos').remove();
         
@@ -1466,9 +1439,7 @@ jQuery(document).ready(function($) {
             precio_original: producto.precio_regular || producto.precio || 0,
             opciones_almacen: opcionesAlmacen
         };
-        
-        console.log('Datos para el template:', datos); // Debug
-        
+                
         // Reemplazar variables en el template
         var html = template;
         for (var key in datos) {
@@ -1750,8 +1721,8 @@ jQuery(document).ready(function($) {
     // Función toast (simple implementación)
     function mvShowToast(message, type) {
         var $toast = $('<div class="notice notice-' + type + ' is-dismissible mv-toast">' +
-                      '<p>' + message + '</p>' +
-                      '</div>');
+                    '<p>' + message + '</p>' +
+                    '</div>');
         
         $('h1').after($toast);
         
@@ -1764,12 +1735,9 @@ jQuery(document).ready(function($) {
 
     // CÓDIGO DE DEPURACIÓN - ELIMINAR DESPUÉS DE RESOLVER EL PROBLEMA
     // Interceptar el envío del formulario para depuración
-    $('#mv-form-cotizacion').on('submit', function(e) {
-        console.log('=== DEPURACIÓN DE ENVÍO DE FORMULARIO ===');
-        
+    $('#mv-form-cotizacion').on('submit', function(e) {        
         // Obtener todos los campos del formulario
         var formData = $(this).serializeArray();
-        console.log('Datos del formulario:', formData);
         
         // Mostrar específicamente los items
         var items = {};
@@ -1780,18 +1748,10 @@ jQuery(document).ready(function($) {
                 }
             }
         });
-        console.log('Items encontrados:', items);
         
         // Verificar campos específicos
-        console.log('=== Verificación de campos de productos ===');
         $('#mv-productos-lista .mv-producto-row').each(function(index) {
             var $row = $(this);
-            console.log('Producto ' + index + ':');
-            console.log('  - producto_id:', $row.find('input[name*="[producto_id]"]').val());
-            console.log('  - nombre (hidden):', $row.find('input[name*="[nombre]"]').val());
-            console.log('  - nombre (visible):', $row.find('.mv-producto-nombre').text());
-            console.log('  - sku:', $row.find('input[name*="[sku]"]').val());
-            console.log('  - precio:', $row.find('input[name*="[precio_unitario]"]').val());
         });
         
         // No cancelar el envío, solo depurar
