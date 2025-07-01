@@ -250,11 +250,11 @@ if (!defined('ABSPATH')) {
                                 <div class="mv-top-info">
                                     <strong><?php echo esc_html($cliente->razon_social); ?></strong>
                                     <span class="mv-top-meta">
-                                        <?php 
+                                        <?php
                                         printf(
                                             __('%d cotizaciones - %s', 'modulo-ventas'),
-                                            $cliente->num_cotizaciones,
-                                            mv_formato_precio($cliente->total_cotizado)
+                                            $cliente->total_cotizaciones,
+                                            mv_formato_precio($cliente->valor_total)
                                         );
                                         ?>
                                     </span>
@@ -357,6 +357,12 @@ if (!defined('ABSPATH')) {
     padding: 20px;
     position: relative;
     text-align: center;
+    transition: all 0.3s ease;
+}
+
+.mv-stat-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .mv-stat-number {
@@ -365,11 +371,27 @@ if (!defined('ABSPATH')) {
     line-height: 1.2;
     color: #1d2327;
     margin-bottom: 5px;
+    transition: transform 0.2s ease;
 }
 
 .mv-stat-label {
     color: #646970;
     font-size: 14px;
+}
+
+.mv-stat-sublabel {
+    color: #8c8f94;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.mv-stat-action {
+    margin-top: 10px;
+}
+
+.mv-stat-action a {
+    font-size: 13px;
+    text-decoration: none;
 }
 
 .mv-stat-change {
@@ -392,12 +414,17 @@ if (!defined('ABSPATH')) {
     margin-top: 20px;
 }
 
+.mv-dashboard-main {
+    min-width: 0; /* Importante para prevenir overflow */
+}
+
 .mv-dashboard-widget {
     background: #fff;
     border: 1px solid #c3c4c7;
     box-shadow: 0 1px 1px rgba(0,0,0,0.04);
     margin-bottom: 20px;
     padding: 20px;
+    overflow: hidden; /* Prevenir overflow horizontal */
 }
 
 .mv-dashboard-widget h2,
@@ -408,6 +435,21 @@ if (!defined('ABSPATH')) {
     font-weight: 600;
 }
 
+/* Contenedor del gráfico - CRÍTICO para responsive */
+.mv-chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.mv-chart-container canvas {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* Status bars */
 .mv-status-item {
     margin-bottom: 15px;
 }
@@ -439,8 +481,11 @@ if (!defined('ABSPATH')) {
     transition: width 0.3s ease;
 }
 
+/* Listas */
 .mv-top-list {
     margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 .mv-top-list li {
@@ -468,6 +513,14 @@ if (!defined('ABSPATH')) {
 
 .mv-top-info {
     flex: 1;
+    min-width: 0; /* Prevenir overflow de texto */
+}
+
+.mv-top-info strong {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .mv-top-meta {
@@ -478,6 +531,8 @@ if (!defined('ABSPATH')) {
 
 .mv-product-list {
     margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 .mv-product-list li {
@@ -495,6 +550,7 @@ if (!defined('ABSPATH')) {
     margin-top: 3px;
 }
 
+/* Acciones rápidas */
 .mv-quick-actions {
     display: flex;
     flex-direction: column;
@@ -518,41 +574,14 @@ if (!defined('ABSPATH')) {
     padding: 20px 0;
 }
 
-/* Mejorar la apariencia del contenedor del gráfico */
-.mv-chart-container {
-    position: relative;
-    height: 300px;
-    padding: 10px;
-}
-
-.mv-chart-container canvas {
-    max-height: 100%;
-}
-
-/* Animación para las cajas de estadísticas */
-.mv-stat-box {
-    transition: all 0.3s ease;
-}
-
-.mv-stat-box:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.mv-stat-number {
-    transition: transform 0.2s ease;
-}
-
-/* Leyenda del gráfico */
-.mv-chart-legend {
-    margin-top: 15px;
-    text-align: center;
-}
-
 /* Responsive */
 @media screen and (max-width: 1200px) {
     .mv-dashboard-columns {
         grid-template-columns: 1fr;
+    }
+    
+    .mv-dashboard-sidebar {
+        max-width: 100%;
     }
 }
 
@@ -564,184 +593,285 @@ if (!defined('ABSPATH')) {
     .mv-stats-boxes {
         grid-template-columns: 1fr;
     }
+    
+    .mv-dashboard {
+        margin-right: 10px;
+    }
+}
+
+/* Prevenir scroll horizontal */
+.wrap {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Tabla responsive */
+@media screen and (max-width: 782px) {
+    .wp-list-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
 }
 </style>
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
-    // Gráfico de evolución
-    if ($('#mv-chart-evolucion').length && typeof Chart !== 'undefined') {
-        <?php if (!empty($stats['cotizaciones_por_mes'])): ?>
-        
-        var ctx = document.getElementById('mv-chart-evolucion').getContext('2d');
-        
-        // Preparar datos
-        var labels = [];
-        var dataCantidades = [];
-        var dataMontos = [];
-        
-        <?php foreach ($stats['cotizaciones_por_mes'] as $mes): ?>
-        labels.push('<?php echo esc_js($mes['mes_corto']); ?>');
-        dataCantidades.push(<?php echo intval($mes['cantidad']); ?>);
-        dataMontos.push(<?php echo floatval($mes['monto']); ?>);
-        <?php endforeach; ?>
-        
-        // Crear gráfico
-        var chartEvolucion = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Cotizaciones',
-                    data: dataCantidades,
-                    backgroundColor: 'rgba(34, 113, 177, 0.8)',
-                    borderColor: '#2271b1',
-                    borderWidth: 1,
-                    yAxisID: 'y-cantidad',
-                    order: 2
-                }, {
-                    label: 'Monto Total',
-                    data: dataMontos,
-                    type: 'line',
-                    borderColor: '#00a32a',
-                    backgroundColor: 'rgba(0, 163, 42, 0.1)',
-                    borderWidth: 2,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#00a32a',
-                    tension: 0.3,
-                    yAxisID: 'y-monto',
-                    order: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
+    // Variable para almacenar la instancia del gráfico
+    var chartEvolucion = null;
+    
+    // Función para crear/actualizar el gráfico
+    function crearGrafico() {
+        if ($('#mv-chart-evolucion').length && typeof Chart !== 'undefined') {
+            <?php if (!empty($stats['cotizaciones_por_mes'])): ?>
+            
+            var canvas = document.getElementById('mv-chart-evolucion');
+            var ctx = canvas.getContext('2d');
+            
+            // Si ya existe el gráfico, destruirlo
+            if (chartEvolucion) {
+                chartEvolucion.destroy();
+            }
+            
+            // Preparar datos
+            var labels = [];
+            var dataCantidades = [];
+            var dataMontos = [];
+            
+            <?php foreach ($stats['cotizaciones_por_mes'] as $mes): ?>
+            labels.push('<?php echo esc_js($mes['mes_corto']); ?>');
+            dataCantidades.push(<?php echo intval($mes['cantidad']); ?>);
+            dataMontos.push(<?php echo floatval($mes['monto']); ?>);
+            <?php endforeach; ?>
+            
+            // Configuración global de Chart.js
+            Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+            
+            // Crear gráfico
+            chartEvolucion = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Cotizaciones',
+                        data: dataCantidades,
+                        backgroundColor: 'rgba(34, 113, 177, 0.8)',
+                        borderColor: '#2271b1',
+                        borderWidth: 1,
+                        yAxisID: 'y-cantidad',
+                        order: 2
+                    }, {
+                        label: 'Monto Total',
+                        data: dataMontos,
+                        type: 'line',
+                        borderColor: '#00a32a',
+                        backgroundColor: 'rgba(0, 163, 42, 0.1)',
+                        borderWidth: 3,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#00a32a',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        tension: 0.3,
+                        yAxisID: 'y-monto',
+                        order: 1
+                    }]
                 },
-                plugins: {
-                    title: {
-                        display: false
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
                     },
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: {
-                            padding: 15,
-                            usePointStyle: true
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                var label = context.dataset.label || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                if (context.datasetIndex === 1) {
-                                    // Formato para montos
-                                    label += '<?php echo get_woocommerce_currency_symbol(); ?>' + 
-                                            new Intl.NumberFormat('es-CL').format(context.parsed.y);
-                                } else {
-                                    // Formato para cantidades
-                                    label += context.parsed.y;
-                                }
-                                return label;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: {
+                    plugins: {
+                        title: {
                             display: false
-                        }
-                    },
-                    'y-cantidad': {
-                        type: 'linear',
-                        display: true,
-                        position: 'left',
-                        title: {
-                            display: true,
-                            text: 'Cantidad de Cotizaciones'
                         },
-                        ticks: {
-                            precision: 0
-                        }
-                    },
-                    'y-monto': {
-                        type: 'linear',
-                        display: true,
-                        position: 'right',
-                        title: {
+                        legend: {
                             display: true,
-                            text: 'Monto Total'
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return '<?php echo get_woocommerce_currency_symbol(); ?>' + 
-                                    new Intl.NumberFormat('es-CL', {
-                                        notation: 'compact',
-                                        compactDisplay: 'short'
-                                    }).format(value);
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
                             }
                         },
-                        grid: {
-                            drawOnChartArea: false
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    var label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    
+                                    if (context.datasetIndex === 1) {
+                                        // Formato para montos
+                                        var valor = context.parsed.y;
+                                        label += '$' + new Intl.NumberFormat('es-CL', {
+                                            minimumFractionDigits: 0,
+                                            maximumFractionDigits: 0
+                                        }).format(valor);
+                                    } else {
+                                        // Formato para cantidades
+                                        label += context.parsed.y + ' cotizaciones';
+                                    }
+                                    return label;
+                                },
+                                afterBody: function(tooltipItems) {
+                                    if (tooltipItems.length === 2) {
+                                        var cantidad = tooltipItems[0].parsed.y;
+                                        var monto = tooltipItems[1].parsed.y;
+                                        var promedio = cantidad > 0 ? monto / cantidad : 0;
+                                        
+                                        return '\nPromedio: $' + 
+                                            new Intl.NumberFormat('es-CL', {
+                                                minimumFractionDigits: 0,
+                                                maximumFractionDigits: 0
+                                            }).format(promedio);
+                                    }
+                                }
+                            },
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#ddd',
+                            borderWidth: 1,
+                            padding: 10,
+                            displayColors: true
                         }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        'y-cantidad': {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Cantidad de Cotizaciones',
+                                font: {
+                                    size: 12,
+                                    weight: 'normal'
+                                }
+                            },
+                            ticks: {
+                                precision: 0,
+                                font: {
+                                    size: 11
+                                },
+                                color: '#666'
+                            },
+                            grid: {
+                                borderDash: [2, 2]
+                            }
+                        },
+                        'y-monto': {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Monto Total (CLP)',
+                                font: {
+                                    size: 12,
+                                    weight: 'normal'
+                                }
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11
+                                },
+                                color: '#666',
+                                callback: function(value, index, ticks) {
+                                    if (value === 0) return '$0';
+                                    
+                                    // Formatear según el rango
+                                    if (value >= 1000000) {
+                                        return '$' + (value / 1000000).toFixed(1).replace('.', ',') + 'M';
+                                    } else if (value >= 1000) {
+                                        return '$' + Math.round(value / 1000) + 'k';
+                                    } else {
+                                        return '$' + Math.round(value);
+                                    }
+                                }
+                            },
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        }
+                    },
+                    onResize: function(chart, size) {
+                        // Forzar redimensionamiento
+                        chart.resize();
                     }
                 }
-            }
-        });
-        
-        <?php else: ?>
-        // No hay datos, mostrar mensaje
-        $('#mv-chart-evolucion').parent().html(
-            '<div style="text-align: center; padding: 80px 20px; color: #666;">' +
-            '<span class="dashicons dashicons-chart-line" style="font-size: 48px; opacity: 0.3;"></span>' +
-            '<p style="margin-top: 10px;">No hay datos suficientes para mostrar el gráfico.</p>' +
-            '<p style="font-size: 13px;">Las estadísticas aparecerán cuando haya cotizaciones registradas.</p>' +
-            '</div>'
-        );
-        <?php endif; ?>
+            });
+            
+            <?php else: ?>
+            // No hay datos, mostrar mensaje
+            $('#mv-chart-evolucion').parent().html(
+                '<div style="text-align: center; padding: 80px 20px; color: #666;">' +
+                '<span class="dashicons dashicons-chart-line" style="font-size: 48px; opacity: 0.3;"></span>' +
+                '<p style="margin-top: 10px;">No hay datos suficientes para mostrar el gráfico.</p>' +
+                '<p style="font-size: 13px;">Las estadísticas aparecerán cuando haya cotizaciones registradas.</p>' +
+                '</div>'
+            );
+            <?php endif; ?>
+        }
     }
+    
+    // Crear el gráfico inicialmente
+    crearGrafico();
+    
+    // Manejar cambios de tamaño con debounce
+    var resizeTimer;
+    $(window).on('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            if (chartEvolucion) {
+                chartEvolucion.resize();
+            }
+        }, 250);
+    });
+    
+    // Detectar cambios de zoom
+    var lastWidth = $(window).width();
+    $(window).on('resize', function() {
+        if ($(window).width() !== lastWidth) {
+            lastWidth = $(window).width();
+            if (chartEvolucion) {
+                setTimeout(function() {
+                    chartEvolucion.resize();
+                }, 100);
+            }
+        }
+    });
     
     // Cerrar panel de bienvenida
     $('.mv-welcome-panel .notice-dismiss').on('click', function() {
         $('.mv-welcome-panel').slideUp();
-        // Guardar preferencia
         $.post(ajaxurl, {
             action: 'mv_dismiss_welcome',
             nonce: '<?php echo wp_create_nonce('mv_dismiss_welcome'); ?>'
         });
     });
     
-    // Tooltip en elementos
+    // Animación en hover de estadísticas (sin duplicar)
     $('.mv-stat-box').on('mouseenter', function() {
         $(this).find('.mv-stat-number').css('transform', 'scale(1.05)');
     }).on('mouseleave', function() {
         $(this).find('.mv-stat-number').css('transform', 'scale(1)');
-    });
-
-    // Animación de números al cargar
-    $('.mv-stat-number').each(function() {
-        var $this = $(this);
-        var countTo = parseInt($this.text().replace(/[^0-9]/g, ''));
-        if (!isNaN(countTo) && countTo > 0) {
-            $({countNum: 0}).animate({
-                countNum: countTo
-            }, {
-                duration: 1000,
-                easing: 'swing',
-                step: function() {
-                    $this.text(Math.floor(this.countNum));
-                },
-                complete: function() {
-                    $this.text(this.countNum);
-                }
-            });
-        }
     });
 });
 </script>

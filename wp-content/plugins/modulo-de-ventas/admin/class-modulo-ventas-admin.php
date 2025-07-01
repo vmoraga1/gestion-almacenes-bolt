@@ -1660,8 +1660,133 @@ class Modulo_Ventas_Admin {
      */
     private function obtener_estadisticas_dashboard() {
         $stats = array();
-        
+    
         // Cotizaciones del mes actual
+        $fecha_inicio = date('Y-m-01');
+        $fecha_fin = date('Y-m-d');
+        
+        // Usar el método directo de la DB
+        global $wpdb;
+        $tabla = $wpdb->prefix . 'mv_cotizaciones';
+        $tabla_clientes = $wpdb->prefix . 'mv_clientes';
+        $tabla_items = $wpdb->prefix . 'mv_cotizaciones_items';
+        
+        // Cotizaciones del mes
+        $stats['cotizaciones_mes'] = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM {$tabla} 
+            WHERE DATE(fecha) >= %s AND DATE(fecha) <= %s",
+            $fecha_inicio,
+            $fecha_fin
+        )) ?: 0;
+        
+        // Si no hay cotizaciones en el mes actual, buscar en general
+        if ($stats['cotizaciones_mes'] == 0) {
+            // Obtener total general para mostrar algo
+            $total_general = $wpdb->get_var("SELECT COUNT(*) FROM {$tabla}") ?: 0;
+            
+            // Si hay cotizaciones pero no en este mes, mostrar mensaje diferente
+            if ($total_general > 0) {
+                $stats['sin_datos_mes'] = true;
+                $stats['total_historico'] = $total_general;
+            }
+        }
+        
+        // Valor total del mes
+        $stats['valor_total_mes'] = $wpdb->get_var($wpdb->prepare(
+            "SELECT COALESCE(SUM(total), 0) FROM {$tabla} 
+            WHERE DATE(fecha) >= %s AND DATE(fecha) <= %s",
+            $fecha_inicio,
+            $fecha_fin
+        )) ?: 0;
+        
+        // Cotizaciones del mes anterior (para comparación)
+        $mes_anterior_inicio = date('Y-m-01', strtotime('-1 month'));
+        $mes_anterior_fin = date('Y-m-t', strtotime('-1 month'));
+        
+        $stats['cotizaciones_mes_anterior'] = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM {$tabla} 
+            WHERE DATE(fecha) >= %s AND DATE(fecha) <= %s",
+            $mes_anterior_inicio,
+            $mes_anterior_fin
+        )) ?: 0;
+        
+        // Por estado - contar TODAS las cotizaciones, no solo del mes
+        $estados = array('pendiente', 'aprobada', 'rechazada', 'expirada', 'convertida');
+        $stats['por_estado'] = array();
+        
+        foreach ($estados as $estado) {
+            $stats['por_estado'][$estado] = $wpdb->get_var($wpdb->prepare(
+                "SELECT COUNT(*) FROM {$tabla} WHERE estado = %s",
+                $estado
+            )) ?: 0;
+        }
+        
+        // Añadir estado 'borrador' si existe
+        $stats['por_estado']['borrador'] = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM {$tabla} WHERE estado = %s",
+            'borrador'
+        )) ?: 0;
+        
+        // Tasa de conversión
+        $total_cotizaciones = array_sum($stats['por_estado']);
+        $stats['tasa_conversion'] = $total_cotizaciones > 0 
+            ? round(($stats['por_estado']['convertida'] / $total_cotizaciones) * 100, 1)
+            : 0;
+        
+        // Próximas a expirar (próximos 7 días)
+        $fecha_limite = date('Y-m-d', strtotime('+7 days'));
+        $stats['proximas_expirar'] = $wpdb->get_var($wpdb->prepare(
+            "SELECT COUNT(*) FROM {$tabla} 
+            WHERE estado IN ('pendiente', 'enviada') 
+            AND fecha_expiracion <= %s 
+            AND fecha_expiracion >= %s",
+            $fecha_limite,
+            date('Y-m-d')
+        )) ?: 0;
+        
+        // Cotizaciones recientes (las últimas 5, sin importar el mes)
+        $stats['cotizaciones_recientes'] = $wpdb->get_results(
+            "SELECT c.*, cl.razon_social 
+            FROM {$tabla} c 
+            LEFT JOIN {$tabla_clientes} cl ON c.cliente_id = cl.id 
+            ORDER BY c.fecha DESC 
+            LIMIT 5"
+        );
+        
+        // Top clientes (general, no solo del mes)
+        $stats['top_clientes'] = $wpdb->get_results(
+            "SELECT 
+                cl.id, 
+                cl.razon_social, 
+                COUNT(c.id) as total_cotizaciones, 
+                COALESCE(SUM(c.total), 0) as valor_total
+            FROM {$tabla_clientes} cl
+            INNER JOIN {$tabla} c ON cl.id = c.cliente_id
+            GROUP BY cl.id, cl.razon_social
+            ORDER BY valor_total DESC
+            LIMIT 5"
+        );
+        
+        // Productos más cotizados (general)
+        $stats['productos_populares'] = $wpdb->get_results(
+            "SELECT 
+                ci.nombre, 
+                COUNT(DISTINCT ci.cotizacion_id) as veces_cotizado,
+                SUM(ci.cantidad) as cantidad_total
+            FROM {$tabla_items} ci
+            WHERE ci.nombre IS NOT NULL AND ci.nombre != ''
+            GROUP BY ci.nombre
+            ORDER BY veces_cotizado DESC
+            LIMIT 5"
+        );
+        
+        // Datos para el gráfico - últimos 6 meses
+        $stats['cotizaciones_por_mes'] = $this->db->obtener_cotizaciones_por_mes(6);
+        
+        return $stats;
+    }
+
+        /*// Cotizaciones del mes actual
         $fecha_inicio = date('Y-m-01');
         $fecha_fin = date('Y-m-d');
         
@@ -1727,7 +1852,7 @@ class Modulo_Ventas_Admin {
         ));
         
         return $stats;
-    }
+    }*/
     
     /**
      * Generar reportes

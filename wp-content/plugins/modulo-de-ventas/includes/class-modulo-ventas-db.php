@@ -1717,4 +1717,5 @@ class Modulo_Ventas_DB {
         
         return $resultados;
     }
+    
 }
