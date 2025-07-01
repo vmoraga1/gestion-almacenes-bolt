@@ -1,4 +1,8 @@
 <?php
+// Debug temporal - agregar después del <?php
+    add_action('wp_ajax_mv_agregar_nota_cliente', function() {
+        wp_send_json_success(array('message' => 'Handler funcionando!'));
+    });
 /**
  * Clase para manejar todas las peticiones AJAX del Módulo de Ventas
  *
@@ -10,6 +14,7 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+
 
 class Modulo_Ventas_Ajax {
     
@@ -74,6 +79,10 @@ class Modulo_Ventas_Ajax {
             'mv_validar_rut' => 'validar_rut',
             'mv_obtener_comunas' => 'obtener_comunas',
             'mv_sincronizar_cliente_wc' => 'sincronizar_cliente_woocommerce',
+            // Notas de clientes
+            'mv_agregar_nota_cliente' => 'agregar_nota_cliente',
+            'mv_eliminar_nota_cliente' => 'eliminar_nota_cliente',
+            'mv_actualizar_nota_cliente' => 'actualizar_nota_cliente',
             
             // Reportes y estadísticas
             'mv_obtener_estadisticas' => 'obtener_estadisticas',
@@ -1245,6 +1254,119 @@ class Modulo_Ventas_Ajax {
         }
         
         wp_send_json_success(array('message' => __('Cliente sincronizado con WooCommerce', 'modulo-ventas')));
+    }
+
+    /**
+     * AJAX: Agregar nota a cliente
+     */
+    public function agregar_nota_cliente() {
+        // Verificar nonce
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mv_agregar_nota_cliente')) {
+            wp_send_json_error(array('message' => __('Error de seguridad', 'modulo-ventas')));
+        }
+        
+        // Verificar permisos
+        if (!current_user_can('manage_clientes_ventas')) {
+            wp_send_json_error(array('message' => __('No tiene permisos suficientes', 'modulo-ventas')));
+        }
+        
+        // Validar datos
+        $cliente_id = isset($_POST['cliente_id']) ? intval($_POST['cliente_id']) : 0;
+        $nota = isset($_POST['nota']) ? sanitize_textarea_field($_POST['nota']) : '';
+        $tipo = isset($_POST['tipo']) ? sanitize_text_field($_POST['tipo']) : 'general';
+        $es_privada = isset($_POST['es_privada']) ? intval($_POST['es_privada']) : 0;
+        
+        if (!$cliente_id || empty($nota)) {
+            wp_send_json_error(array('message' => __('Datos incompletos', 'modulo-ventas')));
+        }
+        
+        // Crear nota
+        $resultado = $this->db->crear_nota_cliente($cliente_id, $nota, $tipo, $es_privada);
+        
+        if (is_wp_error($resultado)) {
+            wp_send_json_error(array('message' => $resultado->get_error_message()));
+        }
+        
+        // Log de actividad
+        $this->logger->log("Nota agregada al cliente ID: {$cliente_id}", 'info');
+        
+        wp_send_json_success(array(
+            'message' => __('Nota agregada correctamente', 'modulo-ventas'),
+            'nota_id' => $resultado
+        ));
+    }
+
+    /**
+     * AJAX: Eliminar nota de cliente
+     */
+    public function eliminar_nota_cliente() {
+        // Verificar nonce
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mv_eliminar_nota')) {
+            wp_send_json_error(array('message' => __('Error de seguridad', 'modulo-ventas')));
+        }
+        
+        // Verificar permisos
+        if (!current_user_can('manage_clientes_ventas')) {
+            wp_send_json_error(array('message' => __('No tiene permisos suficientes', 'modulo-ventas')));
+        }
+        
+        // Validar datos
+        $nota_id = isset($_POST['nota_id']) ? intval($_POST['nota_id']) : 0;
+        
+        if (!$nota_id) {
+            wp_send_json_error(array('message' => __('ID de nota inválido', 'modulo-ventas')));
+        }
+        
+        // Eliminar nota
+        $resultado = $this->db->eliminar_nota_cliente($nota_id);
+        
+        if (is_wp_error($resultado)) {
+            wp_send_json_error(array('message' => $resultado->get_error_message()));
+        }
+        
+        if (!$resultado) {
+            wp_send_json_error(array('message' => __('Error al eliminar la nota', 'modulo-ventas')));
+        }
+        
+        wp_send_json_success(array(
+            'message' => __('Nota eliminada correctamente', 'modulo-ventas')
+        ));
+    }
+
+    /**
+     * AJAX: Actualizar nota de cliente
+     */
+    public function actualizar_nota_cliente() {
+        // Verificar nonce
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mv_actualizar_nota')) {
+            wp_send_json_error(array('message' => __('Error de seguridad', 'modulo-ventas')));
+        }
+        
+        // Verificar permisos
+        if (!current_user_can('manage_clientes_ventas')) {
+            wp_send_json_error(array('message' => __('No tiene permisos suficientes', 'modulo-ventas')));
+        }
+        
+        // Validar datos
+        $nota_id = isset($_POST['nota_id']) ? intval($_POST['nota_id']) : 0;
+        $texto_nota = isset($_POST['nota']) ? sanitize_textarea_field($_POST['nota']) : '';
+        $tipo = isset($_POST['tipo']) ? sanitize_text_field($_POST['tipo']) : null;
+        $es_privada = isset($_POST['es_privada']) ? intval($_POST['es_privada']) : null;
+        
+        if (!$nota_id || empty($texto_nota)) {
+            wp_send_json_error(array('message' => __('Datos incompletos', 'modulo-ventas')));
+        }
+        
+        // Actualizar nota
+        $resultado = $this->db->actualizar_nota_cliente($nota_id, $texto_nota, $tipo, $es_privada);
+        
+        if (!$resultado) {
+            wp_send_json_error(array('message' => __('Error al actualizar la nota', 'modulo-ventas')));
+        }
+        
+        wp_send_json_success(array(
+            'message' => __('Nota actualizada correctamente', 'modulo-ventas')
+        ));
     }
     
     /**

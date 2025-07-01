@@ -163,7 +163,7 @@ if (!function_exists('mv_tooltip')) {
                         
                         <?php if (mv_almacenes_activo() && !empty($almacenes)) : ?>
                         <!-- Almacén predeterminado -->
-                        <div class="mv-form-group">
+                        <!--<div class="mv-form-group"> * ACTIVAR DESPUÉS *
                             <label for="almacen_id">
                                 <?php _e('Almacén predeterminado', 'modulo-ventas'); ?>
                                 <?php echo mv_tooltip(
@@ -180,7 +180,7 @@ if (!function_exists('mv_tooltip')) {
                                     </option>
                                 <?php endforeach; ?>
                             </select>
-                        </div>
+                        </div>-->
                         <?php endif; ?>
                         
                         <!-- IVA -->

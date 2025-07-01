@@ -48,6 +48,7 @@ class Clientes_List_Table extends WP_List_Table {
             'telefono'      => __('Teléfono', 'modulo-ventas'),
             'ciudad'        => __('Ciudad', 'modulo-ventas'),
             'cotizaciones'  => __('Cotizaciones', 'modulo-ventas'),
+            'notas'         => __('Notas', 'modulo-ventas'),
             'ultima_actividad' => __('Última Actividad', 'modulo-ventas'),
             'estado'        => __('Estado', 'modulo-ventas')
         );
@@ -196,6 +197,27 @@ class Clientes_List_Table extends WP_List_Table {
             );
         }
         return '<span style="color: #999;">0</span>';
+    }
+
+    /**
+     * Columna notas
+     */
+    public function column_notas($item) {
+        $count = $this->db->contar_notas_cliente($item['id']);
+        
+        if ($count > 0) {
+            return sprintf(
+                '<a href="%s#mv-notas" title="%s">
+                    <span class="dashicons dashicons-admin-comments"></span>
+                    <span class="mv-notas-count">%d</span>
+                </a>',
+                admin_url('admin.php?page=modulo-ventas-ver-cliente&id=' . $item['id']),
+                sprintf(_n('%d nota', '%d notas', $count, 'modulo-ventas'), $count),
+                $count
+            );
+        }
+        
+        return '<span class="dashicons dashicons-admin-comments" style="color: #ddd;"></span>';
     }
     
     /**

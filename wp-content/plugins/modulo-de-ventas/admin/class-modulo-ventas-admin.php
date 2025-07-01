@@ -52,6 +52,11 @@ class Modulo_Ventas_Admin {
         add_action('wp_ajax_mv_obtener_comunas', array($this, 'ajax_obtener_comunas'));
         add_action('wp_ajax_mv_exportar_cotizaciones', array($this, 'ajax_exportar_cotizaciones'));
         add_action('wp_ajax_mv_obtener_estadisticas', array($this, 'ajax_obtener_estadisticas'));
+
+        // Handlers de notas
+        add_action('wp_ajax_mv_agregar_nota_cliente', array($this, 'ajax_agregar_nota_cliente'));
+        add_action('wp_ajax_mv_eliminar_nota_cliente', array($this, 'ajax_eliminar_nota_cliente'));
+        add_action('wp_ajax_mv_actualizar_nota_cliente', array($this, 'ajax_actualizar_nota_cliente'));
         
         // Configuración del plugin
         add_action('admin_init', array($this, 'registrar_configuracion'));
@@ -1443,6 +1448,97 @@ class Modulo_Ventas_Admin {
             wp_die(__('Cliente no encontrado.', 'modulo-ventas'));
         }
         
+        // Procesar formulario de nota si fue enviado
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mv_nota_nonce'])) {
+            if (wp_verify_nonce($_POST['mv_nota_nonce'], 'mv_agregar_nota_cliente')) {
+                $nota = isset($_POST['nota']) ? sanitize_textarea_field($_POST['nota']) : '';
+                $tipo = isset($_POST['tipo']) ? sanitize_text_field($_POST['tipo']) : 'general';
+                $es_privada = isset($_POST['es_privada']) ? intval($_POST['es_privada']) : 0;
+                
+                if (!empty($nota)) {
+                    $resultado = $this->db->crear_nota_cliente($cliente_id, $nota, $tipo, $es_privada);
+                    
+                    if (!is_wp_error($resultado)) {
+                        // Agregar mensaje de éxito
+                        add_settings_error(
+                            'mv_mensajes',
+                            'nota_agregada',
+                            __('Nota agregada correctamente.', 'modulo-ventas'),
+                            'success'
+                        );
+                        
+                        // Redireccionar para evitar reenvío del formulario
+                        wp_redirect(add_query_arg(array(
+                            'page' => 'modulo-ventas-ver-cliente',
+                            'id' => $cliente_id,
+                            'mensaje' => 'nota_agregada'
+                        ), admin_url('admin.php')));
+                        exit;
+                    }
+                }
+            }
+        }
+        
+        // Obtener estadísticas
+        $estadisticas = $this->obtener_estadisticas_cliente($cliente_id);
+        
+        // Obtener cotizaciones recientes con paginación
+        $pagina_actual = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+        $items_por_pagina = 10;
+        
+        $resultado_cotizaciones = $this->db->obtener_cotizaciones(array(
+            'cliente_id' => $cliente_id,
+            'por_pagina' => $items_por_pagina,
+            'pagina' => $pagina_actual,
+            'ordenar_por' => 'fecha',
+            'orden' => 'DESC'
+        ));
+        
+        $cotizaciones_recientes = isset($resultado_cotizaciones['items']) ? $resultado_cotizaciones['items'] : array();
+        
+        // Obtener pedidos si WooCommerce está activo
+        $pedidos = array();
+        if (function_exists('wc_get_orders') && $cliente->user_id) {
+            $pedidos = wc_get_orders(array(
+                'customer_id' => $cliente->user_id,
+                'limit' => 10,
+                'orderby' => 'date',
+                'order' => 'DESC',
+                'status' => array('completed', 'processing', 'on-hold'),
+                'return' => 'objects'
+            ));
+        }
+        
+        // Obtener actividad reciente
+        $actividad = $this->obtener_actividad_cliente($cliente_id);
+        
+        // Obtener notas del cliente
+        $notas = $this->db->obtener_notas_cliente($cliente_id);
+        
+        // Pasar la instancia de db a la vista para las funciones de notas
+        $db = $this->db;
+        
+        // Cargar vista
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/views/cliente-detalle.php';
+        /*// Verificar permisos
+        if (!current_user_can('manage_clientes_ventas')) {
+            wp_die(__('No tiene permisos suficientes para acceder a esta página.', 'modulo-ventas'));
+        }
+        
+        // Obtener ID
+        $cliente_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+        
+        if (!$cliente_id) {
+            wp_die(__('ID de cliente inválido.', 'modulo-ventas'));
+        }
+        
+        // Obtener cliente
+        $cliente = $this->db->obtener_cliente($cliente_id);
+        
+        if (!$cliente) {
+            wp_die(__('Cliente no encontrado.', 'modulo-ventas'));
+        }
+        
         // Obtener estadísticas completas del cliente
         $estadisticas = $this->obtener_estadisticas_completas_cliente($cliente_id);
         
@@ -1470,6 +1566,7 @@ class Modulo_Ventas_Admin {
         
         // Cargar vista
         require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/views/cliente-detalle.php';
+        */
     }
 
     /**
@@ -2326,26 +2423,40 @@ class Modulo_Ventas_Admin {
      */
     private function obtener_estadisticas_cliente($cliente_id) {
         global $wpdb;
-        
         $tabla_cotizaciones = $wpdb->prefix . 'mv_cotizaciones';
+        $tabla_items = $wpdb->prefix . 'mv_cotizaciones_items';
         
+        // Inicializar TODAS las estadísticas con valores por defecto
         $estadisticas = array(
+            // Cotizaciones
             'total_cotizaciones' => 0,
             'cotizaciones_pendientes' => 0,
             'cotizaciones_aprobadas' => 0,
             'cotizaciones_convertidas' => 0,
+            'cotizaciones_rechazadas' => 0,
+            'cotizaciones_expiradas' => 0,
+            
+            // Montos
             'monto_total_cotizado' => 0,
             'monto_total_aprobado' => 0,
-            'ultima_cotizacion' => null
+            'monto_total_convertido' => 0,
+            'monto_promedio_cotizacion' => 0,
+            
+            // Productos
+            'productos_mas_cotizados' => array(),
+            'total_productos_cotizados' => 0,
+            
+            // Tendencias
+            'cotizaciones_por_mes' => array(),
+            'tasa_conversion' => 0,
+            'tiempo_promedio_decision' => 0,
+            
+            // Última actividad
+            'ultima_cotizacion' => null,
+            'ultimo_pedido' => null
         );
         
-        // Total de cotizaciones
-        $estadisticas['total_cotizaciones'] = $wpdb->get_var($wpdb->prepare(
-            "SELECT COUNT(*) FROM $tabla_cotizaciones WHERE cliente_id = %d",
-            $cliente_id
-        ));
-        
-        // Cotizaciones por estado
+        // Estadísticas por estado
         $estados = $wpdb->get_results($wpdb->prepare(
             "SELECT estado, COUNT(*) as cantidad, SUM(total) as monto 
             FROM $tabla_cotizaciones 
@@ -2354,31 +2465,100 @@ class Modulo_Ventas_Admin {
             $cliente_id
         ), ARRAY_A);
         
+        $total_cotizaciones = 0;
+        $monto_total = 0;
+        
         foreach ($estados as $estado) {
+            $cantidad = intval($estado['cantidad']);
+            $monto = floatval($estado['monto']);
+            $total_cotizaciones += $cantidad;
+            $monto_total += $monto;
+            
             switch ($estado['estado']) {
                 case 'pendiente':
-                    $estadisticas['cotizaciones_pendientes'] = $estado['cantidad'];
+                case 'enviada':
+                    $estadisticas['cotizaciones_pendientes'] += $cantidad;
                     break;
                 case 'aprobada':
-                    $estadisticas['cotizaciones_aprobadas'] = $estado['cantidad'];
-                    $estadisticas['monto_total_aprobado'] = $estado['monto'];
+                    $estadisticas['cotizaciones_aprobadas'] = $cantidad;
+                    $estadisticas['monto_total_aprobado'] = $monto;
                     break;
                 case 'convertida':
-                    $estadisticas['cotizaciones_convertidas'] = $estado['cantidad'];
+                    $estadisticas['cotizaciones_convertidas'] = $cantidad;
+                    $estadisticas['monto_total_convertido'] = $monto;
+                    break;
+                case 'rechazada':
+                    $estadisticas['cotizaciones_rechazadas'] = $cantidad;
+                    break;
+                case 'expirada':
+                    $estadisticas['cotizaciones_expiradas'] = $cantidad;
                     break;
             }
-            $estadisticas['monto_total_cotizado'] += $estado['monto'];
         }
         
-        // Última cotización
-        $estadisticas['ultima_cotizacion'] = $wpdb->get_row($wpdb->prepare(
-            "SELECT folio, fecha, total, estado 
-            FROM $tabla_cotizaciones 
-            WHERE cliente_id = %d 
-            ORDER BY fecha DESC 
-            LIMIT 1",
+        $estadisticas['total_cotizaciones'] = $total_cotizaciones;
+        $estadisticas['monto_total_cotizado'] = $monto_total;
+        
+        // Calcular promedios y tasas SOLO si hay cotizaciones
+        if ($total_cotizaciones > 0) {
+            $estadisticas['monto_promedio_cotizacion'] = $monto_total / $total_cotizaciones;
+            
+            // Tasa de conversión: (aprobadas + convertidas) / total * 100
+            $conversiones = $estadisticas['cotizaciones_aprobadas'] + $estadisticas['cotizaciones_convertidas'];
+            $estadisticas['tasa_conversion'] = ($conversiones / $total_cotizaciones) * 100;
+        }
+        
+        // Productos más cotizados
+        $productos = $wpdb->get_results($wpdb->prepare(
+            "SELECT 
+                i.producto_id,
+                i.nombre as producto_nombre,
+                COUNT(DISTINCT i.cotizacion_id) as veces_cotizado,
+                SUM(i.cantidad) as cantidad_total,
+                SUM(i.subtotal) as monto_total
+            FROM $tabla_items i
+            INNER JOIN $tabla_cotizaciones c ON i.cotizacion_id = c.id
+            WHERE c.cliente_id = %d
+            GROUP BY i.producto_id, i.nombre
+            ORDER BY veces_cotizado DESC, monto_total DESC
+            LIMIT 5",
+            $cliente_id
+        ), ARRAY_A);
+
+        $estadisticas['productos_mas_cotizados'] = $productos;
+        $estadisticas['total_productos_cotizados'] = count($productos);
+        
+        // Tiempo promedio de decisión
+        $tiempo_decision = $wpdb->get_var($wpdb->prepare(
+            "SELECT AVG(DATEDIFF(
+                COALESCE(fecha_modificacion, fecha), 
+                fecha
+            ))
+            FROM $tabla_cotizaciones
+            WHERE cliente_id = %d
+            AND estado IN ('aprobada', 'rechazada', 'convertida')
+            AND fecha IS NOT NULL
+            AND fecha_modificacion IS NOT NULL",
             $cliente_id
         ));
+        
+        $estadisticas['tiempo_promedio_decision'] = $tiempo_decision ? round($tiempo_decision) : 0;
+        
+        // Cotizaciones por mes (últimos 12 meses)
+        $cotizaciones_mes = $wpdb->get_results($wpdb->prepare(
+            "SELECT 
+                DATE_FORMAT(fecha, '%%Y-%%m') as mes,
+                COUNT(*) as cantidad,
+                SUM(total) as monto
+            FROM $tabla_cotizaciones
+            WHERE cliente_id = %d
+            AND fecha >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
+            GROUP BY mes
+            ORDER BY mes DESC",
+            $cliente_id
+        ), ARRAY_A);
+        
+        $estadisticas['cotizaciones_por_mes'] = $cotizaciones_mes;
         
         return $estadisticas;
     }
@@ -2621,5 +2801,126 @@ class Modulo_Ventas_Admin {
         $estadisticas = $this->obtener_estadisticas_completas($periodo);
         
         wp_send_json_success(array('estadisticas' => $estadisticas));
+    }
+
+    /**
+     * AJAX: Agregar nota a cliente
+     */
+    public function ajax_agregar_nota_cliente() {
+        // Verificar nonce
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mv_agregar_nota_cliente')) {
+            wp_send_json_error(array('message' => __('Error de seguridad', 'modulo-ventas')));
+            wp_die(); // Importante: terminar la ejecución
+        }
+        
+        // Verificar permisos
+        if (!current_user_can('manage_clientes_ventas')) {
+            wp_send_json_error(array('message' => __('No tiene permisos suficientes', 'modulo-ventas')));
+            wp_die();
+        }
+        
+        // Validar datos
+        $cliente_id = isset($_POST['cliente_id']) ? intval($_POST['cliente_id']) : 0;
+        $nota = isset($_POST['nota']) ? sanitize_textarea_field($_POST['nota']) : '';
+        $tipo = isset($_POST['tipo']) ? sanitize_text_field($_POST['tipo']) : 'general';
+        $es_privada = isset($_POST['es_privada']) ? intval($_POST['es_privada']) : 0;
+        
+        if (!$cliente_id || empty($nota)) {
+            wp_send_json_error(array('message' => __('Datos incompletos', 'modulo-ventas')));
+            wp_die();
+        }
+        
+        // Crear nota
+        $resultado = $this->db->crear_nota_cliente($cliente_id, $nota, $tipo, $es_privada);
+        
+        if (is_wp_error($resultado)) {
+            wp_send_json_error(array('message' => $resultado->get_error_message()));
+            wp_die();
+        }
+        
+        // Log de actividad
+        $logger = Modulo_Ventas_Logger::get_instance();
+        $logger->log("Nota agregada al cliente ID: {$cliente_id}", 'info');
+        
+        // Enviar respuesta exitosa
+        wp_send_json_success(array(
+            'message' => __('Nota agregada correctamente', 'modulo-ventas'),
+            'nota_id' => $resultado
+        ));
+        
+        wp_die();
+    }
+
+    /**
+     * AJAX: Eliminar nota de cliente
+     */
+    public function ajax_eliminar_nota_cliente() {
+        // Verificar nonce
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mv_eliminar_nota')) {
+            wp_send_json_error(array('message' => __('Error de seguridad', 'modulo-ventas')));
+        }
+        
+        // Verificar permisos
+        if (!current_user_can('manage_clientes_ventas')) {
+            wp_send_json_error(array('message' => __('No tiene permisos suficientes', 'modulo-ventas')));
+        }
+        
+        // Validar datos
+        $nota_id = isset($_POST['nota_id']) ? intval($_POST['nota_id']) : 0;
+        
+        if (!$nota_id) {
+            wp_send_json_error(array('message' => __('ID de nota inválido', 'modulo-ventas')));
+        }
+        
+        // Eliminar nota
+        $resultado = $this->db->eliminar_nota_cliente($nota_id);
+        
+        if (is_wp_error($resultado)) {
+            wp_send_json_error(array('message' => $resultado->get_error_message()));
+        }
+        
+        if (!$resultado) {
+            wp_send_json_error(array('message' => __('Error al eliminar la nota', 'modulo-ventas')));
+        }
+        
+        wp_send_json_success(array(
+            'message' => __('Nota eliminada correctamente', 'modulo-ventas')
+        ));
+    }
+
+    /**
+     * AJAX: Actualizar nota de cliente
+     */
+    public function ajax_actualizar_nota_cliente() {
+        // Verificar nonce
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mv_actualizar_nota')) {
+            wp_send_json_error(array('message' => __('Error de seguridad', 'modulo-ventas')));
+        }
+        
+        // Verificar permisos
+        if (!current_user_can('manage_clientes_ventas')) {
+            wp_send_json_error(array('message' => __('No tiene permisos suficientes', 'modulo-ventas')));
+        }
+        
+        // Validar datos
+        $nota_id = isset($_POST['nota_id']) ? intval($_POST['nota_id']) : 0;
+        $texto_nota = isset($_POST['nota']) ? sanitize_textarea_field($_POST['nota']) : '';
+        $tipo = isset($_POST['tipo']) ? sanitize_text_field($_POST['tipo']) : null;
+        $es_privada = isset($_POST['es_privada']) ? intval($_POST['es_privada']) : null;
+        
+        if (!$nota_id || empty($texto_nota)) {
+            wp_send_json_error(array('message' => __('Datos incompletos', 'modulo-ventas')));
+        }
+        
+        // Actualizar nota
+        $resultado = $this->db->actualizar_nota_cliente($nota_id, $texto_nota, $tipo, $es_privada);
+        
+        if (!$resultado) {
+            wp_send_json_error(array('message' => __('Error al actualizar la nota', 'modulo-ventas')));
+        }
+        
+        wp_send_json_success(array(
+            'message' => __('Nota actualizada correctamente', 'modulo-ventas')
+        ));
     }
 }

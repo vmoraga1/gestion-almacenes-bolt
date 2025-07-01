@@ -368,6 +368,102 @@ if (!defined('ABSPATH')) {
                 <p class="mv-no-items"><?php _e('No hay actividad registrada.', 'modulo-ventas'); ?></p>
             <?php endif; ?>
         </div>
+
+        <!-- Notas del Cliente -->
+        <div class="postbox">
+            <h2 class="hndle">
+                <span><?php _e('Notas y Comentarios', 'modulo-ventas'); ?></span>
+                <span class="mv-count">(<?php echo $db->contar_notas_cliente($cliente->id); ?>)</span>
+            </h2>
+            <div class="inside">
+                <!-- Formulario para agregar nota -->
+                <div class="mv-nueva-nota-form">
+                    <form id="mv-form-nueva-nota" method="post">
+                        <?php wp_nonce_field('mv_agregar_nota_cliente', 'mv_nota_nonce'); ?>
+                        <input type="hidden" name="action" value="agregar_nota">
+                        <input type="hidden" name="cliente_id" value="<?php echo esc_attr($cliente->id); ?>">
+                        
+                        <div class="mv-form-group">
+                            <textarea name="nota" id="nueva_nota" rows="3" class="widefat" 
+                                    placeholder="<?php esc_attr_e('Escriba una nota o comentario...', 'modulo-ventas'); ?>" 
+                                    required></textarea>
+                        </div>
+                        
+                        <div class="mv-nota-opciones">
+                            <select name="tipo" id="tipo_nota" class="mv-select-tipo">
+                                <?php foreach ($db->obtener_tipos_notas() as $valor => $etiqueta): ?>
+                                    <option value="<?php echo esc_attr($valor); ?>">
+                                        <?php echo esc_html($etiqueta); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            
+                            <label class="mv-checkbox-privada">
+                                <input type="checkbox" name="es_privada" value="1">
+                                <?php _e('Nota privada', 'modulo-ventas'); ?>
+                                <span class="description"><?php _e('(solo visible para ti)', 'modulo-ventas'); ?></span>
+                            </label>
+                            
+                            <button type="submit" class="button button-primary">
+                                <?php _e('Agregar Nota', 'modulo-ventas'); ?>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Lista de notas existentes -->
+                <div class="mv-notas-lista">
+                    <?php
+                    $notas = $db->obtener_notas_cliente($cliente->id);
+                    if (empty($notas)): ?>
+                        <p class="mv-no-notas"><?php _e('No hay notas para este cliente.', 'modulo-ventas'); ?></p>
+                    <?php else: ?>
+                        <?php foreach ($notas as $nota): ?>
+                            <div class="mv-nota-item <?php echo $nota->es_privada ? 'mv-nota-privada' : ''; ?>">
+                                <div class="mv-nota-header">
+                                    <span class="mv-nota-tipo mv-tipo-<?php echo esc_attr($nota->tipo); ?>">
+                                        <?php 
+                                        $tipos = $db->obtener_tipos_notas();
+                                        echo esc_html($tipos[$nota->tipo] ?? $nota->tipo); 
+                                        ?>
+                                    </span>
+                                    <span class="mv-nota-autor">
+                                        <?php echo esc_html($nota->autor_nombre); ?>
+                                    </span>
+                                    <span class="mv-nota-fecha">
+                                        <?php echo human_time_diff(strtotime($nota->fecha_creacion), current_time('timestamp')) . ' ' . __('atrás', 'modulo-ventas'); ?>
+                                    </span>
+                                    <?php if ($nota->es_privada): ?>
+                                        <span class="mv-nota-privada-badge" title="<?php esc_attr_e('Nota privada', 'modulo-ventas'); ?>">
+                                            <span class="dashicons dashicons-lock"></span>
+                                        </span>
+                                    <?php endif; ?>
+                                    
+                                    <?php if ($nota->creado_por == get_current_user_id()): ?>
+                                        <div class="mv-nota-acciones">
+                                            <a href="#" class="mv-editar-nota" data-nota-id="<?php echo esc_attr($nota->id); ?>">
+                                                <?php _e('Editar', 'modulo-ventas'); ?>
+                                            </a>
+                                            <a href="#" class="mv-eliminar-nota" data-nota-id="<?php echo esc_attr($nota->id); ?>">
+                                                <?php _e('Eliminar', 'modulo-ventas'); ?>
+                                            </a>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="mv-nota-contenido">
+                                    <?php echo nl2br(esc_html($nota->nota)); ?>
+                                </div>
+                                <?php if ($nota->fecha_actualizacion != $nota->fecha_creacion): ?>
+                                    <div class="mv-nota-editado">
+                                        <em><?php _e('Editado', 'modulo-ventas'); ?></em>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -652,6 +748,130 @@ if (!defined('ABSPATH')) {
     border-bottom: none;
 }
 
+/* Estilos para la sección de notas */
+.mv-nueva-nota-form {
+    background: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #e1e1e1;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.mv-nota-opciones {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.mv-select-tipo {
+    min-width: 150px;
+}
+
+.mv-checkbox-privada {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-right: auto;
+}
+
+.mv-checkbox-privada .description {
+    color: #666;
+    font-size: 12px;
+}
+
+.mv-notas-lista {
+    margin-top: 20px;
+}
+
+.mv-nota-item {
+    background: #fff;
+    border: 1px solid #e1e1e1;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.mv-nota-privada {
+    background: #fffbf0;
+    border-color: #f0c36d;
+}
+
+.mv-nota-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: #666;
+}
+
+.mv-nota-tipo {
+    background: #2271b1;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.mv-tipo-llamada { background: #00a32a; }
+.mv-tipo-reunion { background: #8c5cff; }
+.mv-tipo-email { background: #0073aa; }
+.mv-tipo-seguimiento { background: #f0b849; color: #000; }
+.mv-tipo-cotizacion { background: #00a0d2; }
+.mv-tipo-reclamo { background: #d63638; }
+.mv-tipo-observacion { background: #666; }
+
+.mv-nota-fecha {
+    margin-left: auto;
+}
+
+.mv-nota-privada-badge {
+    color: #f0c36d;
+}
+
+.mv-nota-acciones {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.mv-nota-acciones a {
+    margin-left: 10px;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.mv-nota-acciones a:hover {
+    text-decoration: underline;
+}
+
+.mv-nota-contenido {
+    line-height: 1.6;
+    color: #333;
+}
+
+.mv-nota-editado {
+    margin-top: 5px;
+    font-size: 11px;
+    color: #999;
+}
+
+.mv-no-notas {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+
+.mv-count {
+    font-weight: normal;
+    color: #666;
+}
+/* Fin sección notas clientes */
+
 /* Responsive */
 @media screen and (max-width: 1200px) {
     .mv-stats-grid {
@@ -717,5 +937,95 @@ jQuery(document).ready(function($) {
         console.log('Datos para gráfico:', {labels, cantidades, montos});
     }
     <?php endif; ?>
+
+    // Manejar envío del formulario de nueva nota
+    $('#mv-form-nueva-nota').on('submit', function(e) {
+        e.preventDefault();
+        
+        var $form = $(this);
+        var $submit = $form.find('button[type="submit"]');
+        
+        $submit.prop('disabled', true).text('<?php _e('Agregando...', 'modulo-ventas'); ?>');
+        
+        $.ajax({
+            url: window.ajaxurl,
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                action: 'mv_agregar_nota_cliente',
+                nonce: $form.find('input[name="mv_nota_nonce"]').val(),
+                cliente_id: $form.find('input[name="cliente_id"]').val(),
+                nota: $form.find('textarea[name="nota"]').val(),
+                tipo: $form.find('select[name="tipo"]').val(),
+                es_privada: $form.find('input[name="es_privada"]').is(':checked') ? 1 : 0
+            },
+            success: function(response) {
+                console.log('Respuesta del servidor:', response); // Debug
+                
+                if (response && response.success) {
+                    // Recargar la página para mostrar la nueva nota
+                    location.reload();
+                } else {
+                    // Manejar error
+                    var mensaje = 'Error al agregar la nota';
+                    if (response && response.data && response.data.message) {
+                        mensaje = response.data.message;
+                    }
+                    alert(mensaje);
+                    $submit.prop('disabled', false).text('<?php _e('Agregar Nota', 'modulo-ventas'); ?>');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error AJAX:', error);
+                console.error('Respuesta:', xhr.responseText);
+                alert('<?php _e('Error de conexión. Por favor, intente nuevamente.', 'modulo-ventas'); ?>');
+                $submit.prop('disabled', false).text('<?php _e('Agregar Nota', 'modulo-ventas'); ?>');
+            }
+        });
+    });
+    
+    // Manejar eliminación de notas
+    $('.mv-eliminar-nota').on('click', function(e) {
+        e.preventDefault();
+        
+        if (!confirm('<?php _e('¿Está seguro de eliminar esta nota?', 'modulo-ventas'); ?>')) {
+            return;
+        }
+        
+        var $link = $(this);
+        var notaId = $link.data('nota-id');
+        
+        $.ajax({
+            url: window.ajaxurl,
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                action: 'mv_eliminar_nota_cliente',
+                nonce: '<?php echo wp_create_nonce('mv_eliminar_nota'); ?>',
+                nota_id: notaId
+            },
+            success: function(response) {
+                if (response && response.success) {
+                    $link.closest('.mv-nota-item').fadeOut(function() {
+                        $(this).remove();
+                        // Si no quedan notas, mostrar mensaje
+                        if ($('.mv-nota-item').length === 0) {
+                            $('.mv-notas-lista').html('<p class="mv-no-notas"><?php _e('No hay notas para este cliente.', 'modulo-ventas'); ?></p>');
+                        }
+                    });
+                } else {
+                    var mensaje = 'Error al eliminar la nota';
+                    if (response && response.data && response.data.message) {
+                        mensaje = response.data.message;
+                    }
+                    alert(mensaje);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error AJAX:', error);
+                alert('<?php _e('Error al eliminar la nota', 'modulo-ventas'); ?>');
+            }
+        });
+    });
 });
 </script>

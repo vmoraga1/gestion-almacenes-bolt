@@ -30,6 +30,7 @@ class Modulo_Ventas_DB {
     private $tabla_cotizaciones_items;
     private $tabla_clientes;
     private $tabla_clientes_meta;
+    private $tabla_clientes_notas;
     
     /**
      * Constructor
@@ -43,6 +44,8 @@ class Modulo_Ventas_DB {
         $this->tabla_cotizaciones_items = $wpdb->prefix . 'mv_cotizaciones_items';
         $this->tabla_clientes = $wpdb->prefix . 'mv_clientes';
         $this->tabla_clientes_meta = $wpdb->prefix . 'mv_clientes_meta';
+        $this->tabla_clientes_notas = $wpdb->prefix . 'mv_clientes_notas';
+
     }
     
     /**
@@ -88,6 +91,7 @@ class Modulo_Ventas_DB {
         $this->crear_tabla_clientes_meta();
         $this->crear_tabla_cotizaciones();
         $this->crear_tabla_cotizaciones_items();
+        $this->crear_tabla_clientes_notas();
         
         // Log
         $logger = Modulo_Ventas_Logger::get_instance();
@@ -156,6 +160,31 @@ class Modulo_Ventas_DB {
             PRIMARY KEY (meta_id),
             KEY cliente_id (cliente_id),
             KEY meta_key (meta_key)
+        ) $charset_collate;";
+        
+        dbDelta($sql);
+    }
+
+    /**
+     * Crear tabla de notas de clientes
+     */
+    private function crear_tabla_clientes_notas() {
+        $charset_collate = $this->wpdb->get_charset_collate();
+        
+        $sql = "CREATE TABLE {$this->tabla_clientes_notas} (
+            id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            cliente_id bigint(20) UNSIGNED NOT NULL,
+            nota text NOT NULL,
+            tipo varchar(50) DEFAULT 'general' COMMENT 'general, llamada, reunion, seguimiento, etc',
+            es_privada tinyint(1) DEFAULT 0 COMMENT 'Si es privada, solo la ve quien la creó',
+            creado_por bigint(20) UNSIGNED NOT NULL COMMENT 'ID del usuario que creó la nota',
+            fecha_creacion datetime DEFAULT CURRENT_TIMESTAMP,
+            fecha_actualizacion datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            KEY cliente_id (cliente_id),
+            KEY creado_por (creado_por),
+            KEY tipo (tipo),
+            KEY fecha_creacion (fecha_creacion)
         ) $charset_collate;";
         
         dbDelta($sql);
@@ -466,7 +495,8 @@ class Modulo_Ventas_DB {
             $this->tabla_clientes,
             $this->tabla_clientes_meta,
             $this->tabla_cotizaciones,
-            $this->tabla_cotizaciones_items
+            $this->tabla_cotizaciones_items,
+            $this->tabla_clientes_notas
         );
         
         $tablas_faltantes = array();
@@ -515,6 +545,10 @@ class Modulo_Ventas_DB {
     
     public function get_tabla_cotizaciones_items() {
         return $this->tabla_cotizaciones_items;
+    }
+
+    public function get_tabla_clientes_notas() {
+        return $this->tabla_clientes_notas;
     }
     
     /**
@@ -774,6 +808,145 @@ class Modulo_Ventas_DB {
         
         return $this->wpdb->get_results($sql);
     }
+
+    /**
+     * Crear nota de cliente
+     */
+    public function crear_nota_cliente($cliente_id, $nota, $tipo = 'general', $es_privada = false) {
+        // Validar datos
+        if (empty($cliente_id) || empty($nota)) {
+            return new WP_Error('datos_faltantes', __('Cliente y nota son obligatorios', 'modulo-ventas'));
+        }
+        
+        // Verificar que el cliente existe
+        if (!$this->obtener_cliente($cliente_id)) {
+            return new WP_Error('cliente_invalido', __('El cliente especificado no existe', 'modulo-ventas'));
+        }
+        
+        $datos = array(
+            'cliente_id' => intval($cliente_id),
+            'nota' => sanitize_textarea_field($nota),
+            'tipo' => sanitize_text_field($tipo),
+            'es_privada' => intval($es_privada),
+            'creado_por' => get_current_user_id()
+        );
+        
+        $formatos = array('%d', '%s', '%s', '%d', '%d');
+        
+        $resultado = $this->wpdb->insert($this->tabla_clientes_notas, $datos, $formatos);
+        
+        if ($resultado === false) {
+            return new WP_Error('error_db', __('Error al crear la nota', 'modulo-ventas'));
+        }
+        
+        return $this->wpdb->insert_id;
+    }
+
+    /**
+     * Obtener notas de un cliente
+     */
+    public function obtener_notas_cliente($cliente_id, $incluir_privadas = true) {
+        $usuario_actual = get_current_user_id();
+        
+        $sql = "SELECT n.*, u.display_name as autor_nombre 
+                FROM {$this->tabla_clientes_notas} n
+                LEFT JOIN {$this->wpdb->users} u ON n.creado_por = u.ID
+                WHERE n.cliente_id = %d";
+        
+        // Si no incluir privadas, solo mostrar las públicas o las propias
+        if (!$incluir_privadas) {
+            $sql .= " AND (n.es_privada = 0 OR n.creado_por = %d)";
+            $sql = $this->wpdb->prepare($sql, $cliente_id, $usuario_actual);
+        } else {
+            $sql = $this->wpdb->prepare($sql, $cliente_id);
+        }
+        
+        $sql .= " ORDER BY n.fecha_creacion DESC";
+        
+        return $this->wpdb->get_results($sql);
+    }
+
+    /**
+     * Actualizar nota
+     */
+    public function actualizar_nota_cliente($nota_id, $texto_nota, $tipo = null, $es_privada = null) {
+        $datos = array(
+            'nota' => sanitize_textarea_field($texto_nota),
+            'fecha_actualizacion' => current_time('mysql')
+        );
+        $formatos = array('%s', '%s');
+        
+        if ($tipo !== null) {
+            $datos['tipo'] = sanitize_text_field($tipo);
+            $formatos[] = '%s';
+        }
+        
+        if ($es_privada !== null) {
+            $datos['es_privada'] = intval($es_privada);
+            $formatos[] = '%d';
+        }
+        
+        $resultado = $this->wpdb->update(
+            $this->tabla_clientes_notas,
+            $datos,
+            array('id' => intval($nota_id)),
+            $formatos,
+            array('%d')
+        );
+        
+        return $resultado !== false;
+    }
+
+    /**
+     * Eliminar nota
+     */
+    public function eliminar_nota_cliente($nota_id, $verificar_autor = true) {
+        if ($verificar_autor) {
+            // Verificar que el usuario actual es el autor
+            $nota = $this->wpdb->get_row($this->wpdb->prepare(
+                "SELECT creado_por FROM {$this->tabla_clientes_notas} WHERE id = %d",
+                $nota_id
+            ));
+            
+            if (!$nota || $nota->creado_por != get_current_user_id()) {
+                return new WP_Error('sin_permisos', __('No tiene permisos para eliminar esta nota', 'modulo-ventas'));
+            }
+        }
+        
+        $resultado = $this->wpdb->delete(
+            $this->tabla_clientes_notas,
+            array('id' => intval($nota_id)),
+            array('%d')
+        );
+        
+        return $resultado !== false;
+    }
+
+    /**
+     * Contar notas por cliente
+     */
+    public function contar_notas_cliente($cliente_id) {
+        return $this->wpdb->get_var($this->wpdb->prepare(
+            "SELECT COUNT(*) FROM {$this->tabla_clientes_notas} WHERE cliente_id = %d",
+            $cliente_id
+        ));
+    }
+
+    /**
+     * Obtener tipos de notas disponibles
+     */
+    public function obtener_tipos_notas() {
+        return array(
+            'general' => __('General', 'modulo-ventas'),
+            'llamada' => __('Llamada telefónica', 'modulo-ventas'),
+            'reunion' => __('Reunión', 'modulo-ventas'),
+            'email' => __('Correo electrónico', 'modulo-ventas'),
+            'seguimiento' => __('Seguimiento', 'modulo-ventas'),
+            'cotizacion' => __('Sobre cotización', 'modulo-ventas'),
+            'reclamo' => __('Reclamo', 'modulo-ventas'),
+            'observacion' => __('Observación', 'modulo-ventas')
+        );
+    }
     
     /**
      * FUNCIONES PARA METADATOS DE CLIENTES
@@ -887,7 +1060,91 @@ class Modulo_Ventas_DB {
      * Obtener clientes con estadísticas
      */
     public function obtener_clientes_con_estadisticas($args = array()) {
+        // Argumentos por defecto
         $defaults = array(
+            'limite' => 20,
+            'offset' => 0,
+            'orden' => 'razon_social',
+            'orden_dir' => 'ASC',
+            'buscar' => '',
+            'estado' => ''
+        );
+        
+        $args = wp_parse_args($args, $defaults);
+        
+        // Query principal con JOIN para cotizaciones Y notas
+        $sql = "SELECT 
+            c.*,
+            COUNT(DISTINCT cot.id) as cotizaciones,
+            COUNT(DISTINCT n.id) as total_notas,
+            c.fecha_actualizacion as fecha_modificacion
+        FROM {$this->tabla_clientes} c
+        LEFT JOIN {$this->tabla_cotizaciones} cot ON c.id = cot.cliente_id
+        LEFT JOIN {$this->tabla_clientes_notas} n ON c.id = n.cliente_id
+        WHERE 1=1";
+        
+        // Query para contar total
+        $count_sql = "SELECT COUNT(DISTINCT c.id) 
+                    FROM {$this->tabla_clientes} c 
+                    WHERE 1=1";
+        
+        // Condiciones WHERE
+        $where_conditions = array();
+        
+        // Búsqueda
+        if (!empty($args['buscar'])) {
+            $buscar = '%' . $this->wpdb->esc_like($args['buscar']) . '%';
+            $where_conditions[] = $this->wpdb->prepare(
+                "(c.razon_social LIKE %s OR c.rut LIKE %s OR c.email LIKE %s)",
+                $buscar, $buscar, $buscar
+            );
+        }
+        
+        // Estado
+        if (!empty($args['estado'])) {
+            $where_conditions[] = $this->wpdb->prepare("c.estado = %s", $args['estado']);
+        }
+        
+        // Aplicar condiciones WHERE
+        if (!empty($where_conditions)) {
+            $where = ' AND ' . implode(' AND ', $where_conditions);
+            $sql .= $where;
+            $count_sql .= $where;
+        }
+        
+        // GROUP BY
+        $sql .= " GROUP BY c.id";
+        
+        // ORDER BY
+        $orden_columnas_validas = array('razon_social', 'rut', 'email', 'estado', 'fecha_modificacion');
+        $orden = in_array($args['orden'], $orden_columnas_validas) ? $args['orden'] : 'razon_social';
+        $orden_dir = in_array(strtoupper($args['orden_dir']), array('ASC', 'DESC')) ? $args['orden_dir'] : 'ASC';
+        
+        $sql .= " ORDER BY c.{$orden} {$orden_dir}";
+        
+        // LIMIT y OFFSET
+        if ($args['limite'] > 0) {
+            $sql .= $this->wpdb->prepare(" LIMIT %d OFFSET %d", $args['limite'], $args['offset']);
+        }
+        
+        // Ejecutar queries
+        $items = $this->wpdb->get_results($sql, ARRAY_A);
+        $total = $this->wpdb->get_var($count_sql);
+        
+        // Agregar el conteo de notas a cada item si no se obtuvo en la consulta principal
+        // (por si hay algún problema con el GROUP BY)
+        foreach ($items as &$item) {
+            if (!isset($item['total_notas']) || $item['total_notas'] === null) {
+                $item['total_notas'] = $this->contar_notas_cliente($item['id']);
+            }
+        }
+        
+        return array(
+            'items' => $items,
+            'total' => $total
+        );
+        
+        /*$defaults = array(
             'limite' => 20,
             'offset' => 0,
             'orden' => 'razon_social',
@@ -954,7 +1211,7 @@ class Modulo_Ventas_DB {
         return array(
             'items' => $items,
             'total' => $total
-        );
+        );*/
     }
 
     /**
