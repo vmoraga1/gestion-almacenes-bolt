@@ -1424,15 +1424,6 @@ class Modulo_Ventas_Admin {
      * Página de detalle de cliente
      */
     public function pagina_detalle_cliente() {
-        // Debug temporal
-        error_log('Usuario actual: ' . get_current_user_id());
-        error_log('Permisos: ' . json_encode(wp_get_current_user()->allcaps));
-        
-        // Verificar permisos
-        if (!current_user_can('manage_clientes_ventas') && !current_user_can('manage_options')) {
-            wp_die(__('No tiene permisos suficientes para acceder a esta página. Debug: Usuario ' . get_current_user_id(), 'modulo-ventas'));
-        }
-
         // Verificar permisos
         if (!current_user_can('manage_clientes_ventas')) {
             wp_die(__('No tiene permisos suficientes para acceder a esta página.', 'modulo-ventas'));

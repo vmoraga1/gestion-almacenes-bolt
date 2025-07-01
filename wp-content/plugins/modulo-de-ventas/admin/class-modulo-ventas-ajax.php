@@ -1256,10 +1256,6 @@ class Modulo_Ventas_Ajax {
      * AJAX: Agregar nota a cliente
      */
     public function agregar_nota_cliente() {
-        // Debug temporal
-        error_log('agregar_nota_cliente llamado');
-        error_log('POST data: ' . print_r($_POST, true));
-
         // Verificar nonce
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mv_agregar_nota_cliente')) {
             wp_send_json_error(array('message' => __('Error de seguridad', 'modulo-ventas')));
