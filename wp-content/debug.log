@@ -60,3 +60,22 @@
 [01-Jul-2025 18:29:05 UTC] Método existe: SI
 [01-Jul-2025 18:29:59 UTC] Clase Ajax instanciada: Modulo_Ventas_Ajax
 [01-Jul-2025 18:29:59 UTC] Método existe: SI
+[01-Jul-2025 18:40:26 UTC] PHP Fatal error:  Cannot declare class Modulo_Ventas_Ajax, because the name is already in use in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 15
+[01-Jul-2025 18:40:26 UTC] PHP Stack trace:
+[01-Jul-2025 18:40:26 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\plugins.php:0
+[01-Jul-2025 18:40:26 UTC] PHP   2. activate_plugin($plugin = 'modulo-de-ventas/modulo-ventas.php', $redirect = 'http://localhost/gestion-almacenes-bolt/wp-admin/plugins.php?error=true&plugin=modulo-de-ventas%2Fmodulo-ventas.php', $network_wide = FALSE, $silent = *uninitialized*) C:\wamp64\www\gestion-almacenes-bolt\wp-admin\plugins.php:60
+[01-Jul-2025 18:40:26 UTC] PHP   3. do_action($hook_name = 'activate_modulo-de-ventas/modulo-ventas.php', ...$arg = variadic(FALSE)) C:\wamp64\www\gestion-almacenes-bolt\wp-admin\includes\plugin.php:703
+[01-Jul-2025 18:40:26 UTC] PHP   4. WP_Hook->do_action($args = [0 => FALSE]) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[01-Jul-2025 18:40:26 UTC] PHP   5. WP_Hook->apply_filters($value = '', $args = [0 => FALSE]) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[01-Jul-2025 18:40:26 UTC] PHP   6. Modulo_Ventas->activar(FALSE) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[01-Jul-2025 18:40:26 UTC] PHP   7. Modulo_Ventas->cargar_archivos() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:276
+[01-Jul-2025 19:07:10 UTC] PHP Fatal error:  Cannot declare class Modulo_Ventas_Ajax, because the name is already in use in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 15
+[01-Jul-2025 19:07:10 UTC] PHP Stack trace:
+[01-Jul-2025 19:07:10 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\plugins.php:0
+[01-Jul-2025 19:07:10 UTC] PHP   2. activate_plugin($plugin = 'modulo-de-ventas/modulo-ventas.php', $redirect = 'http://localhost/gestion-almacenes-bolt/wp-admin/plugins.php?error=true&plugin=modulo-de-ventas%2Fmodulo-ventas.php', $network_wide = FALSE, $silent = *uninitialized*) C:\wamp64\www\gestion-almacenes-bolt\wp-admin\plugins.php:60
+[01-Jul-2025 19:07:10 UTC] PHP   3. do_action($hook_name = 'activate_modulo-de-ventas/modulo-ventas.php', ...$arg = variadic(FALSE)) C:\wamp64\www\gestion-almacenes-bolt\wp-admin\includes\plugin.php:703
+[01-Jul-2025 19:07:10 UTC] PHP   4. WP_Hook->do_action($args = [0 => FALSE]) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[01-Jul-2025 19:07:10 UTC] PHP   5. WP_Hook->apply_filters($value = '', $args = [0 => FALSE]) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[01-Jul-2025 19:07:10 UTC] PHP   6. Modulo_Ventas->activar(FALSE) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[01-Jul-2025 19:07:10 UTC] PHP   7. Modulo_Ventas->cargar_archivos() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:276
+[01-Jul-2025 19:07:10 UTC] PHP   8. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:150
