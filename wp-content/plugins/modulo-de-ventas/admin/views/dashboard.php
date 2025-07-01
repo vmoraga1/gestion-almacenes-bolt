@@ -91,12 +91,19 @@ if (!defined('ABSPATH')) {
         <div class="mv-stat-box">
             <div class="mv-stat-number"><?php echo number_format($stats['cotizaciones_mes'], 0, ',', '.'); ?></div>
             <div class="mv-stat-label"><?php _e('Cotizaciones este mes', 'modulo-ventas'); ?></div>
+            <?php if (isset($stats['sin_datos_mes']) && $stats['sin_datos_mes']) : ?>
+                <div class="mv-stat-sublabel" style="color: #666; font-size: 11px; margin-top: 5px;">
+                    <?php printf(__('Total histórico: %d', 'modulo-ventas'), $stats['total_historico']); ?>
+                </div>
+            <?php endif; ?>
             <div class="mv-stat-change">
-                <?php if (isset($stats['cotizaciones_mes_anterior'])) : ?>
+                <?php if ($stats['cotizaciones_mes_anterior'] > 0 || $stats['cotizaciones_mes'] > 0) : ?>
                     <?php 
-                    $cambio = $stats['cotizaciones_mes_anterior'] > 0 
-                        ? (($stats['cotizaciones_mes'] - $stats['cotizaciones_mes_anterior']) / $stats['cotizaciones_mes_anterior']) * 100 
-                        : 0;
+                    if ($stats['cotizaciones_mes_anterior'] > 0) {
+                        $cambio = (($stats['cotizaciones_mes'] - $stats['cotizaciones_mes_anterior']) / $stats['cotizaciones_mes_anterior']) * 100;
+                    } else {
+                        $cambio = 100; // Si no había cotizaciones el mes anterior
+                    }
                     ?>
                     <span class="<?php echo $cambio >= 0 ? 'positive' : 'negative'; ?>">
                         <?php echo $cambio >= 0 ? '+' : ''; ?><?php echo number_format($cambio, 1, ',', '.'); ?>%
