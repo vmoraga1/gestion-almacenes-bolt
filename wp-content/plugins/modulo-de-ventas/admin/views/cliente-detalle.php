@@ -380,7 +380,7 @@ if (!defined('ABSPATH')) {
                 <div class="mv-nueva-nota-form">
                     <form id="mv-form-nueva-nota" method="post">
                         <?php wp_nonce_field('mv_agregar_nota_cliente', 'mv_nota_nonce'); ?>
-                        <input type="hidden" name="action" value="agregar_nota">
+                        <!-- <input type="hidden" name="action" value="agregar_nota"> comentado porque no funciona el guardado de notas-->
                         <input type="hidden" name="cliente_id" value="<?php echo esc_attr($cliente->id); ?>">
                         
                         <div class="mv-form-group">
@@ -834,9 +834,7 @@ if (!defined('ABSPATH')) {
 }
 
 .mv-nota-acciones {
-    position: absolute;
-    top: 15px;
-    right: 15px;
+    position: relative;
 }
 
 .mv-nota-acciones a {
@@ -901,6 +899,9 @@ if (!defined('ABSPATH')) {
 
 <script>
 jQuery(document).ready(function($) {
+    // Asegurar que ajaxurl esté definido
+    var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
+
     // Manejo de tabs
     $('.nav-tab').on('click', function(e) {
         e.preventDefault();
@@ -944,11 +945,24 @@ jQuery(document).ready(function($) {
         
         var $form = $(this);
         var $submit = $form.find('button[type="submit"]');
+
+        // Construir datos manualmente sin campos extra
+        var datos = {
+            action: 'mv_agregar_nota_cliente',
+            nonce: $form.find('input[name="mv_nota_nonce"]').val(),
+            cliente_id: $form.find('input[name="cliente_id"]').val(),
+            nota: $form.find('textarea[name="nota"]').val(),
+            tipo: $form.find('select[name="tipo"]').val(),
+            es_privada: $form.find('input[name="es_privada"]').is(':checked') ? 1 : 0
+        };
+        
+        console.log('Datos a enviar:', datos); // Debug
+        console.log('URL AJAX:', ajaxurl); // Debug
         
         $submit.prop('disabled', true).text('<?php _e('Agregando...', 'modulo-ventas'); ?>');
         
         $.ajax({
-            url: window.ajaxurl,
+            url: ajaxurl,
             type: 'POST',
             dataType: 'json',
             data: {
@@ -996,7 +1010,7 @@ jQuery(document).ready(function($) {
         var notaId = $link.data('nota-id');
         
         $.ajax({
-            url: window.ajaxurl,
+            url: ajaxurl,
             type: 'POST',
             dataType: 'json',
             data: {
@@ -1024,6 +1038,100 @@ jQuery(document).ready(function($) {
             error: function(xhr, status, error) {
                 console.error('Error AJAX:', error);
                 alert('<?php _e('Error al eliminar la nota', 'modulo-ventas'); ?>');
+            }
+        });
+    });
+
+    // Manejar edición de notas
+    $(document).on('click', '.mv-editar-nota', function(e) {
+        e.preventDefault();
+        
+        var $link = $(this);
+        var notaId = $link.data('nota-id');
+        var $notaItem = $link.closest('.mv-nota-item');
+        var $notaContenido = $notaItem.find('.mv-nota-contenido');
+        
+        // Obtener el texto sin los <br>
+        var textoActual = $notaContenido.html().replace(/<br\s*\/?>/gi, '\n').trim();
+        // Decodificar entidades HTML
+        var textArea = document.createElement('textarea');
+        textArea.innerHTML = textoActual;
+        textoActual = textArea.value;
+        
+        // Crear formulario de edición
+        var formHtml = `
+            <form class="mv-form-editar-nota" data-nota-id="${notaId}">
+                <textarea class="widefat" rows="3">${textoActual}</textarea>
+                <div class="mv-nota-editar-acciones" style="margin-top: 10px;">
+                    <button type="submit" class="button button-primary button-small"><?php _e('Guardar', 'modulo-ventas'); ?></button>
+                    <button type="button" class="button button-small mv-cancelar-edicion"><?php _e('Cancelar', 'modulo-ventas'); ?></button>
+                </div>
+            </form>
+        `;
+        
+        // Ocultar contenido y mostrar formulario
+        $notaContenido.hide();
+        $notaContenido.after(formHtml);
+        $link.hide();
+        
+        // Enfocar el textarea
+        $notaItem.find('textarea').focus();
+    });
+
+    // Manejar cancelación de edición
+    $(document).on('click', '.mv-cancelar-edicion', function() {
+        var $form = $(this).closest('.mv-form-editar-nota');
+        var $notaItem = $form.closest('.mv-nota-item');
+        
+        $form.remove();
+        $notaItem.find('.mv-nota-contenido').show();
+        $notaItem.find('.mv-editar-nota').show();
+    });
+
+    // Manejar envío del formulario de edición
+    $(document).on('submit', '.mv-form-editar-nota', function(e) {
+        e.preventDefault();
+        
+        var $form = $(this);
+        var $submit = $form.find('button[type="submit"]');
+        var notaId = $form.data('nota-id');
+        var nuevoTexto = $form.find('textarea').val();
+        var $notaItem = $form.closest('.mv-nota-item');
+        
+        $submit.prop('disabled', true).text('<?php _e('Guardando...', 'modulo-ventas'); ?>');
+        
+        $.ajax({
+            url: ajaxurl,
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                action: 'mv_actualizar_nota_cliente',
+                nonce: '<?php echo wp_create_nonce('mv_actualizar_nota'); ?>',
+                nota_id: notaId,
+                nota: nuevoTexto
+            },
+            success: function(response) {
+                if (response && response.success) {
+                    // Actualizar el contenido con nl2br
+                    var textoFormateado = nuevoTexto.replace(/\n/g, '<br>');
+                    $notaItem.find('.mv-nota-contenido').html(textoFormateado).show();
+                    $form.remove();
+                    $notaItem.find('.mv-editar-nota').show();
+                    
+                    // Agregar o actualizar el indicador de editado
+                    if ($notaItem.find('.mv-nota-editado').length === 0) {
+                        $notaItem.append('<div class="mv-nota-editado"><em><?php _e('Editado', 'modulo-ventas'); ?></em></div>');
+                    }
+                } else {
+                    var mensaje = response?.data?.message || 'Error al actualizar la nota';
+                    alert(mensaje);
+                    $submit.prop('disabled', false).text('<?php _e('Guardar', 'modulo-ventas'); ?>');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error AJAX:', error);
+                alert('<?php _e('Error al actualizar la nota', 'modulo-ventas'); ?>');
+                $submit.prop('disabled', false).text('<?php _e('Guardar', 'modulo-ventas'); ?>');
             }
         });
     });

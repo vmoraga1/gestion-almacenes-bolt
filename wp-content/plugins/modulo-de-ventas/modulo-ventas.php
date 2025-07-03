@@ -28,6 +28,45 @@ define('MODULO_VENTAS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('MODULO_VENTAS_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('MODULO_VENTAS_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
+// Hook para detectar cuando se desactiva el plugin
+add_action('deactivate_plugin', function($plugin, $network_deactivating) {
+    if ($plugin === 'modulo-de-ventas/modulo-ventas.php') {
+        $log_file = WP_CONTENT_DIR . '/modulo-ventas-deactivation.log';
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10);
+        
+        $log_data = date('Y-m-d H:i:s') . " - Plugin siendo desactivado\n";
+        $log_data .= "Network deactivating: " . ($network_deactivating ? 'YES' : 'NO') . "\n";
+        $log_data .= "Backtrace:\n";
+        
+        foreach ($backtrace as $i => $call) {
+            $file = isset($call['file']) ? str_replace(ABSPATH, '', $call['file']) : 'unknown';
+            $line = isset($call['line']) ? $call['line'] : 0;
+            $function = isset($call['function']) ? $call['function'] : 'unknown';
+            $log_data .= "  #{$i} {$file}:{$line} - {$function}()\n";
+        }
+        
+        $log_data .= "\n" . str_repeat('-', 80) . "\n\n";
+        
+        file_put_contents($log_file, $log_data, FILE_APPEND);
+    }
+}, 10, 2);
+
+// También agregar un shutdown handler para capturar errores fatales
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        $log_file = WP_CONTENT_DIR . '/modulo-ventas-fatal-error.log';
+        $log_data = date('Y-m-d H:i:s') . " - Error fatal detectado\n";
+        $log_data .= "Type: " . $error['type'] . "\n";
+        $log_data .= "Message: " . $error['message'] . "\n";
+        $log_data .= "File: " . str_replace(ABSPATH, '', $error['file']) . "\n";
+        $log_data .= "Line: " . $error['line'] . "\n";
+        $log_data .= "\n" . str_repeat('-', 80) . "\n\n";
+        
+        file_put_contents($log_file, $log_data, FILE_APPEND);
+    }
+});
+
 // Clase principal del plugin
 class Modulo_Ventas {
     
@@ -59,7 +98,8 @@ class Modulo_Ventas {
         //$this->cargar_archivos_basicos();
         
         // Verificar dependencias
-        add_action('plugins_loaded', array($this, 'verificar_dependencias'), 1);
+        add_action('plugins_loaded', array($this, 'cargar_plugin'), 10);
+        add_action('admin_init', array($this, 'verificar_dependencias_admin'), 10);
         
         // Cargar traducciones en el momento correcto
         add_action('init', array($this, 'cargar_textdomain'), 0);
@@ -144,12 +184,12 @@ class Modulo_Ventas {
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-integration.php';
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf.php';
         
-        // Admin
-        if (is_admin()) {
-            require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/class-modulo-ventas-admin.php';
-            require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/class-modulo-ventas-ajax.php';
-            require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/class-cotizaciones-list-table.php';
-        }
+        // AJAX siempre se carga
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/class-modulo-ventas-ajax.php';
+        
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/class-modulo-ventas-admin.php';
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/class-cotizaciones-list-table.php';
+        
     }
     
     // Inicializar clases
@@ -161,11 +201,18 @@ class Modulo_Ventas {
         $this->cotizaciones = new Modulo_Ventas_Cotizaciones();
         $this->integration = new Modulo_Ventas_Integration();
         
+        // Ajax SIEMPRE se necesita (tanto en admin como en peticiones AJAX)
+        $this->ajax = new Modulo_Ventas_Ajax();
+        
         // Admin solo si estamos en el área administrativa
         if (is_admin()) {
             $this->admin = new Modulo_Ventas_Admin();
-            $this->ajax = new Modulo_Ventas_Ajax();
-            error_log('Clase Ajax instanciada: ' . get_class($this->ajax));
+            error_log('Clase Admin instanciada: ' . get_class($this->admin));
+        }
+        
+        // Log para debug
+        if (defined('DOING_AJAX') && DOING_AJAX) {
+            error_log('Petición AJAX detectada');
         }
     }
     
@@ -245,6 +292,43 @@ class Modulo_Ventas {
                     'select_warehouse' => __('Seleccione un almacén', 'modulo-ventas'),
                 )
             ));
+        }
+    }
+
+    // Y crea estos nuevos métodos:
+    public function cargar_plugin() {
+        $this->cargar_archivos();
+        $this->inicializar_clases();
+    }
+
+    public function verificar_dependencias_admin() {
+        // Solo verificar en el admin, no en AJAX
+        if (wp_doing_ajax()) {
+            return; // No hacer nada durante AJAX
+        }
+        
+        $dependencias_cumplidas = true;
+        $mensajes_error = array();
+        
+        // Verificar WooCommerce
+        if (!class_exists('WooCommerce')) {
+            $dependencias_cumplidas = false;
+            $mensajes_error[] = 'Módulo de Ventas requiere WooCommerce para funcionar.';
+        }
+        
+        // Verificar Gestión de Almacenes
+        if (!defined('GESTION_ALMACENES_VERSION')) {
+            $dependencias_cumplidas = false;
+            $mensajes_error[] = 'Módulo de Ventas requiere el plugin Gestión de Almacenes para funcionar.';
+        }
+        
+        // Si faltan dependencias, mostrar avisos
+        if (!$dependencias_cumplidas) {
+            add_action('admin_notices', function() use ($mensajes_error) {
+                foreach ($mensajes_error as $mensaje) {
+                    echo '<div class="error"><p>' . esc_html($mensaje) . '</p></div>';
+                }
+            });
         }
     }
     
@@ -430,9 +514,9 @@ add_action('plugins_loaded', function() {
 // Forzar carga de Ajax para peticiones AJAX
 if (wp_doing_ajax()) {
     $plugin = Modulo_Ventas::get_instance();
-    // Forzar la verificación de dependencias que carga los archivos
-    if (method_exists($plugin, 'verificar_dependencias')) {
-        $plugin->verificar_dependencias();
+    // Cargar archivos sin verificar dependencias
+    if (method_exists($plugin, 'cargar_plugin')) {
+        $plugin->cargar_plugin();
     }
 }
 

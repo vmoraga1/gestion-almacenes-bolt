@@ -21,6 +21,57 @@ if (!function_exists('mv_get_instance')) {
         if (null === $instance) {
             $instance = new stdClass();
             
+            // Crear un objeto wrapper para mensajes
+            $instance->messages = new Modulo_Ventas_Messages_Wrapper();
+        }
+        
+        return $instance;
+    }
+}
+
+/**
+ * Clase wrapper para mensajes
+ */
+if (!class_exists('Modulo_Ventas_Messages_Wrapper')) {
+    class Modulo_Ventas_Messages_Wrapper {
+        private $real_instance = null;
+        
+        public function get_messages($context = null) {
+            if ($this->real_instance === null && class_exists('Modulo_Ventas_Messages')) {
+                $this->real_instance = Modulo_Ventas_Messages::get_instance();
+            }
+            
+            if ($this->real_instance !== null) {
+                return $this->real_instance->get_messages($context);
+            }
+            
+            // Si no hay instancia, retornar array vacío
+            return array();
+        }
+        
+        public function __call($method, $args) {
+            if ($this->real_instance === null && class_exists('Modulo_Ventas_Messages')) {
+                $this->real_instance = Modulo_Ventas_Messages::get_instance();
+            }
+            
+            if ($this->real_instance !== null && method_exists($this->real_instance, $method)) {
+                return call_user_func_array(array($this->real_instance, $method), $args);
+            }
+            
+            return null;
+        }
+    }
+}
+/*
+ * Obtener instancia del plugin con manejo seguro
+ *
+if (!function_exists('mv_get_instance')) {
+    function mv_get_instance() {
+        static $instance = null;
+        
+        if (null === $instance) {
+            $instance = new stdClass();
+            
             // Crear un objeto wrapper para mensajes que siempre tenga el método get_messages
             $instance->messages = new class {
                 private $real_instance = null;
@@ -54,7 +105,7 @@ if (!function_exists('mv_get_instance')) {
         
         return $instance;
     }
-}
+}*/
 
 /* //Helper para obtener instancia de mensajes
 
@@ -76,12 +127,30 @@ if (!function_exists('mv_messages')) {
             return Modulo_Ventas_Messages::get_instance();
         }
         // Retornar un objeto mock si la clase no existe aún
-        return new class {
-            public function get_messages($context = null) { return array(); }
-            public function add_message($message, $type = 'info', $context = 'general') { return null; }
-            public function display_messages($context = null, $echo = true) { return ''; }
-            public function __call($method, $args) { return null; }
-        };
+        return new Modulo_Ventas_Mock_Messages();
+    }
+}
+
+/**
+ * Clase mock para mensajes cuando la clase real no está disponible
+ */
+if (!class_exists('Modulo_Ventas_Mock_Messages')) {
+    class Modulo_Ventas_Mock_Messages {
+        public function get_messages($context = null) { 
+            return array(); 
+        }
+        
+        public function add_message($message, $type = 'info', $context = 'general') { 
+            return null; 
+        }
+        
+        public function display_messages($context = null, $echo = true) { 
+            return ''; 
+        }
+        
+        public function __call($method, $args) { 
+            return null; 
+        }
     }
 }
 

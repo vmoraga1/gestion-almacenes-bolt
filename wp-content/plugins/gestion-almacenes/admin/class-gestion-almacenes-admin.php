@@ -92,7 +92,7 @@ class Gestion_Almacenes_Admin {
 
         // Editar Transferencia (página oculta, solo accesible por URL)
         add_submenu_page(
-            null,
+            '',
             __('Editar Transferencia', 'gestion-almacenes'),
             __('Editar Transferencia', 'gestion-almacenes'),
             'manage_options',
@@ -102,7 +102,7 @@ class Gestion_Almacenes_Admin {
         
         // Página para ver transferencias
         add_submenu_page(
-            null,
+            '',
             __('Ver Transferencia', 'gestion-almacenes'),
             __('Ver Transferencia', 'gestion-almacenes'),
             'manage_options',
@@ -111,7 +111,7 @@ class Gestion_Almacenes_Admin {
         );
 
         add_submenu_page(
-            null,
+            '',
             __('Imprimir Transferencia', 'gestion-almacenes'),
             __('Imprimir Transferencia', 'gestion-almacenes'),
             'manage_options',

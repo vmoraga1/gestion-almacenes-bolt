@@ -383,109 +383,136 @@ class Modulo_Ventas_Ajax {
      * Guardar cotización
      */
     public function guardar_cotizacion() {
-        mv_ajax_check_permissions('create_cotizaciones', 'modulo_ventas_nonce');
+        // Log directo al archivo
+        $log_file = MODULO_VENTAS_PLUGIN_DIR . 'debug-cotizacion.log';
+        file_put_contents($log_file, "\n=== " . date('Y-m-d H:i:s') . " ===\n", FILE_APPEND);
+        file_put_contents($log_file, "INICIO guardar_cotizacion\n", FILE_APPEND);
         
-        // Validar datos
-        if (!isset($_POST['datos_generales']) || !isset($_POST['items'])) {
-            wp_send_json_error(array('message' => __('Datos incompletos', 'modulo-ventas')));
-        }
-        
-        // Sanitizar datos generales
-        $datos_generales = array();
-        foreach ($_POST['datos_generales'] as $key => $value) {
-            switch ($key) {
-                case 'cliente_id':
-                case 'vendedor_id':
-                case 'almacen_id':
-                    $datos_generales[$key] = intval($value);
-                    break;
-                    
-                case 'subtotal':
-                case 'total':
-                case 'descuento_monto':
-                case 'descuento_porcentaje':
-                case 'costo_envio':
-                    $datos_generales[$key] = floatval($value);
-                    break;
-                    
-                case 'incluye_iva':
-                    $datos_generales[$key] = $value ? 1 : 0;
-                    break;
-                    
-                case 'fecha_expiracion':
-                    $datos_generales[$key] = sanitize_text_field($value);
-                    if ($datos_generales[$key] && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $datos_generales[$key])) {
-                        wp_send_json_error(array('message' => __('Formato de fecha inválido', 'modulo-ventas')));
-                    }
-                    break;
-                    
-                case 'observaciones':
-                case 'notas_internas':
-                case 'terminos_condiciones':
-                case 'condiciones_pago':
-                    $datos_generales[$key] = sanitize_textarea_field($value);
-                    break;
-                    
-                default:
-                    $datos_generales[$key] = sanitize_text_field($value);
-            }
-        }
-        
-        // Sanitizar items
-        $items = array();
-        foreach ($_POST['items'] as $item) {
-            $item_sanitizado = array(
-                'producto_id' => intval($item['producto_id']),
-                'variacion_id' => isset($item['variacion_id']) ? intval($item['variacion_id']) : 0,
-                'almacen_id' => isset($item['almacen_id']) ? intval($item['almacen_id']) : null,
-                'sku' => sanitize_text_field($item['sku'] ?? ''),
-                'nombre' => sanitize_text_field($item['nombre']),
-                'descripcion' => sanitize_textarea_field($item['descripcion'] ?? ''),
-                'cantidad' => floatval($item['cantidad']),
-                'precio_unitario' => floatval($item['precio_unitario']),
-                'precio_original' => floatval($item['precio_original'] ?? $item['precio_unitario']),
-                'descuento_monto' => floatval($item['descuento_monto'] ?? 0),
-                'descuento_porcentaje' => floatval($item['descuento_porcentaje'] ?? 0),
-                'tipo_descuento' => sanitize_text_field($item['tipo_descuento'] ?? 'monto'),
-                'subtotal' => floatval($item['subtotal']),
-                'notas' => sanitize_textarea_field($item['notas'] ?? ''),
-                'stock_disponible' => isset($item['stock_disponible']) ? intval($item['stock_disponible']) : null
-            );
+        try {
+            file_put_contents($log_file, "Verificando permisos...\n", FILE_APPEND);
+            mv_ajax_check_permissions('create_cotizaciones', 'modulo_ventas_nonce');
+            file_put_contents($log_file, "Permisos OK\n", FILE_APPEND);
             
-            // Validaciones
-            if ($item_sanitizado['cantidad'] <= 0) {
-                wp_send_json_error(array('message' => __('La cantidad debe ser mayor a 0', 'modulo-ventas')));
+            // Validar datos
+            if (!isset($_POST['datos_generales']) || !isset($_POST['items'])) {
+                file_put_contents($log_file, "ERROR: Datos incompletos\n", FILE_APPEND);
+                wp_send_json_error(array('message' => __('Datos incompletos', 'modulo-ventas')));
             }
             
-            if ($item_sanitizado['precio_unitario'] < 0) {
-                wp_send_json_error(array('message' => __('El precio no puede ser negativo', 'modulo-ventas')));
+            file_put_contents($log_file, "Datos recibidos OK\n", FILE_APPEND);
+            
+            // Sanitizar datos generales
+            $datos_generales = array();
+            foreach ($_POST['datos_generales'] as $key => $value) {
+                switch ($key) {
+                    case 'cliente_id':
+                    case 'vendedor_id':
+                    case 'almacen_id':
+                        $datos_generales[$key] = intval($value);
+                        break;
+                        
+                    case 'subtotal':
+                    case 'total':
+                    case 'descuento_monto':
+                    case 'descuento_porcentaje':
+                    case 'costo_envio':
+                        $datos_generales[$key] = floatval($value);
+                        break;
+                        
+                    case 'incluye_iva':
+                        $datos_generales[$key] = $value ? 1 : 0;
+                        break;
+                        
+                    case 'fecha_expiracion':
+                        $datos_generales[$key] = sanitize_text_field($value);
+                        if ($datos_generales[$key] && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $datos_generales[$key])) {
+                            wp_send_json_error(array('message' => __('Formato de fecha inválido', 'modulo-ventas')));
+                        }
+                        break;
+                        
+                    case 'observaciones':
+                    case 'notas_internas':
+                    case 'terminos_condiciones':
+                    case 'condiciones_pago':
+                        $datos_generales[$key] = sanitize_textarea_field($value);
+                        break;
+                        
+                    default:
+                        $datos_generales[$key] = sanitize_text_field($value);
+                }
+            }
+
+            // Sanitizar items
+            $items = array();
+            foreach ($_POST['items'] as $item) {
+                $item_sanitizado = array(
+                    'producto_id'         => isset($item['producto_id']) ? intval($item['producto_id']) : 0,
+                    'variacion_id'        => isset($item['variacion_id']) ? intval($item['variacion_id']) : 0,
+                    'almacen_id'          => isset($item['almacen_id']) ? intval($item['almacen_id']) : null,
+                    'sku'                 => isset($item['sku']) ? sanitize_text_field($item['sku']) : '',
+                    'nombre'              => isset($item['nombre']) ? sanitize_text_field($item['nombre']) : '',
+                    'descripcion'         => isset($item['descripcion']) ? sanitize_textarea_field($item['descripcion']) : '',
+                    'cantidad'            => isset($item['cantidad']) ? floatval($item['cantidad']) : 0,
+                    'precio_unitario'     => isset($item['precio_unitario']) ? floatval($item['precio_unitario']) : 0,
+                    'precio_original'     => isset($item['precio_original']) ? floatval($item['precio_original']) : (isset($item['precio_unitario']) ? floatval($item['precio_unitario']) : 0),
+                    'descuento_monto'     => isset($item['descuento_monto']) ? floatval($item['descuento_monto']) : 0,
+                    'descuento_porcentaje'=> isset($item['descuento_porcentaje']) ? floatval($item['descuento_porcentaje']) : 0,
+                    'tipo_descuento'      => isset($item['tipo_descuento']) ? sanitize_text_field($item['tipo_descuento']) : 'monto',
+                    'subtotal'            => isset($item['subtotal']) ? floatval($item['subtotal']) : 0,
+                    'notas'               => isset($item['notas']) ? sanitize_textarea_field($item['notas']) : '',
+                    'stock_disponible'    => isset($item['stock_disponible']) ? intval($item['stock_disponible']) : null
+                );
+                
+                // Validaciones
+                if ($item_sanitizado['cantidad'] <= 0) {
+                    wp_send_json_error(array('message' => __('La cantidad debe ser mayor a 0', 'modulo-ventas')));
+                }
+                
+                if ($item_sanitizado['precio_unitario'] < 0) {
+                    wp_send_json_error(array('message' => __('El precio no puede ser negativo', 'modulo-ventas')));
+                }
+                
+                $items[] = $item_sanitizado;
+            }
+
+            // Antes de crear la cotización
+            file_put_contents($log_file, "Llamando a crear_cotizacion...\n", FILE_APPEND);
+            $cotizacion_id = $this->cotizaciones->crear_cotizacion($datos_generales, $items);
+            file_put_contents($log_file, "Resultado crear_cotizacion: " . print_r($cotizacion_id, true) . "\n", FILE_APPEND);
+            
+            // Crear cotización
+            $cotizacion_id = $this->cotizaciones->crear_cotizacion($datos_generales, $items);
+            
+            if (is_wp_error($cotizacion_id)) {
+                $this->logger->log('Error al crear cotización: ' . $cotizacion_id->get_error_message(), 'error');
+                wp_send_json_error(array(
+                    'message' => $cotizacion_id->get_error_message(),
+                    'errors' => $cotizacion_id->get_error_messages()
+                ));
             }
             
-            $items[] = $item_sanitizado;
-        }
-        
-        // Crear cotización
-        $cotizacion_id = $this->cotizaciones->crear_cotizacion($datos_generales, $items);
-        
-        if (is_wp_error($cotizacion_id)) {
-            $this->logger->log('Error al crear cotización: ' . $cotizacion_id->get_error_message(), 'error');
-            wp_send_json_error(array(
-                'message' => $cotizacion_id->get_error_message(),
-                'errors' => $cotizacion_id->get_error_messages()
+            // Obtener cotización creada
+            $cotizacion = $this->db->obtener_cotizacion($cotizacion_id);
+            
+            $this->logger->log("Cotización creada exitosamente: {$cotizacion->folio}", 'info');
+            
+            wp_send_json_success(array(
+                'cotizacion_id' => $cotizacion_id,
+                'folio' => $cotizacion->folio,
+                'redirect_url' => mv_admin_url('ver-cotizacion', array('id' => $cotizacion_id)),
+                'message' => sprintf(__('Cotización %s creada exitosamente', 'modulo-ventas'), $cotizacion->folio)
             ));
+        } catch (Exception $e) {
+            file_put_contents($log_file, "EXCEPTION: " . $e->getMessage() . "\n", FILE_APPEND);
+            file_put_contents($log_file, "TRACE: " . $e->getTraceAsString() . "\n", FILE_APPEND);
+            wp_send_json_error(array('message' => 'Error: ' . $e->getMessage()));
+        } catch (Error $e) {
+            file_put_contents($log_file, "ERROR FATAL: " . $e->getMessage() . "\n", FILE_APPEND);
+            file_put_contents($log_file, "TRACE: " . $e->getTraceAsString() . "\n", FILE_APPEND);
+            wp_send_json_error(array('message' => 'Error fatal: ' . $e->getMessage()));
         }
         
-        // Obtener cotización creada
-        $cotizacion = $this->db->obtener_cotizacion($cotizacion_id);
-        
-        $this->logger->log("Cotización creada exitosamente: {$cotizacion->folio}", 'info');
-        
-        wp_send_json_success(array(
-            'cotizacion_id' => $cotizacion_id,
-            'folio' => $cotizacion->folio,
-            'redirect_url' => mv_admin_url('ver-cotizacion', array('id' => $cotizacion_id)),
-            'message' => sprintf(__('Cotización %s creada exitosamente', 'modulo-ventas'), $cotizacion->folio)
-        ));
+        error_log('=== FIN guardar_cotizacion ===');
     }
     
     /**
@@ -751,13 +778,13 @@ class Modulo_Ventas_Ajax {
         
         $subtotal = 0;
         $items_calculados = array();
-        
+
         // Calcular subtotal y totales por item
         foreach ($items as $index => $item) {
-            $cantidad = floatval($item['cantidad'] ?? 0);
-            $precio_unitario = floatval($item['precio_unitario'] ?? 0);
-            $descuento_item = floatval($item['descuento'] ?? 0);
-            $tipo_descuento_item = $item['tipo_descuento'] ?? 'monto';
+            $cantidad = isset($item['cantidad']) ? floatval($item['cantidad']) : 0;
+            $precio_unitario = isset($item['precio_unitario']) ? floatval($item['precio_unitario']) : 0;
+            $descuento_item = isset($item['descuento']) ? floatval($item['descuento']) : 0;
+            $tipo_descuento_item = isset($item['tipo_descuento']) ? $item['tipo_descuento'] : 'monto';
             
             // Calcular subtotal del item
             $subtotal_item = $cantidad * $precio_unitario;
@@ -925,17 +952,17 @@ class Modulo_Ventas_Ajax {
         
         // Sanitizar datos
         $datos_cliente = array(
-            'razon_social' => sanitize_text_field($datos['razon_social']),
-            'rut' => mv_limpiar_rut($datos['rut']),
-            'giro_comercial' => sanitize_text_field($datos['giro_comercial'] ?? ''),
-            'telefono' => sanitize_text_field($datos['telefono'] ?? ''),
-            'email' => sanitize_email($datos['email'] ?? ''),
-            'email_dte' => sanitize_email($datos['email_dte'] ?? ''),
-            'direccion_facturacion' => sanitize_textarea_field($datos['direccion_facturacion'] ?? ''),
-            'comuna_facturacion' => sanitize_text_field($datos['comuna_facturacion'] ?? ''),
-            'ciudad_facturacion' => sanitize_text_field($datos['ciudad_facturacion'] ?? ''),
-            'region_facturacion' => sanitize_text_field($datos['region_facturacion'] ?? ''),
-            'pais_facturacion' => sanitize_text_field($datos['pais_facturacion'] ?? 'Chile')
+            'razon_social'          => isset($datos['razon_social']) ? sanitize_text_field($datos['razon_social']) : '',
+            'rut'                   => isset($datos['rut']) ? mv_limpiar_rut($datos['rut']) : '',
+            'giro_comercial'        => isset($datos['giro_comercial']) ? sanitize_text_field($datos['giro_comercial']) : '',
+            'telefono'              => isset($datos['telefono']) ? sanitize_text_field($datos['telefono']) : '',
+            'email'                 => isset($datos['email']) ? sanitize_email($datos['email']) : '',
+            'email_dte'             => isset($datos['email_dte']) ? sanitize_email($datos['email_dte']) : '',
+            'direccion_facturacion' => isset($datos['direccion_facturacion']) ? sanitize_textarea_field($datos['direccion_facturacion']) : '',
+            'comuna_facturacion'    => isset($datos['comuna_facturacion']) ? sanitize_text_field($datos['comuna_facturacion']) : '',
+            'ciudad_facturacion'    => isset($datos['ciudad_facturacion']) ? sanitize_text_field($datos['ciudad_facturacion']) : '',
+            'region_facturacion'    => isset($datos['region_facturacion']) ? sanitize_text_field($datos['region_facturacion']) : '',
+            'pais_facturacion'      => isset($datos['pais_facturacion']) ? sanitize_text_field($datos['pais_facturacion']) : 'Chile'
         );
         
         $cliente_id = $this->db->crear_cliente($datos_cliente);
@@ -979,30 +1006,30 @@ class Modulo_Ventas_Ajax {
         if (!$cliente) {
             wp_send_json_error(array('message' => __('Cliente no encontrado', 'modulo-ventas')));
         }
-        
+
         // Formatear datos para respuesta
         $cliente_data = array(
-            'id' => $cliente->id,
-            'razon_social' => $cliente->razon_social,
-            'rut' => mv_formatear_rut($cliente->rut),
-            'giro_comercial' => $cliente->giro_comercial,
-            'telefono' => $cliente->telefono,
-            'email' => $cliente->email,
-            'email_dte' => $cliente->email_dte,
-            'direccion_facturacion' => $cliente->direccion_facturacion,
-            'comuna_facturacion' => $cliente->comuna_facturacion,
-            'ciudad_facturacion' => $cliente->ciudad_facturacion,
-            'region_facturacion' => $cliente->region_facturacion,
-            'pais_facturacion' => $cliente->pais_facturacion,
-            'usar_misma_direccion' => $cliente->usar_direccion_facturacion_para_envio,
-            'direccion_envio' => $cliente->direccion_envio,
-            'comuna_envio' => $cliente->comuna_envio,
-            'ciudad_envio' => $cliente->ciudad_envio,
-            'region_envio' => $cliente->region_envio,
-            'pais_envio' => $cliente->pais_envio,
-            'user_id' => $cliente->user_id,
-            'fecha_creacion' => mv_formato_fecha($cliente->fecha_creacion, true),
-            'meta' => $cliente->meta ?? array()
+            'id'                    => isset($cliente->id) ? $cliente->id : null,
+            'razon_social'          => isset($cliente->razon_social) ? $cliente->razon_social : '',
+            'rut'                   => isset($cliente->rut) ? mv_formatear_rut($cliente->rut) : '',
+            'giro_comercial'        => isset($cliente->giro_comercial) ? $cliente->giro_comercial : '',
+            'telefono'              => isset($cliente->telefono) ? $cliente->telefono : '',
+            'email'                 => isset($cliente->email) ? $cliente->email : '',
+            'email_dte'             => isset($cliente->email_dte) ? $cliente->email_dte : '',
+            'direccion_facturacion' => isset($cliente->direccion_facturacion) ? $cliente->direccion_facturacion : '',
+            'comuna_facturacion'    => isset($cliente->comuna_facturacion) ? $cliente->comuna_facturacion : '',
+            'ciudad_facturacion'    => isset($cliente->ciudad_facturacion) ? $cliente->ciudad_facturacion : '',
+            'region_facturacion'    => isset($cliente->region_facturacion) ? $cliente->region_facturacion : '',
+            'pais_facturacion'      => isset($cliente->pais_facturacion) ? $cliente->pais_facturacion : '',
+            'usar_misma_direccion'  => isset($cliente->usar_direccion_facturacion_para_envio) ? $cliente->usar_direccion_facturacion_para_envio : false,
+            'direccion_envio'       => isset($cliente->direccion_envio) ? $cliente->direccion_envio : '',
+            'comuna_envio'          => isset($cliente->comuna_envio) ? $cliente->comuna_envio : '',
+            'ciudad_envio'          => isset($cliente->ciudad_envio) ? $cliente->ciudad_envio : '',
+            'region_envio'          => isset($cliente->region_envio) ? $cliente->region_envio : '',
+            'pais_envio'            => isset($cliente->pais_envio) ? $cliente->pais_envio : '',
+            'user_id'               => isset($cliente->user_id) ? $cliente->user_id : null,
+            'fecha_creacion'        => isset($cliente->fecha_creacion) ? mv_formato_fecha($cliente->fecha_creacion, true) : '',
+            'meta'                  => isset($cliente->meta) ? $cliente->meta : array()
         );
         
         wp_send_json_success(array('cliente' => $cliente_data));

@@ -38,7 +38,8 @@ if ( empty( $current_screen ) ) {
 }
 
 get_admin_page_title();
-$title = strip_tags( $title );
+$title = strip_tags(is_string($title) ? $title : '');
+//$title = strip_tags( $title ); // Deprecated
 
 if ( is_network_admin() ) {
 	/* translators: Network admin screen title. %s: Network title. */

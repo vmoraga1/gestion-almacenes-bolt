@@ -167,8 +167,8 @@ if (!defined('ABSPATH')) {
                                     <select name="region" id="region" class="regular-text">
                                         <option value=""><?php _e('Seleccionar región', 'modulo-ventas'); ?></option>
                                         <?php foreach ($regiones as $codigo => $nombre): ?>
-                                        <option value="<?php echo esc_attr($codigo); ?>" 
-                                            <?php selected($cliente->region, $codigo); ?>>
+                                        <option value="<?php echo esc_attr($codigo); ?>"
+                                            <?php selected(isset($cliente->region) ? $cliente->region : '', $codigo); ?>>
                                             <?php echo esc_html($nombre); ?>
                                         </option>
                                         <?php endforeach; ?>
@@ -368,14 +368,14 @@ if (!defined('ABSPATH')) {
                     <div class="inside">
                         <p>
                             <a href="<?php echo admin_url('admin.php?page=modulo-ventas-nueva-cotizacion&cliente_id=' . $cliente->id); ?>" 
-                               class="button button-secondary">
+                                class="button button-secondary">
                                 <span class="dashicons dashicons-plus-alt"></span>
                                 <?php _e('Nueva Cotización', 'modulo-ventas'); ?>
                             </a>
                         </p>
                         <p>
                             <a href="<?php echo admin_url('admin.php?page=modulo-ventas-cotizaciones&cliente_id=' . $cliente->id); ?>" 
-                               class="button button-secondary">
+                                class="button button-secondary">
                                 <span class="dashicons dashicons-list-view"></span>
                                 <?php _e('Ver Cotizaciones', 'modulo-ventas'); ?>
                             </a>

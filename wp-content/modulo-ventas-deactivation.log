@@ -1,0 +1,32 @@
+2025-07-02 16:38:30 - Plugin siendo desactivado
+Network deactivating: NO
+Backtrace:
+  #0 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324 - {closure}()
+  #1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348 - apply_filters()
+  #2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517 - do_action()
+  #3 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\includes\plugin.php:787 - do_action()
+  #4 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:159 - deactivate_plugins()
+  #5 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:481 - verificar_dependencias()
+  #6 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:545 - include_once()
+  #7 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103 - require_once()
+  #8 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50 - require_once()
+  #9 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:22 - require_once()
+
+--------------------------------------------------------------------------------
+
+2025-07-02 16:45:34 - Plugin siendo desactivado
+Network deactivating: NO
+Backtrace:
+  #0 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324 - {closure}()
+  #1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348 - apply_filters()
+  #2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517 - do_action()
+  #3 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\includes\plugin.php:787 - do_action()
+  #4 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:160 - deactivate_plugins()
+  #5 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:495 - verificar_dependencias()
+  #6 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:545 - include_once()
+  #7 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103 - require_once()
+  #8 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50 - require_once()
+  #9 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:22 - require_once()
+
+--------------------------------------------------------------------------------
+

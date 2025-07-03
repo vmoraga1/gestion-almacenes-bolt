@@ -2,7 +2,7 @@
 /**
  * Cost of Goods for WooCommerce - Costs input.
  *
- * @version 3.6.9
+ * @version 3.7.4
  * @since   3.0.3
  * @author  WPFactory
  */
@@ -35,7 +35,7 @@ if ( ! class_exists( 'Alg_WC_Cost_of_Goods' ) ) :
 		 * @since 1.0.0
 		 * @var   string
 		 */
-		public $version = '3.7.2';
+		public $version = '3.7.6';
 
 		/**
 		 * @since 1.0.0
@@ -150,7 +150,7 @@ if ( ! class_exists( 'Alg_WC_Cost_of_Goods' ) ) :
 		/**
 		 * move_wc_settings_tab_to_wpfactory_submenu.
 		 *
-		 * @version 3.6.3
+		 * @version 3.7.4
 		 * @since   3.5.1
 		 *
 		 * @return void
@@ -160,12 +160,16 @@ if ( ! class_exists( 'Alg_WC_Cost_of_Goods' ) ) :
 				return;
 			}
 			require_once plugin_dir_path( alg_wc_cog()->get_filesystem_path() ) . 'vendor/autoload.php';
-			// WC Settings tab as WPFactory submenu item.
 			$wpf_admin_menu = \WPFactory\WPFactory_Admin_Menu\WPFactory_Admin_Menu::get_instance();
 			$wpf_admin_menu->move_wc_settings_tab_to_wpfactory_menu( array(
 				'wc_settings_tab_id' => 'alg_wc_cost_of_goods',
 				'menu_title'         => __( 'Cost of Goods', 'cost-of-goods-for-woocommerce' ),
-				'page_title'         => __( 'Cost of Goods Sold', 'cost-of-goods-for-woocommerce' ),
+				'page_title'         => __( 'Cost of Goods: Product Cost & Profit Calculator for WooCommerce', 'cost-of-goods-for-woocommerce' ),
+				'plugin_icon' => array(
+					'get_url_method'    => 'wporg_plugins_api',
+					'wporg_plugin_slug' => 'cost-of-goods-for-woocommerce',
+					'style'             => 'margin-left:-4px',
+				)
 			) );
 		}
 
