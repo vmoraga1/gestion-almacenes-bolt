@@ -22,3 +22,147 @@ Line: 46
 
 --------------------------------------------------------------------------------
 
+2025-07-05 16:51:22 - Error fatal detectado
+Type: 4
+Message: syntax error, unexpected token "<<"
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php
+Line: 46
+
+--------------------------------------------------------------------------------
+
+2025-07-05 16:52:58 - Error fatal detectado
+Type: 4
+Message: syntax error, unexpected token "<<"
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php
+Line: 46
+
+--------------------------------------------------------------------------------
+
+2025-07-05 16:53:59 - Error fatal detectado
+Type: 4
+Message: syntax error, unexpected token "<<"
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php
+Line: 46
+
+--------------------------------------------------------------------------------
+
+2025-07-05 16:56:00 - Error fatal detectado
+Type: 4
+Message: syntax error, unexpected token "==="
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php
+Line: 1593
+
+--------------------------------------------------------------------------------
+
+2025-07-05 16:58:01 - Error fatal detectado
+Type: 4
+Message: syntax error, unexpected token "public"
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php
+Line: 1653
+
+--------------------------------------------------------------------------------
+
+2025-07-05 17:15:47 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Failed opening required 'C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas/admin/class-modulo-ventas-admin.php' (include_path='.;C:\php\pear') in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:190
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(300): Modulo_Ventas->cargar_archivos()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(537): Modulo_Ventas->cargar_plugin()
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(545): include_once('C:\\wamp64\\www\\g...')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(22): require_once('C:\\wamp64\\www\\g...')
+#6 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php
+Line: 190
+
+--------------------------------------------------------------------------------
+
+2025-07-05 17:17:47 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Failed opening required 'C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas/admin/class-modulo-ventas-admin.php' (include_path='.;C:\php\pear') in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:190
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(300): Modulo_Ventas->cargar_archivos()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(537): Modulo_Ventas->cargar_plugin()
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(545): include_once('C:\\wamp64\\www\\g...')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(22): require_once('C:\\wamp64\\www\\g...')
+#6 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php
+Line: 190
+
+--------------------------------------------------------------------------------
+
+2025-07-05 17:19:47 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Failed opening required 'C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas/admin/class-modulo-ventas-admin.php' (include_path='.;C:\php\pear') in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:190
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(300): Modulo_Ventas->cargar_archivos()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(537): Modulo_Ventas->cargar_plugin()
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(545): include_once('C:\\wamp64\\www\\g...')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(22): require_once('C:\\wamp64\\www\\g...')
+#6 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php
+Line: 190
+
+--------------------------------------------------------------------------------
+
+2025-07-05 17:20:47 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Failed opening required 'C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas/admin/class-modulo-ventas-admin.php' (include_path='.;C:\php\pear') in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:190
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(300): Modulo_Ventas->cargar_archivos()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(537): Modulo_Ventas->cargar_plugin()
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(545): include_once('C:\\wamp64\\www\\g...')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(22): require_once('C:\\wamp64\\www\\g...')
+#6 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php
+Line: 190
+
+--------------------------------------------------------------------------------
+
+2025-07-05 17:22:47 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Failed opening required 'C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas/admin/class-modulo-ventas-admin.php' (include_path='.;C:\php\pear') in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:190
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(300): Modulo_Ventas->cargar_archivos()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(537): Modulo_Ventas->cargar_plugin()
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(545): include_once('C:\\wamp64\\www\\g...')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(22): require_once('C:\\wamp64\\www\\g...')
+#6 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php
+Line: 190
+
+--------------------------------------------------------------------------------
+
+2025-07-05 17:23:02 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Failed opening required 'C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas/admin/class-modulo-ventas-admin.php' (include_path='.;C:\php\pear') in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:190
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(300): Modulo_Ventas->cargar_archivos()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(578): do_action('plugins_loaded')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(35): require_once('C:\\wamp64\\www\\g...')
+#8 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php
+Line: 190
+
+--------------------------------------------------------------------------------
+

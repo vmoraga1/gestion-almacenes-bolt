@@ -170,3 +170,6 @@
 [05-Jul-2025 17:28:38 UTC] Petición AJAX detectada
 [05-Jul-2025 17:28:39 UTC] Clase Admin instanciada: Modulo_Ventas_Admin
 [05-Jul-2025 17:28:39 UTC] Petición AJAX detectada
+[05-Jul-2025 17:28:57 UTC] Clase Admin instanciada: Modulo_Ventas_Admin
+[05-Jul-2025 17:28:59 UTC] Método registrar_menu() llamado
+[05-Jul-2025 17:28:59 UTC] Current user can manage_clientes_ventas: SI

@@ -213,9 +213,9 @@ class Modulo_Ventas_Admin {
             'manage_modulo_ventas',
             '#',
             ''
-        );*/
+        );
         
-        /*// Herramientas
+        // Herramientas
         add_submenu_page(
             'modulo-ventas',
             __('Herramientas', 'modulo-ventas'),
