@@ -511,8 +511,6 @@ class Modulo_Ventas_Ajax {
             file_put_contents($log_file, "TRACE: " . $e->getTraceAsString() . "\n", FILE_APPEND);
             wp_send_json_error(array('message' => 'Error fatal: ' . $e->getMessage()));
         }
-        
-        error_log('=== FIN guardar_cotizacion ===');
     }
     
     /**
@@ -1128,21 +1126,16 @@ class Modulo_Ventas_Ajax {
      * Validar RUT vía AJAX
      */
     public function validar_rut() {
-        // Log para debug
-        error_log('Método validar_rut() ejecutado');
-        
         // Verificar nonce de forma más flexible
         $nonce_valid = false;
         
         // Primero intentar con el nonce general
         if (isset($_POST['nonce']) && wp_verify_nonce($_POST['nonce'], 'modulo_ventas_nonce')) {
             $nonce_valid = true;
-            error_log('Nonce válido: modulo_ventas_nonce');
         }
         // Si no, intentar con el nonce específico
         else if (isset($_POST['nonce']) && wp_verify_nonce($_POST['nonce'], 'mv_validar_rut')) {
             $nonce_valid = true;
-            error_log('Nonce válido: mv_validar_rut');
         }
         // Intentar otros nombres de campo de nonce
         else {
@@ -1152,19 +1145,13 @@ class Modulo_Ventas_Ajax {
                     if (wp_verify_nonce($_POST[$field], 'modulo_ventas_nonce') || 
                         wp_verify_nonce($_POST[$field], 'mv_validar_rut')) {
                         $nonce_valid = true;
-                        error_log("Nonce válido en campo: $field");
                         break;
                     }
                 }
             }
         }
         
-        if (!$nonce_valid) {
-            error_log('Error: Nonce inválido');
-            error_log('Nonces recibidos: ' . print_r(array_filter($_POST, function($key) {
-                return strpos($key, 'nonce') !== false || $key === 'security' || $key === '_wpnonce';
-            }, ARRAY_FILTER_USE_KEY), true));
-            
+        if (!$nonce_valid) {            
             wp_send_json_error(array(
                 'message' => __('Error de seguridad', 'modulo-ventas'),
                 'debug' => 'Nonce inválido o faltante'
@@ -1175,8 +1162,6 @@ class Modulo_Ventas_Ajax {
         $rut = isset($_POST['rut']) ? sanitize_text_field($_POST['rut']) : '';
         $cliente_id = isset($_POST['cliente_id']) ? intval($_POST['cliente_id']) : 0;
         
-        error_log("Validando RUT: $rut");
-        
         if (empty($rut)) {
             wp_send_json_error(array('message' => __('RUT vacío', 'modulo-ventas')));
             return;
@@ -1184,11 +1169,9 @@ class Modulo_Ventas_Ajax {
         
         // Limpiar RUT
         $rut_limpio = mv_limpiar_rut($rut);
-        error_log("RUT limpio: $rut_limpio");
         
         // Validar formato y dígito verificador
         if (!mv_validar_rut($rut)) {
-            error_log("RUT inválido: $rut");
             wp_send_json_error(array(
                 'message' => __('RUT inválido. Verifique el dígito verificador.', 'modulo-ventas'),
                 'rut_ingresado' => $rut,
@@ -1283,10 +1266,6 @@ class Modulo_Ventas_Ajax {
      * AJAX: Agregar nota a cliente
      */
     public function agregar_nota_cliente() {
-        // Debug temporal
-        error_log('agregar_nota_cliente llamado');
-        error_log('POST data: ' . print_r($_POST, true));
-
         // Verificar nonce
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mv_agregar_nota_cliente')) {
             wp_send_json_error(array('message' => __('Error de seguridad', 'modulo-ventas')));

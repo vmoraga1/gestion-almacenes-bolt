@@ -14,3 +14,11 @@ Line: 28
 
 --------------------------------------------------------------------------------
 
+2025-07-03 01:08:49 - Error fatal detectado
+Type: 4
+Message: syntax error, unexpected token "<<"
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php
+Line: 46
+
+--------------------------------------------------------------------------------
+

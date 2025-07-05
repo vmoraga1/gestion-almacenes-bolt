@@ -215,16 +215,6 @@ class Modulo_Ventas_Admin {
             ''
         );
         
-        // Configuración
-        add_submenu_page(
-            'modulo-ventas',
-            __('Configuración', 'modulo-ventas'),
-            __('Configuración', 'modulo-ventas'),
-            'manage_modulo_ventas',
-            'modulo-ventas-configuracion',
-            array($this, 'pagina_configuracion')
-        );
-        
         // Herramientas
         add_submenu_page(
             'modulo-ventas',
@@ -253,6 +243,16 @@ class Modulo_Ventas_Admin {
             'manage_modulo_ventas',
             'modulo-ventas-ventas',
             array($this, 'pagina_ventas')
+        );
+
+        // Configuración
+        add_submenu_page(
+            'modulo-ventas',
+            __('Configuración', 'modulo-ventas'),
+            __('Configuración', 'modulo-ventas'),
+            'manage_modulo_ventas',
+            'modulo-ventas-configuracion',
+            array($this, 'pagina_configuracion')
         );
     }
     
