@@ -1255,3 +1255,758 @@ if (!function_exists('mv_obtener_nombre_region')) {
         return isset($regiones[$codigo]) ? $regiones[$codigo] : $codigo;
     }
 }
+
+/**
+ * Funciones auxiliares para configuración del Módulo de Ventas
+ * Estas funciones deben agregarse al archivo includes/helpers.php
+ */
+
+/**
+ * Obtener configuración completa del plugin
+ */
+if (!function_exists('mv_get_configuracion_completa')) {
+    function mv_get_configuracion_completa() {
+        return array(
+            // General
+            'prefijo_cotizacion' => get_option('modulo_ventas_prefijo_cotizacion', 'COT'),
+            'dias_expiracion' => get_option('modulo_ventas_dias_expiracion', 30),
+            'numeracion_tipo' => get_option('modulo_ventas_numeracion_tipo', 'consecutiva'),
+            'moneda_predeterminada' => get_option('modulo_ventas_moneda_predeterminada', 'CLP'),
+            'decimales_precio' => get_option('modulo_ventas_decimales_precio', '2'),
+            'decimales_cantidad' => get_option('modulo_ventas_decimales_cantidad', '0'),
+            
+            // Stock y Almacenes
+            'permitir_cotizar_sin_stock' => get_option('modulo_ventas_permitir_cotizar_sin_stock', 'no'),
+            'reservar_stock' => get_option('modulo_ventas_reservar_stock', 'no'),
+            'tiempo_reserva_stock' => get_option('modulo_ventas_tiempo_reserva_stock', 24),
+            'almacen_predeterminado' => get_option('modulo_ventas_almacen_predeterminado', 0),
+            'sincronizar_stock' => get_option('modulo_ventas_sincronizar_stock', 'yes'),
+            'mostrar_stock_cotizacion' => get_option('modulo_ventas_mostrar_stock_cotizacion', 'yes'),
+            
+            // Emails y Notificaciones
+            'notificar_nueva_cotizacion' => get_option('modulo_ventas_notificar_nueva_cotizacion', 'yes'),
+            'emails_notificacion' => get_option('modulo_ventas_emails_notificacion', get_option('admin_email')),
+            'plantilla_email_cotizacion' => get_option('modulo_ventas_plantilla_email_cotizacion', mv_get_plantilla_email_default()),
+            
+            // Integración
+            'crear_cliente_automatico' => get_option('modulo_ventas_crear_cliente_automatico', 'no'),
+            'conversion_automatica' => get_option('modulo_ventas_conversion_automatica', 'no'),
+            
+            // PDF y Documentos
+            'logo_empresa' => get_option('modulo_ventas_logo_empresa', ''),
+            'info_empresa' => get_option('modulo_ventas_info_empresa', ''),
+            'terminos_condiciones' => get_option('modulo_ventas_terminos_condiciones', ''),
+            
+            // Avanzado
+            'log_level' => get_option('modulo_ventas_log_level', 'info'),
+            'log_retention_days' => get_option('modulo_ventas_log_retention_days', 30),
+            'debug_mode' => get_option('modulo_ventas_debug_mode', 'no'),
+        );
+    }
+}
+
+/**
+ * Procesar formulario de configuración
+ */
+if (!function_exists('mv_procesar_configuracion')) {
+    function mv_procesar_configuracion($post_data) {
+        try {
+            // Manejar reset de configuración
+            if (isset($_GET['reset']) && $_GET['reset'] == '1') {
+                return mv_reset_configuracion();
+            }
+            
+            // Lista de opciones a procesar
+            $opciones_texto = array(
+                'modulo_ventas_prefijo_cotizacion',
+                'modulo_ventas_numeracion_tipo',
+                'modulo_ventas_moneda_predeterminada',
+                'modulo_ventas_decimales_precio',
+                'modulo_ventas_decimales_cantidad',
+                'modulo_ventas_log_level'
+            );
+            
+            $opciones_numero = array(
+                'modulo_ventas_dias_expiracion',
+                'modulo_ventas_tiempo_reserva_stock',
+                'modulo_ventas_almacen_predeterminado',
+                'modulo_ventas_log_retention_days'
+            );
+            
+            $opciones_textarea = array(
+                'modulo_ventas_emails_notificacion',
+                'modulo_ventas_plantilla_email_cotizacion',
+                'modulo_ventas_info_empresa',
+                'modulo_ventas_terminos_condiciones'
+            );
+            
+            $opciones_checkbox = array(
+                'modulo_ventas_permitir_cotizar_sin_stock',
+                'modulo_ventas_reservar_stock',
+                'modulo_ventas_sincronizar_stock',
+                'modulo_ventas_mostrar_stock_cotizacion',
+                'modulo_ventas_notificar_nueva_cotizacion',
+                'modulo_ventas_crear_cliente_automatico',
+                'modulo_ventas_conversion_automatica',
+                'modulo_ventas_debug_mode'
+            );
+            
+            // Procesar opciones de texto
+            foreach ($opciones_texto as $opcion) {
+                if (isset($post_data[$opcion])) {
+                    $valor = sanitize_text_field($post_data[$opcion]);
+                    
+                    // Validaciones específicas
+                    if ($opcion === 'modulo_ventas_prefijo_cotizacion') {
+                        if (empty($valor) || strlen($valor) > 10) {
+                            return array('success' => false, 'message' => __('El prefijo debe tener entre 1 y 10 caracteres.', 'modulo-ventas'));
+                        }
+                        $valor = strtoupper($valor);
+                    }
+                    
+                    if ($opcion === 'modulo_ventas_decimales_precio') {
+                        $valor = intval($valor);
+                        if ($valor < 0 || $valor > 4) {
+                            return array('success' => false, 'message' => __('Los decimales del precio deben estar entre 0 y 4.', 'modulo-ventas'));
+                        }
+                    }
+                    
+                    if ($opcion === 'modulo_ventas_decimales_cantidad') {
+                        $valor = intval($valor);
+                        if ($valor < 0 || $valor > 3) {
+                            return array('success' => false, 'message' => __('Los decimales de cantidad deben estar entre 0 y 3.', 'modulo-ventas'));
+                        }
+                    }
+                    
+                    update_option($opcion, $valor);
+                }
+            }
+            
+            // Procesar opciones numéricas
+            foreach ($opciones_numero as $opcion) {
+                if (isset($post_data[$opcion])) {
+                    $valor = intval($post_data[$opcion]);
+                    
+                    // Validaciones específicas
+                    if ($opcion === 'modulo_ventas_dias_expiracion') {
+                        if ($valor < 1 || $valor > 365) {
+                            return array('success' => false, 'message' => __('Los días de expiración deben estar entre 1 y 365.', 'modulo-ventas'));
+                        }
+                    }
+                    
+                    if ($opcion === 'modulo_ventas_tiempo_reserva_stock') {
+                        if ($valor < 1 || $valor > 72) {
+                            return array('success' => false, 'message' => __('El tiempo de reserva debe estar entre 1 y 72 horas.', 'modulo-ventas'));
+                        }
+                    }
+                    
+                    update_option($opcion, $valor);
+                }
+            }
+            
+            // Procesar opciones textarea
+            foreach ($opciones_textarea as $opcion) {
+                if (isset($post_data[$opcion])) {
+                    $valor = sanitize_textarea_field($post_data[$opcion]);
+                    
+                    // Validación de emails
+                    if ($opcion === 'modulo_ventas_emails_notificacion') {
+                        $emails = array_map('trim', explode(',', $valor));
+                        $emails_validos = array();
+                        
+                        foreach ($emails as $email) {
+                            if (!empty($email) && is_email($email)) {
+                                $emails_validos[] = $email;
+                            } elseif (!empty($email)) {
+                                return array('success' => false, 'message' => sprintf(__('El email "%s" no es válido.', 'modulo-ventas'), $email));
+                            }
+                        }
+                        
+                        $valor = implode(', ', $emails_validos);
+                    }
+                    
+                    update_option($opcion, $valor);
+                }
+            }
+            
+            // Procesar checkboxes
+            foreach ($opciones_checkbox as $opcion) {
+                $valor = isset($post_data[$opcion]) && $post_data[$opcion] === 'yes' ? 'yes' : 'no';
+                update_option($opcion, $valor);
+            }
+            
+            // Manejar upload de logo
+            if (isset($_FILES['modulo_ventas_logo_empresa']) && $_FILES['modulo_ventas_logo_empresa']['error'] === UPLOAD_ERR_OK) {
+                $resultado_logo = mv_manejar_upload_logo($_FILES['modulo_ventas_logo_empresa']);
+                if ($resultado_logo['success']) {
+                    update_option('modulo_ventas_logo_empresa', $resultado_logo['url']);
+                } else {
+                    return array('success' => false, 'message' => $resultado_logo['message']);
+                }
+            }
+            
+            // Eliminar logo si se solicita
+            if (isset($post_data['modulo_ventas_eliminar_logo']) && $post_data['modulo_ventas_eliminar_logo'] === 'yes') {
+                $logo_actual = get_option('modulo_ventas_logo_empresa');
+                if ($logo_actual) {
+                    mv_eliminar_logo($logo_actual);
+                    delete_option('modulo_ventas_logo_empresa');
+                }
+            }
+            
+            // Actualizar configuración del logger si cambió el nivel
+            if (isset($post_data['modulo_ventas_log_level'])) {
+                $logger = Modulo_Ventas_Logger::get_instance();
+                $logger->set_log_level($post_data['modulo_ventas_log_level']);
+            }
+            
+            // Log de configuración actualizada
+            mv_log('Configuración del plugin actualizada', 'info', array(
+                'usuario' => get_current_user_id(),
+                'tab' => isset($_GET['tab']) ? $_GET['tab'] : 'general'
+            ));
+            
+            return array('success' => true);
+            
+        } catch (Exception $e) {
+            mv_log('Error al guardar configuración: ' . $e->getMessage(), 'error');
+            return array('success' => false, 'message' => __('Error interno al guardar la configuración.', 'modulo-ventas'));
+        }
+    }
+}
+
+/**
+ * Resetear configuración a valores por defecto
+ */
+if (!function_exists('mv_reset_configuracion')) {
+    function mv_reset_configuracion() {
+        $opciones_default = array(
+            'modulo_ventas_prefijo_cotizacion' => 'COT',
+            'modulo_ventas_dias_expiracion' => 30,
+            'modulo_ventas_numeracion_tipo' => 'consecutiva',
+            'modulo_ventas_moneda_predeterminada' => 'CLP',
+            'modulo_ventas_decimales_precio' => '2',
+            'modulo_ventas_decimales_cantidad' => '0',
+            'modulo_ventas_permitir_cotizar_sin_stock' => 'no',
+            'modulo_ventas_reservar_stock' => 'no',
+            'modulo_ventas_tiempo_reserva_stock' => 24,
+            'modulo_ventas_almacen_predeterminado' => 0,
+            'modulo_ventas_sincronizar_stock' => 'yes',
+            'modulo_ventas_mostrar_stock_cotizacion' => 'yes',
+            'modulo_ventas_notificar_nueva_cotizacion' => 'yes',
+            'modulo_ventas_emails_notificacion' => get_option('admin_email'),
+            'modulo_ventas_plantilla_email_cotizacion' => mv_get_plantilla_email_default(),
+            'modulo_ventas_crear_cliente_automatico' => 'no',
+            'modulo_ventas_conversion_automatica' => 'no',
+            'modulo_ventas_info_empresa' => '',
+            'modulo_ventas_terminos_condiciones' => '',
+            'modulo_ventas_log_level' => 'info',
+            'modulo_ventas_log_retention_days' => 30,
+            'modulo_ventas_debug_mode' => 'no'
+        );
+        
+        foreach ($opciones_default as $opcion => $valor) {
+            update_option($opcion, $valor);
+        }
+        
+        // Eliminar logo si existe
+        $logo_actual = get_option('modulo_ventas_logo_empresa');
+        if ($logo_actual) {
+            mv_eliminar_logo($logo_actual);
+            delete_option('modulo_ventas_logo_empresa');
+        }
+        
+        if (function_exists('mv_log')) {
+            mv_log('Configuración restablecida a valores por defecto', 'info');
+        }
+        
+        return array('success' => true);
+    }
+}
+
+/**
+ * Obtener plantilla de email por defecto
+ */
+if (!function_exists('mv_get_plantilla_email_default')) {
+    function mv_get_plantilla_email_default() {
+        return "Estimado/a {cliente_nombre},
+
+Le enviamos la cotización {folio} solicitada con fecha {fecha}.
+
+Total: {total}
+
+Puede revisar los detalles completos en el siguiente enlace:
+{enlace_cotizacion}
+
+Saludos cordiales,
+Equipo de Ventas";
+    }
+}
+
+/**
+ * Manejar upload de logo
+ */
+if (!function_exists('mv_manejar_upload_logo')) {
+    function mv_manejar_upload_logo($file) {
+        // Verificar que sea una imagen
+        $allowed_types = array('image/jpeg', 'image/png', 'image/gif', 'image/webp');
+        if (!in_array($file['type'], $allowed_types)) {
+            return array('success' => false, 'message' => __('Solo se permiten archivos de imagen (JPG, PNG, GIF, WebP).', 'modulo-ventas'));
+        }
+        
+        // Verificar tamaño (máximo 2MB)
+        if ($file['size'] > 2 * 1024 * 1024) {
+            return array('success' => false, 'message' => __('El archivo es demasiado grande. Máximo permitido: 2MB.', 'modulo-ventas'));
+        }
+        
+        // Directorio de uploads
+        $upload_dir = wp_upload_dir();
+        $mv_upload_dir = $upload_dir['basedir'] . '/modulo-ventas/';
+        $mv_upload_url = $upload_dir['baseurl'] . '/modulo-ventas/';
+        
+        // Crear directorio si no existe
+        if (!file_exists($mv_upload_dir)) {
+            if (!wp_mkdir_p($mv_upload_dir)) {
+                return array('success' => false, 'message' => __('No se pudo crear el directorio de uploads.', 'modulo-ventas'));
+            }
+        }
+        
+        // Generar nombre único
+        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $filename = 'logo-' . time() . '.' . sanitize_file_name($extension);
+        $file_path = $mv_upload_dir . $filename;
+        
+        // Eliminar logo anterior si existe
+        $logo_actual = get_option('modulo_ventas_logo_empresa');
+        if ($logo_actual) {
+            mv_eliminar_logo($logo_actual);
+        }
+        
+        // Mover archivo
+        if (move_uploaded_file($file['tmp_name'], $file_path)) {
+            return array(
+                'success' => true,
+                'url' => $mv_upload_url . $filename,
+                'path' => $file_path
+            );
+        }
+        
+        return array('success' => false, 'message' => __('Error al subir el archivo.', 'modulo-ventas'));
+    }
+}
+
+/**
+ * Eliminar archivo de logo
+ */
+if (!function_exists('mv_eliminar_logo')) {
+    function mv_eliminar_logo($logo_url) {
+        if (empty($logo_url)) {
+            return false;
+        }
+        
+        $upload_dir = wp_upload_dir();
+        $logo_path = str_replace($upload_dir['baseurl'], $upload_dir['basedir'], $logo_url);
+        
+        if (file_exists($logo_path)) {
+            return unlink($logo_path);
+        }
+        
+        return false;
+    }
+}
+
+/**
+ * Verificar si se puede cotizar sin stock según configuración
+ */
+if (!function_exists('mv_puede_cotizar_sin_stock')) {
+    function mv_puede_cotizar_sin_stock() {
+        return get_option('modulo_ventas_permitir_cotizar_sin_stock', 'no') === 'yes';
+    }
+}
+
+/**
+ * Verificar si se debe reservar stock automáticamente
+ */
+if (!function_exists('mv_debe_reservar_stock')) {
+    function mv_debe_reservar_stock() {
+        return get_option('modulo_ventas_reservar_stock', 'no') === 'yes';
+    }
+}
+
+/**
+ * Obtener tiempo de reserva de stock en horas
+ */
+if (!function_exists('mv_get_tiempo_reserva_stock')) {
+    function mv_get_tiempo_reserva_stock() {
+        return intval(get_option('modulo_ventas_tiempo_reserva_stock', 24));
+    }
+}
+
+/**
+ * Obtener almacén predeterminado
+ */
+if (!function_exists('mv_get_almacen_predeterminado')) {
+    function mv_get_almacen_predeterminado() {
+        return intval(get_option('modulo_ventas_almacen_predeterminado', 0));
+    }
+}
+
+/**
+ * Verificar si está activado el modo debug
+ */
+if (!function_exists('mv_is_debug_mode')) {
+    function mv_is_debug_mode() {
+        return get_option('modulo_ventas_debug_mode', 'no') === 'yes';
+    }
+}
+
+/**
+ * Obtener número de decimales para precios
+ */
+if (!function_exists('mv_get_decimales_precio')) {
+    function mv_get_decimales_precio() {
+        return intval(get_option('modulo_ventas_decimales_precio', '2'));
+    }
+}
+
+/**
+ * Obtener número de decimales para cantidades
+ */
+if (!function_exists('mv_get_decimales_cantidad')) {
+    function mv_get_decimales_cantidad() {
+        return intval(get_option('modulo_ventas_decimales_cantidad', '0'));
+    }
+}
+
+/**
+ * Formatear precio según configuración
+ */
+if (!function_exists('mv_format_precio')) {
+    function mv_format_precio($precio, $incluir_simbolo = true) {
+        $decimales = mv_get_decimales_precio();
+        $moneda = get_option('modulo_ventas_moneda_predeterminada', 'CLP');
+        
+        $precio_formateado = number_format(floatval($precio), $decimales, ',', '.');
+        
+        if ($incluir_simbolo) {
+            $simbolos = array(
+                'CLP' => '$',        // Peso chileno
+                'USD' => 'US$',      // Dólar americano  
+                'EUR' => '€'         // Euro
+            );
+            
+            $simbolo = isset($simbolos[$moneda]) ? $simbolos[$moneda] : '$';
+            return $simbolo . ' ' . $precio_formateado;
+        }
+        
+        return $precio_formateado;
+    }
+}
+
+/**
+ * Formatear cantidad según configuración
+ */
+if (!function_exists('mv_format_cantidad')) {
+    function mv_format_cantidad($cantidad) {
+        $decimales = mv_get_decimales_cantidad();
+        return number_format($cantidad, $decimales, ',', '.');
+    }
+}
+
+/**
+ * Validar precio según configuración de decimales
+ */
+if (!function_exists('mv_validar_precio')) {
+    function mv_validar_precio($precio) {
+        $decimales_permitidos = mv_get_decimales_precio();
+        
+        // Convertir a float
+        $precio = floatval($precio);
+        
+        if ($precio < 0) {
+            return array('valid' => false, 'message' => __('El precio no puede ser negativo.', 'modulo-ventas'));
+        }
+        
+        // Verificar decimales
+        $precio_str = number_format($precio, 10, '.', '');
+        $partes = explode('.', $precio_str);
+        
+        if (isset($partes[1])) {
+            $decimales_actuales = strlen(rtrim($partes[1], '0'));
+            if ($decimales_actuales > $decimales_permitidos) {
+                return array(
+                    'valid' => false, 
+                    'message' => sprintf(__('El precio no puede tener más de %d decimales.', 'modulo-ventas'), $decimales_permitidos)
+                );
+            }
+        }
+        
+        return array('valid' => true, 'precio' => $precio);
+    }
+}
+
+/**
+ * Validar cantidad según configuración de decimales
+ */
+if (!function_exists('mv_validar_cantidad')) {
+    function mv_validar_cantidad($cantidad) {
+        $decimales_permitidos = mv_get_decimales_cantidad();
+        
+        // Convertir a float
+        $cantidad = floatval($cantidad);
+        
+        if ($cantidad <= 0) {
+            return array('valid' => false, 'message' => __('La cantidad debe ser mayor a cero.', 'modulo-ventas'));
+        }
+        
+        // Verificar decimales
+        $cantidad_str = number_format($cantidad, 10, '.', '');
+        $partes = explode('.', $cantidad_str);
+        
+        if (isset($partes[1])) {
+            $decimales_actuales = strlen(rtrim($partes[1], '0'));
+            if ($decimales_actuales > $decimales_permitidos) {
+                return array(
+                    'valid' => false, 
+                    'message' => sprintf(__('La cantidad no puede tener más de %d decimales.', 'modulo-ventas'), $decimales_permitidos)
+                );
+            }
+        }
+        
+        return array('valid' => true, 'cantidad' => $cantidad);
+    }
+}
+
+/**
+ * Obtener atributos HTML para campos de precio
+ */
+if (!function_exists('mv_get_precio_field_attributes')) {
+    function mv_get_precio_field_attributes() {
+        $decimales = mv_get_decimales_precio();
+        
+        if ($decimales > 0) {
+            $step = '0.' . str_repeat('0', $decimales - 1) . '1';
+        } else {
+            $step = '1';
+        }
+        
+        return array(
+            'type' => 'number',
+            'step' => $step,
+            'min' => '0',
+            'class' => 'mv-precio-field'
+        );
+    }
+}
+
+/**
+ * Obtener atributos HTML para campos de cantidad
+ */
+if (!function_exists('mv_get_cantidad_field_attributes')) {
+    function mv_get_cantidad_field_attributes() {
+        $decimales = mv_get_decimales_cantidad();
+        
+        if ($decimales > 0) {
+            $step = '0.' . str_repeat('0', $decimales - 1) . '1';
+        } else {
+            $step = '1';
+        }
+        
+        return array(
+            'type' => 'number',
+            'step' => $step,
+            'min' => '0.01',
+            'class' => 'mv-cantidad-field'
+        );
+    }
+}
+
+/* Fin funciones auxiliares de página Configuración */
+
+
+
+// Funciones auxiliares para PDF (inicio)
+/**
+ * Subir logo de empresa
+ */
+if (!function_exists('mv_upload_logo')) {
+    function mv_upload_logo($file) {
+        // Verificar que se subió un archivo
+        if (empty($file['name'])) {
+            return new WP_Error('no_file', __('No se seleccionó ningún archivo', 'modulo-ventas'));
+        }
+        
+        // Verificar tipo de archivo
+        $allowed_types = array('image/jpeg', 'image/jpg', 'image/png', 'image/gif');
+        if (!in_array($file['type'], $allowed_types)) {
+            return new WP_Error('invalid_type', __('Tipo de archivo no permitido. Use JPG, PNG o GIF.', 'modulo-ventas'));
+        }
+        
+        // Verificar tamaño (max 2MB)
+        $max_size = 2 * 1024 * 1024; // 2MB
+        if ($file['size'] > $max_size) {
+            return new WP_Error('file_too_large', __('El archivo es demasiado grande. Máximo 2MB.', 'modulo-ventas'));
+        }
+        
+        // Configurar upload
+        $upload_overrides = array(
+            'test_form' => false,
+            'unique_filename_callback' => function($dir, $name, $ext) {
+                return 'mv-logo-' . time() . $ext;
+            }
+        );
+        
+        // Crear directorio si no existe
+        $upload_dir = wp_upload_dir();
+        $mv_dir = $upload_dir['basedir'] . '/modulo-ventas/logos';
+        
+        if (!file_exists($mv_dir)) {
+            wp_mkdir_p($mv_dir);
+        }
+        
+        // Cambiar directorio temporal para el upload
+        add_filter('upload_dir', function($dirs) use ($upload_dir) {
+            $dirs['path'] = $upload_dir['basedir'] . '/modulo-ventas/logos';
+            $dirs['url'] = $upload_dir['baseurl'] . '/modulo-ventas/logos';
+            $dirs['subdir'] = '';
+            return $dirs;
+        });
+        
+        // Incluir funciones de WordPress para upload
+        if (!function_exists('wp_handle_upload')) {
+            require_once(ABSPATH . 'wp-admin/includes/file.php');
+        }
+        
+        // Realizar upload
+        $upload_result = wp_handle_upload($file, $upload_overrides);
+        
+        // Remover filtro
+        remove_all_filters('upload_dir');
+        
+        if (isset($upload_result['error'])) {
+            return new WP_Error('upload_error', $upload_result['error']);
+        }
+        
+        return $upload_result;
+    }
+}
+
+/**
+ * Obtener URL del logo actual
+ */
+if (!function_exists('mv_get_logo_url')) {
+    function mv_get_logo_url() {
+        $config = get_option('mv_pdf_config', array());
+        return isset($config['empresa_logo']) ? $config['empresa_logo'] : '';
+    }
+}
+
+/**
+ * Obtener path del logo actual
+ */
+if (!function_exists('mv_get_logo_path')) {
+    function mv_get_logo_path() {
+        $config = get_option('mv_pdf_config', array());
+        
+        if (isset($config['empresa_logo_path']) && file_exists($config['empresa_logo_path'])) {
+            return $config['empresa_logo_path'];
+        }
+        
+        // Fallback: convertir URL a path
+        if (isset($config['empresa_logo'])) {
+            $upload_dir = wp_upload_dir();
+            $logo_path = str_replace($upload_dir['baseurl'], $upload_dir['basedir'], $config['empresa_logo']);
+            
+            if (file_exists($logo_path)) {
+                return $logo_path;
+            }
+        }
+        
+        return '';
+    }
+}
+
+/**
+ * Validar configuración de PDF
+ */
+if (!function_exists('mv_validate_pdf_config')) {
+    function mv_validate_pdf_config($config) {
+        $errors = array();
+        
+        // Validar campos requeridos
+        if (empty($config['empresa_nombre'])) {
+            $errors[] = __('El nombre de la empresa es requerido', 'modulo-ventas');
+        }
+        
+        // Validar email
+        if (!empty($config['empresa_email']) && !is_email($config['empresa_email'])) {
+            $errors[] = __('El email de la empresa no es válido', 'modulo-ventas');
+        }
+        
+        // Validar URL
+        if (!empty($config['empresa_web']) && !filter_var($config['empresa_web'], FILTER_VALIDATE_URL)) {
+            $errors[] = __('La URL del sitio web no es válida', 'modulo-ventas');
+        }
+        
+        // Validar márgenes
+        $margenes = array('margen_izquierdo', 'margen_derecho', 'margen_superior', 'margen_inferior');
+        foreach ($margenes as $margen) {
+            if (isset($config[$margen])) {
+                $valor = intval($config[$margen]);
+                if ($valor < 5 || $valor > 50) {
+                    $errors[] = sprintf(__('El margen %s debe estar entre 5 y 50 mm', 'modulo-ventas'), str_replace('margen_', '', $margen));
+                }
+            }
+        }
+        
+        // Validar tamaño de fuente
+        if (isset($config['fuente_tamano'])) {
+            $tamano = intval($config['fuente_tamano']);
+            if ($tamano < 8 || $tamano > 16) {
+                $errors[] = __('El tamaño de fuente debe estar entre 8 y 16 puntos', 'modulo-ventas');
+            }
+        }
+        
+        return $errors;
+    }
+}
+
+/**
+ * Obtener configuración de PDF con valores por defecto
+ */
+if (!function_exists('mv_get_pdf_config')) {
+    function mv_get_pdf_config() {
+        $defaults = array(
+            'empresa_nombre' => get_bloginfo('name'),
+            'empresa_direccion' => get_option('woocommerce_store_address', ''),
+            'empresa_ciudad' => get_option('woocommerce_store_city', ''),
+            'empresa_telefono' => '',
+            'empresa_email' => get_option('admin_email'),
+            'empresa_web' => get_option('siteurl'),
+            'empresa_rut' => '',
+            'empresa_logo' => '',
+            'papel_tamano' => 'A4',
+            'papel_orientacion' => 'P',
+            'fuente_principal' => 'helvetica',
+            'fuente_tamano' => 10,
+            'color_primario' => '#2271b1',
+            'margen_izquierdo' => 15,
+            'margen_derecho' => 15,
+            'margen_superior' => 27,
+            'margen_inferior' => 25,
+            'mostrar_footer' => true,
+            'footer_texto' => __('Documento generado por', 'modulo-ventas') . ' ' . get_bloginfo('name'),
+            'terminos_default' => __("• Esta cotización tiene una validez de 30 días desde la fecha de emisión.\n• Los precios incluyen IVA y están sujetos a cambios sin previo aviso.\n• Para confirmar el pedido, se requiere una señal del 50% del valor total.\n• Los tiempos de entrega se confirmarán al momento de la orden de compra.", 'modulo-ventas'),
+            'nota_validez' => __('30 días', 'modulo-ventas'),
+            'incluir_logo' => true,
+            'logo_posicion' => 'izquierda',
+            'mostrar_qr' => false,
+            'marca_agua' => false,
+            'marca_agua_texto' => __('COTIZACIÓN', 'modulo-ventas')
+        );
+        
+        $config = get_option('mv_pdf_config', array());
+        return wp_parse_args($config, $defaults);
+    }
+}
+// Fin funciones auxiliares para PDF

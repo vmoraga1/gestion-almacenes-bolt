@@ -33,6 +33,11 @@ class Modulo_Ventas_Ajax {
         
         // Registrar todos los handlers AJAX
         $this->registrar_ajax_handlers();
+
+        // AGREGAR HOOKS DE DIAGNÓSTICO DIRECTAMENTE AQUÍ
+        add_action('wp_ajax_mv_test_pdf_simple', array($this, 'test_pdf_simple'));
+        add_action('wp_ajax_mv_crear_directorios_pdf', array($this, 'crear_directorios_pdf'));
+        add_action('wp_ajax_mv_test_cotizacion_demo', array($this, 'test_cotizacion_demo'));
     }
     
     /**
@@ -75,7 +80,6 @@ class Modulo_Ventas_Ajax {
             'mv_validar_rut' => 'validar_rut',
             'mv_obtener_comunas' => 'obtener_comunas',
             'mv_sincronizar_cliente_wc' => 'sincronizar_cliente_woocommerce',
-            // Notas de clientes
             'mv_agregar_nota_cliente' => 'agregar_nota_cliente',
             'mv_eliminar_nota_cliente' => 'eliminar_nota_cliente',
             'mv_actualizar_nota_cliente' => 'actualizar_nota_cliente',
@@ -93,6 +97,11 @@ class Modulo_Ventas_Ajax {
             'mv_test_email' => 'test_email',
             'mv_limpiar_logs' => 'limpiar_logs',
             'mv_backup_datos' => 'backup_datos',
+
+            // Diagnóstico y testing
+            'mv_test_pdf_simple' => 'test_pdf_simple',
+            'mv_crear_directorios_pdf' => 'crear_directorios_pdf', 
+            'mv_test_cotizacion_demo' => 'test_cotizacion_demo',
         );
         
         foreach ($private_actions as $action => $method) {
@@ -732,6 +741,350 @@ class Modulo_Ventas_Ajax {
             'pdf_path' => $pdf_path,
             'message' => __('PDF generado exitosamente', 'modulo-ventas')
         ));
+    }
+
+    /**
+     * AJAX: Test PDF simple
+     */
+    public function test_pdf_simple() {
+        // Verificar nonce
+        if (!check_ajax_referer('mv_diagnostico', 'nonce', false)) {
+            wp_send_json_error(array('message' => 'Error de seguridad: nonce inválido'));
+            return;
+        }
+        
+        // Verificar permisos
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(array('message' => 'Sin permisos de administrador'));
+            return;
+        }
+        
+        // Log para debug
+        error_log('MODULO_VENTAS: Iniciando test_pdf_simple');
+        
+        try {
+            // Verificar TCPDF
+            if (!class_exists('TCPDF')) {
+                wp_send_json_error(array('message' => 'TCPDF no disponible en AJAX'));
+                return;
+            }
+            
+            error_log('MODULO_VENTAS: TCPDF disponible en AJAX');
+            
+            // Test básico de creación de PDF
+            $pdf = new TCPDF();
+            $pdf->AddPage();
+            $pdf->SetFont('helvetica', 'B', 16);
+            $pdf->Cell(0, 15, 'TEST AJAX EXITOSO', 0, 1, 'C');
+            
+            error_log('MODULO_VENTAS: PDF creado exitosamente');
+            
+            // Preparar ruta
+            $upload_dir = wp_upload_dir();
+            $pdf_dir = $upload_dir['basedir'] . '/modulo-ventas/pdfs';
+            $filename = 'test_ajax_' . time() . '.pdf';
+            $filepath = $pdf_dir . '/' . $filename;
+            
+            // Crear directorio si no existe
+            if (!file_exists($pdf_dir)) {
+                wp_mkdir_p($pdf_dir);
+                error_log('MODULO_VENTAS: Directorio PDF creado');
+            }
+            
+            // Guardar PDF
+            $pdf->Output($filepath, 'F');
+            
+            // Verificar que se guardó
+            if (file_exists($filepath)) {
+                $file_url = $upload_dir['baseurl'] . '/modulo-ventas/pdfs/' . $filename;
+                $filesize = filesize($filepath);
+                
+                error_log('MODULO_VENTAS: PDF guardado exitosamente: ' . $filepath);
+                
+                wp_send_json_success(array(
+                    'message' => 'Test PDF AJAX exitoso!',
+                    'file_path' => $filepath,
+                    'file_url' => $file_url,
+                    'file_size' => $filesize . ' bytes',
+                    'debug_info' => array(
+                        'upload_dir' => $upload_dir['basedir'],
+                        'pdf_dir' => $pdf_dir,
+                        'filename' => $filename,
+                        'tcpdf_class' => class_exists('TCPDF') ? 'Disponible' : 'No disponible'
+                    )
+                ));
+            } else {
+                error_log('MODULO_VENTAS: Error - archivo no se guardó: ' . $filepath);
+                wp_send_json_error(array(
+                    'message' => 'PDF se generó pero no se guardó',
+                    'filepath' => $filepath,
+                    'directory_exists' => file_exists($pdf_dir) ? 'Si' : 'No',
+                    'directory_writable' => is_writable($pdf_dir) ? 'Si' : 'No'
+                ));
+            }
+            
+        } catch (Exception $e) {
+            error_log('MODULO_VENTAS: Exception en test_pdf_simple: ' . $e->getMessage());
+            wp_send_json_error(array(
+                'message' => 'Exception: ' . $e->getMessage(),
+                'file' => basename($e->getFile()),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ));
+        } catch (Error $e) {
+            error_log('MODULO_VENTAS: Error fatal en test_pdf_simple: ' . $e->getMessage());
+            wp_send_json_error(array(
+                'message' => 'Error fatal: ' . $e->getMessage(),
+                'file' => basename($e->getFile()),
+                'line' => $e->getLine()
+            ));
+        }
+    }
+    
+    /**
+     * AJAX: Crear directorios PDF
+     */
+    public function crear_directorios_pdf() {
+        if (!check_ajax_referer('mv_diagnostico', 'nonce', false)) {
+            wp_send_json_error(array('message' => 'Nonce inválido'));
+            return;
+        }
+        
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(array('message' => 'Sin permisos'));
+            return;
+        }
+        
+        $upload_dir = wp_upload_dir();
+        $base_dir = $upload_dir['basedir'] . '/modulo-ventas';
+        
+        $directorios = array(
+            $base_dir,
+            $base_dir . '/pdfs',
+            $base_dir . '/logos'
+        );
+        
+        $resultado = array();
+        
+        foreach ($directorios as $dir) {
+            if (!file_exists($dir)) {
+                if (wp_mkdir_p($dir)) {
+                    $resultado[] = 'Creado: ' . basename($dir);
+                } else {
+                    $resultado[] = 'Error creando: ' . basename($dir);
+                }
+            } else {
+                $resultado[] = 'Ya existe: ' . basename($dir);
+            }
+        }
+        
+        wp_send_json_success(array(
+            'message' => 'Directorios procesados',
+            'detalles' => $resultado
+        ));
+    }
+    
+    /**
+     * AJAX: Test con cotización demo
+     */
+    public function test_cotizacion_demo() {
+        check_ajax_referer('mv_diagnostico', 'nonce');
+        
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(array('message' => __('Sin permisos', 'modulo-ventas')));
+        }
+        
+        try {
+            $pdf_generator = new Modulo_Ventas_PDF();
+            
+            // Crear datos demo
+            $cotizacion_demo = (object) array(
+                'id' => 999,
+                'folio' => 'DEMO-001',
+                'fecha' => date('Y-m-d'),
+                'fecha_expiracion' => date('Y-m-d', strtotime('+30 days')),
+                'subtotal' => 50000,
+                'total' => 59500,
+                'estado' => 'pendiente',
+                'observaciones' => 'Esta es una cotización de demostración generada para probar el sistema PDF.',
+                'incluir_iva' => true,
+                'costo_envio' => 0,
+                'descuento_global' => 0
+            );
+            
+            $cliente_demo = (object) array(
+                'razon_social' => 'Cliente de Demostración S.A.',
+                'rut' => '12.345.678-9',
+                'email' => 'demo@ejemplo.com',
+                'telefono' => '+56 9 1234 5678',
+                'direccion_facturacion' => 'Av. Demo 123, Santiago'
+            );
+            
+            $items_demo = array(
+                (object) array(
+                    'nombre' => 'Producto Demo 1',
+                    'sku' => 'DEMO-001',
+                    'cantidad' => 2,
+                    'precio' => 15000,
+                    'descuento' => 0,
+                    'descuento_tipo' => 'porcentaje',
+                    'subtotal' => 30000
+                ),
+                (object) array(
+                    'nombre' => 'Producto Demo 2', 
+                    'sku' => 'DEMO-002',
+                    'cantidad' => 1,
+                    'precio' => 20000,
+                    'descuento' => 0,
+                    'descuento_tipo' => 'porcentaje',
+                    'subtotal' => 20000
+                )
+            );
+            
+            // Usar el método interno para generar PDF demo
+            $resultado = $this->generar_pdf_demo($cotizacion_demo, $cliente_demo, $items_demo);
+            
+            if (is_wp_error($resultado)) {
+                wp_send_json_error(array('message' => $resultado->get_error_message()));
+            } else {
+                $upload_dir = wp_upload_dir();
+                $pdf_url = str_replace($upload_dir['basedir'], $upload_dir['baseurl'], $resultado);
+                
+                wp_send_json_success(array(
+                    'message' => 'PDF de cotización demo generado exitosamente',
+                    'pdf_path' => $resultado,
+                    'pdf_url' => $pdf_url
+                ));
+            }
+            
+        } catch (Exception $e) {
+            wp_send_json_error(array('message' => 'Error: ' . $e->getMessage()));
+        }
+    }
+    
+    /**
+     * Generar PDF demo (método interno)
+     */
+    private function generar_pdf_demo($cotizacion, $cliente, $items) {
+        if (!class_exists('TCPDF')) {
+            return new WP_Error('tcpdf_missing', 'TCPDF no disponible');
+        }
+        
+        try {
+            $pdf = new TCPDF('P', PDF_UNIT, 'A4', true, 'UTF-8', false);
+            
+            $pdf->SetCreator('Módulo de Ventas - Demo');
+            $pdf->SetAuthor('Sistema Demo');
+            $pdf->SetTitle('Cotización Demo');
+            
+            $pdf->SetMargins(15, 27, 15);
+            $pdf->SetAutoPageBreak(TRUE, 25);
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(false);
+            
+            $pdf->AddPage();
+            
+            // Header
+            $pdf->SetFont('helvetica', 'B', 20);
+            $pdf->SetTextColor(34, 113, 177);
+            $pdf->Cell(0, 15, 'COTIZACIÓN DEMO', 0, 1, 'C');
+            
+            $pdf->SetFont('helvetica', '', 14);
+            $pdf->SetTextColor(100, 100, 100);
+            $pdf->Cell(0, 8, 'N° ' . $cotizacion->folio, 0, 1, 'C');
+            $pdf->Ln(10);
+            
+            // Info empresa
+            $pdf->SetFont('helvetica', 'B', 12);
+            $pdf->SetTextColor(0, 0, 0);
+            $pdf->Cell(0, 8, get_bloginfo('name'), 0, 1, 'L');
+            
+            // Info cotización y cliente
+            $pdf->Ln(5);
+            $pdf->SetFont('helvetica', 'B', 11);
+            $pdf->Cell(95, 6, 'CLIENTE', 0, 0, 'L');
+            $pdf->Cell(95, 6, 'INFORMACIÓN DE COTIZACIÓN', 0, 1, 'L');
+            
+            $pdf->SetFont('helvetica', '', 10);
+            $y_inicial = $pdf->GetY();
+            
+            // Cliente
+            $pdf->Cell(95, 5, $cliente->razon_social, 0, 1, 'L');
+            $pdf->Cell(95, 5, 'RUT: ' . $cliente->rut, 0, 1, 'L');
+            
+            // Cotización
+            $pdf->SetXY(110, $y_inicial);
+            $pdf->Cell(95, 5, 'Fecha: ' . date('d/m/Y', strtotime($cotizacion->fecha)), 0, 1, 'L');
+            $pdf->SetX(110);
+            $pdf->Cell(95, 5, 'Válida hasta: ' . date('d/m/Y', strtotime($cotizacion->fecha_expiracion)), 0, 1, 'L');
+            
+            $pdf->Ln(10);
+            
+            // Tabla productos
+            $pdf->SetFont('helvetica', 'B', 9);
+            $pdf->SetFillColor(240, 240, 240);
+            
+            $w = array(80, 20, 25, 25, 30);
+            $pdf->Cell($w[0], 8, 'Descripción', 1, 0, 'L', 1);
+            $pdf->Cell($w[1], 8, 'Cant.', 1, 0, 'C', 1);
+            $pdf->Cell($w[2], 8, 'Precio', 1, 0, 'R', 1);
+            $pdf->Cell($w[3], 8, 'Desc.', 1, 0, 'R', 1);
+            $pdf->Cell($w[4], 8, 'Subtotal', 1, 1, 'R', 1);
+            
+            $pdf->SetFont('helvetica', '', 9);
+            foreach ($items as $item) {
+                $pdf->Cell($w[0], 6, '[' . $item->sku . '] ' . $item->nombre, 1, 0, 'L');
+                $pdf->Cell($w[1], 6, $item->cantidad, 1, 0, 'C');
+                $pdf->Cell($w[2], 6, '$' . number_format($item->precio, 0), 1, 0, 'R');
+                $pdf->Cell($w[3], 6, '-', 1, 0, 'R');
+                $pdf->Cell($w[4], 6, '$' . number_format($item->subtotal, 0), 1, 1, 'R');
+            }
+            
+            // Totales
+            $pdf->Ln(5);
+            $x_totales = 130;
+            $pdf->SetFont('helvetica', '', 10);
+            
+            $pdf->SetXY($x_totales, $pdf->GetY());
+            $pdf->Cell(35, 6, 'Subtotal:', 0, 0, 'L');
+            $pdf->Cell(35, 6, '$' . number_format($cotizacion->subtotal, 0), 0, 1, 'R');
+            
+            $pdf->SetX($x_totales);
+            $pdf->Cell(35, 6, 'IVA (19%):', 0, 0, 'L');
+            $iva = $cotizacion->total - $cotizacion->subtotal;
+            $pdf->Cell(35, 6, '$' . number_format($iva, 0), 0, 1, 'R');
+            
+            $pdf->SetX($x_totales);
+            $pdf->Line($x_totales, $pdf->GetY(), $x_totales + 70, $pdf->GetY());
+            $pdf->Ln(3);
+            
+            $pdf->SetFont('helvetica', 'B', 12);
+            $pdf->SetX($x_totales);
+            $pdf->Cell(35, 8, 'TOTAL:', 0, 0, 'L');
+            $pdf->Cell(35, 8, '$' . number_format($cotizacion->total, 0), 0, 1, 'R');
+            
+            // Observaciones
+            if (!empty($cotizacion->observaciones)) {
+                $pdf->Ln(10);
+                $pdf->SetFont('helvetica', 'B', 10);
+                $pdf->Cell(0, 6, 'OBSERVACIONES', 0, 1, 'L');
+                $pdf->SetFont('helvetica', '', 9);
+                $pdf->MultiCell(0, 5, $cotizacion->observaciones, 0, 'L');
+            }
+            
+            // Guardar
+            $upload_dir = wp_upload_dir();
+            $filename = 'cotizacion_demo_' . date('Y-m-d_H-i-s') . '.pdf';
+            $filepath = $upload_dir['basedir'] . '/modulo-ventas/pdfs/' . $filename;
+            
+            wp_mkdir_p(dirname($filepath));
+            $pdf->Output($filepath, 'F');
+            
+            return $filepath;
+            
+        } catch (Exception $e) {
+            return new WP_Error('pdf_error', $e->getMessage());
+        }
     }
     
     /**

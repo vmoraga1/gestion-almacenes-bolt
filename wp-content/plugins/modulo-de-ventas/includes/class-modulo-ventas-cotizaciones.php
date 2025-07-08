@@ -74,9 +74,19 @@ class Modulo_Ventas_Cotizaciones {
             return new WP_Error('sin_permisos', __('No tiene permisos para crear cotizaciones', 'modulo-ventas'));
         }
         
-        // Validar stock disponible antes de crear
+        // Log de inicio
+        $this->logger->log('Iniciando creación de cotización', 'info', array(
+            'cliente_id' => $datos_generales['cliente_id'] ?? 'No especificado',
+            'productos' => count($items),
+            'permitir_sin_stock' => get_option('modulo_ventas_permitir_cotizar_sin_stock', 'no')
+        ));
+        
+        // Validar stock disponible antes de crear (solo si no está permitido cotizar sin stock)
         $validacion_stock = $this->validar_stock_items($items);
         if (is_wp_error($validacion_stock)) {
+            // NO llamar manejar_error_validacion aquí
+            // Solo retornar el error para que lo maneje el admin controller
+            /*$this->manejar_error_validacion($validacion_stock);*/
             return $validacion_stock;
         }
         
@@ -84,8 +94,13 @@ class Modulo_Ventas_Cotizaciones {
         $cotizacion_id = $this->db->crear_cotizacion($datos_generales, $items);
         
         if (is_wp_error($cotizacion_id)) {
+            $this->manejar_error_validacion($cotizacion_id);
             return $cotizacion_id;
         }
+        
+        $this->logger->log('Cotización creada exitosamente', 'info', array(
+            'cotizacion_id' => $cotizacion_id
+        ));
         
         // Reservar stock si está configurado
         if (get_option('modulo_ventas_reservar_stock', 'no') === 'yes') {
@@ -138,19 +153,28 @@ class Modulo_Ventas_Cotizaciones {
      * Validar stock disponible para los items
      */
     private function validar_stock_items($items) {
+        // Verificar si está habilitado permitir cotizar sin stock
+        if (get_option('modulo_ventas_permitir_cotizar_sin_stock', 'no') === 'yes') {
+            // Si está permitido cotizar sin stock, no validar
+            $this->logger->log('Validación de stock omitida: configurado para permitir cotizaciones sin stock', 'info');
+            return true;
+        }
+        
         // Verificar si el plugin de almacenes está activo
         if (!class_exists('Gestion_Almacenes_DB')) {
-            return true; // Si no está activo, usar stock de WooCommerce
+            // Si no está activo, usar stock de WooCommerce
+            return $this->validar_stock_woocommerce($items);
         }
         
         global $gestion_almacenes_db;
         $errores = array();
+        $productos_con_error = array();
         
         foreach ($items as $item) {
             $producto_id = $item['producto_id'];
             $variacion_id = isset($item['variacion_id']) ? $item['variacion_id'] : 0;
             $almacen_id = isset($item['almacen_id']) ? $item['almacen_id'] : null;
-            $cantidad = $item['cantidad'];
+            $cantidad = floatval($item['cantidad']);
             
             // Obtener producto
             $producto = wc_get_product($variacion_id ?: $producto_id);
@@ -159,28 +183,104 @@ class Modulo_Ventas_Cotizaciones {
                 continue;
             }
             
+            // Logs para debugging
+            $this->logger->log(sprintf(
+                'Validando stock: Producto %s, Cantidad: %s, Almacén: %s',
+                $producto->get_name(),
+                $cantidad,
+                $almacen_id ?: 'General'
+            ), 'debug');
+            
             // Si hay almacén específico, verificar stock del almacén
             if ($almacen_id && $gestion_almacenes_db) {
                 $stock_almacen = $gestion_almacenes_db->get_product_warehouse_stock($variacion_id ?: $producto_id);
-                $stock_disponible = isset($stock_almacen[$almacen_id]) ? $stock_almacen[$almacen_id] : 0;
+                $stock_disponible = isset($stock_almacen[$almacen_id]) ? intval($stock_almacen[$almacen_id]) : 0;
                 
                 if ($stock_disponible < $cantidad) {
                     $almacen = $gestion_almacenes_db->get_warehouse($almacen_id);
-                    $errores[] = sprintf(
-                        __('Stock insuficiente para %s en almacén %s. Disponible: %d, Solicitado: %d', 'modulo-ventas'),
+                    $error_msg = sprintf(
+                        __('Stock insuficiente para %s en almacén %s. Disponible: %d, Solicitado: %s', 'modulo-ventas'),
                         $producto->get_name(),
                         $almacen ? $almacen->name : 'ID ' . $almacen_id,
                         $stock_disponible,
                         $cantidad
                     );
+                    $errores[] = $error_msg;
+                    $productos_con_error[] = $producto->get_name();
                 }
             } else {
-                // Usar stock general de WooCommerce
-                if ($producto->managing_stock() && $producto->get_stock_quantity() < $cantidad) {
-                    $errores[] = sprintf(
-                        __('Stock insuficiente para %s. Disponible: %d, Solicitado: %d', 'modulo-ventas'),
+                // Usar stock general
+                $stock_disponible = 0;
+                
+                if ($gestion_almacenes_db) {
+                    // Sumar stock de todos los almacenes
+                    $stock_almacen = $gestion_almacenes_db->get_product_warehouse_stock($variacion_id ?: $producto_id);
+                    $stock_disponible = array_sum($stock_almacen);
+                } else {
+                    // Fallback a WooCommerce
+                    if ($producto->managing_stock()) {
+                        $stock_disponible = $producto->get_stock_quantity();
+                    }
+                }
+                
+                if ($stock_disponible < $cantidad) {
+                    $error_msg = sprintf(
+                        __('Stock insuficiente para %s. Disponible: %d, Solicitado: %s', 'modulo-ventas'),
                         $producto->get_name(),
-                        $producto->get_stock_quantity(),
+                        $stock_disponible,
+                        $cantidad
+                    );
+                    $errores[] = $error_msg;
+                    $productos_con_error[] = $producto->get_name();
+                }
+            }
+        }
+        
+        if (!empty($errores)) {
+            // Crear mensaje más amigable para el usuario
+            $mensaje_principal = sprintf(
+                __('No se puede crear la cotización debido a stock insuficiente en %d producto(s):', 'modulo-ventas'),
+                count($productos_con_error)
+            );
+            
+            $mensaje_completo = $mensaje_principal . '<br><br>' . implode('<br>', $errores);
+            
+            $error_final = new WP_Error('stock_insuficiente', $mensaje_completo);
+            $this->logger->log('Validación de stock falló: ' . implode('; ', $errores), 'error');
+            return $error_final;
+        }
+        
+        $this->logger->log('Validación de stock exitosa para todos los productos', 'info');
+        return true;
+    }
+
+    /**
+     * Validar stock usando solo WooCommerce (cuando no está el plugin de almacenes)
+     */
+    private function validar_stock_woocommerce($items) {
+        $errores = array();
+        
+        foreach ($items as $item) {
+            $producto_id = $item['producto_id'];
+            $variacion_id = isset($item['variacion_id']) ? $item['variacion_id'] : 0;
+            $cantidad = floatval($item['cantidad']);
+            
+            // Obtener producto
+            $producto = wc_get_product($variacion_id ?: $producto_id);
+            if (!$producto) {
+                $errores[] = sprintf(__('Producto ID %d no encontrado', 'modulo-ventas'), $producto_id);
+                continue;
+            }
+            
+            // Verificar si maneja stock
+            if ($producto->managing_stock()) {
+                $stock_disponible = $producto->get_stock_quantity();
+                
+                if ($stock_disponible < $cantidad) {
+                    $errores[] = sprintf(
+                        __('Stock insuficiente para %s. Disponible: %d, Solicitado: %s', 'modulo-ventas'),
+                        $producto->get_name(),
+                        $stock_disponible,
                         $cantidad
                     );
                 }
@@ -972,4 +1072,31 @@ class Modulo_Ventas_Cotizaciones {
         
         return isset($colores[$estado]) ? $colores[$estado] : '#666666';
     }
+
+    /**
+     * Manejar errores de validación y mostrarlos al usuario
+     */
+    public function manejar_error_validacion($error) {
+        if (is_wp_error($error)) {
+            // Log del error
+            $this->logger->log('Error en validación: ' . $error->get_error_message(), 'error');
+            
+            // CORREGIDO: Solo usar JSON para peticiones AJAX reales
+            if (wp_doing_ajax() && !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+                strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                wp_send_json_error(array(
+                    'message' => $error->get_error_message(),
+                    'code' => $error->get_error_code()
+                ));
+            }
+            
+            // Para peticiones normales de formulario, NO mostrar el error aquí
+            // El error se maneja en el admin controller
+            
+            return false;
+        }
+        
+        return true;
+    }
+
 }

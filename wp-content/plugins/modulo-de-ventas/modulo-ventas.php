@@ -103,6 +103,9 @@ class Modulo_Ventas {
         
         // Cargar traducciones en el momento correcto
         add_action('init', array($this, 'cargar_textdomain'), 0);
+
+        // Hook muy temprano para AJAX
+        add_action('init', array($this, 'init_ajax_temprano'), 5);
         
         // Hooks de activación/desactivación
         register_activation_hook(MODULO_VENTAS_PLUGIN_FILE, array($this, 'activar'));
@@ -118,15 +121,6 @@ class Modulo_Ventas {
         // Inicializar el plugin
         add_action('init', array($this, 'init'), 10);
     }
-    
-    // Cargar archivos básicos que no dependen de traducciones
-    /*private function cargar_archivos_basicos() {
-        // Solo cargar helpers.php si estamos en el admin y es necesario
-        if (is_admin()) {
-            // Cargar helpers pero sin ejecutar código que use traducciones
-            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/helpers-basic.php';
-        }
-    }*/
     
     // Verificar dependencias del plugin
     public function verificar_dependencias() {
@@ -184,6 +178,14 @@ class Modulo_Ventas {
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-integration.php';
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf.php';
         
+        // PDF Handler - VERIFICAR ARCHIVO EXISTE
+        $pdf_handler_path = MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-handler.php';
+        if (file_exists($pdf_handler_path)) {
+            require_once $pdf_handler_path;
+        } else {
+            error_log('MODULO_VENTAS: PDF Handler no encontrado en: ' . $pdf_handler_path);
+        }
+        
         // AJAX siempre se carga
         require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/class-modulo-ventas-ajax.php';
         
@@ -200,6 +202,13 @@ class Modulo_Ventas {
         $this->clientes = new Modulo_Ventas_Clientes();
         $this->cotizaciones = new Modulo_Ventas_Cotizaciones();
         $this->integration = new Modulo_Ventas_Integration();
+
+        // PDF Handler solo si existe la clase
+        if (class_exists('Modulo_Ventas_PDF_Handler')) {
+            $this->pdf_handler = new Modulo_Ventas_PDF_Handler();
+        } else {
+            error_log('MODULO_VENTAS: Clase Modulo_Ventas_PDF_Handler no encontrada');
+        }
         
         // Ajax SIEMPRE se necesita (tanto en admin como en peticiones AJAX)
         $this->ajax = new Modulo_Ventas_Ajax();
@@ -207,13 +216,60 @@ class Modulo_Ventas {
         // Admin solo si estamos en el área administrativa
         if (is_admin()) {
             $this->admin = new Modulo_Ventas_Admin();
-            error_log('Clase Admin instanciada: ' . get_class($this->admin));
+            //error_log('Clase Admin instanciada: ' . get_class($this->admin));
         }
         
         // Log para debug
         if (defined('DOING_AJAX') && DOING_AJAX) {
-            error_log('Petición AJAX detectada');
+            //error_log('Petición AJAX detectada');
         }
+    }
+
+    // NUEVO MÉTODO: Inicialización temprana para AJAX
+    public function init_ajax_temprano() {
+        // Solo para peticiones AJAX o si estamos en admin
+        if (wp_doing_ajax() || is_admin()) {
+            // Cargar TCPDF lo más temprano posible
+            $this->cargar_tcpdf_global();
+            
+            // Log para debug
+            if (wp_doing_ajax()) {
+                error_log('MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: ' . (class_exists('TCPDF') ? 'SI' : 'NO'));
+            }
+        }
+    }
+
+    // Cargar TCPDF globalmente
+    private function cargar_tcpdf_global() {
+        // Si ya está cargado, no hacer nada
+        if (class_exists('TCPDF')) {
+            return;
+        }
+        
+        // Intentar autoload primero
+        $autoload_path = MODULO_VENTAS_PLUGIN_DIR . 'vendor/autoload.php';
+        if (file_exists($autoload_path)) {
+            require_once $autoload_path;
+            
+            if (class_exists('TCPDF')) {
+                error_log('MODULO_VENTAS: TCPDF cargado via autoload');
+                return;
+            }
+        }
+        
+        // Cargar manualmente como fallback
+        $tcpdf_path = MODULO_VENTAS_PLUGIN_DIR . 'vendor/tecnickcom/tcpdf/tcpdf.php';
+        if (file_exists($tcpdf_path)) {
+            require_once $tcpdf_path;
+            
+            if (class_exists('TCPDF')) {
+                error_log('MODULO_VENTAS: TCPDF cargado manualmente');
+                return;
+            }
+        }
+        
+        // Log si falla
+        error_log('MODULO_VENTAS: ERROR - No se pudo cargar TCPDF');
     }
     
     // Inicialización del plugin

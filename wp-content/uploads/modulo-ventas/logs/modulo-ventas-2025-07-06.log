@@ -1,0 +1,14 @@
+[2025-07-06 15:43:33] INFO: 1 cotizaciones marcadas como expiradas | IP: ::1
+[2025-07-06 15:43:33] INFO: Verificación automática: 1 cotizaciones marcadas como expiradas | IP: ::1
+[2025-07-06 19:50:06] INFO: Iniciando creación de cotización | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cliente_id":11,"productos":1,"permitir_sin_stock":"yes"}
+[2025-07-06 19:50:06] INFO: Validación de stock omitida: configurado para permitir cotizaciones sin stock | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-06 19:50:06] INFO: Cotización creada: COT-2025-000024 (ID: 24) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-06 19:50:06] INFO: Cotización creada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cotizacion_id":24}
+[2025-07-06 19:50:06] INFO: Cotización creada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cotizacion_id":24,"folio":"COT-2025-000024"}
+[2025-07-06 19:53:45] INFO: Nota agregada al cliente ID: 11 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-06 20:17:48] INFO: Cliente creado: Arturo Vidal (ID: 24) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-06 20:17:48] INFO: Cliente creado rápidamente: Arturo Vidal (ID: 24) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-06 20:49:25] INFO: PDF generado para cotización COT-2025-000024: cotizacion_COT2025000024_2025-07-06.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-06 20:50:03] INFO: PDF generado para cotización COT-2025-000024: cotizacion_COT2025000024_2025-07-06.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-06 21:08:02] INFO: PDF generado para cotización COT-2025-000024: cotizacion_COT2025000024_2025-07-06.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-06 21:08:23] INFO: PDF generado para cotización COT-2025-000024: cotizacion_COT2025000024_2025-07-06.pdf | Usuario: hostpanish (ID: 1) | IP: ::1

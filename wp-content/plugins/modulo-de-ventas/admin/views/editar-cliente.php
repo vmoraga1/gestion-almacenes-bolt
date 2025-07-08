@@ -227,7 +227,7 @@ if (!defined('ABSPATH')) {
                                 <td>
                                     <input type="number" name="credito_autorizado" id="credito_autorizado" 
                                         value="<?php echo isset($cliente->credito_autorizado) ? esc_attr($cliente->credito_autorizado) : '0'; ?>"
-                                        class="regular-text" min="0" step="0.01">
+                                        class="mv-input-cantidad mv-cantidad-field small-text" min="0" step="0.01">
                                     <p class="description">
                                         <?php _e('Monto máximo de crédito autorizado para este cliente.', 'modulo-ventas'); ?>
                                     </p>

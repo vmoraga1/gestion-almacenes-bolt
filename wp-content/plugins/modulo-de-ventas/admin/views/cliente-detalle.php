@@ -956,9 +956,6 @@ jQuery(document).ready(function($) {
             es_privada: $form.find('input[name="es_privada"]').is(':checked') ? 1 : 0
         };
         
-        console.log('Datos a enviar:', datos); // Debug
-        console.log('URL AJAX:', ajaxurl); // Debug
-        
         $submit.prop('disabled', true).text('<?php _e('Agregando...', 'modulo-ventas'); ?>');
         
         $.ajax({
@@ -973,9 +970,7 @@ jQuery(document).ready(function($) {
                 tipo: $form.find('select[name="tipo"]').val(),
                 es_privada: $form.find('input[name="es_privada"]').is(':checked') ? 1 : 0
             },
-            success: function(response) {
-                console.log('Respuesta del servidor:', response); // Debug
-                
+            success: function(response) {                
                 if (response && response.success) {
                     // Recargar la página para mostrar la nueva nota
                     location.reload();

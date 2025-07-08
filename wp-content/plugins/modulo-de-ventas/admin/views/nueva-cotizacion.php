@@ -12,38 +12,40 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// SOLUCIÓN TEMPORAL: Incluir helpers manualmente si no están cargados
-if (!function_exists('mv_calcular_fecha_expiracion')) {
-    $helpers_path = plugin_dir_path(dirname(dirname(__FILE__))) . 'includes/helpers.php';
-    if (file_exists($helpers_path)) {
-        require_once $helpers_path;
-        error_log('[MODULO_VENTAS] Helpers cargado manualmente desde nueva-cotizacion.php');
-    } else {
-        error_log('[MODULO_VENTAS] No se pudo encontrar helpers.php en: ' . $helpers_path);
-    }
-}
-
-// Variables disponibles:
-// $lista_clientes - Array de clientes
-// $almacenes - Array de almacenes disponibles
-// $config - Configuración del plugin
-
-// Función temporal para tooltips
-if (!function_exists('mv_tooltip')) {
-    function mv_tooltip($content, $text) {
-        return $content; // Por ahora, solo retornar el contenido sin tooltip
-    }
-}
-
 ?>
 
 <div class="wrap mv-nueva-cotizacion">
+
+    <?php
+    // Mostrar mensaje de error si existe
+    $error_stock = get_transient('mv_stock_error_message');
+    if ($error_stock) {
+        delete_transient('mv_stock_error_message');
+        ?>
+        <div class="notice notice-error is-dismissible" style="margin: 20px 0;">
+            <p><strong><?php _e('Error al crear la cotización:', 'modulo-ventas'); ?></strong></p>
+            <p><?php echo wp_kses_post(nl2br($error_stock)); ?></p>
+            <button type="button" class="notice-dismiss">
+                <span class="screen-reader-text"><?php _e('Descartar este aviso.', 'modulo-ventas'); ?></span>
+            </button>
+        </div>
+        <script>
+        jQuery(document).ready(function($) {
+            $('.notice-dismiss').on('click', function() {
+                $(this).closest('.notice').fadeOut();
+            });
+        });
+        </script>
+        <?php
+    }
+    ?>
+
     <h1>
         <span class="dashicons dashicons-plus-alt"></span>
         <?php _e('Nueva Cotización', 'modulo-ventas'); ?>
     </h1>
     
-    <form method="post" id="mv-form-cotizacion" class="mv-form-cotizacion">
+    <form method="post" id="mv-form-cotizacion" class="mv-form-cotizacion mv-cotizacion-form" data-validate-decimales="true">
         <?php wp_nonce_field('mv_crear_cotizacion', 'mv_cotizacion_nonce'); ?>
         
         <!-- Columna principal -->
@@ -163,7 +165,7 @@ if (!function_exists('mv_tooltip')) {
                         
                         <?php if (mv_almacenes_activo() && !empty($almacenes)) : ?>
                         <!-- Almacén predeterminado -->
-                        <!--<div class="mv-form-group"> * ACTIVAR DESPUÉS *
+                        <div class="mv-form-group">
                             <label for="almacen_id">
                                 <?php _e('Almacén predeterminado', 'modulo-ventas'); ?>
                                 <?php echo mv_tooltip(
@@ -180,7 +182,7 @@ if (!function_exists('mv_tooltip')) {
                                     </option>
                                 <?php endforeach; ?>
                             </select>
-                        </div>-->
+                        </div>
                         <?php endif; ?>
                         
                         <!-- IVA -->
@@ -327,7 +329,7 @@ if (!function_exists('mv_tooltip')) {
                                             value="0" 
                                             min="0" 
                                             step="0.01"
-                                            class="small-text">
+                                            class="small-text mv-precio-field">
                                     </div>
                                 </th>
                                 <td><span id="mv-descuento-total">0</span></td>
@@ -347,7 +349,7 @@ if (!function_exists('mv_tooltip')) {
                                         value="0" 
                                         min="0" 
                                         step="1"
-                                        class="small-text">
+                                        class="small-text mv-precio-field">
                                 </th>
                                 <td><span id="mv-envio">0</span></td>
                             </tr>
@@ -617,7 +619,7 @@ if (!function_exists('mv_tooltip')) {
                 value="1" 
                 min="0.01" 
                 step="0.01" 
-                class="mv-input-cantidad small-text">
+                class="mv-input-cantidad mv-cantidad-field small-text">
         </td>
         
         <td class="column-precio">
@@ -626,7 +628,7 @@ if (!function_exists('mv_tooltip')) {
                 value="{{precio}}" 
                 min="0" 
                 step="1" 
-                class="mv-input-precio regular-text">
+                class="mv-input-precio mv-precio-field regular-text">
             <input type="hidden" name="items[{{index}}][precio_original]" value="{{precio_original}}">
         </td>
         
@@ -641,7 +643,7 @@ if (!function_exists('mv_tooltip')) {
                     value="0" 
                     min="0" 
                     step="0.01" 
-                    class="mv-input-descuento small-text-dcto">
+                    class="mv-input-descuento mv-precio-field small-text-dcto">
             </div>
         </td>
         
@@ -1756,6 +1758,26 @@ jQuery(document).ready(function($) {
         
         // No cancelar el envío, solo depurar
         // e.preventDefault(); // Descomentar para evitar el envío y revisar la consola
+    });
+
+    // Configurar validación de decimales cuando se agreguen productos dinámicamente
+    $(document).on('click', '.mv-btn-agregar-producto', function() {
+        // Después de agregar el producto, reconfigurar validación
+        setTimeout(function() {
+            if (typeof window.mvActualizarConfigDecimales === 'function') {
+                window.mvActualizarConfigDecimales({});
+            }
+        }, 100);
+    });
+
+    // También configurar para productos ya existentes al cargar la página
+    $(document).ready(function() {
+        // Esperar a que se cargue el script de decimales
+        setTimeout(function() {
+            if (typeof window.mvActualizarConfigDecimales === 'function') {
+                window.mvActualizarConfigDecimales({});
+            }
+        }, 500);
     });
 });
 </script>

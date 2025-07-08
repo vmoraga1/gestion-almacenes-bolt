@@ -1,2 +1,164 @@
 [2025-07-05 17:26:49] INFO: Cotización creada: COT-2025-000021 (ID: 21) | Usuario: hostpanish (ID: 1) | IP: ::1
 [2025-07-05 17:27:35] INFO: Nota agregada al cliente ID: 11 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-05 17:41:44] EMERGENCY: Error Fatal: Cannot redeclare mv_get_estados_cotizacion() (previously declared in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\helpers.php:364) | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\configuracion.php","line":1081,"type":64}
+[2025-07-05 17:49:01] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined function mv_get_configuracion_completa() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\configuracion.php:16
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(711): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_configuracion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\configuracion.php","line":16,"type":1}
+[2025-07-05 17:50:48] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined function esc_js_e() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\configuracion.php:693
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(711): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_configuracion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\configuracion.php","line":693,"type":1}
+[2025-07-05 17:51:07] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined function esc_js_e() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\configuracion.php:693
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(711): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_configuracion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\configuracion.php","line":693,"type":1}
+[2025-07-05 17:51:43] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined function esc_js_e() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\configuracion.php:693
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(711): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_configuracion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\configuracion.php","line":693,"type":1}
+[2025-07-05 17:52:19] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined function esc_js_e() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\configuracion.php:693
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(711): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_configuracion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\configuracion.php","line":693,"type":1}
+[2025-07-05 17:52:36] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined function esc_js_e() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\configuracion.php:693
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(711): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_configuracion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\configuracion.php","line":693,"type":1}
+[2025-07-05 17:52:48] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined function esc_js_e() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\configuracion.php:693
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(711): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_configuracion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\configuracion.php","line":693,"type":1}
+[2025-07-05 17:53:24] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined function esc_js_e() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\configuracion.php:693
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(711): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_configuracion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\configuracion.php","line":693,"type":1}
+[2025-07-05 17:54:58] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined function esc_js_e() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\configuracion.php:693
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(711): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_configuracion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\configuracion.php","line":693,"type":1}
+[2025-07-05 17:55:24] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"general"}
+[2025-07-05 17:55:24] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined function esc_js_e() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\configuracion.php:693
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(711): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_configuracion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\configuracion.php","line":693,"type":1}
+[2025-07-05 17:55:49] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined function esc_js_e() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\configuracion.php:693
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(711): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_configuracion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\configuracion.php","line":693,"type":1}
+[2025-07-05 20:20:43] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined function esc_js_e() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\configuracion.php:728
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(711): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_configuracion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\configuracion.php","line":728,"type":1}
+[2025-07-05 20:21:54] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined function esc_js_e() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\configuracion.php:728
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(711): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_configuracion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\configuracion.php","line":728,"type":1}
+[2025-07-05 20:22:13] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined function esc_js_e() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\configuracion.php:728
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(711): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_configuracion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\configuracion.php","line":728,"type":1}
+[2025-07-05 20:25:54] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"general"}
+[2025-07-05 20:26:36] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"stock"}
+[2025-07-05 20:51:29] INFO: Iniciando creación de cotización | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cliente_id":15,"productos":1,"permitir_sin_stock":"yes"}
+[2025-07-05 20:51:29] INFO: Validación de stock omitida: configurado para permitir cotizaciones sin stock | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-05 20:51:29] INFO: Cotización creada: COT-2025-000022 (ID: 22) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-05 20:51:29] INFO: Cotización creada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cotizacion_id":22}
+[2025-07-05 21:02:51] INFO: Iniciando creación de cotización | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cliente_id":15,"productos":1,"permitir_sin_stock":"yes"}
+[2025-07-05 21:02:51] INFO: Validación de stock omitida: configurado para permitir cotizaciones sin stock | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-05 21:02:51] INFO: Cotización creada: COT-2025-000023 (ID: 23) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-05 21:02:51] INFO: Cotización creada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cotizacion_id":23}
+[2025-07-05 21:02:51] INFO: Cotización creada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cotizacion_id":23,"folio":"COT-2025-000023"}
+[2025-07-05 21:06:50] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"stock"}
+[2025-07-05 21:11:51] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"stock"}
+[2025-07-05 21:13:04] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"stock"}
+[2025-07-05 21:18:06] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"stock"}
+[2025-07-05 21:18:14] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"stock"}
+[2025-07-05 21:18:28] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"stock"}
+[2025-07-05 21:18:39] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"stock"}
+[2025-07-05 22:01:44] INFO: Iniciando creación de cotización | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cliente_id":15,"productos":1,"permitir_sin_stock":"no"}
+[2025-07-05 22:01:44] WARNING: Error de stock: Stock insuficiente para Silla Metal. Disponible: 2, Solicitado: 6 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-05 22:01:44] ERROR: Validación de stock falló: Stock insuficiente para Silla Metal. Disponible: 2, Solicitado: 6 | Usuario: hostpanish (ID: 1) | IP: ::1 | Trace: class-modulo-ventas-cotizaciones.php:254 log() <- class-modulo-ventas-cotizaciones.php:85 validar_stock_items() <- class-modulo-ventas-admin.php:471 crear_cotizacion() <- class-modulo-ventas-admin.php:304 procesar_nueva_cotizacion()
+[2025-07-05 22:01:44] ERROR: Error en validación: Stock insuficiente para Silla Metal. Disponible: 2, Solicitado: 6 | Usuario: hostpanish (ID: 1) | IP: ::1 | Trace: class-modulo-ventas-cotizaciones.php:1087 log() <- class-modulo-ventas-cotizaciones.php:88 manejar_error_validacion() <- class-modulo-ventas-admin.php:471 crear_cotizacion() <- class-modulo-ventas-admin.php:304 procesar_nueva_cotizacion()
+[2025-07-05 22:22:28] INFO: Iniciando creación de cotización | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cliente_id":15,"productos":1,"permitir_sin_stock":"no"}
+[2025-07-05 22:22:28] ERROR: Validación de stock falló: Stock insuficiente para Silla Metal. Disponible: 2, Solicitado: 16 | Usuario: hostpanish (ID: 1) | IP: ::1 | Trace: class-modulo-ventas-cotizaciones.php:249 log() <- class-modulo-ventas-cotizaciones.php:85 validar_stock_items() <- class-modulo-ventas-admin.php:479 crear_cotizacion() <- class-modulo-ventas-admin.php:305 procesar_nueva_cotizacion()
+[2025-07-05 22:23:32] INFO: Iniciando creación de cotización | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cliente_id":15,"productos":1,"permitir_sin_stock":"no"}
+[2025-07-05 22:23:32] ERROR: Validación de stock falló: Stock insuficiente para Silla Metal. Disponible: 2, Solicitado: 8 | Usuario: hostpanish (ID: 1) | IP: ::1 | Trace: class-modulo-ventas-cotizaciones.php:249 log() <- class-modulo-ventas-cotizaciones.php:85 validar_stock_items() <- class-modulo-ventas-admin.php:479 crear_cotizacion() <- class-modulo-ventas-admin.php:305 procesar_nueva_cotizacion()
+[2025-07-05 22:28:11] INFO: Iniciando creación de cotización | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cliente_id":15,"productos":1,"permitir_sin_stock":"no"}
+[2025-07-05 22:28:11] ERROR: Validación de stock falló: Stock insuficiente para Silla Metal. Disponible: 2, Solicitado: 10 | Usuario: hostpanish (ID: 1) | IP: ::1 | Trace: class-modulo-ventas-cotizaciones.php:249 log() <- class-modulo-ventas-cotizaciones.php:85 validar_stock_items() <- class-modulo-ventas-admin.php:479 crear_cotizacion() <- class-modulo-ventas-admin.php:305 procesar_nueva_cotizacion()
+[2025-07-05 22:31:00] INFO: Iniciando creación de cotización | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cliente_id":15,"productos":1,"permitir_sin_stock":"no"}
+[2025-07-05 22:31:00] ERROR: Validación de stock falló: Stock insuficiente para Silla Metal. Disponible: 2, Solicitado: 11 | Usuario: hostpanish (ID: 1) | IP: ::1 | Trace: class-modulo-ventas-cotizaciones.php:249 log() <- class-modulo-ventas-cotizaciones.php:85 validar_stock_items() <- class-modulo-ventas-admin.php:479 crear_cotizacion() <- class-modulo-ventas-admin.php:305 procesar_nueva_cotizacion()
+[2025-07-05 22:35:41] INFO: Iniciando creación de cotización | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cliente_id":15,"productos":1,"permitir_sin_stock":"no"}
+[2025-07-05 22:35:41] ERROR: Validación de stock falló: Stock insuficiente para Silla Metal. Disponible: 2, Solicitado: 5 | Usuario: hostpanish (ID: 1) | IP: ::1 | Trace: class-modulo-ventas-cotizaciones.php:249 log() <- class-modulo-ventas-cotizaciones.php:85 validar_stock_items() <- class-modulo-ventas-admin.php:479 crear_cotizacion() <- class-modulo-ventas-admin.php:305 procesar_nueva_cotizacion()
+[2025-07-05 22:41:37] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"stock"}
+[2025-07-05 22:43:12] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"stock"}

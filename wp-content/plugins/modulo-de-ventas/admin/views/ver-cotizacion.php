@@ -572,6 +572,34 @@ if (!empty($cotizacion->vendedor_id)) {
                             <?php _e('Imprimir', 'modulo-ventas'); ?>
                         </a>
                     </div>
+                    <?php 
+                    // Generar URLs para PDF
+                    $pdf_handler = new Modulo_Ventas_PDF_Handler();
+                    $preview_url = $pdf_handler->generar_url_preview($cotizacion_id);
+                    $download_url = $pdf_handler->generar_url_descarga($cotizacion_id);
+                    ?>
+
+                    <div class="mv-pdf-actions">
+                        <button type="button" class="button button-secondary mv-btn-pdf-preview" 
+                                data-cotizacion-id="<?php echo $cotizacion_id; ?>"
+                                data-preview-url="<?php echo esc_url($preview_url); ?>">
+                            <span class="dashicons dashicons-visibility"></span>
+                            <?php _e('Ver PDF', 'modulo-ventas'); ?>
+                        </button>
+                        
+                        <button type="button" class="button button-secondary mv-btn-pdf-download" 
+                                data-cotizacion-id="<?php echo $cotizacion_id; ?>"
+                                data-download-url="<?php echo esc_url($download_url); ?>">
+                            <span class="dashicons dashicons-download"></span>
+                            <?php _e('Descargar PDF', 'modulo-ventas'); ?>
+                        </button>
+                        
+                        <button type="button" class="button button-secondary mv-btn-email-pdf" 
+                                data-cotizacion-id="<?php echo $cotizacion_id; ?>">
+                            <span class="dashicons dashicons-email"></span>
+                            <?php _e('Enviar por Email', 'modulo-ventas'); ?>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -961,6 +989,20 @@ if (!empty($cotizacion->vendedor_id)) {
     text-align: center;
 }
 
+/* Estilo para Botones PDF */
+.mv-pdf-actions {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.mv-pdf-actions .button {
+    margin-right: 5px;
+}
+
+.mv-pdf-actions .dashicons {
+    margin-right: 3px;
+}
+
 /* Responsive */
 @media screen and (max-width: 1200px) {
     .mv-cotizacion-container {
@@ -1040,5 +1082,25 @@ jQuery(document).ready(function($) {
     }).on('mouseleave', function() {
         $(this).removeClass('show-tooltip');
     });
+
+    // Ver PDF en nueva ventana
+    $('.mv-btn-pdf-preview').on('click', function() {
+        var previewUrl = $(this).data('preview-url');
+        window.open(previewUrl, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
+    });
+    
+    // Descargar PDF
+    $('.mv-btn-pdf-download').on('click', function() {
+        var downloadUrl = $(this).data('download-url');
+        window.location.href = downloadUrl;
+    });
+    
+    // Enviar por email (por implementar)
+    $('.mv-btn-email-pdf').on('click', function() {
+        var cotizacionId = $(this).data('cotizacion-id');
+        alert('Función de envío por email en desarrollo');
+        // TODO: Implementar modal para envío por email
+    });
+    // Fin PDF
 });
 </script>

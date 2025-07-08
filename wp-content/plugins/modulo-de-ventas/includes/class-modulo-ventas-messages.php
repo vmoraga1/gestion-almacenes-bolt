@@ -734,7 +734,7 @@ class Modulo_Ventas_Messages {
             <?php endif; ?>
             <div class="mv-progress-bar">
                 <div class="mv-progress-bar-fill <?php echo $animated ? 'animated' : ''; ?>" 
-                     style="width: <?php echo intval($progress); ?>%;">
+                    style="width: <?php echo intval($progress); ?>%;">
                     <span class="mv-progress-percent"><?php echo intval($progress); ?>%</span>
                 </div>
             </div>

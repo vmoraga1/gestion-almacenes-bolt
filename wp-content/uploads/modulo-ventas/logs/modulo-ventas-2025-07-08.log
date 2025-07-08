@@ -1,0 +1,12 @@
+[2025-07-08 17:49:19] EMERGENCY: Error Fatal: Uncaught TypeError: call_user_func_array(): Argument #1 ($callback) must be a valid callback, class Modulo_Ventas does not have a method "init_ajax_temprano" in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(727): do_action('init')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(22): require_once('C:\\wamp64\\www\\g...')
+#6 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php","line":324,"type":1}
+[2025-07-08 17:52:02] INFO: TCPDF cargado desde: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas/vendor/autoload.php | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-08 17:52:03] INFO: PDF generado para cotización COT-2025-000024: cotizacion_COT2025000024_2025-07-08.pdf | Usuario: hostpanish (ID: 1) | IP: ::1

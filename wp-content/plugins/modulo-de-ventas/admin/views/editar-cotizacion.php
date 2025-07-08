@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mv_cotizacion_nonce']
         </a>
     </h1>
     
-    <form method="post" id="mv-form-cotizacion" class="mv-form-cotizacion">
+    <form method="post" id="mv-form-cotizacion" class="mv-form-cotizacion mv-cotizacion-form" data-validate-decimales="true">
         <?php wp_nonce_field('mv_editar_cotizacion', 'mv_cotizacion_nonce'); ?>
         <input type="hidden" name="cotizacion_id" value="<?php echo esc_attr($cotizacion_id); ?>">
         
@@ -339,20 +339,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mv_cotizacion_nonce']
                                                 
                                                 <td class="column-cantidad">
                                                     <input type="number" 
-                                                           name="items[<?php echo $index; ?>][cantidad]" 
-                                                           value="<?php echo esc_attr($item->cantidad); ?>" 
-                                                           min="0.01" 
-                                                           step="0.01" 
-                                                           class="mv-input-cantidad small-text">
+                                                        name="items[<?php echo $index; ?>][cantidad]" 
+                                                        value="<?php echo esc_attr($item->cantidad); ?>" 
+                                                        min="0.01" 
+                                                        step="0.01" 
+                                                        class="mv-input-cantidad mv-cantidad-field small-text">
                                                 </td>
                                                 
                                                 <td class="column-precio">
                                                     <input type="number" 
-                                                           name="items[<?php echo $index; ?>][precio_unitario]" 
-                                                           value="<?php echo esc_attr($item->precio_unitario); ?>" 
-                                                           min="0" 
-                                                           step="1" 
-                                                           class="mv-input-precio regular-text">
+                                                        name="items[<?php echo $index; ?>][precio_unitario]" 
+                                                        value="<?php echo esc_attr($item->precio_unitario); ?>" 
+                                                        min="0" 
+                                                        step="1" 
+                                                        class="mv-input-precio mv-precio-field regular-text">
                                                     <input type="hidden" name="items[<?php echo $index; ?>][precio_original]" value="<?php echo esc_attr($item->precio_original ?? $item->precio_unitario); ?>">
                                                 </td>
                                                 
@@ -363,11 +363,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mv_cotizacion_nonce']
                                                             <option value="porcentaje" <?php selected($item->tipo_descuento ?? '', 'porcentaje'); ?>>%</option>
                                                         </select>
                                                         <input type="number" 
-                                                               name="items[<?php echo $index; ?>][descuento_monto]" 
-                                                               value="<?php echo esc_attr($item->descuento ?? 0); ?>" 
-                                                               min="0" 
-                                                               step="0.01" 
-                                                               class="mv-input-descuento small-text">
+                                                            name="items[<?php echo $index; ?>][descuento_monto]" 
+                                                            value="<?php echo esc_attr($item->descuento ?? 0); ?>" 
+                                                            min="0" 
+                                                            step="0.01" 
+                                                            class="mv-input-descuento small-text">
                                                     </div>
                                                 </td>
                                                 
@@ -502,13 +502,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mv_cotizacion_nonce']
                                                 <option value="monto" <?php selected($cotizacion->tipo_descuento_global, 'monto'); ?>>$</option>
                                                 <option value="porcentaje" <?php selected($cotizacion->tipo_descuento_global, 'porcentaje'); ?>>%</option>
                                             </select>
-                                            <input type="number" 
-                                                   name="descuento_global" 
-                                                   id="descuento_global" 
-                                                   value="<?php echo esc_attr($cotizacion->descuento_global ?? 0); ?>" 
-                                                   min="0" 
-                                                   step="0.01"
-                                                   class="small-text">
+                                                <input type="number" 
+                                                    name="descuento_global" 
+                                                    id="descuento_global" 
+                                                    value="<?php echo esc_attr($cotizacion->descuento_global ?? 0); ?>" 
+                                                    min="0" 
+                                                    step="0.01"
+                                                    class="small-text mv-precio-field">
                                         </div>
                                     </th>
                                     <td><span id="mv-descuento-total">
@@ -560,12 +560,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mv_cotizacion_nonce']
                                     <th>
                                         <?php _e('Envío', 'modulo-ventas'); ?>
                                         <input type="number" 
-                                               name="costo_envio" 
-                                               id="costo_envio" 
-                                               value="<?php echo esc_attr($cotizacion->envio ?? 0); ?>" 
-                                               min="0" 
-                                               step="1"
-                                               class="small-text">
+                                            name="costo_envio" 
+                                            id="costo_envio" 
+                                            value="<?php echo esc_attr($cotizacion->envio ?? 0); ?>" 
+                                            min="0" 
+                                            step="1"
+                                            class="small-text mv-precio-field">
                                     </th>
                                     <td><span id="mv-envio"><?php echo wc_price($cotizacion->envio ?? 0); ?></span></td>
                                 </tr>
@@ -781,11 +781,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mv_cotizacion_nonce']
                     <option value="porcentaje">%</option>
                 </select>
                 <input type="number" 
-                       name="items[{{index}}][descuento_monto]" 
-                       value="0" 
-                       min="0" 
-                       step="0.01" 
-                       class="mv-input-descuento small-text">
+                    name="items[{{index}}][descuento_monto]" 
+                    value="0" 
+                    min="0" 
+                    step="0.01" 
+                    class="mv-input-descuento mv-precio-field small-text ">
             </div>
         </td>
         
@@ -1494,10 +1494,10 @@ jQuery(document).ready(function($) {
     // Formatear precio
     function formatearPrecio(valor) {
         return moduloVentasAjax.currency_symbol + ' ' + 
-               new Intl.NumberFormat('es-CL', {
-                   minimumFractionDigits: 0,
-                   maximumFractionDigits: 0
-               }).format(valor);
+            new Intl.NumberFormat('es-CL', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(valor);
     }
     
     // Vista previa
@@ -1636,6 +1636,26 @@ jQuery(document).ready(function($) {
             e.preventDefault();
             e.returnValue = '<?php _e('Hay cambios sin guardar. ¿Está seguro de que desea salir?', 'modulo-ventas'); ?>';
         }
+    });
+
+    // Configurar validación de decimales cuando se agreguen productos dinámicamente
+    $(document).on('click', '.mv-btn-agregar-producto', function() {
+        // Después de agregar el producto, reconfigurar validación
+        setTimeout(function() {
+            if (typeof window.mvActualizarConfigDecimales === 'function') {
+                window.mvActualizarConfigDecimales({});
+            }
+        }, 100);
+    });
+
+    // También configurar para productos ya existentes al cargar la página
+    $(document).ready(function() {
+        // Esperar a que se cargue el script de decimales
+        setTimeout(function() {
+            if (typeof window.mvActualizarConfigDecimales === 'function') {
+                window.mvActualizarConfigDecimales({});
+            }
+        }, 500);
     });
 });
 </script>
