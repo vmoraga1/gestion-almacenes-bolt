@@ -954,6 +954,35 @@ class Modulo_Ventas_Admin {
      * Cargar assets específicos del admin
      */
     public function cargar_assets_admin($hook) {
+        // ESPECÍFICO para diagnóstico PDF - FORZAR carga de variables
+        if (strpos($hook, 'modulo-ventas-diagnostico') !== false) {
+            // Asegurar que jQuery esté cargado
+            wp_enqueue_script('jquery');
+            
+            // Crear un script específico para diagnóstico
+            wp_add_inline_script('jquery', '
+                // Definir ajaxurl globalmente si no existe
+                if (typeof ajaxurl === "undefined") {
+                    window.ajaxurl = "' . admin_url('admin-ajax.php') . '";
+                }
+                
+                // Definir objeto moduloVentasAjax si no existe
+                if (typeof moduloVentasAjax === "undefined") {
+                    window.moduloVentasAjax = {
+                        ajaxurl: "' . admin_url('admin-ajax.php') . '",
+                        ajax_url: "' . admin_url('admin-ajax.php') . '",
+                        nonce: "' . wp_create_nonce('modulo_ventas_nonce') . '",
+                        diagnostico_nonce: "' . wp_create_nonce('mv_diagnostico') . '"
+                    };
+                }
+                
+                console.log("Variables AJAX inicializadas para diagnóstico");
+                console.log("ajaxurl:", window.ajaxurl);
+                console.log("moduloVentasAjax:", window.moduloVentasAjax);
+            ', 'before');
+            
+            return; // Salir temprano para diagnóstico
+        }
         // Solo cargar en páginas del plugin
         if (strpos($hook, 'modulo-ventas') === false && strpos($hook, 'mv-') === false) {
             return;

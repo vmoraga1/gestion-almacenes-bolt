@@ -38,6 +38,8 @@ class Modulo_Ventas_Ajax {
         add_action('wp_ajax_mv_test_pdf_simple', array($this, 'test_pdf_simple'));
         add_action('wp_ajax_mv_crear_directorios_pdf', array($this, 'crear_directorios_pdf'));
         add_action('wp_ajax_mv_test_cotizacion_demo', array($this, 'test_cotizacion_demo'));
+        add_action('wp_ajax_mv_descargar_pdf_test', array($this, 'descargar_pdf_test'));
+        add_action('wp_ajax_nopriv_mv_descargar_pdf_test', array($this, 'descargar_pdf_test'));
     }
     
     /**
@@ -747,9 +749,29 @@ class Modulo_Ventas_Ajax {
      * AJAX: Test PDF simple
      */
     public function test_pdf_simple() {
-        // Verificar nonce
-        if (!check_ajax_referer('mv_diagnostico', 'nonce', false)) {
-            wp_send_json_error(array('message' => 'Error de seguridad: nonce inválido'));
+        // Debug inicial
+        //error_log('MODULO_VENTAS: test_pdf_simple() INICIADO');
+        //error_log('MODULO_VENTAS: doing_ajax=' . (wp_doing_ajax() ? 'SI' : 'NO'));
+        //error_log('MODULO_VENTAS: TCPDF existe=' . (class_exists('TCPDF') ? 'SI' : 'NO'));
+        
+        // Verificar nonce con más flexibilidad
+        $nonce_valido = false;
+        
+        if (isset($_POST['nonce'])) {
+            $nonce_valido = wp_verify_nonce($_POST['nonce'], 'mv_diagnostico');
+            //error_log('MODULO_VENTAS: Nonce verification result: ' . ($nonce_valido ? 'VALIDO' : 'INVALIDO'));
+        } else {
+            //error_log('MODULO_VENTAS: No se encontró nonce en $_POST');
+        }
+        
+        if (!$nonce_valido) {
+            wp_send_json_error(array(
+                'message' => 'Error de seguridad: nonce inválido',
+                'debug' => array(
+                    'nonce_sent' => isset($_POST['nonce']) ? $_POST['nonce'] : 'No enviado',
+                    'expected_action' => 'mv_diagnostico'
+                )
+            ));
             return;
         }
         
@@ -759,84 +781,169 @@ class Modulo_Ventas_Ajax {
             return;
         }
         
-        // Log para debug
-        error_log('MODULO_VENTAS: Iniciando test_pdf_simple');
-        
-        try {
-            // Verificar TCPDF
-            if (!class_exists('TCPDF')) {
-                wp_send_json_error(array('message' => 'TCPDF no disponible en AJAX'));
-                return;
+        // Intentar cargar TCPDF si no está disponible
+        if (!class_exists('TCPDF')) {
+            //error_log('MODULO_VENTAS: TCPDF no disponible, intentando cargar...');
+            
+            // Intentar autoload
+            $autoload_path = MODULO_VENTAS_PLUGIN_DIR . 'vendor/autoload.php';
+            if (file_exists($autoload_path)) {
+                require_once $autoload_path;
+                //error_log('MODULO_VENTAS: Autoload cargado');
             }
             
-            error_log('MODULO_VENTAS: TCPDF disponible en AJAX');
+            // Intentar carga directa
+            if (!class_exists('TCPDF')) {
+                $tcpdf_path = MODULO_VENTAS_PLUGIN_DIR . 'vendor/tecnickcom/tcpdf/tcpdf.php';
+                if (file_exists($tcpdf_path)) {
+                    require_once $tcpdf_path;
+                    //error_log('MODULO_VENTAS: TCPDF cargado directamente');
+                }
+            }
             
+            // Verificar si ahora está disponible
+            if (!class_exists('TCPDF')) {
+                //error_log('MODULO_VENTAS: ERROR - No se pudo cargar TCPDF');
+                wp_send_json_error(array(
+                    'message' => 'TCPDF no está disponible',
+                    'debug' => array(
+                        'autoload_exists' => file_exists($autoload_path),
+                        'tcpdf_direct_exists' => file_exists($tcpdf_path),
+                        'plugin_dir' => MODULO_VENTAS_PLUGIN_DIR
+                    )
+                ));
+                return;
+            }
+        }
+        
+        //error_log('MODULO_VENTAS: TCPDF confirmado disponible, iniciando generación');
+        
+        try {
             // Test básico de creación de PDF
             $pdf = new TCPDF();
+            //error_log('MODULO_VENTAS: TCPDF instanciado exitosamente');
+            
             $pdf->AddPage();
             $pdf->SetFont('helvetica', 'B', 16);
-            $pdf->Cell(0, 15, 'TEST AJAX EXITOSO', 0, 1, 'C');
+            $pdf->Cell(0, 15, 'TEST AJAX EXITOSO - ' . date('Y-m-d H:i:s'), 0, 1, 'C');
+            $pdf->Ln(10);
+            $pdf->SetFont('helvetica', '', 12);
+            $pdf->Cell(0, 10, 'Este PDF fue generado via AJAX', 0, 1, 'C');
+            $pdf->Cell(0, 10, 'Módulo de Ventas v' . MODULO_VENTAS_VERSION, 0, 1, 'C');
             
-            error_log('MODULO_VENTAS: PDF creado exitosamente');
+            //error_log('MODULO_VENTAS: Contenido PDF agregado');
             
-            // Preparar ruta
+            // Preparar ruta - USAR DIRECTORIO PÚBLICO
             $upload_dir = wp_upload_dir();
-            $pdf_dir = $upload_dir['basedir'] . '/modulo-ventas/pdfs';
-            $filename = 'test_ajax_' . time() . '.pdf';
+            
+            // Probar primero en uploads raíz (más accesible)
+            $pdf_dir = $upload_dir['basedir'] . '/test-pdfs';
+            $filename = 'test_ajax_' . date('Ymd_His') . '.pdf';
             $filepath = $pdf_dir . '/' . $filename;
             
             // Crear directorio si no existe
             if (!file_exists($pdf_dir)) {
-                wp_mkdir_p($pdf_dir);
-                error_log('MODULO_VENTAS: Directorio PDF creado');
+                $created = wp_mkdir_p($pdf_dir);
+                //error_log('MODULO_VENTAS: Directorio test-pdfs ' . ($created ? 'creado' : 'no se pudo crear'));
+                
+                if (!$created) {
+                    wp_send_json_error(array(
+                        'message' => 'No se pudo crear directorio test-pdfs',
+                        'debug' => array(
+                            'pdf_dir' => $pdf_dir,
+                            'upload_dir' => $upload_dir['basedir'],
+                            'upload_writable' => is_writable($upload_dir['basedir'])
+                        )
+                    ));
+                    return;
+                }
+                
+                // Crear .htaccess permisivo en el nuevo directorio
+                $htaccess_content = "# Permitir acceso a PDFs de test\n";
+                $htaccess_content .= "Options +Indexes\n";
+                $htaccess_content .= "<Files \"*.pdf\">\n";
+                $htaccess_content .= "    Order allow,deny\n";
+                $htaccess_content .= "    Allow from all\n";
+                $htaccess_content .= "</Files>\n";
+                
+                file_put_contents($pdf_dir . '/.htaccess', $htaccess_content);
+                //error_log('MODULO_VENTAS: .htaccess creado en test-pdfs');
             }
             
             // Guardar PDF
-            $pdf->Output($filepath, 'F');
+            $output_result = $pdf->Output($filepath, 'F');
+            //error_log('MODULO_VENTAS: PDF Output resultado: ' . ($output_result ? 'exitoso' : 'falló'));
             
             // Verificar que se guardó
             if (file_exists($filepath)) {
-                $file_url = $upload_dir['baseurl'] . '/modulo-ventas/pdfs/' . $filename;
+                // URL directa al nuevo directorio
+                $file_url = $upload_dir['baseurl'] . '/test-pdfs/' . $filename;
+                
+                // TAMBIÉN crear URL de descarga segura
+                $download_url = admin_url('admin-ajax.php') . '?' . http_build_query(array(
+                    'action' => 'mv_descargar_pdf_test',
+                    'file' => $filename,
+                    'nonce' => wp_create_nonce('mv_pdf_download_' . $filename)
+                ));
+                
                 $filesize = filesize($filepath);
                 
-                error_log('MODULO_VENTAS: PDF guardado exitosamente: ' . $filepath);
+                //error_log('MODULO_VENTAS: PDF guardado exitosamente: ' . $filepath . ' (' . $filesize . ' bytes)');
                 
                 wp_send_json_success(array(
-                    'message' => 'Test PDF AJAX exitoso!',
+                    'message' => '¡Test PDF AJAX exitoso!',
                     'file_path' => $filepath,
                     'file_url' => $file_url,
-                    'file_size' => $filesize . ' bytes',
+                    'download_url' => $download_url,
+                    'file_size' => number_format($filesize) . ' bytes',
+                    'filename' => $filename,
                     'debug_info' => array(
+                        'tcpdf_version' => defined('TCPDF_VERSION') ? TCPDF_VERSION : 'Desconocida',
                         'upload_dir' => $upload_dir['basedir'],
                         'pdf_dir' => $pdf_dir,
-                        'filename' => $filename,
-                        'tcpdf_class' => class_exists('TCPDF') ? 'Disponible' : 'No disponible'
+                        'file_exists' => true,
+                        'file_readable' => is_readable($filepath),
+                        'directory_public' => true
                     )
                 ));
+                
             } else {
-                error_log('MODULO_VENTAS: Error - archivo no se guardó: ' . $filepath);
+                //error_log('MODULO_VENTAS: ERROR - archivo no se guardó: ' . $filepath);
                 wp_send_json_error(array(
-                    'message' => 'PDF se generó pero no se guardó',
-                    'filepath' => $filepath,
-                    'directory_exists' => file_exists($pdf_dir) ? 'Si' : 'No',
-                    'directory_writable' => is_writable($pdf_dir) ? 'Si' : 'No'
+                    'message' => 'PDF se generó pero no se guardó en disco',
+                    'debug' => array(
+                        'filepath' => $filepath,
+                        'directory_exists' => file_exists($pdf_dir),
+                        'directory_writable' => is_writable($pdf_dir),
+                        'output_result' => $output_result
+                    )
                 ));
             }
             
         } catch (Exception $e) {
-            error_log('MODULO_VENTAS: Exception en test_pdf_simple: ' . $e->getMessage());
+            //error_log('MODULO_VENTAS: Exception en test_pdf_simple: ' . $e->getMessage());
+            //error_log('MODULO_VENTAS: Exception trace: ' . $e->getTraceAsString());
+            
             wp_send_json_error(array(
-                'message' => 'Exception: ' . $e->getMessage(),
-                'file' => basename($e->getFile()),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
+                'message' => 'Exception durante generación: ' . $e->getMessage(),
+                'debug' => array(
+                    'exception_type' => get_class($e),
+                    'file' => basename($e->getFile()),
+                    'line' => $e->getLine(),
+                    'tcpdf_available' => class_exists('TCPDF')
+                )
             ));
+            
         } catch (Error $e) {
-            error_log('MODULO_VENTAS: Error fatal en test_pdf_simple: ' . $e->getMessage());
+            //error_log('MODULO_VENTAS: Error fatal en test_pdf_simple: ' . $e->getMessage());
+            
             wp_send_json_error(array(
                 'message' => 'Error fatal: ' . $e->getMessage(),
-                'file' => basename($e->getFile()),
-                'line' => $e->getLine()
+                'debug' => array(
+                    'error_type' => get_class($e),
+                    'file' => basename($e->getFile()),
+                    'line' => $e->getLine()
+                )
             ));
         }
     }
@@ -882,6 +989,57 @@ class Modulo_Ventas_Ajax {
             'message' => 'Directorios procesados',
             'detalles' => $resultado
         ));
+    }
+
+    /**
+     * Descargar PDF de test de forma segura
+     */
+    public function descargar_pdf_test() {
+        // Verificar parámetros
+        $filename = isset($_GET['file']) ? sanitize_file_name($_GET['file']) : '';
+        $nonce = isset($_GET['nonce']) ? $_GET['nonce'] : '';
+        
+        if (empty($filename)) {
+            wp_die('Archivo no especificado', 'Error', array('response' => 400));
+        }
+        
+        // Verificar nonce
+        if (!wp_verify_nonce($nonce, 'mv_pdf_download_' . $filename)) {
+            wp_die('Acceso no autorizado', 'Error', array('response' => 403));
+        }
+        
+        // Construir ruta del archivo
+        $upload_dir = wp_upload_dir();
+        $pdf_path = $upload_dir['basedir'] . '/test-pdfs/' . $filename;
+        
+        // Verificar que el archivo existe y es un PDF
+        if (!file_exists($pdf_path) || pathinfo($pdf_path, PATHINFO_EXTENSION) !== 'pdf') {
+            wp_die('Archivo no encontrado', 'Error', array('response' => 404));
+        }
+        
+        // Verificar que es un archivo dentro del directorio permitido
+        $real_path = realpath($pdf_path);
+        $allowed_dir = realpath($upload_dir['basedir'] . '/test-pdfs/');
+        
+        if (strpos($real_path, $allowed_dir) !== 0) {
+            wp_die('Acceso denegado', 'Error', array('response' => 403));
+        }
+        
+        // Servir el archivo
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: inline; filename="' . basename($filename) . '"');
+        header('Content-Length: ' . filesize($pdf_path));
+        header('Cache-Control: private, max-age=0, must-revalidate');
+        header('Pragma: public');
+        
+        // Limpiar cualquier output previo
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
+        
+        // Leer y enviar el archivo
+        readfile($pdf_path);
+        exit;
     }
     
     /**

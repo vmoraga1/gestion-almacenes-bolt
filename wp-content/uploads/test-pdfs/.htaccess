@@ -1,0 +1,6 @@
+# Permitir acceso a PDFs de test
+Options +Indexes
+<Files "*.pdf">
+    Order allow,deny
+    Allow from all
+</Files>

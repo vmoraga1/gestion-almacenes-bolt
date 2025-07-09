@@ -557,6 +557,44 @@ modulo_ventas();
 
 // Asegurar que los handlers AJAX se carguen correctamente
 add_action('init', function() {
+    // Inicialización temprana para AJAX
+    $plugin_instance = modulo_ventas();
+    $plugin_instance->init_ajax_temprano();
+
+    // TAMBIÉN AGREGAR UN HOOK MÁS TEMPRANO PARA TCPDF:
+    add_action('wp_loaded', function() {
+        // Cargar TCPDF lo más temprano posible para AJAX
+        if (wp_doing_ajax() || is_admin()) {
+            $tcpdf_loaded = false;
+            
+            // Método 1: Autoload
+            $autoload_path = MODULO_VENTAS_PLUGIN_DIR . 'vendor/autoload.php';
+            if (file_exists($autoload_path) && !$tcpdf_loaded) {
+                require_once $autoload_path;
+                if (class_exists('TCPDF')) {
+                    $tcpdf_loaded = true;
+                    error_log('MODULO_VENTAS: TCPDF cargado via autoload');
+                }
+            }
+            
+            // Método 2: Carga directa como fallback
+            if (!$tcpdf_loaded) {
+                $tcpdf_path = MODULO_VENTAS_PLUGIN_DIR . 'vendor/tecnickcom/tcpdf/tcpdf.php';
+                if (file_exists($tcpdf_path)) {
+                    require_once $tcpdf_path;
+                    if (class_exists('TCPDF')) {
+                        $tcpdf_loaded = true;
+                        error_log('MODULO_VENTAS: TCPDF cargado directamente');
+                    }
+                }
+            }
+            
+            if (!$tcpdf_loaded) {
+                error_log('MODULO_VENTAS: ERROR - No se pudo cargar TCPDF');
+            }
+        }
+    }, 5); // Prioridad alta
+
     // Solo cargar AJAX si estamos en una petición AJAX
     if (wp_doing_ajax()) {
         // Verificar que las clases necesarias estén disponibles

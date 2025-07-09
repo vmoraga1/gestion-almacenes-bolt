@@ -249,15 +249,28 @@ echo '</div>';
 ?>
 <script>
 jQuery(document).ready(function($) {
-    // Debug: verificar que ajaxurl existe
-    console.log('AJAX URL:', ajaxurl);
-    console.log('Nonce disponible:', '<?php echo wp_create_nonce('mv_diagnostico'); ?>');
+    // ASEGURAR que ajaxurl esté definido
+    if (typeof ajaxurl === 'undefined') {
+        window.ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
+    }
+    
+    // Debug: verificar variables
+    //console.log('AJAX URL:', ajaxurl);
+    //console.log('Nonce disponible:', '<?php echo wp_create_nonce('mv_diagnostico'); ?>');
+    //console.log('moduloVentasAjax disponible:', typeof moduloVentasAjax !== 'undefined');
+    
+    // Si moduloVentasAjax está disponible, usar su ajaxurl
+    if (typeof moduloVentasAjax !== 'undefined' && moduloVentasAjax.ajaxurl) {
+        ajaxurl = moduloVentasAjax.ajaxurl;
+        //console.log('AJAX URL actualizado desde moduloVentasAjax:', ajaxurl);
+    }
     
     $('#test-pdf-simple').on('click', function() {
         var $btn = $(this);
         $btn.prop('disabled', true).text('Probando...');
         
-        console.log('Iniciando test PDF simple...');
+        //console.log('Iniciando test PDF simple...');
+        //console.log('URL final a usar:', ajaxurl);
         
         $.ajax({
             url: ajaxurl,
@@ -267,25 +280,49 @@ jQuery(document).ready(function($) {
                 action: 'mv_test_pdf_simple',
                 nonce: '<?php echo wp_create_nonce('mv_diagnostico'); ?>'
             },
+            beforeSend: function() {
+                //console.log('Enviando petición AJAX...');
+            },
             success: function(response) {
-                console.log('Respuesta AJAX exitosa:', response);
+                //console.log('Respuesta AJAX exitosa:', response);
                 $btn.prop('disabled', false).text('Test PDF Simple');
                 
                 if (response.success) {
-                    alert('Test PDF exitoso!\n\n' + response.data.message + '\n\nTamaño: ' + response.data.file_size);
+                    var message = '¡Test PDF exitoso!\n\n';
+                    message += 'Mensaje: ' + response.data.message + '\n';
+                    message += 'Archivo: ' + response.data.filename + '\n';
+                    message += 'Tamaño: ' + response.data.file_size;
                     
-                    // Abrir PDF si está disponible
-                    if (response.data.file_url) {
-                        console.log('Abriendo PDF:', response.data.file_url);
-                        window.open(response.data.file_url, '_blank');
+                    alert(message);
+                    
+                    // Mostrar opciones de acceso al PDF
+                    if (response.data.file_url || response.data.download_url) {
+                        //console.log('URLs disponibles:');
+                        //console.log('- URL directa:', response.data.file_url);
+                        //console.log('- URL descarga:', response.data.download_url);
+                        
+                        var accessMsg = '¿Cómo desea acceder al PDF?\n\n';
+                        accessMsg += '1. URL Directa (puede dar 403)\n';
+                        accessMsg += '2. Descarga Segura (via PHP)\n';
+                        accessMsg += '3. Cancelar';
+                        
+                        var choice = prompt(accessMsg, '2');
+                        
+                        if (choice === '1' && response.data.file_url) {
+                            //console.log('Abriendo URL directa:', response.data.file_url);
+                            window.open(response.data.file_url, '_blank');
+                        } else if (choice === '2' && response.data.download_url) {
+                            //console.log('Abriendo descarga segura:', response.data.download_url);
+                            window.open(response.data.download_url, '_blank');
+                        }
                     }
                 } else {
                     console.error('Error en respuesta:', response.data);
                     var errorMsg = 'Error en test PDF:\n\n';
                     if (response.data && response.data.message) {
                         errorMsg += response.data.message;
-                        if (response.data.file && response.data.line) {
-                            errorMsg += '\n\nArchivo: ' + response.data.file + '\nLínea: ' + response.data.line;
+                        if (response.data.debug) {
+                            //console.log('Debug info:', response.data.debug);
                         }
                     } else {
                         errorMsg += 'Error desconocido';
@@ -294,11 +331,13 @@ jQuery(document).ready(function($) {
                 }
             },
             error: function(xhr, textStatus, errorThrown) {
-                console.error('Error AJAX:', {
+                console.error('Error AJAX completo:', {
                     xhr: xhr,
                     textStatus: textStatus,
                     errorThrown: errorThrown,
-                    responseText: xhr.responseText
+                    responseText: xhr.responseText ? xhr.responseText.substring(0, 1000) : 'Sin respuesta',
+                    status: xhr.status,
+                    statusText: xhr.statusText
                 });
                 
                 $btn.prop('disabled', false).text('Test PDF Simple');
@@ -306,9 +345,24 @@ jQuery(document).ready(function($) {
                 var errorMsg = 'Error de conexión AJAX:\n';
                 errorMsg += 'Estado: ' + textStatus + '\n';
                 errorMsg += 'Error: ' + errorThrown + '\n';
+                errorMsg += 'Código HTTP: ' + xhr.status + '\n';
                 
-                if (xhr.responseText) {
-                    errorMsg += '\nRespuesta del servidor:\n' + xhr.responseText.substring(0, 200);
+                // Analizar el tipo de error
+                if (textStatus === 'parsererror') {
+                    errorMsg += '\n⚠ Error de parsing JSON - El servidor devolvió HTML\n';
+                    errorMsg += 'Esto indica que el handler AJAX no está funcionando correctamente.\n';
+                    
+                    // Mostrar parte de la respuesta
+                    if (xhr.responseText) {
+                        var firstLine = xhr.responseText.split('\n')[0];
+                        errorMsg += 'Primera línea de respuesta: ' + firstLine.substring(0, 100);
+                    }
+                } else if (xhr.status === 0) {
+                    errorMsg += '\n⚠ Error de red - Verificar conexión';
+                } else if (xhr.status === 403) {
+                    errorMsg += '\n⚠ Error de permisos';
+                } else if (xhr.status === 404) {
+                    errorMsg += '\n⚠ Handler AJAX no encontrado';
                 }
                 
                 alert(errorMsg);
@@ -330,10 +384,10 @@ jQuery(document).ready(function($) {
             },
             success: function(response) {
                 $btn.prop('disabled', false).text('Crear Directorios');
-                console.log('Crear directorios response:', response);
+                //console.log('Crear directorios response:', response);
                 
                 if (response.success) {
-                    alert('Directorios procesados:\n\n' + response.data.detalles.join('\n'));
+                    alert('Directorios procesados:\n\n' + (response.data.detalles || []).join('\n'));
                     location.reload();
                 } else {
                     alert('Error: ' + (response.data ? response.data.message : 'Error desconocido'));
@@ -353,6 +407,23 @@ jQuery(document).ready(function($) {
     
     $('#recargar-tcpdf').on('click', function() {
         location.reload();
+    });
+    
+    // Test de conectividad AJAX al cargar la página
+    //console.log('=== TEST DE CONECTIVIDAD AJAX ===');
+    $.ajax({
+        url: ajaxurl,
+        type: 'POST',
+        data: {
+            action: 'heartbeat', // Acción estándar de WordPress
+            _wpnonce: '<?php echo wp_create_nonce('heartbeat-nonce'); ?>'
+        },
+        success: function(response) {
+            //console.log('✅ Conectividad AJAX OK - WordPress responde correctamente');
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            console.error('❌ Error de conectividad AJAX básica:', textStatus);
+        }
     });
 });
 </script>
