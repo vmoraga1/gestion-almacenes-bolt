@@ -186,6 +186,11 @@ class Modulo_Ventas {
             error_log('MODULO_VENTAS: PDF Handler no encontrado en: ' . $pdf_handler_path);
         }
         
+        // Plantillas PDF personalizables
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates-db.php';
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates.php';
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates-ajax.php';
+        
         // AJAX siempre se carga
         require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/class-modulo-ventas-ajax.php';
         
@@ -217,6 +222,8 @@ class Modulo_Ventas {
         if (is_admin()) {
             $this->admin = new Modulo_Ventas_Admin();
             //error_log('Clase Admin instanciada: ' . get_class($this->admin));
+            $this->pdf_templates = Modulo_Ventas_PDF_Templates::get_instance();
+            error_log('MODULO_VENTAS: Sistema de plantillas PDF inicializado');
         }
         
         // Log para debug

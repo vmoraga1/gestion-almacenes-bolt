@@ -2342,3 +2342,658 @@ Stack trace:
 [09-Jul-2025 06:24:12 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
 [09-Jul-2025 06:24:12 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
 [09-Jul-2025 06:24:12 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:32:09 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:32:09 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:32:09 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:32:09 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:33:09 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:33:09 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:33:09 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:33:09 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:12:47 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:13:05 UTC] PHP Fatal error:  Maximum execution time of 120 seconds exceeded in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Blocks\BlockTypes\MiniCartContents.php on line 11
+[09-Jul-2025 17:13:05 UTC] PHP Stack trace:
+[09-Jul-2025 17:13:05 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[09-Jul-2025 17:13:05 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:35
+[09-Jul-2025 17:13:05 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 17:13:05 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 17:13:05 UTC] PHP   5. do_action($hook_name = 'init') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:727
+[09-Jul-2025 17:13:05 UTC] PHP   6. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[09-Jul-2025 17:13:05 UTC] PHP   7. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[09-Jul-2025 17:13:05 UTC] PHP   8. Automattic\WooCommerce\Blocks\BlockTypesController->register_blocks('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[09-Jul-2025 17:13:05 UTC] PHP   9. Automattic\WooCommerce\Blocks\BlockTypesController->get_block_types() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Blocks\BlockTypesController.php:113
+[09-Jul-2025 17:13:05 UTC] PHP  10. Automattic\Jetpack\Autoloader\jpb323e7746ab973b3b70eecf7e12b646a\al5_0_0\PHP_Autoloader::load_class($class_name = 'Automattic\\WooCommerce\\Blocks\\BlockTypes\\MiniCartContents') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Blocks\BlockTypesController.php:524
+[09-Jul-2025 17:13:05 UTC] PHP  11. require() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\vendor\jetpack-autoloader\class-php-autoloader.php:102
+[09-Jul-2025 17:13:08 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:13:08 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:13:08 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:13:16 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:15:25 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:15:26 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:15:34 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:15:35 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:15:40 UTC] MODULO_VENTAS: Evaluando cotización 24 - Estado: pendiente, Cliente: 11, Total: 190400.00
+[09-Jul-2025 17:15:40 UTC] MODULO_VENTAS: Cotización 24 tiene 1 items
+[09-Jul-2025 17:15:40 UTC] MODULO_VENTAS: Cotización 24 puede generar PDF
+[09-Jul-2025 17:17:07 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:17:07 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:17:07 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:17:08 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:17:17 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:17:17 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:18:21 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:18:21 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:18:21 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:18:22 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:20:22 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:20:22 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:20:22 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:20:22 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:22:23 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:22:23 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:22:23 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:22:24 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:24:24 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:24:24 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:24:24 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:24:24 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:26:25 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:26:25 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:26:25 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:26:25 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:28:26 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:28:26 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:28:26 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:28:26 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:30:27 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:30:27 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:30:27 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:30:27 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:32:28 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:32:28 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:32:28 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:32:28 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:34:29 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:34:29 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:34:29 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:34:29 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:36:30 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:36:30 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:36:30 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:36:30 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:38:31 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:38:31 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:38:31 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:38:31 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:40:32 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:40:32 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:40:32 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:40:32 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:42:33 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:42:33 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:42:33 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:42:33 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:44:34 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:44:34 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:44:34 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:44:39 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:46:35 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:46:35 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:46:35 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:46:35 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:48:36 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:48:36 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:48:36 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:48:36 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:50:37 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:50:37 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:50:37 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:50:37 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:52:38 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:52:38 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:52:38 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:52:38 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:54:39 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:54:39 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:54:39 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:54:39 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:56:40 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:56:40 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:56:40 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:56:40 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:58:41 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 17:58:41 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:58:41 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 17:58:41 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:00:42 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:00:42 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:00:42 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:00:43 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:01:42 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:01:42 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:01:42 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:01:42 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:02:43 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:02:43 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:02:43 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:02:43 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:03:44 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:03:44 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:03:44 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:03:44 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:05:45 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:05:45 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:05:45 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:05:46 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:05:49 UTC] Automatic updates starting...
+[09-Jul-2025 18:05:49 UTC] Automatic updates complete.
+[09-Jul-2025 18:07:46 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:07:46 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:07:46 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:07:47 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:09:47 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:09:47 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:09:47 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:09:47 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:11:48 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:11:48 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:11:48 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:11:48 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:13:49 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 18:13:49 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:13:49 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 18:13:49 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 19:46:21 UTC] PHP Fatal error:  Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php:24
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php(360): Modulo_Ventas_PDF_Templates_Ajax->__construct()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(188): require_once('C:\\wamp64\\www\\g...')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(357): Modulo_Ventas->cargar_archivos()
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(632): Modulo_Ventas->cargar_plugin()
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(545): include_once('C:\\wamp64\\www\\g...')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(22): require_once('C:\\wamp64\\www\\g...')
+#8 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php on line 24
+[09-Jul-2025 19:46:23 UTC] PHP Fatal error:  Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php:24
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php(360): Modulo_Ventas_PDF_Templates_Ajax->__construct()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(188): require_once('C:\\wamp64\\www\\g...')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(357): Modulo_Ventas->cargar_archivos()
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin('')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(578): do_action('plugins_loaded')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#9 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(35): require_once('C:\\wamp64\\www\\g...')
+#10 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php on line 24
+[09-Jul-2025 19:46:23 UTC] PHP Notice:  La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para más información. (Este mensaje fue añadido en la versión 6.7.0). in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php on line 6121
+[09-Jul-2025 19:46:23 UTC] PHP Stack trace:
+[09-Jul-2025 19:46:23 UTC] PHP   1. WooCommerce->log_errors() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:0
+[09-Jul-2025 19:46:23 UTC] PHP   2. WC_Logger->critical($message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php(360): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(188): require_once(\'C:\\\\wamp64\\\\www\\\\g...\')\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(357): Modulo_Ventas->cargar_archivos()\n#3 C:\\wamp64\\www\\gestio']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:422
+[09-Jul-2025 19:46:23 UTC] PHP   3. WC_Logger->log($level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php(360): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(188): require_once(\'C:\\\\wamp64\\\\www\\\\g...\')\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(357): Modulo_Ventas->cargar_archivos()\n#3 C:\\wamp64\\www\\gestio']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:236
+[09-Jul-2025 19:46:23 UTC] PHP   4. Automattic\WooCommerce\Internal\Logging\RemoteLogger->handle($timestamp = 1752090383, $level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php(360): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(188): require_once(\'C:\\\\wamp64\\\\www\\\\g...\')\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(357): Modulo_Ventas->cargar_archivos()\n#3 C:\\wamp64\\www\\gestio']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:189
+[09-Jul-2025 19:46:23 UTC] PHP   5. Automattic\WooCommerce\Internal\Logging\RemoteLogger->should_handle($level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php(360): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(188): require_once(\'C:\\\\wamp64\\\\www\\\\g...\')\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(357): Modulo_Ventas->cargar_archivos()\n#3 C:\\wamp64\\www\\gestio']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:46
+[09-Jul-2025 19:46:23 UTC] PHP   6. Automattic\WooCommerce\Internal\Logging\RemoteLogger->is_remote_logging_allowed() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:177
+[09-Jul-2025 19:46:23 UTC] PHP   7. Automattic\WooCommerce\Utilities\FeaturesUtil::feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:147
+[09-Jul-2025 19:46:23 UTC] PHP   8. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Utilities\FeaturesUtil.php:42
+[09-Jul-2025 19:46:23 UTC] PHP   9. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_exists($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:593
+[09-Jul-2025 19:46:23 UTC] PHP  10. Automattic\WooCommerce\Internal\Features\FeaturesController->get_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:697
+[09-Jul-2025 19:46:23 UTC] PHP  11. Automattic\WooCommerce\Internal\Features\FeaturesController->init_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:214
+[09-Jul-2025 19:46:23 UTC] PHP  12. __($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:248
+[09-Jul-2025 19:46:23 UTC] PHP  13. translate($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:307
+[09-Jul-2025 19:46:23 UTC] PHP  14. get_translations_for_domain($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:195
+[09-Jul-2025 19:46:23 UTC] PHP  15. _load_textdomain_just_in_time($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1409
+[09-Jul-2025 19:46:23 UTC] PHP  16. _doing_it_wrong($function_name = '_load_textdomain_just_in_time', $message = 'La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde.', $version = '6.7.0') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1379
+[09-Jul-2025 19:46:23 UTC] PHP  17. wp_trigger_error($function_name = '', $message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_level = *uninitialized*) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6061
+[09-Jul-2025 19:46:23 UTC] PHP  18. trigger_error($message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_level = 1024) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6121
+[09-Jul-2025 19:48:26 UTC] PHP Fatal error:  Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php:24
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin('')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(578): do_action('plugins_loaded')
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(35): require_once('C:\\wamp64\\www\\g...')
+#9 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php on line 24
+[09-Jul-2025 19:48:26 UTC] PHP Notice:  La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para más información. (Este mensaje fue añadido en la versión 6.7.0). in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php on line 6121
+[09-Jul-2025 19:48:26 UTC] PHP Stack trace:
+[09-Jul-2025 19:48:26 UTC] PHP   1. WooCommerce->log_errors() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:0
+[09-Jul-2025 19:48:26 UTC] PHP   2. WC_Logger->critical($message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin(\'\')\n#3 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(348): WP_Hook->apply']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:422
+[09-Jul-2025 19:48:26 UTC] PHP   3. WC_Logger->log($level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin(\'\')\n#3 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(348): WP_Hook->apply']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:236
+[09-Jul-2025 19:48:26 UTC] PHP   4. Automattic\WooCommerce\Internal\Logging\RemoteLogger->handle($timestamp = 1752090506, $level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin(\'\')\n#3 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(348): WP_Hook->apply']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:189
+[09-Jul-2025 19:48:26 UTC] PHP   5. Automattic\WooCommerce\Internal\Logging\RemoteLogger->should_handle($level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin(\'\')\n#3 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(348): WP_Hook->apply']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:46
+[09-Jul-2025 19:48:26 UTC] PHP   6. Automattic\WooCommerce\Internal\Logging\RemoteLogger->is_remote_logging_allowed() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:177
+[09-Jul-2025 19:48:26 UTC] PHP   7. Automattic\WooCommerce\Utilities\FeaturesUtil::feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:147
+[09-Jul-2025 19:48:26 UTC] PHP   8. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Utilities\FeaturesUtil.php:42
+[09-Jul-2025 19:48:26 UTC] PHP   9. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_exists($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:593
+[09-Jul-2025 19:48:26 UTC] PHP  10. Automattic\WooCommerce\Internal\Features\FeaturesController->get_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:697
+[09-Jul-2025 19:48:26 UTC] PHP  11. Automattic\WooCommerce\Internal\Features\FeaturesController->init_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:214
+[09-Jul-2025 19:48:26 UTC] PHP  12. __($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:248
+[09-Jul-2025 19:48:26 UTC] PHP  13. translate($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:307
+[09-Jul-2025 19:48:26 UTC] PHP  14. get_translations_for_domain($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:195
+[09-Jul-2025 19:48:26 UTC] PHP  15. _load_textdomain_just_in_time($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1409
+[09-Jul-2025 19:48:26 UTC] PHP  16. _doing_it_wrong($function_name = '_load_textdomain_just_in_time', $message = 'La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde.', $version = '6.7.0') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1379
+[09-Jul-2025 19:48:26 UTC] PHP  17. wp_trigger_error($function_name = '', $message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_level = *uninitialized*) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6061
+[09-Jul-2025 19:48:26 UTC] PHP  18. trigger_error($message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_level = 1024) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6121
+[09-Jul-2025 19:49:36 UTC] PHP Fatal error:  Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php:24
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin('')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(578): do_action('plugins_loaded')
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(35): require_once('C:\\wamp64\\www\\g...')
+#9 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php on line 24
+[09-Jul-2025 19:49:36 UTC] PHP Notice:  La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para más información. (Este mensaje fue añadido en la versión 6.7.0). in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php on line 6121
+[09-Jul-2025 19:49:36 UTC] PHP Stack trace:
+[09-Jul-2025 19:49:36 UTC] PHP   1. WooCommerce->log_errors() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:0
+[09-Jul-2025 19:49:36 UTC] PHP   2. WC_Logger->critical($message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin(\'\')\n#3 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(348): WP_Hook->apply']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:422
+[09-Jul-2025 19:49:36 UTC] PHP   3. WC_Logger->log($level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin(\'\')\n#3 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(348): WP_Hook->apply']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:236
+[09-Jul-2025 19:49:36 UTC] PHP   4. Automattic\WooCommerce\Internal\Logging\RemoteLogger->handle($timestamp = 1752090576, $level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin(\'\')\n#3 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(348): WP_Hook->apply']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:189
+[09-Jul-2025 19:49:36 UTC] PHP   5. Automattic\WooCommerce\Internal\Logging\RemoteLogger->should_handle($level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin(\'\')\n#3 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(348): WP_Hook->apply']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:46
+[09-Jul-2025 19:49:36 UTC] PHP   6. Automattic\WooCommerce\Internal\Logging\RemoteLogger->is_remote_logging_allowed() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:177
+[09-Jul-2025 19:49:36 UTC] PHP   7. Automattic\WooCommerce\Utilities\FeaturesUtil::feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:147
+[09-Jul-2025 19:49:36 UTC] PHP   8. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Utilities\FeaturesUtil.php:42
+[09-Jul-2025 19:49:36 UTC] PHP   9. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_exists($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:593
+[09-Jul-2025 19:49:36 UTC] PHP  10. Automattic\WooCommerce\Internal\Features\FeaturesController->get_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:697
+[09-Jul-2025 19:49:36 UTC] PHP  11. Automattic\WooCommerce\Internal\Features\FeaturesController->init_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:214
+[09-Jul-2025 19:49:36 UTC] PHP  12. __($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:248
+[09-Jul-2025 19:49:36 UTC] PHP  13. translate($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:307
+[09-Jul-2025 19:49:36 UTC] PHP  14. get_translations_for_domain($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:195
+[09-Jul-2025 19:49:36 UTC] PHP  15. _load_textdomain_just_in_time($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1409
+[09-Jul-2025 19:49:36 UTC] PHP  16. _doing_it_wrong($function_name = '_load_textdomain_just_in_time', $message = 'La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde.', $version = '6.7.0') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1379
+[09-Jul-2025 19:49:36 UTC] PHP  17. wp_trigger_error($function_name = '', $message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_level = *uninitialized*) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6061
+[09-Jul-2025 19:49:36 UTC] PHP  18. trigger_error($message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_level = 1024) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6121
+[09-Jul-2025 19:49:40 UTC] PHP Fatal error:  Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php:24
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin('')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(578): do_action('plugins_loaded')
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(35): require_once('C:\\wamp64\\www\\g...')
+#9 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php on line 24
+[09-Jul-2025 19:49:40 UTC] PHP Notice:  La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para más información. (Este mensaje fue añadido en la versión 6.7.0). in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php on line 6121
+[09-Jul-2025 19:49:40 UTC] PHP Stack trace:
+[09-Jul-2025 19:49:40 UTC] PHP   1. WooCommerce->log_errors() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:0
+[09-Jul-2025 19:49:40 UTC] PHP   2. WC_Logger->critical($message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin(\'\')\n#3 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(348): WP_Hook->apply']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:422
+[09-Jul-2025 19:49:40 UTC] PHP   3. WC_Logger->log($level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin(\'\')\n#3 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(348): WP_Hook->apply']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:236
+[09-Jul-2025 19:49:40 UTC] PHP   4. Automattic\WooCommerce\Internal\Logging\RemoteLogger->handle($timestamp = 1752090580, $level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin(\'\')\n#3 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(348): WP_Hook->apply']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:189
+[09-Jul-2025 19:49:40 UTC] PHP   5. Automattic\WooCommerce\Internal\Logging\RemoteLogger->should_handle($level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin(\'\')\n#3 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(348): WP_Hook->apply']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:46
+[09-Jul-2025 19:49:40 UTC] PHP   6. Automattic\WooCommerce\Internal\Logging\RemoteLogger->is_remote_logging_allowed() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:177
+[09-Jul-2025 19:49:40 UTC] PHP   7. Automattic\WooCommerce\Utilities\FeaturesUtil::feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:147
+[09-Jul-2025 19:49:40 UTC] PHP   8. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Utilities\FeaturesUtil.php:42
+[09-Jul-2025 19:49:40 UTC] PHP   9. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_exists($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:593
+[09-Jul-2025 19:49:40 UTC] PHP  10. Automattic\WooCommerce\Internal\Features\FeaturesController->get_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:697
+[09-Jul-2025 19:49:40 UTC] PHP  11. Automattic\WooCommerce\Internal\Features\FeaturesController->init_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:214
+[09-Jul-2025 19:49:40 UTC] PHP  12. __($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:248
+[09-Jul-2025 19:49:40 UTC] PHP  13. translate($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:307
+[09-Jul-2025 19:49:40 UTC] PHP  14. get_translations_for_domain($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:195
+[09-Jul-2025 19:49:40 UTC] PHP  15. _load_textdomain_just_in_time($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1409
+[09-Jul-2025 19:49:40 UTC] PHP  16. _doing_it_wrong($function_name = '_load_textdomain_just_in_time', $message = 'La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde.', $version = '6.7.0') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1379
+[09-Jul-2025 19:49:40 UTC] PHP  17. wp_trigger_error($function_name = '', $message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_level = *uninitialized*) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6061
+[09-Jul-2025 19:49:40 UTC] PHP  18. trigger_error($message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_level = 1024) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6121
+[09-Jul-2025 19:51:13 UTC] PHP Fatal error:  Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php:24
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin('')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(578): do_action('plugins_loaded')
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(35): require_once('C:\\wamp64\\www\\g...')
+#9 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php on line 24
+[09-Jul-2025 19:51:13 UTC] PHP Notice:  La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para más información. (Este mensaje fue añadido en la versión 6.7.0). in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php on line 6121
+[09-Jul-2025 19:51:13 UTC] PHP Stack trace:
+[09-Jul-2025 19:51:13 UTC] PHP   1. WooCommerce->log_errors() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:0
+[09-Jul-2025 19:51:13 UTC] PHP   2. WC_Logger->critical($message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin(\'\')\n#3 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(348): WP_Hook->apply']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:422
+[09-Jul-2025 19:51:13 UTC] PHP   3. WC_Logger->log($level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin(\'\')\n#3 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(348): WP_Hook->apply']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:236
+[09-Jul-2025 19:51:13 UTC] PHP   4. Automattic\WooCommerce\Internal\Logging\RemoteLogger->handle($timestamp = 1752090673, $level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin(\'\')\n#3 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(348): WP_Hook->apply']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:189
+[09-Jul-2025 19:51:13 UTC] PHP   5. Automattic\WooCommerce\Internal\Logging\RemoteLogger->should_handle($level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin(\'\')\n#3 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-includes\\class-wp-hook.php(348): WP_Hook->apply']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:46
+[09-Jul-2025 19:51:13 UTC] PHP   6. Automattic\WooCommerce\Internal\Logging\RemoteLogger->is_remote_logging_allowed() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:177
+[09-Jul-2025 19:51:13 UTC] PHP   7. Automattic\WooCommerce\Utilities\FeaturesUtil::feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:147
+[09-Jul-2025 19:51:13 UTC] PHP   8. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Utilities\FeaturesUtil.php:42
+[09-Jul-2025 19:51:13 UTC] PHP   9. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_exists($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:593
+[09-Jul-2025 19:51:13 UTC] PHP  10. Automattic\WooCommerce\Internal\Features\FeaturesController->get_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:697
+[09-Jul-2025 19:51:13 UTC] PHP  11. Automattic\WooCommerce\Internal\Features\FeaturesController->init_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:214
+[09-Jul-2025 19:51:13 UTC] PHP  12. __($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:248
+[09-Jul-2025 19:51:13 UTC] PHP  13. translate($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:307
+[09-Jul-2025 19:51:13 UTC] PHP  14. get_translations_for_domain($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:195
+[09-Jul-2025 19:51:13 UTC] PHP  15. _load_textdomain_just_in_time($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1409
+[09-Jul-2025 19:51:13 UTC] PHP  16. _doing_it_wrong($function_name = '_load_textdomain_just_in_time', $message = 'La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde.', $version = '6.7.0') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1379
+[09-Jul-2025 19:51:13 UTC] PHP  17. wp_trigger_error($function_name = '', $message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_level = *uninitialized*) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6061
+[09-Jul-2025 19:51:13 UTC] PHP  18. trigger_error($message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_level = 1024) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6121
+[09-Jul-2025 19:54:42 UTC] PHP Fatal error:  Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php:24
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php(360): Modulo_Ventas_PDF_Templates_Ajax->__construct()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(188): require_once('C:\\wamp64\\www\\g...')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(359): Modulo_Ventas->cargar_archivos()
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin('')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(578): do_action('plugins_loaded')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#9 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(35): require_once('C:\\wamp64\\www\\g...')
+#10 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php on line 24
+[09-Jul-2025 19:54:42 UTC] PHP Notice:  La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para más información. (Este mensaje fue añadido en la versión 6.7.0). in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php on line 6121
+[09-Jul-2025 19:54:42 UTC] PHP Stack trace:
+[09-Jul-2025 19:54:42 UTC] PHP   1. WooCommerce->log_errors() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:0
+[09-Jul-2025 19:54:42 UTC] PHP   2. WC_Logger->critical($message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php(360): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(188): require_once(\'C:\\\\wamp64\\\\www\\\\g...\')\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(359): Modulo_Ventas->cargar_archivos()\n#3 C:\\wamp64\\www\\gestio']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-woocommerce.php:422
+[09-Jul-2025 19:54:42 UTC] PHP   3. WC_Logger->log($level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php(360): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(188): require_once(\'C:\\\\wamp64\\\\www\\\\g...\')\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(359): Modulo_Ventas->cargar_archivos()\n#3 C:\\wamp64\\www\\gestio']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:236
+[09-Jul-2025 19:54:42 UTC] PHP   4. Automattic\WooCommerce\Internal\Logging\RemoteLogger->handle($timestamp = 1752090882, $level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php(360): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(188): require_once(\'C:\\\\wamp64\\\\www\\\\g...\')\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(359): Modulo_Ventas->cargar_archivos()\n#3 C:\\wamp64\\www\\gestio']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\includes\class-wc-logger.php:189
+[09-Jul-2025 19:54:42 UTC] PHP   5. Automattic\WooCommerce\Internal\Logging\RemoteLogger->should_handle($level = 'critical', $message = 'Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php:24', $context = ['source' => 'fatal-errors', 'error' => ['type' => 1, 'file' => 'C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php', 'line' => 24], 'remote-logging' => TRUE, 'backtrace' => [0 => '#0 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php(360): Modulo_Ventas_PDF_Templates_Ajax->__construct()\n#1 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(188): require_once(\'C:\\\\wamp64\\\\www\\\\g...\')\n#2 C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\modulo-ventas.php(359): Modulo_Ventas->cargar_archivos()\n#3 C:\\wamp64\\www\\gestio']]) C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:46
+[09-Jul-2025 19:54:42 UTC] PHP   6. Automattic\WooCommerce\Internal\Logging\RemoteLogger->is_remote_logging_allowed() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:177
+[09-Jul-2025 19:54:42 UTC] PHP   7. Automattic\WooCommerce\Utilities\FeaturesUtil::feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Logging\RemoteLogger.php:147
+[09-Jul-2025 19:54:42 UTC] PHP   8. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_is_enabled($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Utilities\FeaturesUtil.php:42
+[09-Jul-2025 19:54:42 UTC] PHP   9. Automattic\WooCommerce\Internal\Features\FeaturesController->feature_exists($feature_id = 'remote_logging') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:593
+[09-Jul-2025 19:54:42 UTC] PHP  10. Automattic\WooCommerce\Internal\Features\FeaturesController->get_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:697
+[09-Jul-2025 19:54:42 UTC] PHP  11. Automattic\WooCommerce\Internal\Features\FeaturesController->init_feature_definitions() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:214
+[09-Jul-2025 19:54:42 UTC] PHP  12. __($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\woocommerce\src\Internal\Features\FeaturesController.php:248
+[09-Jul-2025 19:54:42 UTC] PHP  13. translate($text = 'Analytics', $domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:307
+[09-Jul-2025 19:54:42 UTC] PHP  14. get_translations_for_domain($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:195
+[09-Jul-2025 19:54:42 UTC] PHP  15. _load_textdomain_just_in_time($domain = 'woocommerce') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1409
+[09-Jul-2025 19:54:42 UTC] PHP  16. _doing_it_wrong($function_name = '_load_textdomain_just_in_time', $message = 'La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde.', $version = '6.7.0') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\l10n.php:1379
+[09-Jul-2025 19:54:42 UTC] PHP  17. wp_trigger_error($function_name = '', $message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_level = *uninitialized*) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6061
+[09-Jul-2025 19:54:42 UTC] PHP  18. trigger_error($message = 'La función _load_textdomain_just_in_time ha sido llamada <strong>de forma incorrecta</strong>. La carga de la traducción para el dominio <code>woocommerce</code> se activó demasiado pronto. Esto suele ser un indicador de que algún código del plugin o tema se ejecuta demasiado pronto. Las traducciones deberían cargarse en la acción <code>init</code> o más tarde. Por favor, ve <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">depuración en WordPress</a> para má', $error_level = 1024) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:6121
+[09-Jul-2025 19:55:45 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 19:55:45 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 19:55:51 UTC] MODULO_VENTAS_TEMPLATES: Plantilla por defecto creada con ID: 1
+[09-Jul-2025 19:55:51 UTC] MODULO_VENTAS_TEMPLATES: Datos por defecto insertados
+[09-Jul-2025 19:55:51 UTC] MODULO_VENTAS_TEMPLATES: Tablas de plantillas PDF creadas exitosamente
+[09-Jul-2025 19:55:51 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 19:56:23 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 19:56:23 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 19:56:23 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 19:57:01 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 19:57:01 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 19:57:01 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 19:57:08 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 19:57:08 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 19:57:08 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 19:57:08 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 19:57:08 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 19:57:09 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 19:57:09 UTC] === MODULO_VENTAS_AJAX: generar_pdf_cotizacion() INICIADO ===
+[09-Jul-2025 19:57:09 UTC] REQUEST_METHOD: GET
+[09-Jul-2025 19:57:09 UTC] POST data: Array
+(
+)
+
+[09-Jul-2025 19:57:09 UTC] GET data: Array
+(
+    [action] => mv_generar_pdf_cotizacion
+    [cotizacion_id] => 24
+    [modo] => preview
+    [_wpnonce] => 68fab9d7ce
+)
+
+[09-Jul-2025 19:57:09 UTC] MODULO_VENTAS_AJAX: Parámetros detectados - ID: 24, Acción: preview, Método: GET
+[09-Jul-2025 19:57:09 UTC] MODULO_VENTAS: Evaluando cotización 24 - Estado: pendiente, Cliente: 11, Total: 190400.00
+[09-Jul-2025 19:57:09 UTC] MODULO_VENTAS: Cotización 24 tiene 1 items
+[09-Jul-2025 19:57:09 UTC] MODULO_VENTAS: Cotización 24 puede generar PDF
+[09-Jul-2025 19:57:09 UTC] MODULO_VENTAS_AJAX: Generando PDF para cotización 24...
+[09-Jul-2025 19:57:09 UTC] MODULO_VENTAS_PDF: Iniciando generación para cotización 24
+[09-Jul-2025 19:57:09 UTC] MODULO_VENTAS_PDF: TCPDF OK, obteniendo datos...
+[09-Jul-2025 19:57:09 UTC] MODULO_VENTAS_PDF: Cotización obtenida - Folio: COT-2025-000024
+[09-Jul-2025 19:57:09 UTC] MODULO_VENTAS_PDF: Cliente obtenido - Alexis Sanchez
+[09-Jul-2025 19:57:09 UTC] MODULO_VENTAS_PDF: Items obtenidos - Cantidad: 1
+[09-Jul-2025 19:57:09 UTC] MODULO_VENTAS_PDF: Vendedor obtenido - hostpanish
+[09-Jul-2025 19:57:09 UTC] MODULO_VENTAS_PDF: Creando instancia PDF...
+[09-Jul-2025 19:57:09 UTC] MODULO_VENTAS_PDF: Instancia PDF creada
+[09-Jul-2025 19:57:09 UTC] MODULO_VENTAS_PDF: Metadatos configurados
+[09-Jul-2025 19:57:09 UTC] MODULO_VENTAS_PDF: Página agregada
+[09-Jul-2025 19:57:10 UTC] MODULO_VENTAS_PDF: Header generado
+[09-Jul-2025 19:57:10 UTC] MODULO_VENTAS_PDF: Info empresa generada
+[09-Jul-2025 19:57:10 UTC] MODULO_VENTAS_PDF: Info cotización generada
+[09-Jul-2025 19:57:10 UTC] MODULO_VENTAS_PDF: Tabla productos generada
+[09-Jul-2025 19:57:10 UTC] MODULO_VENTAS_PDF: Totales generados
+[09-Jul-2025 19:57:10 UTC] MODULO_VENTAS_PDF: Términos generados
+[09-Jul-2025 19:57:10 UTC] MODULO_VENTAS_PDF: Guardando en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/pdfs/cotizacion_COT2025000024_2025-07-09.pdf
+[09-Jul-2025 19:57:10 UTC] MODULO_VENTAS_PDF: Output result: false
+[09-Jul-2025 19:57:10 UTC] MODULO_VENTAS_PDF: Archivo guardado exitosamente - 48296 bytes
+[09-Jul-2025 19:57:10 UTC] MODULO_VENTAS_AJAX: PDF generado exitosamente: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/pdfs/cotizacion_COT2025000024_2025-07-09.pdf
+[09-Jul-2025 19:57:10 UTC] MODULO_VENTAS_AJAX: Enviando archivo vía GET: cotizacion_COT-2025-000024.pdf
+[09-Jul-2025 19:57:16 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 19:57:16 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 19:57:16 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 19:57:16 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 19:57:16 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 19:57:16 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 19:57:17 UTC] === MODULO_VENTAS_AJAX: generar_pdf_cotizacion() INICIADO ===
+[09-Jul-2025 19:57:17 UTC] REQUEST_METHOD: GET
+[09-Jul-2025 19:57:17 UTC] POST data: Array
+(
+)
+
+[09-Jul-2025 19:57:17 UTC] GET data: Array
+(
+    [action] => mv_generar_pdf_cotizacion
+    [cotizacion_id] => 20
+    [modo] => preview
+    [_wpnonce] => 1896e9b86f
+)
+
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_AJAX: Parámetros detectados - ID: 20, Acción: preview, Método: GET
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS: Evaluando cotización 20 - Estado: pendiente, Cliente: 11, Total: 595000.00
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS: Cotización 20 tiene 1 items
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS: Cotización 20 puede generar PDF
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_AJAX: Generando PDF para cotización 20...
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Iniciando generación para cotización 20
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: TCPDF OK, obteniendo datos...
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Cotización obtenida - Folio: COT-2025-000020
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Cliente obtenido - Alexis Sanchez
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Items obtenidos - Cantidad: 1
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Vendedor obtenido - hostpanish
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Creando instancia PDF...
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Instancia PDF creada
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Metadatos configurados
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Página agregada
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Header generado
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Info empresa generada
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Info cotización generada
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Tabla productos generada
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Totales generados
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Términos generados
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Guardando en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/pdfs/cotizacion_COT2025000020_2025-07-09.pdf
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Output result: false
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_PDF: Archivo guardado exitosamente - 48300 bytes
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_AJAX: PDF generado exitosamente: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/pdfs/cotizacion_COT2025000020_2025-07-09.pdf
+[09-Jul-2025 19:57:17 UTC] MODULO_VENTAS_AJAX: Enviando archivo vía GET: cotizacion_COT-2025-000020.pdf
+[09-Jul-2025 19:57:31 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 19:57:31 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 19:57:31 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 19:57:31 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 19:57:31 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 19:57:32 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 19:57:32 UTC] === MODULO_VENTAS_AJAX: generar_pdf_cotizacion() INICIADO ===
+[09-Jul-2025 19:57:32 UTC] REQUEST_METHOD: GET
+[09-Jul-2025 19:57:32 UTC] POST data: Array
+(
+)
+
+[09-Jul-2025 19:57:32 UTC] GET data: Array
+(
+    [action] => mv_generar_pdf_cotizacion
+    [cotizacion_id] => 18
+    [modo] => download
+    [_wpnonce] => 0e7e2fb814
+)
+
+[09-Jul-2025 19:57:32 UTC] MODULO_VENTAS_AJAX: Parámetros detectados - ID: 18, Acción: download, Método: GET
+[09-Jul-2025 19:57:32 UTC] MODULO_VENTAS: Evaluando cotización 18 - Estado: pendiente, Cliente: 12, Total: 160000.00
+[09-Jul-2025 19:57:32 UTC] MODULO_VENTAS: Cotización 18 tiene 1 items
+[09-Jul-2025 19:57:32 UTC] MODULO_VENTAS: Cotización 18 puede generar PDF
+[09-Jul-2025 19:57:32 UTC] MODULO_VENTAS_AJAX: Generando PDF para cotización 18...
+[09-Jul-2025 19:57:32 UTC] MODULO_VENTAS_PDF: Iniciando generación para cotización 18
+[09-Jul-2025 19:57:32 UTC] MODULO_VENTAS_PDF: TCPDF OK, obteniendo datos...
+[09-Jul-2025 19:57:32 UTC] MODULO_VENTAS_PDF: Cotización obtenida - Folio: COT-2025-000018
+[09-Jul-2025 19:57:32 UTC] MODULO_VENTAS_PDF: Cliente obtenido - Andrés Moraga
+[09-Jul-2025 19:57:32 UTC] MODULO_VENTAS_PDF: Items obtenidos - Cantidad: 1
+[09-Jul-2025 19:57:32 UTC] MODULO_VENTAS_PDF: Vendedor obtenido - hostpanish
+[09-Jul-2025 19:57:32 UTC] MODULO_VENTAS_PDF: Creando instancia PDF...
+[09-Jul-2025 19:57:32 UTC] MODULO_VENTAS_PDF: Instancia PDF creada
+[09-Jul-2025 19:57:32 UTC] MODULO_VENTAS_PDF: Metadatos configurados
+[09-Jul-2025 19:57:32 UTC] MODULO_VENTAS_PDF: Página agregada
+[09-Jul-2025 19:57:33 UTC] MODULO_VENTAS_PDF: Header generado
+[09-Jul-2025 19:57:33 UTC] MODULO_VENTAS_PDF: Info empresa generada
+[09-Jul-2025 19:57:33 UTC] MODULO_VENTAS_PDF: Info cotización generada
+[09-Jul-2025 19:57:33 UTC] MODULO_VENTAS_PDF: Tabla productos generada
+[09-Jul-2025 19:57:33 UTC] MODULO_VENTAS_PDF: Totales generados
+[09-Jul-2025 19:57:33 UTC] MODULO_VENTAS_PDF: Términos generados
+[09-Jul-2025 19:57:33 UTC] MODULO_VENTAS_PDF: Guardando en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/pdfs/cotizacion_COT2025000018_2025-07-09.pdf
+[09-Jul-2025 19:57:33 UTC] MODULO_VENTAS_PDF: Output result: false
+[09-Jul-2025 19:57:33 UTC] MODULO_VENTAS_PDF: Archivo guardado exitosamente - 48296 bytes
+[09-Jul-2025 19:57:33 UTC] MODULO_VENTAS_AJAX: PDF generado exitosamente: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/pdfs/cotizacion_COT2025000018_2025-07-09.pdf
+[09-Jul-2025 19:57:33 UTC] MODULO_VENTAS_AJAX: Enviando archivo vía GET: cotizacion_COT-2025-000018.pdf
+[09-Jul-2025 19:58:04 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 19:58:04 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 19:58:04 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 19:58:04 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 19:58:04 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 19:58:04 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 19:59:14 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 19:59:15 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 19:59:15 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:00:18 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:00:18 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:00:18 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:00:18 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:00:18 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:00:18 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:01:46 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:01:46 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:01:46 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:01:46 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:01:46 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:01:46 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:02:46 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:02:46 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:02:46 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:02:46 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:02:46 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:02:46 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:03:45 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:03:46 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:03:46 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:03:46 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:03:46 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:03:46 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:04:45 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:04:46 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:04:46 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:04:46 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:04:46 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:04:46 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:05:46 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:05:46 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:05:46 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:05:46 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:05:46 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:05:46 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:07:46 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:07:46 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:07:46 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:07:46 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:07:46 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:07:46 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:08:13 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:08:13 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:08:14 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:08:24 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:08:24 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:08:24 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:09:26 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:09:26 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:09:26 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:09:26 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:09:26 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:09:26 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:10:27 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:10:27 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:10:27 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:10:27 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:10:27 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:10:27 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:12:28 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:12:28 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:12:28 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:12:28 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:12:28 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:12:28 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:14:29 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:14:29 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:14:29 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:14:29 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:14:29 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:14:29 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:16:30 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:16:30 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:16:30 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:16:30 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:16:30 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:16:30 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:18:31 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:18:31 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:18:31 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:18:31 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:18:31 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:18:31 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:20:32 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:20:32 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:20:32 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:20:32 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:20:32 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:20:32 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:28:50 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:28:50 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:28:50 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:28:50 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:28:50 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:28:50 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:28:55 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:28:55 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:28:56 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:30:00 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:30:00 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:30:00 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:30:00 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:30:00 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:30:01 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:30:07 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:30:07 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:30:08 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:30:24 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:30:24 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:30:25 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:30:27 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:30:27 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:30:27 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:30:27 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:30:27 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:30:28 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:31:27 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:31:27 UTC] MODULO_VENTAS: Sistema de plantillas PDF inicializado
+[09-Jul-2025 20:31:27 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 20:31:27 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:31:27 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 20:31:28 UTC] MODULO_VENTAS: TCPDF cargado via autoload

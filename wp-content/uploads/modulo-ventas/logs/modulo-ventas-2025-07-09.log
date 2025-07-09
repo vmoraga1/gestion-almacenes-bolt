@@ -30,3 +30,59 @@ Stack trace:
 [2025-07-09 06:03:37] INFO: PDF generado para cotización COT-2025-000024: cotizacion_COT2025000024_2025-07-09.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
 [2025-07-09 06:08:46] INFO: PDF generado para cotización COT-2025-000024: cotizacion_COT2025000024_2025-07-09.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
 [2025-07-09 06:14:17] INFO: PDF generado para cotización COT-2025-000024: cotizacion_COT2025000024_2025-07-09.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-09 17:13:06] EMERGENCY: Error Fatal: Maximum execution time of 120 seconds exceeded | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\woocommerce\\src\\Blocks\\BlockTypes\\MiniCartContents.php","line":11,"type":1}
+[2025-07-09 19:48:26] EMERGENCY: Error Fatal: Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php:24
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin('')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(578): do_action('plugins_loaded')
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(35): require_once('C:\\wamp64\\www\\g...')
+#9 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php","line":24,"type":1}
+[2025-07-09 19:49:36] EMERGENCY: Error Fatal: Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php:24
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin('')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(578): do_action('plugins_loaded')
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(35): require_once('C:\\wamp64\\www\\g...')
+#9 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php","line":24,"type":1}
+[2025-07-09 19:49:40] EMERGENCY: Error Fatal: Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php:24
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin('')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(578): do_action('plugins_loaded')
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(35): require_once('C:\\wamp64\\www\\g...')
+#9 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php","line":24,"type":1}
+[2025-07-09 19:51:13] EMERGENCY: Error Fatal: Uncaught Error: Class "Modulo_Ventas_PDF_Templates" not found in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates-ajax.php:24
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(208): Modulo_Ventas_PDF_Templates_Ajax->__construct()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(361): Modulo_Ventas->inicializar_clases()
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas->cargar_plugin('')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(578): do_action('plugins_loaded')
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(35): require_once('C:\\wamp64\\www\\g...')
+#9 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-templates-ajax.php","line":24,"type":1}
+[2025-07-09 19:57:10] INFO: PDF generado para cotización COT-2025-000024: cotizacion_COT2025000024_2025-07-09.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-09 19:57:17] INFO: PDF generado para cotización COT-2025-000020: cotizacion_COT2025000020_2025-07-09.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-09 19:57:33] INFO: PDF generado para cotización COT-2025-000018: cotizacion_COT2025000018_2025-07-09.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
