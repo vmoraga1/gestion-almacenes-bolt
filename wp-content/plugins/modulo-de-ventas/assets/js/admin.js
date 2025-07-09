@@ -158,7 +158,7 @@
         },
         formatMoney: function(amount) {
             return moduloVentasAjax.currency_symbol + ' ' + 
-                   new Intl.NumberFormat('es-CL').format(amount);
+                new Intl.NumberFormat('es-CL').format(amount);
         }
     };
 

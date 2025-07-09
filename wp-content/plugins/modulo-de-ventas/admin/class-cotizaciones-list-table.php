@@ -103,24 +103,40 @@ class Cotizaciones_List_Table extends WP_List_Table {
                 '<a href="%s">%s</a>',
                 admin_url('admin.php?page=modulo-ventas-editar-cotizacion&id=' . $item['id']),
                 __('Editar', 'modulo-ventas')
-            ),
-            'duplicate' => sprintf(
-                '<a href="%s">%s</a>',
-                wp_nonce_url(
-                    admin_url('admin.php?page=modulo-ventas-cotizaciones&action=duplicate&id=' . $item['id']),
-                    'duplicate_cotizacion_' . $item['id']
-                ),
-                __('Duplicar', 'modulo-ventas')
-            ),
-            'delete' => sprintf(
-                '<a href="%s" onclick="return confirm(\'%s\')">%s</a>',
-                wp_nonce_url(
-                    admin_url('admin.php?page=modulo-ventas-cotizaciones&action=delete&id=' . $item['id']),
-                    'delete_cotizacion_' . $item['id']
-                ),
-                __('¿Está seguro de eliminar esta cotización?', 'modulo-ventas'),
-                __('Eliminar', 'modulo-ventas')
             )
+        );
+        
+        // Agregar acción PDF solo si tiene productos
+        $tiene_productos = $this->db->contar_items_cotizacion($item['id']) > 0;
+        if ($tiene_productos) {
+            $actions['pdf'] = sprintf(
+                '<a href="%s" target="_blank">%s</a>',
+                wp_nonce_url(
+                    admin_url('admin-ajax.php?action=mv_generar_pdf_cotizacion&cotizacion_id=' . $item['id'] . '&modo=preview'),
+                    'mv_pdf_cotizacion_' . $item['id']
+                ),
+                __('Ver PDF', 'modulo-ventas')
+            );
+        }
+        
+        // Otras acciones existentes
+        $actions['duplicate'] = sprintf(
+            '<a href="%s">%s</a>',
+            wp_nonce_url(
+                admin_url('admin.php?page=modulo-ventas-cotizaciones&action=duplicate&id=' . $item['id']),
+                'duplicate_cotizacion_' . $item['id']
+            ),
+            __('Duplicar', 'modulo-ventas')
+        );
+        
+        $actions['delete'] = sprintf(
+            '<a href="%s" onclick="return confirm(\'%s\')">%s</a>',
+            wp_nonce_url(
+                admin_url('admin.php?page=modulo-ventas-cotizaciones&action=delete&id=' . $item['id']),
+                'delete_cotizacion_' . $item['id']
+            ),
+            __('¿Está seguro de eliminar esta cotización?', 'modulo-ventas'),
+            __('Eliminar', 'modulo-ventas')
         );
         
         return sprintf(
@@ -220,31 +236,66 @@ class Cotizaciones_List_Table extends WP_List_Table {
      */
     public function column_acciones($item) {
         $acciones = array();
+    
+        // Verificar si puede generar PDF
+        $puede_generar_pdf = $this->db->contar_items_cotizacion($item['id']) > 0;
         
-        // PDF
+        // Botones PDF (solo si tiene productos)
+        if ($puede_generar_pdf) {
+            // Ver PDF
+            $acciones[] = sprintf(
+                '<a href="%s" class="button button-small mv-btn-pdf-preview" target="_blank" title="%s">
+                    <span class="dashicons dashicons-visibility"></span>
+                </a>',
+                wp_nonce_url(
+                    admin_url('admin-ajax.php?action=mv_generar_pdf_cotizacion&cotizacion_id=' . $item['id'] . '&modo=preview'),
+                    'mv_pdf_cotizacion_' . $item['id']
+                ),
+                __('Ver PDF', 'modulo-ventas')
+            );
+            
+            // Descargar PDF
+            $acciones[] = sprintf(
+                '<a href="%s" class="button button-small mv-btn-pdf-download" title="%s">
+                    <span class="dashicons dashicons-download"></span>
+                </a>',
+                wp_nonce_url(
+                    admin_url('admin-ajax.php?action=mv_generar_pdf_cotizacion&cotizacion_id=' . $item['id'] . '&modo=download'),
+                    'mv_pdf_cotizacion_' . $item['id']
+                ),
+                __('Descargar PDF', 'modulo-ventas')
+            );
+        }
+        
+        // Separador visual si hay botones PDF
+        if (!empty($acciones) && $puede_generar_pdf) {
+            $acciones[] = '<span class="mv-action-separator">|</span>';
+        }
+        
+        // Editar
         $acciones[] = sprintf(
-            '<a href="%s" class="button button-small" target="_blank" title="%s"><span class="dashicons dashicons-pdf"></span></a>',
-            wp_nonce_url(
-                admin_url('admin.php?page=modulo-ventas-cotizaciones&action=pdf&id=' . $item['id']),
-                'pdf_cotizacion_' . $item['id']
-            ),
-            __('Descargar PDF', 'modulo-ventas')
+            '<a href="%s" class="button button-small" title="%s">
+                <span class="dashicons dashicons-edit"></span>
+            </a>',
+            admin_url('admin.php?page=modulo-ventas-editar-cotizacion&id=' . $item['id']),
+            __('Editar', 'modulo-ventas')
         );
         
         // Email
         $acciones[] = sprintf(
-            '<a href="%s" class="button button-small" title="%s"><span class="dashicons dashicons-email"></span></a>',
-            wp_nonce_url(
-                admin_url('admin.php?page=modulo-ventas-cotizaciones&action=email&id=' . $item['id']),
-                'email_cotizacion_' . $item['id']
-            ),
+            '<a href="#" class="button button-small mv-btn-email" data-cotizacion-id="%s" title="%s">
+                <span class="dashicons dashicons-email-alt"></span>
+            </a>',
+            $item['id'],
             __('Enviar por Email', 'modulo-ventas')
         );
         
-        // Convertir a venta
+        // Convertir a venta (solo para estados apropiados)
         if (in_array($item['estado'], array('aceptada', 'enviada'))) {
             $acciones[] = sprintf(
-                '<a href="%s" class="button button-small button-primary" title="%s"><span class="dashicons dashicons-cart"></span></a>',
+                '<a href="%s" class="button button-small button-primary mv-btn-convert" title="%s">
+                    <span class="dashicons dashicons-cart"></span>
+                </a>',
                 wp_nonce_url(
                     admin_url('admin.php?page=modulo-ventas-cotizaciones&action=convert&id=' . $item['id']),
                     'convert_cotizacion_' . $item['id']
@@ -253,7 +304,7 @@ class Cotizaciones_List_Table extends WP_List_Table {
             );
         }
         
-        return implode(' ', $acciones);
+        return '<div class="mv-actions-buttons">' . implode(' ', $acciones) . '</div>';
     }
     
     /**

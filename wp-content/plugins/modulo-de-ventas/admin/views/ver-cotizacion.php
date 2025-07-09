@@ -602,6 +602,125 @@ if (!empty($cotizacion->vendedor_id)) {
                     </div>
                 </div>
             </div>
+            
+            <?php
+            /*// ===== DEBUG TEMPORAL - REMOVER DESPUÉS =====
+            echo '<div style="background: #f0f0f0; padding: 10px; margin: 10px 0; border: 1px solid #ccc;">';
+            echo '<h3>🐛 DEBUG INFORMACIÓN</h3>';
+
+            // Mostrar información de la cotización
+            echo '<p><strong>ID Cotización:</strong> ' . $cotizacion->id . '</p>';
+            echo '<p><strong>Estado:</strong> ' . $cotizacion->estado . '</p>';
+            echo '<p><strong>Cliente ID:</strong> ' . $cotizacion->cliente_id . '</p>';
+            echo '<p><strong>Total:</strong> $' . number_format($cotizacion->total, 2) . '</p>';
+
+            // Contar items
+            $items_count = $db->contar_items_cotizacion($cotizacion->id);
+            echo '<p><strong>Cantidad de Items:</strong> ' . $items_count . '</p>';
+
+            // Debug completo
+            $debug_info = $db->debug_cotizacion($cotizacion->id);
+            echo '<p><strong>Debug completo:</strong></p>';
+            echo '<pre style="background: white; padding: 10px; font-size: 12px;">';
+            print_r($debug_info);
+            echo '</pre>';
+
+            echo '</div>';
+            // ===== FIN DEBUG TEMPORAL =====*/
+
+            // Verificar si la cotización puede generar PDF
+            $puede_generar_pdf = $db->cotizacion_puede_generar_pdf($cotizacion->id);
+
+            ?>
+
+            <!-- Sección PDF -->
+            <div class="postbox">
+                <div class="postbox-header">
+                    <h2 class="hndle">
+                        <span class="dashicons dashicons-media-document" style="margin-right: 5px;"></span>
+                        <?php _e('Documento PDF', 'modulo-ventas'); ?>
+                    </h2>
+                </div>
+                <div class="inside">
+                    <?php if ($puede_generar_pdf): ?>
+                        <div class="mv-cotizacion-pdf-actions">
+                            <p class="description" style="margin-bottom: 15px;">
+                                <?php _e('Genere el PDF de esta cotización para enviar al cliente o para sus registros.', 'modulo-ventas'); ?>
+                            </p>
+                            
+                            <div class="mv-pdf-buttons" style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
+                                <a href="<?php echo wp_nonce_url(
+                                    admin_url('admin-ajax.php?action=mv_generar_pdf_cotizacion&cotizacion_id=' . $cotizacion->id . '&modo=preview'),
+                                    'mv_pdf_cotizacion_' . $cotizacion->id
+                                ); ?>" 
+                                class="button button-primary mv-pdf-preview-button" 
+                                target="_blank"
+                                data-cotizacion-id="<?php echo $cotizacion->id; ?>">
+                                    <span class="dashicons dashicons-visibility" style="margin-right: 5px;"></span>
+                                    <?php _e('Ver PDF', 'modulo-ventas'); ?>
+                                </a>
+                                
+                                <a href="<?php echo wp_nonce_url(
+                                    admin_url('admin-ajax.php?action=mv_generar_pdf_cotizacion&cotizacion_id=' . $cotizacion->id . '&modo=download'),
+                                    'mv_pdf_cotizacion_' . $cotizacion->id
+                                ); ?>" 
+                                class="button mv-pdf-download-button"
+                                data-cotizacion-id="<?php echo $cotizacion->id; ?>">
+                                    <span class="dashicons dashicons-download" style="margin-right: 5px;"></span>
+                                    <?php _e('Descargar PDF', 'modulo-ventas'); ?>
+                                </a>
+                                
+                                <button type="button" 
+                                        class="button mv-pdf-email-button" 
+                                        data-cotizacion-id="<?php echo $cotizacion->id; ?>"
+                                        onclick="mv_modal_enviar_email(<?php echo $cotizacion->id; ?>)">
+                                    <span class="dashicons dashicons-email-alt" style="margin-right: 5px;"></span>
+                                    <?php _e('Enviar por Email', 'modulo-ventas'); ?>
+                                </button>
+                            </div>
+                            
+                            <div class="mv-pdf-info" style="background: #f8f9fa; padding: 15px; border-radius: 4px; border-left: 4px solid #0073aa;">
+                                <h4 style="margin: 0 0 10px 0; color: #23282d;">
+                                    <span class="dashicons dashicons-info" style="margin-right: 5px;"></span>
+                                    <?php _e('Información del PDF', 'modulo-ventas'); ?>
+                                </h4>
+                                <ul style="margin: 0; padding-left: 20px; color: #646970;">
+                                    <li><?php _e('Incluye información completa de la cotización y cliente', 'modulo-ventas'); ?></li>
+                                    <li><?php _e('Formato profesional listo para imprimir o enviar', 'modulo-ventas'); ?></li>
+                                    <li><?php _e('Se genera en tiempo real con los datos actuales', 'modulo-ventas'); ?></li>
+                                    <li><?php printf(__('Archivo: cotizacion_%s.pdf', 'modulo-ventas'), $cotizacion->folio); ?></li>
+                                </ul>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <!-- Mensaje cuando no se puede generar PDF -->
+                        <div class="notice notice-warning inline" style="margin: 0;">
+                            <p>
+                                <span class="dashicons dashicons-warning" style="margin-right: 5px;"></span>
+                                <strong><?php _e('PDF no disponible', 'modulo-ventas'); ?></strong>
+                            </p>
+                            <p style="margin: 10px 0 0 0;">
+                                <?php _e('Para generar el PDF, la cotización debe cumplir con los siguientes requisitos:', 'modulo-ventas'); ?>
+                            </p>
+                            <ul style="margin: 10px 0 0 20px;">
+                                <li><?php _e('Tener al menos un producto agregado', 'modulo-ventas'); ?></li>
+                                <li><?php _e('Tener un cliente asignado', 'modulo-ventas'); ?></li>
+                                <li><?php _e('Tener un total mayor a cero', 'modulo-ventas'); ?></li>
+                            </ul>
+                            
+                            <?php if ($cotizacion->estado === 'borrador'): ?>
+                            <p style="margin: 15px 0 0 0;">
+                                <a href="<?php echo admin_url('admin.php?page=modulo-ventas-editar-cotizacion&id=' . $cotizacion->id); ?>" 
+                                class="button button-secondary">
+                                    <span class="dashicons dashicons-edit" style="margin-right: 5px;"></span>
+                                    <?php _e('Completar Cotización', 'modulo-ventas'); ?>
+                                </a>
+                            </p>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
 
             <!-- Historial -->
             <div class="postbox">
@@ -1101,6 +1220,65 @@ jQuery(document).ready(function($) {
         alert('Función de envío por email en desarrollo');
         // TODO: Implementar modal para envío por email
     });
+
+    // Mejorar botones PDF con indicadores de carga
+    $('.mv-pdf-preview-button, .mv-pdf-download-button').on('click', function() {
+        var $btn = $(this);
+        var originalText = $btn.text();
+        var isPreview = $btn.hasClass('mv-pdf-preview-button');
+        
+        // Cambiar texto y deshabilitar
+        $btn.prop('disabled', true);
+        $btn.find('.dashicons').removeClass('dashicons-visibility dashicons-download').addClass('dashicons-update');
+        
+        if (isPreview) {
+            $btn.append(' <?php _e('Generando...', 'modulo-ventas'); ?>');
+        } else {
+            $btn.append(' <?php _e('Preparando descarga...', 'modulo-ventas'); ?>');
+        }
+        
+        // Restaurar después de un tiempo
+        setTimeout(function() {
+            $btn.prop('disabled', false);
+            $btn.text(originalText);
+            
+            if (isPreview) {
+                $btn.prepend('<span class="dashicons dashicons-visibility" style="margin-right: 5px;"></span>');
+            } else {
+                $btn.prepend('<span class="dashicons dashicons-download" style="margin-right: 5px;"></span>');
+            }
+        }, isPreview ? 2000 : 3000);
+    });
     // Fin PDF
+
+    // Función para mostrar modal de envío por email
+    function mv_modal_enviar_email(cotizacionId) {
+        var email = prompt('<?php _e('Ingrese el email del destinatario:', 'modulo-ventas'); ?>');
+        if (email && email.trim()) {
+            if (isValidEmail(email)) {
+                // TODO: Implementar envío real por AJAX
+                alert('<?php _e('Función de envío por email en desarrollo', 'modulo-ventas'); ?>\n\nCotización: ' + cotizacionId + '\nEmail: ' + email);
+            } else {
+                alert('<?php _e('Por favor ingrese un email válido', 'modulo-ventas'); ?>');
+            }
+        }
+    }
+
+    // Validador de email
+    function isValidEmail(email) {
+        var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+
+    // Mejorar botón de email
+    $('.mv-pdf-email-button').on('click', function() {
+        var $btn = $(this);
+        $btn.find('.dashicons').removeClass('dashicons-email-alt').addClass('dashicons-update');
+        
+        // Restaurar después de la acción
+        setTimeout(function() {
+            $btn.find('.dashicons').removeClass('dashicons-update').addClass('dashicons-email-alt');
+        }, 1000);
+    });
 });
 </script>

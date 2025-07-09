@@ -1991,4 +1991,138 @@ class Modulo_Ventas_DB {
         return $resultados;
     }
     
+    /**
+     * Contar items de una cotización
+     */
+    public function contar_items_cotizacion($cotizacion_id) {
+        $cotizacion_id = intval($cotizacion_id);
+        
+        if (!$cotizacion_id) {
+            return 0;
+        }
+        
+        $sql = $this->wpdb->prepare(
+            "SELECT COUNT(*) FROM {$this->tabla_cotizaciones_items} WHERE cotizacion_id = %d",
+            $cotizacion_id
+        );
+        
+        return intval($this->wpdb->get_var($sql));
+    }
+
+    /**
+     * Verificar si una cotización existe y tiene el estado correcto para generar PDF
+     */
+    public function cotizacion_puede_generar_pdf($cotizacion_id) {
+        $cotizacion = $this->obtener_cotizacion($cotizacion_id);
+        
+        if (!$cotizacion) {
+            error_log("MODULO_VENTAS: Cotización {$cotizacion_id} no encontrada");
+            return false;
+        }
+        
+        // Debug: Log para ver qué cotización estamos evaluando
+        error_log("MODULO_VENTAS: Evaluando cotización {$cotizacion_id} - Estado: {$cotizacion->estado}, Cliente: {$cotizacion->cliente_id}, Total: {$cotizacion->total}");
+        
+        // Verificar que tenga items
+        $tiene_items = $this->contar_items_cotizacion($cotizacion_id) > 0;
+        
+        if (!$tiene_items) {
+            error_log("MODULO_VENTAS: Cotización {$cotizacion_id} no tiene items");
+            return false;
+        }
+        
+        error_log("MODULO_VENTAS: Cotización {$cotizacion_id} tiene " . $this->contar_items_cotizacion($cotizacion_id) . " items");
+        
+        // TODOS los estados válidos para generar PDF (incluyendo variaciones de nombres)
+        $estados_validos = array(
+            'borrador',
+            'pendiente',     // ⭐ AGREGADO
+            'enviada', 
+            'aceptada', 
+            'aprobada',      // ⭐ AGREGADO (variación de aceptada)
+            'rechazada', 
+            'vencida', 
+            'expirada',      // ⭐ AGREGADO (variación de vencida)
+            'convertida',
+            'cancelada'      // ⭐ AGREGADO por si acaso
+        );
+        
+        // Verificar estado
+        $estado_valido = in_array(strtolower($cotizacion->estado), $estados_validos);
+        
+        if (!$estado_valido) {
+            error_log("MODULO_VENTAS: Estado '{$cotizacion->estado}' no es válido para PDF");
+            return false;
+        }
+        
+        // Para borradores y pendientes, verificar datos adicionales
+        if (in_array(strtolower($cotizacion->estado), array('borrador', 'pendiente'))) {
+            // Verificar que tenga cliente
+            if (!$cotizacion->cliente_id || $cotizacion->cliente_id <= 0) {
+                error_log("MODULO_VENTAS: Cotización {$cotizacion_id} no tiene cliente asignado");
+                return false;
+            }
+            
+            // Verificar que tenga total mayor a 0
+            if (!$cotizacion->total || $cotizacion->total <= 0) {
+                error_log("MODULO_VENTAS: Cotización {$cotizacion_id} tiene total igual a 0");
+                return false;
+            }
+        }
+        
+        error_log("MODULO_VENTAS: Cotización {$cotizacion_id} puede generar PDF");
+        return true;
+    }
+
+    /**
+     * Obtener datos completos de cotización para PDF
+     */
+    public function obtener_cotizacion_para_pdf($cotizacion_id) {
+        $cotizacion = $this->obtener_cotizacion($cotizacion_id);
+        
+        if (!$cotizacion) {
+            return false;
+        }
+        
+        // Obtener cliente
+        $cliente = $this->obtener_cliente($cotizacion->cliente_id);
+        
+        // Obtener items
+        $items = $this->obtener_items_cotizacion($cotizacion_id);
+        
+        // Obtener vendedor
+        $vendedor = null;
+        if ($cotizacion->usuario_id) {
+            $vendedor = get_userdata($cotizacion->usuario_id);
+        }
+        
+        return array(
+            'cotizacion' => $cotizacion,
+            'cliente' => $cliente,
+            'items' => $items,
+            'vendedor' => $vendedor
+        );
+    }
+
+    /**
+     * TAMBIÉN AGREGAR ESTE MÉTODO DE DEBUG PARA VER LA COTIZACIÓN ACTUAL
+     */
+    public function debug_cotizacion($cotizacion_id) {
+        $cotizacion = $this->obtener_cotizacion($cotizacion_id);
+        
+        if (!$cotizacion) {
+            return array('error' => 'Cotización no encontrada');
+        }
+        
+        $items_count = $this->contar_items_cotizacion($cotizacion_id);
+        
+        return array(
+            'cotizacion_id' => $cotizacion_id,
+            'estado' => $cotizacion->estado,
+            'cliente_id' => $cotizacion->cliente_id,
+            'total' => $cotizacion->total,
+            'items_count' => $items_count,
+            'puede_pdf' => $this->cotizacion_puede_generar_pdf($cotizacion_id)
+        );
+    }
 }

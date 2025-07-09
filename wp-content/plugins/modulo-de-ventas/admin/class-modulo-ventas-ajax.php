@@ -719,6 +719,13 @@ class Modulo_Ventas_Ajax {
      * Generar PDF de cotización
      */
     public function generar_pdf_cotizacion() {
+        // Verificar si es petición GET (para preview/download directo)
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $this->manejar_pdf_via_get();
+            return;
+        }
+        
+        // Manejar petición AJAX POST
         mv_ajax_check_permissions('view_cotizaciones', 'modulo_ventas_nonce');
         
         $cotizacion_id = isset($_POST['cotizacion_id']) ? intval($_POST['cotizacion_id']) : 0;
@@ -728,21 +735,232 @@ class Modulo_Ventas_Ajax {
             wp_send_json_error(array('message' => __('ID de cotización inválido', 'modulo-ventas')));
         }
         
-        $pdf_path = $this->cotizaciones->generar_pdf($cotizacion_id);
-        
-        if (is_wp_error($pdf_path)) {
-            wp_send_json_error(array('message' => $pdf_path->get_error_message()));
+        // Verificar que la cotización puede generar PDF
+        if (!$this->db->cotizacion_puede_generar_pdf($cotizacion_id)) {
+            wp_send_json_error(array('message' => __('Esta cotización no puede generar PDF. Debe tener productos y datos completos.', 'modulo-ventas')));
         }
         
-        // Convertir a URL
-        $upload_dir = wp_upload_dir();
-        $pdf_url = str_replace($upload_dir['basedir'], $upload_dir['baseurl'], $pdf_path);
+        try {
+            // Generar PDF usando la clase PDF
+            $pdf_generator = new Modulo_Ventas_PDF();
+            $result = $pdf_generator->generar_pdf_cotizacion($cotizacion_id);
+            
+            if (is_wp_error($result)) {
+                wp_send_json_error(array('message' => $result->get_error_message()));
+                return;
+            }
+            
+            // $result contiene la ruta del archivo generado
+            $filename = basename($result);
+            
+            // Crear URL segura
+            $secure_url = admin_url('admin-ajax.php') . '?' . http_build_query(array(
+                'action' => 'mv_servir_pdf',
+                'file' => $filename,
+                'type' => 'cotizacion',
+                'nonce' => wp_create_nonce('mv_pdf_access_' . $filename)
+            ));
+            
+            wp_send_json_success(array(
+                'pdf_url' => $secure_url,
+                'pdf_path' => $result,
+                'filename' => $filename,
+                'message' => __('PDF generado exitosamente', 'modulo-ventas')
+            ));
+            
+        } catch (Exception $e) {
+            error_log('MODULO_VENTAS: Error generando PDF cotización: ' . $e->getMessage());
+            wp_send_json_error(array('message' => 'Error al generar PDF: ' . $e->getMessage()));
+        }
+    }
+
+    /**
+     * Manejar peticiones GET para PDF (preview/download directo)
+     */
+    private function manejar_pdf_via_get() {
+        // Activar output de errores para debug
+        ini_set('display_errors', 1);
+        error_reporting(E_ALL);
         
-        wp_send_json_success(array(
-            'pdf_url' => $pdf_url,
-            'pdf_path' => $pdf_path,
-            'message' => __('PDF generado exitosamente', 'modulo-ventas')
-        ));
+        // Log inicio del proceso
+        error_log('MODULO_VENTAS: Iniciando manejar_pdf_via_get()');
+        
+        // Verificar parámetros
+        $cotizacion_id = isset($_GET['cotizacion_id']) ? intval($_GET['cotizacion_id']) : 0;
+        $modo = isset($_GET['modo']) ? sanitize_text_field($_GET['modo']) : 'preview';
+        $nonce = isset($_GET['_wpnonce']) ? $_GET['_wpnonce'] : '';
+        
+        error_log("MODULO_VENTAS: Parámetros - ID: {$cotizacion_id}, Modo: {$modo}");
+        
+        // Verificar nonce
+        if (!wp_verify_nonce($nonce, 'mv_pdf_cotizacion_' . $cotizacion_id)) {
+            error_log('MODULO_VENTAS: Error - Nonce inválido');
+            wp_die('Acceso no autorizado', 'Error', array('response' => 403));
+        }
+        
+        error_log('MODULO_VENTAS: Nonce válido');
+        
+        // Verificar permisos
+        if (!current_user_can('view_cotizaciones')) {
+            error_log('MODULO_VENTAS: Error - Sin permisos');
+            wp_die('Sin permisos', 'Error', array('response' => 403));
+        }
+        
+        error_log('MODULO_VENTAS: Permisos OK');
+        
+        // Verificar cotización
+        if (!$cotizacion_id || !$this->db->cotizacion_puede_generar_pdf($cotizacion_id)) {
+            error_log('MODULO_VENTAS: Error - Cotización no válida para PDF');
+            wp_die('Cotización no válida para PDF', 'Error', array('response' => 400));
+        }
+        
+        error_log('MODULO_VENTAS: Cotización válida para PDF');
+        
+        try {
+            // Asegurar que TCPDF esté disponible
+            if (!class_exists('TCPDF')) {
+                error_log('MODULO_VENTAS: TCPDF no está cargado, intentando cargar...');
+                
+                // Intentar autoload
+                $autoload_path = MODULO_VENTAS_PLUGIN_DIR . 'vendor/autoload.php';
+                if (file_exists($autoload_path)) {
+                    require_once $autoload_path;
+                    error_log('MODULO_VENTAS: Autoload cargado');
+                }
+                
+                if (!class_exists('TCPDF')) {
+                    $tcpdf_path = MODULO_VENTAS_PLUGIN_DIR . 'vendor/tecnickcom/tcpdf/tcpdf.php';
+                    if (file_exists($tcpdf_path)) {
+                        require_once $tcpdf_path;
+                        error_log('MODULO_VENTAS: TCPDF cargado directamente');
+                    }
+                }
+            }
+            
+            if (!class_exists('TCPDF')) {
+                error_log('MODULO_VENTAS: ERROR CRÍTICO - TCPDF no disponible');
+                wp_die('TCPDF no disponible', 'Error', array('response' => 500));
+            }
+            
+            error_log('MODULO_VENTAS: TCPDF disponible, iniciando generación');
+            
+            // Intentar generar PDF
+            $pdf_generator = new Modulo_Ventas_PDF();
+            error_log('MODULO_VENTAS: Instancia PDF creada');
+            
+            $pdf_path = $pdf_generator->generar_pdf_cotizacion($cotizacion_id);
+            error_log('MODULO_VENTAS: PDF generado, resultado: ' . (is_wp_error($pdf_path) ? 'ERROR' : 'OK'));
+            
+            if (is_wp_error($pdf_path)) {
+                error_log('MODULO_VENTAS: Error en generación: ' . $pdf_path->get_error_message());
+                wp_die('Error al generar PDF: ' . $pdf_path->get_error_message(), 'Error', array('response' => 500));
+            }
+            
+            // Verificar que el archivo existe
+            if (!file_exists($pdf_path)) {
+                error_log('MODULO_VENTAS: ERROR - Archivo PDF no existe: ' . $pdf_path);
+                wp_die('PDF no encontrado en: ' . $pdf_path, 'Error', array('response' => 404));
+            }
+            
+            error_log('MODULO_VENTAS: Archivo PDF existe: ' . $pdf_path . ' (' . filesize($pdf_path) . ' bytes)');
+            
+            // Obtener nombre de archivo para download
+            $cotizacion = $this->db->obtener_cotizacion($cotizacion_id);
+            $filename = 'cotizacion_' . $cotizacion->folio . '.pdf';
+            
+            // Configurar headers según el modo
+            if ($modo === 'download') {
+                header('Content-Disposition: attachment; filename="' . $filename . '"');
+            } else {
+                header('Content-Disposition: inline; filename="' . $filename . '"');
+            }
+            
+            header('Content-Type: application/pdf');
+            header('Content-Length: ' . filesize($pdf_path));
+            header('Cache-Control: private, max-age=0, must-revalidate');
+            header('Pragma: public');
+            
+            error_log('MODULO_VENTAS: Headers configurados, enviando archivo');
+            
+            // Limpiar output y enviar archivo
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
+            
+            readfile($pdf_path);
+            error_log('MODULO_VENTAS: Archivo enviado exitosamente');
+            exit;
+            
+        } catch (Exception $e) {
+            error_log('MODULO_VENTAS: Exception en PDF GET: ' . $e->getMessage());
+            error_log('MODULO_VENTAS: Exception trace: ' . $e->getTraceAsString());
+            wp_die('Error interno: ' . $e->getMessage(), 'Error', array('response' => 500));
+        } catch (Error $e) {
+            error_log('MODULO_VENTAS: Error fatal en PDF GET: ' . $e->getMessage());
+            error_log('MODULO_VENTAS: Error trace: ' . $e->getTraceAsString());
+            wp_die('Error fatal: ' . $e->getMessage(), 'Error', array('response' => 500));
+        }
+    }
+
+    /**
+     * ACTUALIZAR EL MÉTODO servir_pdf() para soporte de diferentes tipos
+     */
+    public function servir_pdf() {
+        // Verificar parámetros
+        $filename = isset($_GET['file']) ? sanitize_file_name($_GET['file']) : '';
+        $type = isset($_GET['type']) ? sanitize_text_field($_GET['type']) : 'test';
+        $nonce = isset($_GET['nonce']) ? $_GET['nonce'] : '';
+        
+        if (empty($filename)) {
+            wp_die('Archivo no especificado', 'Error', array('response' => 400));
+        }
+        
+        // Verificar nonce
+        if (!wp_verify_nonce($nonce, 'mv_pdf_access_' . $filename)) {
+            wp_die('Acceso no autorizado', 'Error', array('response' => 403));
+        }
+        
+        // Verificar permisos según tipo
+        if ($type === 'cotizacion' && !current_user_can('view_cotizaciones')) {
+            wp_die('Sin permisos', 'Error', array('response' => 403));
+        }
+        
+        // Determinar directorio según tipo
+        $upload_dir = wp_upload_dir();
+        if ($type === 'cotizacion') {
+            $pdf_path = $upload_dir['basedir'] . '/modulo-ventas/pdfs/' . $filename;
+            $allowed_dir = realpath($upload_dir['basedir'] . '/modulo-ventas/pdfs/');
+        } else {
+            $pdf_path = $upload_dir['basedir'] . '/test-pdfs/' . $filename;
+            $allowed_dir = realpath($upload_dir['basedir'] . '/test-pdfs/');
+        }
+        
+        // Verificar que el archivo existe y es un PDF
+        if (!file_exists($pdf_path) || pathinfo($pdf_path, PATHINFO_EXTENSION) !== 'pdf') {
+            wp_die('Archivo no encontrado', 'Error', array('response' => 404));
+        }
+        
+        // Verificar que es un archivo dentro del directorio permitido
+        $real_path = realpath($pdf_path);
+        if (!$allowed_dir || strpos($real_path, $allowed_dir) !== 0) {
+            wp_die('Acceso denegado', 'Error', array('response' => 403));
+        }
+        
+        // Servir el archivo
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: inline; filename="' . basename($filename) . '"');
+        header('Content-Length: ' . filesize($pdf_path));
+        header('Cache-Control: private, max-age=0, must-revalidate');
+        header('Pragma: public');
+        
+        // Limpiar cualquier output previo
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
+        
+        // Leer y enviar el archivo
+        readfile($pdf_path);
+        exit;
     }
 
     /**

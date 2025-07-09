@@ -265,3 +265,212 @@ h2.hndle {
     font-size: 12px;
     font-weight: 500;
 }
+
+/* Contenedor de botones de acciones */
+.mv-actions-buttons {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Botones de acciones en tabla */
+.mv-actions-buttons .button {
+    padding: 2px 5px;
+    min-height: 22px;
+    line-height: 18px;
+    font-size: 12px;
+    border-radius: 3px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+}
+
+.mv-actions-buttons .dashicons {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 1;
+}
+
+/* Separador visual */
+.mv-action-separator {
+    color: #ddd;
+    margin: 0 2px;
+    font-size: 12px;
+}
+
+/* Botones específicos PDF */
+.mv-btn-pdf-preview {
+    background: #0073aa !important;
+    border-color: #005a87 !important;
+    color: white !important;
+}
+
+.mv-btn-pdf-preview:hover {
+    background: #005a87 !important;
+    border-color: #004a73 !important;
+    color: white !important;
+}
+
+.mv-btn-pdf-download {
+    background: #00a32a !important;
+    border-color: #008a20 !important;
+    color: white !important;
+}
+
+.mv-btn-pdf-download:hover {
+    background: #008a20 !important;
+    border-color: #007017 !important;
+    color: white !important;
+}
+
+/* Otros botones de acciones */
+.mv-actions-buttons .button:not(.mv-btn-pdf-preview):not(.mv-btn-pdf-download):not(.button-primary) {
+    background: #f6f7f7;
+    border-color: #dcdcde;
+    color: #50575e;
+}
+
+.mv-actions-buttons .button:not(.mv-btn-pdf-preview):not(.mv-btn-pdf-download):not(.button-primary):hover {
+    background: #f0f0f1;
+    border-color: #c3c4c7;
+    color: #1d2327;
+}
+
+/* Botón convertir (primary) */
+.mv-btn-convert {
+    background: #2271b1 !important;
+    border-color: #135e96 !important;
+    color: white !important;
+}
+
+.mv-btn-convert:hover {
+    background: #135e96 !important;
+    border-color: #0e4f85 !important;
+    color: white !important;
+}
+
+/* Botón email */
+.mv-btn-email {
+    background: #f56e28 !important;
+    border-color: #d63638 !important;
+    color: white !important;
+}
+
+.mv-btn-email:hover {
+    background: #d63638 !important;
+    border-color: #b32d2e !important;
+    color: white !important;
+}
+
+/* Columna acciones en tabla */
+.column-acciones {
+    width: 140px;
+    text-align: center;
+}
+
+/* Estados de carga para botones PDF */
+.mv-pdf-loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.mv-pdf-loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    margin: -6px 0 0 -6px;
+    border: 2px solid transparent;
+    border-top: 2px solid #fff;
+    border-radius: 50%;
+    animation: mv-pdf-spin 1s linear infinite;
+}
+
+@keyframes mv-pdf-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive para móviles */
+@media screen and (max-width: 782px) {
+    .mv-actions-buttons {
+        flex-direction: column;
+        gap: 2px;
+    }
+    
+    .mv-actions-buttons .button {
+        width: 100%;
+        min-width: auto;
+        justify-content: center;
+        font-size: 11px;
+        padding: 3px 6px;
+    }
+    
+    .mv-action-separator {
+        display: none;
+    }
+    
+    .column-acciones {
+        width: 80px;
+    }
+}
+
+/* Tooltips mejorados */
+.mv-actions-buttons .button[title] {
+    position: relative;
+}
+
+.mv-actions-buttons .button[title]:hover::before {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    white-space: nowrap;
+    z-index: 1000;
+    pointer-events: none;
+    margin-bottom: 5px;
+}
+
+.mv-actions-buttons .button[title]:hover::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: #000;
+    z-index: 1000;
+    pointer-events: none;
+    margin-bottom: 1px;
+}
+
+/* Ajustes para la tabla de cotizaciones */
+.wp-list-table .column-acciones {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.wp-list-table tbody td.column-acciones {
+    padding: 8px 5px;
+}
+
+/* Estado cuando no hay productos */
+.mv-no-pdf-available {
+    color: #646970;
+    font-style: italic;
+    font-size: 11px;
+    text-align: center;
+}

@@ -181,72 +181,152 @@ class Modulo_Ventas_PDF {
      * Generar PDF de cotización
      */
     public function generar_pdf_cotizacion($cotizacion_id) {
+        error_log("MODULO_VENTAS_PDF: Iniciando generación para cotización {$cotizacion_id}");
+        
         try {
             if (!$this->verificar_tcpdf()) {
+                error_log('MODULO_VENTAS_PDF: TCPDF no verificado');
                 return new WP_Error('tcpdf_missing', __('TCPDF no está instalado. Ejecute: composer install en el directorio del plugin', 'modulo-ventas'));
             }
             
             if (!class_exists('TCPDF')) {
+                error_log('MODULO_VENTAS_PDF: Clase TCPDF no existe');
                 return new WP_Error('tcpdf_not_loaded', __('No se pudo cargar la clase TCPDF', 'modulo-ventas'));
             }
+            
+            error_log('MODULO_VENTAS_PDF: TCPDF OK, obteniendo datos...');
             
             // Obtener datos
             $cotizacion = $this->db->obtener_cotizacion($cotizacion_id);
             if (!$cotizacion) {
+                error_log("MODULO_VENTAS_PDF: Cotización {$cotizacion_id} no encontrada");
                 return new WP_Error('invalid_quote', __('Cotización no encontrada', 'modulo-ventas'));
             }
             
+            error_log("MODULO_VENTAS_PDF: Cotización obtenida - Folio: {$cotizacion->folio}");
+            
             $cliente = $this->db->obtener_cliente($cotizacion->cliente_id);
             if (!$cliente) {
+                error_log("MODULO_VENTAS_PDF: Cliente {$cotizacion->cliente_id} no encontrado");
                 return new WP_Error('invalid_client', __('Cliente no encontrado', 'modulo-ventas'));
             }
             
+            error_log("MODULO_VENTAS_PDF: Cliente obtenido - {$cliente->razon_social}");
+            
             $items = $this->db->obtener_items_cotizacion($cotizacion_id);
-            $vendedor = get_userdata($cotizacion->vendedor_id);
+            error_log("MODULO_VENTAS_PDF: Items obtenidos - Cantidad: " . count($items));
             
-            // Crear PDF
-            $pdf = $this->crear_instancia_pdf();
-            
-            // Configurar documento
-            $pdf->SetCreator('Módulo de Ventas');
-            $pdf->SetAuthor($this->config['empresa_nombre']);
-            $pdf->SetTitle('Cotización ' . $cotizacion->folio);
-            $pdf->SetSubject('Cotización de venta');
-            $pdf->SetKeywords('cotización, venta, presupuesto');
-            
-            // Agregar página
-            $pdf->AddPage();
-            
-            // Generar contenido
-            $this->generar_header($pdf, $cotizacion);
-            $this->generar_info_empresa($pdf);
-            $this->generar_info_cotizacion($pdf, $cotizacion, $cliente, $vendedor);
-            $this->generar_tabla_productos($pdf, $items, $cotizacion);
-            $this->generar_totales($pdf, $cotizacion);
-            $this->generar_terminos($pdf, $cotizacion);
-            
-            // Generar archivo
-            $filename = $this->generar_nombre_archivo($cotizacion);
-            $filepath = $this->obtener_ruta_archivo($filename);
-            
-            // Asegurar que el directorio existe
-            $this->crear_directorio_pdf();
-            
-            // Guardar PDF
-            $pdf->Output($filepath, 'F');
-            
-            // Log de éxito
-            if ($this->logger) {
-                $this->logger->log("PDF generado para cotización {$cotizacion->folio}: {$filename}", 'info');
+            if (empty($items)) {
+                error_log("MODULO_VENTAS_PDF: ERROR - No hay items en la cotización");
+                return new WP_Error('no_items', __('La cotización no tiene productos', 'modulo-ventas'));
             }
             
-            return $filepath;
+            $vendedor = null;
+            if (isset($cotizacion->vendedor_id) && $cotizacion->vendedor_id) {
+                $vendedor = get_userdata($cotizacion->vendedor_id);
+                error_log("MODULO_VENTAS_PDF: Vendedor obtenido - " . ($vendedor ? $vendedor->display_name : 'No encontrado'));
+            } else {
+                error_log("MODULO_VENTAS_PDF: No hay vendedor asignado");
+            }
+            
+            error_log('MODULO_VENTAS_PDF: Creando instancia PDF...');
+            
+            // Crear PDF con manejo de errores
+            try {
+                $pdf = $this->crear_instancia_pdf();
+                error_log('MODULO_VENTAS_PDF: Instancia PDF creada');
+            } catch (Exception $e) {
+                error_log('MODULO_VENTAS_PDF: Error creando instancia PDF: ' . $e->getMessage());
+                return new WP_Error('pdf_creation_error', 'Error creando PDF: ' . $e->getMessage());
+            }
+            
+            // Configurar documento
+            try {
+                $pdf->SetCreator('Módulo de Ventas');
+                $pdf->SetAuthor($this->config['empresa_nombre']);
+                $pdf->SetTitle('Cotización ' . $cotizacion->folio);
+                $pdf->SetSubject('Cotización de venta');
+                $pdf->SetKeywords('cotización, venta, presupuesto');
+                
+                error_log('MODULO_VENTAS_PDF: Metadatos configurados');
+                
+                // Agregar página
+                $pdf->AddPage();
+                error_log('MODULO_VENTAS_PDF: Página agregada');
+                
+                // Generar contenido paso a paso
+                $this->generar_header($pdf, $cotizacion);
+                error_log('MODULO_VENTAS_PDF: Header generado');
+                
+                $this->generar_info_empresa($pdf);
+                error_log('MODULO_VENTAS_PDF: Info empresa generada');
+                
+                $this->generar_info_cotizacion($pdf, $cotizacion, $cliente, $vendedor);
+                error_log('MODULO_VENTAS_PDF: Info cotización generada');
+                
+                $this->generar_tabla_productos($pdf, $items, $cotizacion);
+                error_log('MODULO_VENTAS_PDF: Tabla productos generada');
+                
+                $this->generar_totales($pdf, $cotizacion);
+                error_log('MODULO_VENTAS_PDF: Totales generados');
+                
+                $this->generar_terminos($pdf, $cotizacion);
+                error_log('MODULO_VENTAS_PDF: Términos generados');
+                
+            } catch (Exception $e) {
+                error_log('MODULO_VENTAS_PDF: Error generando contenido: ' . $e->getMessage());
+                return new WP_Error('content_generation_error', 'Error generando contenido: ' . $e->getMessage());
+            }
+            
+            // Generar archivo
+            try {
+                $filename = $this->generar_nombre_archivo($cotizacion);
+                $filepath = $this->obtener_ruta_archivo($filename);
+                
+                error_log("MODULO_VENTAS_PDF: Guardando en: {$filepath}");
+                
+                // Asegurar que el directorio existe
+                $this->crear_directorio_pdf();
+                
+                // Guardar PDF
+                $result = $pdf->Output($filepath, 'F');
+                error_log("MODULO_VENTAS_PDF: Output result: " . ($result ? 'true' : 'false'));
+                
+                // Verificar que se guardó
+                if (!file_exists($filepath)) {
+                    error_log("MODULO_VENTAS_PDF: ERROR - Archivo no se guardó: {$filepath}");
+                    return new WP_Error('file_not_saved', 'El archivo PDF no se pudo guardar');
+                }
+                
+                $filesize = filesize($filepath);
+                error_log("MODULO_VENTAS_PDF: Archivo guardado exitosamente - {$filesize} bytes");
+                
+                // Log de éxito
+                if ($this->logger) {
+                    $this->logger->log("PDF generado para cotización {$cotizacion->folio}: {$filename}", 'info');
+                }
+                
+                return $filepath;
+                
+            } catch (Exception $e) {
+                error_log('MODULO_VENTAS_PDF: Error guardando archivo: ' . $e->getMessage());
+                return new WP_Error('file_save_error', 'Error guardando archivo: ' . $e->getMessage());
+            }
             
         } catch (Exception $e) {
+            error_log('MODULO_VENTAS_PDF: Exception general: ' . $e->getMessage());
+            error_log('MODULO_VENTAS_PDF: Exception trace: ' . $e->getTraceAsString());
+            
             if ($this->logger) {
                 $this->logger->log('Error generando PDF: ' . $e->getMessage(), 'error');
             }
             return new WP_Error('pdf_generation_error', 'Error al generar PDF: ' . $e->getMessage());
+            
+        } catch (Error $e) {
+            error_log('MODULO_VENTAS_PDF: Error fatal: ' . $e->getMessage());
+            error_log('MODULO_VENTAS_PDF: Error trace: ' . $e->getTraceAsString());
+            
+            return new WP_Error('pdf_fatal_error', 'Error fatal generando PDF: ' . $e->getMessage());
         }
     }
     
