@@ -439,3 +439,37 @@ Line: 324
 
 --------------------------------------------------------------------------------
 
+2025-07-09 05:34:30 - Error fatal detectado
+Type: 1
+Message: Uncaught TypeError: call_user_func_array(): Argument #1 ($callback) must be a valid callback, class Modulo_Ventas_Ajax does not have a method "manejar_pdf_requests" in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(727): do_action('init')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(22): require_once('C:\\wamp64\\www\\g...')
+#6 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php
+Line: 324
+
+--------------------------------------------------------------------------------
+
+2025-07-09 05:36:31 - Error fatal detectado
+Type: 1
+Message: Uncaught TypeError: call_user_func_array(): Argument #1 ($callback) must be a valid callback, class Modulo_Ventas_Ajax does not have a method "manejar_pdf_requests" in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(727): do_action('init')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(22): require_once('C:\\wamp64\\www\\g...')
+#6 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php
+Line: 324
+
+--------------------------------------------------------------------------------
+

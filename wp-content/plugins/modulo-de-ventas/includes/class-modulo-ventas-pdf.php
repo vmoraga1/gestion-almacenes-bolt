@@ -602,22 +602,35 @@ class Modulo_Ventas_PDF {
             
             $pdf->Cell($w[0], $cell_height, $nombre, 1, 0, 'L', $fill);
             $pdf->Cell($w[1], $cell_height, number_format($item->cantidad, 0), 1, 0, 'C', $fill);
-            $pdf->Cell($w[2], $cell_height, '$' . number_format($item->precio, 0), 1, 0, 'R', $fill);
             
-            // Descuento
+            // CORRECCIÓN: Verificar que precio_unitario existe - LÍNEA PROBLEMÁTICA 605
+            $precio = isset($item->precio_unitario) ? $item->precio_unitario : 
+                    (isset($item->precio) ? $item->precio : 0);
+            
+            $pdf->Cell($w[2], $cell_height, '$' . number_format($precio, 0), 1, 0, 'R', $fill);
+            
+            // CORRECCIÓN: Verificar propiedades de descuento - LÍNEA PROBLEMÁTICA 609
             $descuento_texto = '';
-            if ($item->descuento > 0) {
-                if ($item->descuento_tipo === 'porcentaje') {
-                    $descuento_texto = $item->descuento . '%';
-                } else {
-                    $descuento_texto = '$' . number_format($item->descuento, 0);
-                }
+            $descuento_monto = isset($item->descuento_monto) ? $item->descuento_monto : 0;
+            $descuento_porcentaje = isset($item->descuento_porcentaje) ? $item->descuento_porcentaje : 0;
+            $tipo_descuento = isset($item->tipo_descuento) ? $item->tipo_descuento : 'monto';
+            
+            // Priorizar descuento porcentaje si existe
+            if ($descuento_porcentaje > 0) {
+                $descuento_texto = $descuento_porcentaje . '%';
+            } elseif ($descuento_monto > 0) {
+                $descuento_texto = '$' . number_format($descuento_monto, 0);
             } else {
                 $descuento_texto = '-';
             }
             
             $pdf->Cell($w[3], $cell_height, $descuento_texto, 1, 0, 'R', $fill);
-            $pdf->Cell($w[4], $cell_height, '$' . number_format($item->subtotal, 0), 1, 1, 'R', $fill);
+            
+            // CORRECCIÓN: Verificar subtotal
+            $subtotal = isset($item->subtotal) ? $item->subtotal : 
+                    ($precio * $item->cantidad);
+            
+            $pdf->Cell($w[4], $cell_height, '$' . number_format($subtotal, 0), 1, 1, 'R', $fill);
             
             $fill = !$fill;
         }
@@ -642,35 +655,40 @@ class Modulo_Ventas_PDF {
         $pdf->Cell($w_label, 6, __('Subtotal:', 'modulo-ventas'), 0, 0, 'L');
         $pdf->Cell($w_value, 6, '$' . number_format($cotizacion->subtotal, 0), 0, 1, 'R');
         
-        // Descuento global si existe
-        if ($cotizacion->descuento_global > 0) {
+        // CORRECCIÓN: Verificar descuento global - LÍNEA PROBLEMÁTICA 646
+        $descuento_global = isset($cotizacion->descuento_global) ? $cotizacion->descuento_global : 0;
+        $descuento_global_tipo = isset($cotizacion->descuento_global_tipo) ? $cotizacion->descuento_global_tipo : 'monto';
+        
+        if ($descuento_global > 0) {
             $pdf->SetX($x_totales);
             $descuento_texto = __('Descuento:', 'modulo-ventas');
-            if ($cotizacion->descuento_global_tipo === 'porcentaje') {
-                $descuento_texto .= ' (' . $cotizacion->descuento_global . '%)';
+            if ($descuento_global_tipo === 'porcentaje') {
+                $descuento_texto .= ' (' . $descuento_global . '%)';
             }
             $pdf->Cell($w_label, 6, $descuento_texto, 0, 0, 'L');
             
             // Calcular monto del descuento
             $monto_descuento = 0;
-            if ($cotizacion->descuento_global_tipo === 'porcentaje') {
-                $monto_descuento = $cotizacion->subtotal * ($cotizacion->descuento_global / 100);
+            if ($descuento_global_tipo === 'porcentaje') {
+                $monto_descuento = $cotizacion->subtotal * ($descuento_global / 100);
             } else {
-                $monto_descuento = $cotizacion->descuento_global;
+                $monto_descuento = $descuento_global;
             }
             
             $pdf->Cell($w_value, 6, '-$' . number_format($monto_descuento, 0), 0, 1, 'R');
         }
         
         // Envío si existe
-        if ($cotizacion->costo_envio > 0) {
+        $costo_envio = isset($cotizacion->costo_envio) ? $cotizacion->costo_envio : 0;
+        if ($costo_envio > 0) {
             $pdf->SetX($x_totales);
             $pdf->Cell($w_label, 6, __('Envío:', 'modulo-ventas'), 0, 0, 'L');
-            $pdf->Cell($w_value, 6, '$' . number_format($cotizacion->costo_envio, 0), 0, 1, 'R');
+            $pdf->Cell($w_value, 6, '$' . number_format($costo_envio, 0), 0, 1, 'R');
         }
         
-        // IVA si está incluido
-        if ($cotizacion->incluir_iva) {
+        // CORRECCIÓN: Verificar IVA - LÍNEA PROBLEMÁTICA 673
+        $incluir_iva = isset($cotizacion->incluir_iva) ? $cotizacion->incluir_iva : false;
+        if ($incluir_iva) {
             $pdf->SetX($x_totales);
             $pdf->Cell($w_label, 6, __('IVA (19%):', 'modulo-ventas'), 0, 0, 'L');
             
@@ -682,14 +700,14 @@ class Modulo_Ventas_PDF {
         }
         
         // Línea separadora
-        $pdf->SetDrawColor(0, 0, 0);
         $pdf->SetX($x_totales);
+        $pdf->SetDrawColor(200, 200, 200);
         $pdf->Line($x_totales, $pdf->GetY(), $x_totales + $w_label + $w_value, $pdf->GetY());
-        $pdf->Ln(3);
+        $pdf->Ln(2);
         
         // Total
-        $pdf->SetFont($this->config['fuente_principal'], 'B', 12);
         $pdf->SetX($x_totales);
+        $pdf->SetFont($this->config['fuente_principal'], 'B', 12);
         $pdf->Cell($w_label, 8, __('TOTAL:', 'modulo-ventas'), 0, 0, 'L');
         $pdf->Cell($w_value, 8, '$' . number_format($cotizacion->total, 0), 0, 1, 'R');
         

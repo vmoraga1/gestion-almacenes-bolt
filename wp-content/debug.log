@@ -1685,3 +1685,660 @@
 [09-Jul-2025 05:02:14 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
 [09-Jul-2025 05:02:14 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
 [09-Jul-2025 05:02:14 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:03:39 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:03:39 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:03:39 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:03:39 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:04:38 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:04:38 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:04:38 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:04:39 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:06:38 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:06:38 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:06:38 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:06:38 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:08:38 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:08:38 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:08:38 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:08:39 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:10:38 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:10:38 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:10:38 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:10:39 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:12:39 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:12:39 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:12:39 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:12:39 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:20:18 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:20:18 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:20:18 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:20:19 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:21:18 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:21:18 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:21:18 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:21:18 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:23:18 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:23:18 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:23:18 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:23:18 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:25:19 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:25:19 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:25:19 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:25:19 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:26:18 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:26:18 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:26:18 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:26:18 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:26:21 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:26:22 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:26:22 UTC] MODULO_VENTAS: Evaluando cotización 24 - Estado: pendiente, Cliente: 11, Total: 190400.00
+[09-Jul-2025 05:26:22 UTC] MODULO_VENTAS: Cotización 24 tiene 1 items
+[09-Jul-2025 05:26:22 UTC] MODULO_VENTAS: Cotización 24 puede generar PDF
+[09-Jul-2025 05:26:40 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:26:40 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:26:40 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:26:40 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:27:27 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:27:27 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:27:27 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:27:27 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:28:27 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:28:27 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:28:27 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:28:27 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:30:29 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:30:29 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:30:29 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:30:30 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:32:29 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:32:29 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:32:29 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:32:29 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:34:30 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:34:30 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:34:30 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:34:30 UTC] PHP Fatal error:  Uncaught TypeError: call_user_func_array(): Argument #1 ($callback) must be a valid callback, class Modulo_Ventas_Ajax does not have a method "manejar_pdf_requests" in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(727): do_action('init')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(22): require_once('C:\\wamp64\\www\\g...')
+#6 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php on line 324
+[09-Jul-2025 05:36:31 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:36:31 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:36:31 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:36:31 UTC] PHP Fatal error:  Uncaught TypeError: call_user_func_array(): Argument #1 ($callback) must be a valid callback, class Modulo_Ventas_Ajax does not have a method "manejar_pdf_requests" in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(727): do_action('init')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(22): require_once('C:\\wamp64\\www\\g...')
+#6 {main}
+  thrown in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php on line 324
+[09-Jul-2025 05:53:41 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 59
+[09-Jul-2025 05:53:41 UTC] PHP Stack trace:
+[09-Jul-2025 05:53:41 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:0
+[09-Jul-2025 05:53:41 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:22
+[09-Jul-2025 05:53:41 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:53:41 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:53:41 UTC] PHP   5. include_once() C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:545
+[09-Jul-2025 05:53:41 UTC] PHP   6. Modulo_Ventas->cargar_plugin() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:631
+[09-Jul-2025 05:53:41 UTC] PHP   7. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:53:41 UTC] PHP   8. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:53:41 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 60
+[09-Jul-2025 05:53:41 UTC] PHP Stack trace:
+[09-Jul-2025 05:53:41 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:0
+[09-Jul-2025 05:53:41 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:22
+[09-Jul-2025 05:53:41 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:53:41 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:53:41 UTC] PHP   5. include_once() C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:545
+[09-Jul-2025 05:53:41 UTC] PHP   6. Modulo_Ventas->cargar_plugin() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:631
+[09-Jul-2025 05:53:41 UTC] PHP   7. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:53:41 UTC] PHP   8. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:53:42 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 59
+[09-Jul-2025 05:53:42 UTC] PHP Stack trace:
+[09-Jul-2025 05:53:42 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:0
+[09-Jul-2025 05:53:42 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:22
+[09-Jul-2025 05:53:42 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:53:42 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:53:42 UTC] PHP   5. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[09-Jul-2025 05:53:42 UTC] PHP   6. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[09-Jul-2025 05:53:42 UTC] PHP   7. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[09-Jul-2025 05:53:42 UTC] PHP   8. Modulo_Ventas->cargar_plugin('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[09-Jul-2025 05:53:42 UTC] PHP   9. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:53:42 UTC] PHP  10. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:53:42 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 60
+[09-Jul-2025 05:53:42 UTC] PHP Stack trace:
+[09-Jul-2025 05:53:42 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:0
+[09-Jul-2025 05:53:42 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:22
+[09-Jul-2025 05:53:42 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:53:42 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:53:42 UTC] PHP   5. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[09-Jul-2025 05:53:42 UTC] PHP   6. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[09-Jul-2025 05:53:42 UTC] PHP   7. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[09-Jul-2025 05:53:42 UTC] PHP   8. Modulo_Ventas->cargar_plugin('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[09-Jul-2025 05:53:42 UTC] PHP   9. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:53:42 UTC] PHP  10. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:53:43 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:53:43 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:53:43 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:53:44 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:53:45 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 59
+[09-Jul-2025 05:53:45 UTC] PHP Stack trace:
+[09-Jul-2025 05:53:45 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-cron.php:0
+[09-Jul-2025 05:53:45 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-cron.php:46
+[09-Jul-2025 05:53:45 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:53:45 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:53:45 UTC] PHP   5. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[09-Jul-2025 05:53:45 UTC] PHP   6. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[09-Jul-2025 05:53:45 UTC] PHP   7. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[09-Jul-2025 05:53:45 UTC] PHP   8. Modulo_Ventas->cargar_plugin('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[09-Jul-2025 05:53:45 UTC] PHP   9. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:53:45 UTC] PHP  10. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:53:45 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 60
+[09-Jul-2025 05:53:45 UTC] PHP Stack trace:
+[09-Jul-2025 05:53:45 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-cron.php:0
+[09-Jul-2025 05:53:45 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-cron.php:46
+[09-Jul-2025 05:53:45 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:53:45 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:53:45 UTC] PHP   5. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[09-Jul-2025 05:53:45 UTC] PHP   6. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[09-Jul-2025 05:53:45 UTC] PHP   7. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[09-Jul-2025 05:53:45 UTC] PHP   8. Modulo_Ventas->cargar_plugin('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[09-Jul-2025 05:53:45 UTC] PHP   9. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:53:45 UTC] PHP  10. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:53:50 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 59
+[09-Jul-2025 05:53:50 UTC] PHP Stack trace:
+[09-Jul-2025 05:53:50 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[09-Jul-2025 05:53:50 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:35
+[09-Jul-2025 05:53:50 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:53:50 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:53:50 UTC] PHP   5. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[09-Jul-2025 05:53:50 UTC] PHP   6. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[09-Jul-2025 05:53:50 UTC] PHP   7. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[09-Jul-2025 05:53:50 UTC] PHP   8. Modulo_Ventas->cargar_plugin('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[09-Jul-2025 05:53:50 UTC] PHP   9. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:53:50 UTC] PHP  10. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:53:50 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 60
+[09-Jul-2025 05:53:50 UTC] PHP Stack trace:
+[09-Jul-2025 05:53:50 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[09-Jul-2025 05:53:50 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:35
+[09-Jul-2025 05:53:50 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:53:50 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:53:50 UTC] PHP   5. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[09-Jul-2025 05:53:50 UTC] PHP   6. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[09-Jul-2025 05:53:50 UTC] PHP   7. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[09-Jul-2025 05:53:50 UTC] PHP   8. Modulo_Ventas->cargar_plugin('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[09-Jul-2025 05:53:50 UTC] PHP   9. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:53:50 UTC] PHP  10. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:53:51 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:53:51 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:53:51 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php:59) in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php on line 7168
+[09-Jul-2025 05:53:51 UTC] PHP Stack trace:
+[09-Jul-2025 05:53:51 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[09-Jul-2025 05:53:51 UTC] PHP   2. do_action($hook_name = 'admin_init') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:176
+[09-Jul-2025 05:53:51 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[09-Jul-2025 05:53:51 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[09-Jul-2025 05:53:51 UTC] PHP   5. wp_admin_headers('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[09-Jul-2025 05:53:51 UTC] PHP   6. header($header = 'Referrer-Policy: strict-origin-when-cross-origin') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:7168
+[09-Jul-2025 05:53:51 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php:59) in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php on line 7144
+[09-Jul-2025 05:53:51 UTC] PHP Stack trace:
+[09-Jul-2025 05:53:51 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[09-Jul-2025 05:53:51 UTC] PHP   2. do_action($hook_name = 'admin_init') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:176
+[09-Jul-2025 05:53:51 UTC] PHP   3. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[09-Jul-2025 05:53:51 UTC] PHP   4. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[09-Jul-2025 05:53:51 UTC] PHP   5. send_frame_options_header() C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:322
+[09-Jul-2025 05:53:51 UTC] PHP   6. header($header = 'X-Frame-Options: SAMEORIGIN') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\functions.php:7144
+[09-Jul-2025 05:53:51 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php:59) in C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-header.php on line 14
+[09-Jul-2025 05:53:51 UTC] PHP Stack trace:
+[09-Jul-2025 05:53:51 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[09-Jul-2025 05:53:51 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:240
+[09-Jul-2025 05:53:51 UTC] PHP   3. header($header = 'Content-Type: text/html; charset=UTF-8') C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-header.php:14
+[09-Jul-2025 05:53:51 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php:59) in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\option.php on line 1740
+[09-Jul-2025 05:53:51 UTC] PHP Stack trace:
+[09-Jul-2025 05:53:51 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[09-Jul-2025 05:53:51 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:240
+[09-Jul-2025 05:53:51 UTC] PHP   3. wp_user_settings() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-header.php:92
+[09-Jul-2025 05:53:51 UTC] PHP   4. setcookie($name = 'wp-settings-1', $value = '', $expires_or_options = 1783576431, $path = '/gestion-almacenes-bolt/', $domain = '', $secure = FALSE) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\option.php:1740
+[09-Jul-2025 05:53:51 UTC] PHP Warning:  Cannot modify header information - headers already sent by (output started at C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php:59) in C:\wamp64\www\gestion-almacenes-bolt\wp-includes\option.php on line 1741
+[09-Jul-2025 05:53:51 UTC] PHP Stack trace:
+[09-Jul-2025 05:53:51 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:0
+[09-Jul-2025 05:53:51 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php:240
+[09-Jul-2025 05:53:51 UTC] PHP   3. wp_user_settings() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-header.php:92
+[09-Jul-2025 05:53:51 UTC] PHP   4. setcookie($name = 'wp-settings-time-1', $value = 1752040431, $expires_or_options = 1783576431, $path = '/gestion-almacenes-bolt/', $domain = '', $secure = FALSE) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\option.php:1741
+[09-Jul-2025 05:53:51 UTC] MODULO_VENTAS: Evaluando cotización 24 - Estado: pendiente, Cliente: 11, Total: 190400.00
+[09-Jul-2025 05:53:51 UTC] MODULO_VENTAS: Cotización 24 tiene 1 items
+[09-Jul-2025 05:53:51 UTC] MODULO_VENTAS: Cotización 24 puede generar PDF
+[09-Jul-2025 05:53:53 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 59
+[09-Jul-2025 05:53:53 UTC] PHP Stack trace:
+[09-Jul-2025 05:53:53 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\index.php:0
+[09-Jul-2025 05:53:53 UTC] PHP   2. require() C:\wamp64\www\gestion-almacenes-bolt\index.php:17
+[09-Jul-2025 05:53:53 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-blog-header.php:13
+[09-Jul-2025 05:53:53 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:53:53 UTC] PHP   5. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:53:53 UTC] PHP   6. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[09-Jul-2025 05:53:53 UTC] PHP   7. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[09-Jul-2025 05:53:53 UTC] PHP   8. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[09-Jul-2025 05:53:53 UTC] PHP   9. Modulo_Ventas->cargar_plugin('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[09-Jul-2025 05:53:53 UTC] PHP  10. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:53:53 UTC] PHP  11. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:53:53 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 60
+[09-Jul-2025 05:53:53 UTC] PHP Stack trace:
+[09-Jul-2025 05:53:53 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\index.php:0
+[09-Jul-2025 05:53:53 UTC] PHP   2. require() C:\wamp64\www\gestion-almacenes-bolt\index.php:17
+[09-Jul-2025 05:53:53 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-blog-header.php:13
+[09-Jul-2025 05:53:53 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:53:53 UTC] PHP   5. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:53:53 UTC] PHP   6. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[09-Jul-2025 05:53:53 UTC] PHP   7. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[09-Jul-2025 05:53:53 UTC] PHP   8. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[09-Jul-2025 05:53:53 UTC] PHP   9. Modulo_Ventas->cargar_plugin('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[09-Jul-2025 05:53:53 UTC] PHP  10. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:53:53 UTC] PHP  11. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:53:54 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 59
+[09-Jul-2025 05:53:54 UTC] PHP Stack trace:
+[09-Jul-2025 05:53:54 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\index.php:0
+[09-Jul-2025 05:53:54 UTC] PHP   2. require() C:\wamp64\www\gestion-almacenes-bolt\index.php:17
+[09-Jul-2025 05:53:54 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-blog-header.php:13
+[09-Jul-2025 05:53:54 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:53:54 UTC] PHP   5. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:53:54 UTC] PHP   6. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[09-Jul-2025 05:53:54 UTC] PHP   7. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[09-Jul-2025 05:53:54 UTC] PHP   8. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[09-Jul-2025 05:53:54 UTC] PHP   9. Modulo_Ventas->cargar_plugin('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[09-Jul-2025 05:53:54 UTC] PHP  10. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:53:54 UTC] PHP  11. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:53:54 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 60
+[09-Jul-2025 05:53:54 UTC] PHP Stack trace:
+[09-Jul-2025 05:53:54 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\index.php:0
+[09-Jul-2025 05:53:54 UTC] PHP   2. require() C:\wamp64\www\gestion-almacenes-bolt\index.php:17
+[09-Jul-2025 05:53:54 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-blog-header.php:13
+[09-Jul-2025 05:53:54 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:53:54 UTC] PHP   5. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:53:54 UTC] PHP   6. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[09-Jul-2025 05:53:54 UTC] PHP   7. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[09-Jul-2025 05:53:54 UTC] PHP   8. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[09-Jul-2025 05:53:54 UTC] PHP   9. Modulo_Ventas->cargar_plugin('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[09-Jul-2025 05:53:54 UTC] PHP  10. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:53:54 UTC] PHP  11. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:54:57 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 59
+[09-Jul-2025 05:54:57 UTC] PHP Stack trace:
+[09-Jul-2025 05:54:57 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:0
+[09-Jul-2025 05:54:57 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:22
+[09-Jul-2025 05:54:57 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:54:57 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:54:57 UTC] PHP   5. include_once() C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:545
+[09-Jul-2025 05:54:57 UTC] PHP   6. Modulo_Ventas->cargar_plugin() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:631
+[09-Jul-2025 05:54:57 UTC] PHP   7. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:54:57 UTC] PHP   8. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:54:57 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 60
+[09-Jul-2025 05:54:57 UTC] PHP Stack trace:
+[09-Jul-2025 05:54:57 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:0
+[09-Jul-2025 05:54:57 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:22
+[09-Jul-2025 05:54:57 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:54:57 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:54:57 UTC] PHP   5. include_once() C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:545
+[09-Jul-2025 05:54:57 UTC] PHP   6. Modulo_Ventas->cargar_plugin() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:631
+[09-Jul-2025 05:54:57 UTC] PHP   7. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:54:57 UTC] PHP   8. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:54:58 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 59
+[09-Jul-2025 05:54:58 UTC] PHP Stack trace:
+[09-Jul-2025 05:54:58 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:0
+[09-Jul-2025 05:54:58 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:22
+[09-Jul-2025 05:54:58 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:54:58 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:54:58 UTC] PHP   5. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[09-Jul-2025 05:54:58 UTC] PHP   6. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[09-Jul-2025 05:54:58 UTC] PHP   7. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[09-Jul-2025 05:54:58 UTC] PHP   8. Modulo_Ventas->cargar_plugin('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[09-Jul-2025 05:54:58 UTC] PHP   9. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:54:58 UTC] PHP  10. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:54:58 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 60
+[09-Jul-2025 05:54:58 UTC] PHP Stack trace:
+[09-Jul-2025 05:54:58 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:0
+[09-Jul-2025 05:54:58 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php:22
+[09-Jul-2025 05:54:58 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:54:58 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:54:58 UTC] PHP   5. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[09-Jul-2025 05:54:58 UTC] PHP   6. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[09-Jul-2025 05:54:58 UTC] PHP   7. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[09-Jul-2025 05:54:58 UTC] PHP   8. Modulo_Ventas->cargar_plugin('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[09-Jul-2025 05:54:58 UTC] PHP   9. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:54:58 UTC] PHP  10. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:54:58 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:54:58 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:54:58 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:54:58 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:54:59 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 59
+[09-Jul-2025 05:54:59 UTC] PHP Stack trace:
+[09-Jul-2025 05:54:59 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-cron.php:0
+[09-Jul-2025 05:54:59 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-cron.php:46
+[09-Jul-2025 05:54:59 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:54:59 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:54:59 UTC] PHP   5. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[09-Jul-2025 05:54:59 UTC] PHP   6. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[09-Jul-2025 05:54:59 UTC] PHP   7. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[09-Jul-2025 05:54:59 UTC] PHP   8. Modulo_Ventas->cargar_plugin('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[09-Jul-2025 05:54:59 UTC] PHP   9. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:54:59 UTC] PHP  10. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:54:59 UTC] PHP Warning:  Undefined property: Modulo_Ventas_Ajax::$pdf_handler in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php on line 60
+[09-Jul-2025 05:54:59 UTC] PHP Stack trace:
+[09-Jul-2025 05:54:59 UTC] PHP   1. {main}() C:\wamp64\www\gestion-almacenes-bolt\wp-cron.php:0
+[09-Jul-2025 05:54:59 UTC] PHP   2. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-cron.php:46
+[09-Jul-2025 05:54:59 UTC] PHP   3. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-load.php:50
+[09-Jul-2025 05:54:59 UTC] PHP   4. require_once() C:\wamp64\www\gestion-almacenes-bolt\wp-config.php:103
+[09-Jul-2025 05:54:59 UTC] PHP   5. do_action($hook_name = 'plugins_loaded') C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php:578
+[09-Jul-2025 05:54:59 UTC] PHP   6. WP_Hook->do_action($args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517
+[09-Jul-2025 05:54:59 UTC] PHP   7. WP_Hook->apply_filters($value = '', $args = [0 => '']) C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348
+[09-Jul-2025 05:54:59 UTC] PHP   8. Modulo_Ventas->cargar_plugin('') C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324
+[09-Jul-2025 05:54:59 UTC] PHP   9. Modulo_Ventas->inicializar_clases() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:357
+[09-Jul-2025 05:54:59 UTC] PHP  10. Modulo_Ventas_Ajax->__construct() C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:214
+[09-Jul-2025 05:55:05 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:55:05 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:55:06 UTC] MODULO_VENTAS: Evaluando cotización 24 - Estado: pendiente, Cliente: 11, Total: 190400.00
+[09-Jul-2025 05:55:06 UTC] MODULO_VENTAS: Cotización 24 tiene 1 items
+[09-Jul-2025 05:55:06 UTC] MODULO_VENTAS: Cotización 24 puede generar PDF
+[09-Jul-2025 05:55:23 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:55:23 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:55:23 UTC] MODULO_VENTAS: Evaluando cotización 24 - Estado: pendiente, Cliente: 11, Total: 190400.00
+[09-Jul-2025 05:55:23 UTC] MODULO_VENTAS: Cotización 24 tiene 1 items
+[09-Jul-2025 05:55:23 UTC] MODULO_VENTAS: Cotización 24 puede generar PDF
+[09-Jul-2025 05:55:38 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:55:38 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:55:38 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:55:38 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:55:38 UTC] === MODULO_VENTAS_AJAX: generar_pdf_cotizacion() INICIADO ===
+[09-Jul-2025 05:55:38 UTC] REQUEST_METHOD: GET
+[09-Jul-2025 05:55:38 UTC] POST data: Array
+(
+)
+
+[09-Jul-2025 05:55:38 UTC] GET data: Array
+(
+    [action] => mv_generar_pdf_cotizacion
+    [cotizacion_id] => 24
+    [modo] => preview
+    [_wpnonce] => 9eea0fd6fa
+)
+
+[09-Jul-2025 05:55:38 UTC] === MODULO_VENTAS_AJAX: generar_pdf_cotizacion() INICIADO ===
+[09-Jul-2025 05:55:38 UTC] REQUEST_METHOD: GET
+[09-Jul-2025 05:55:38 UTC] POST data: Array
+(
+)
+
+[09-Jul-2025 05:55:38 UTC] GET data: Array
+(
+    [action] => mv_generar_pdf_cotizacion
+    [cotizacion_id] => 24
+    [modo] => preview
+    [_wpnonce] => 9eea0fd6fa
+)
+
+[09-Jul-2025 05:55:52 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:55:52 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:55:52 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:55:53 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:55:53 UTC] === MODULO_VENTAS_AJAX: generar_pdf_cotizacion() INICIADO ===
+[09-Jul-2025 05:55:53 UTC] REQUEST_METHOD: GET
+[09-Jul-2025 05:55:53 UTC] POST data: Array
+(
+)
+
+[09-Jul-2025 05:55:53 UTC] GET data: Array
+(
+    [action] => mv_generar_pdf_cotizacion
+    [cotizacion_id] => 24
+    [modo] => download
+    [_wpnonce] => 9eea0fd6fa
+)
+
+[09-Jul-2025 05:55:53 UTC] === MODULO_VENTAS_AJAX: generar_pdf_cotizacion() INICIADO ===
+[09-Jul-2025 05:55:53 UTC] REQUEST_METHOD: GET
+[09-Jul-2025 05:55:53 UTC] POST data: Array
+(
+)
+
+[09-Jul-2025 05:55:53 UTC] GET data: Array
+(
+    [action] => mv_generar_pdf_cotizacion
+    [cotizacion_id] => 24
+    [modo] => download
+    [_wpnonce] => 9eea0fd6fa
+)
+
+[09-Jul-2025 05:55:57 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:55:58 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:55:59 UTC] MODULO_VENTAS: Evaluando cotización 24 - Estado: pendiente, Cliente: 11, Total: 190400.00
+[09-Jul-2025 05:55:59 UTC] MODULO_VENTAS: Cotización 24 tiene 1 items
+[09-Jul-2025 05:55:59 UTC] MODULO_VENTAS: Cotización 24 puede generar PDF
+[09-Jul-2025 05:57:03 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:57:03 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:57:03 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:57:03 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:59:04 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:59:04 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:59:04 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:59:04 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:59:38 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:59:39 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:59:45 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 05:59:45 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:59:45 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 05:59:45 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:00:04 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:00:04 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:00:04 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:00:04 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:00:44 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:00:44 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:00:44 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:00:44 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:02:06 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:02:06 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:02:06 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:02:06 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:02:44 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:02:44 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:02:44 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:02:44 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:03:16 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:03:16 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:03:16 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:03:17 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:03:20 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:03:21 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:03:21 UTC] MODULO_VENTAS: Evaluando cotización 24 - Estado: pendiente, Cliente: 11, Total: 190400.00
+[09-Jul-2025 06:03:21 UTC] MODULO_VENTAS: Cotización 24 tiene 1 items
+[09-Jul-2025 06:03:21 UTC] MODULO_VENTAS: Cotización 24 puede generar PDF
+[09-Jul-2025 06:03:35 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:03:35 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:03:35 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:03:36 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:03:36 UTC] === MODULO_VENTAS_AJAX: generar_pdf_cotizacion() INICIADO ===
+[09-Jul-2025 06:03:36 UTC] REQUEST_METHOD: GET
+[09-Jul-2025 06:03:36 UTC] POST data: Array
+(
+)
+
+[09-Jul-2025 06:03:36 UTC] GET data: Array
+(
+    [action] => mv_generar_pdf_cotizacion
+    [cotizacion_id] => 24
+    [modo] => preview
+    [_wpnonce] => 9eea0fd6fa
+)
+
+[09-Jul-2025 06:03:36 UTC] MODULO_VENTAS_AJAX: Parámetros detectados - ID: 24, Acción: preview, Método: GET
+[09-Jul-2025 06:03:36 UTC] MODULO_VENTAS: Evaluando cotización 24 - Estado: pendiente, Cliente: 11, Total: 190400.00
+[09-Jul-2025 06:03:36 UTC] MODULO_VENTAS: Cotización 24 tiene 1 items
+[09-Jul-2025 06:03:36 UTC] MODULO_VENTAS: Cotización 24 puede generar PDF
+[09-Jul-2025 06:03:36 UTC] MODULO_VENTAS_AJAX: Generando PDF para cotización 24...
+[09-Jul-2025 06:03:36 UTC] MODULO_VENTAS_PDF: Iniciando generación para cotización 24
+[09-Jul-2025 06:03:36 UTC] MODULO_VENTAS_PDF: TCPDF OK, obteniendo datos...
+[09-Jul-2025 06:03:36 UTC] MODULO_VENTAS_PDF: Cotización obtenida - Folio: COT-2025-000024
+[09-Jul-2025 06:03:36 UTC] MODULO_VENTAS_PDF: Cliente obtenido - Alexis Sanchez
+[09-Jul-2025 06:03:36 UTC] MODULO_VENTAS_PDF: Items obtenidos - Cantidad: 1
+[09-Jul-2025 06:03:36 UTC] MODULO_VENTAS_PDF: Vendedor obtenido - hostpanish
+[09-Jul-2025 06:03:36 UTC] MODULO_VENTAS_PDF: Creando instancia PDF...
+[09-Jul-2025 06:03:36 UTC] MODULO_VENTAS_PDF: Instancia PDF creada
+[09-Jul-2025 06:03:36 UTC] MODULO_VENTAS_PDF: Metadatos configurados
+[09-Jul-2025 06:03:36 UTC] MODULO_VENTAS_PDF: Página agregada
+[09-Jul-2025 06:03:37 UTC] MODULO_VENTAS_PDF: Header generado
+[09-Jul-2025 06:03:37 UTC] MODULO_VENTAS_PDF: Info empresa generada
+[09-Jul-2025 06:03:37 UTC] MODULO_VENTAS_PDF: Info cotización generada
+[09-Jul-2025 06:03:37 UTC] MODULO_VENTAS_PDF: Tabla productos generada
+[09-Jul-2025 06:03:37 UTC] MODULO_VENTAS_PDF: Totales generados
+[09-Jul-2025 06:03:37 UTC] MODULO_VENTAS_PDF: Términos generados
+[09-Jul-2025 06:03:37 UTC] MODULO_VENTAS_PDF: Guardando en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/pdfs/cotizacion_COT2025000024_2025-07-09.pdf
+[09-Jul-2025 06:03:37 UTC] MODULO_VENTAS_PDF: Output result: false
+[09-Jul-2025 06:03:37 UTC] MODULO_VENTAS_PDF: Archivo guardado exitosamente - 48296 bytes
+[09-Jul-2025 06:03:37 UTC] MODULO_VENTAS_AJAX: PDF generado exitosamente: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/pdfs/cotizacion_COT2025000024_2025-07-09.pdf
+[09-Jul-2025 06:03:37 UTC] MODULO_VENTAS_AJAX: Enviando archivo vía GET: cotizacion_COT-2025-000024.pdf
+[09-Jul-2025 06:04:27 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:04:27 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:04:27 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:04:27 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:06:28 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:06:28 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:06:28 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:06:28 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:06:31 UTC] Automatic updates starting...
+[09-Jul-2025 06:06:32 UTC] Automatic updates complete.
+[09-Jul-2025 06:08:29 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:08:29 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:08:29 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:08:30 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:08:45 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:08:45 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:08:45 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:08:46 UTC] === MODULO_VENTAS_AJAX: generar_pdf_cotizacion() INICIADO ===
+[09-Jul-2025 06:08:46 UTC] REQUEST_METHOD: GET
+[09-Jul-2025 06:08:46 UTC] POST data: Array
+(
+)
+
+[09-Jul-2025 06:08:46 UTC] GET data: Array
+(
+    [action] => mv_generar_pdf_cotizacion
+    [cotizacion_id] => 24
+    [modo] => download
+    [_wpnonce] => 9eea0fd6fa
+)
+
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_AJAX: Parámetros detectados - ID: 24, Acción: download, Método: GET
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS: Evaluando cotización 24 - Estado: pendiente, Cliente: 11, Total: 190400.00
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS: Cotización 24 tiene 1 items
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS: Cotización 24 puede generar PDF
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_AJAX: Generando PDF para cotización 24...
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Iniciando generación para cotización 24
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: TCPDF OK, obteniendo datos...
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Cotización obtenida - Folio: COT-2025-000024
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Cliente obtenido - Alexis Sanchez
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Items obtenidos - Cantidad: 1
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Vendedor obtenido - hostpanish
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Creando instancia PDF...
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Instancia PDF creada
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Metadatos configurados
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Página agregada
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Header generado
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Info empresa generada
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Info cotización generada
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Tabla productos generada
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Totales generados
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Términos generados
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Guardando en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/pdfs/cotizacion_COT2025000024_2025-07-09.pdf
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Output result: false
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_PDF: Archivo guardado exitosamente - 48296 bytes
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_AJAX: PDF generado exitosamente: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/pdfs/cotizacion_COT2025000024_2025-07-09.pdf
+[09-Jul-2025 06:08:46 UTC] MODULO_VENTAS_AJAX: Enviando archivo vía GET: cotizacion_COT-2025-000024.pdf
+[09-Jul-2025 06:09:29 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:09:29 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:09:29 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:09:30 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:10:29 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:10:29 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:10:29 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:10:29 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:11:31 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:11:31 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:11:31 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:11:31 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:12:31 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:12:31 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:12:31 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:12:31 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:14:12 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:14:12 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:14:12 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:14:12 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:14:15 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:14:15 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:14:15 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:14:16 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:14:16 UTC] === MODULO_VENTAS_AJAX: generar_pdf_cotizacion() INICIADO ===
+[09-Jul-2025 06:14:16 UTC] REQUEST_METHOD: GET
+[09-Jul-2025 06:14:16 UTC] POST data: Array
+(
+)
+
+[09-Jul-2025 06:14:16 UTC] GET data: Array
+(
+    [action] => mv_generar_pdf_cotizacion
+    [cotizacion_id] => 24
+    [modo] => preview
+    [_wpnonce] => 9eea0fd6fa
+)
+
+[09-Jul-2025 06:14:16 UTC] MODULO_VENTAS_AJAX: Parámetros detectados - ID: 24, Acción: preview, Método: GET
+[09-Jul-2025 06:14:16 UTC] MODULO_VENTAS: Evaluando cotización 24 - Estado: pendiente, Cliente: 11, Total: 190400.00
+[09-Jul-2025 06:14:16 UTC] MODULO_VENTAS: Cotización 24 tiene 1 items
+[09-Jul-2025 06:14:16 UTC] MODULO_VENTAS: Cotización 24 puede generar PDF
+[09-Jul-2025 06:14:16 UTC] MODULO_VENTAS_AJAX: Generando PDF para cotización 24...
+[09-Jul-2025 06:14:16 UTC] MODULO_VENTAS_PDF: Iniciando generación para cotización 24
+[09-Jul-2025 06:14:16 UTC] MODULO_VENTAS_PDF: TCPDF OK, obteniendo datos...
+[09-Jul-2025 06:14:16 UTC] MODULO_VENTAS_PDF: Cotización obtenida - Folio: COT-2025-000024
+[09-Jul-2025 06:14:16 UTC] MODULO_VENTAS_PDF: Cliente obtenido - Alexis Sanchez
+[09-Jul-2025 06:14:16 UTC] MODULO_VENTAS_PDF: Items obtenidos - Cantidad: 1
+[09-Jul-2025 06:14:16 UTC] MODULO_VENTAS_PDF: Vendedor obtenido - hostpanish
+[09-Jul-2025 06:14:16 UTC] MODULO_VENTAS_PDF: Creando instancia PDF...
+[09-Jul-2025 06:14:16 UTC] MODULO_VENTAS_PDF: Instancia PDF creada
+[09-Jul-2025 06:14:16 UTC] MODULO_VENTAS_PDF: Metadatos configurados
+[09-Jul-2025 06:14:16 UTC] MODULO_VENTAS_PDF: Página agregada
+[09-Jul-2025 06:14:17 UTC] MODULO_VENTAS_PDF: Header generado
+[09-Jul-2025 06:14:17 UTC] MODULO_VENTAS_PDF: Info empresa generada
+[09-Jul-2025 06:14:17 UTC] MODULO_VENTAS_PDF: Info cotización generada
+[09-Jul-2025 06:14:17 UTC] MODULO_VENTAS_PDF: Tabla productos generada
+[09-Jul-2025 06:14:17 UTC] MODULO_VENTAS_PDF: Totales generados
+[09-Jul-2025 06:14:17 UTC] MODULO_VENTAS_PDF: Términos generados
+[09-Jul-2025 06:14:17 UTC] MODULO_VENTAS_PDF: Guardando en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/pdfs/cotizacion_COT2025000024_2025-07-09.pdf
+[09-Jul-2025 06:14:17 UTC] MODULO_VENTAS_PDF: Output result: false
+[09-Jul-2025 06:14:17 UTC] MODULO_VENTAS_PDF: Archivo guardado exitosamente - 48296 bytes
+[09-Jul-2025 06:14:17 UTC] MODULO_VENTAS_AJAX: PDF generado exitosamente: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/pdfs/cotizacion_COT2025000024_2025-07-09.pdf
+[09-Jul-2025 06:14:17 UTC] MODULO_VENTAS_AJAX: Enviando archivo vía GET: cotizacion_COT-2025-000024.pdf
+[09-Jul-2025 06:16:12 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:16:12 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:16:12 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:16:12 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:18:11 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:18:11 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:18:11 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:18:12 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:20:12 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:20:12 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:20:12 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:20:12 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:22:12 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:22:12 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:22:12 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:22:12 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:24:12 UTC] MODULO_VENTAS: TCPDF cargado via autoload
+[09-Jul-2025 06:24:12 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:24:12 UTC] MODULO_VENTAS: Inicialización temprana AJAX - TCPDF disponible: SI
+[09-Jul-2025 06:24:12 UTC] MODULO_VENTAS: TCPDF cargado via autoload

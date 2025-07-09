@@ -19,8 +19,8 @@ class Modulo_Ventas_PDF_Handler {
     public function __construct() {
         // Hooks para manejar requests de PDF
         add_action('init', array($this, 'manejar_requests_pdf'));
-        add_action('wp_ajax_mv_generar_pdf_cotizacion', array($this, 'ajax_generar_pdf'));
-        add_action('wp_ajax_mv_descargar_pdf_cotizacion', array($this, 'ajax_descargar_pdf'));
+        //add_action('wp_ajax_mv_generar_pdf_cotizacion', array($this, 'ajax_generar_pdf'));
+        //add_action('wp_ajax_mv_descargar_pdf_cotizacion', array($this, 'ajax_descargar_pdf'));
         
         // Endpoint personalizado para PDFs
         add_action('init', array($this, 'agregar_endpoint_pdf'));
@@ -104,29 +104,85 @@ class Modulo_Ventas_PDF_Handler {
      * Servir PDF de cotización
      */
     private function servir_pdf_cotizacion($cotizacion_id, $disposition = 'inline') {
-        $pdf_generator = new Modulo_Ventas_PDF();
-        $pdf_path = $pdf_generator->generar_pdf_cotizacion($cotizacion_id);
-        
-        if (is_wp_error($pdf_path)) {
-            wp_die($pdf_path->get_error_message());
+        // PASO 1: Limpiar cualquier salida previa ANTES de generar el PDF
+        if (ob_get_level()) {
+            ob_end_clean();
         }
         
-        if (!file_exists($pdf_path)) {
-            wp_die(__('Archivo PDF no encontrado', 'modulo-ventas'));
+        try {
+            // PASO 2: Generar el PDF
+            $pdf_generator = new Modulo_Ventas_PDF();
+            $pdf_path = $pdf_generator->generar_pdf_cotizacion($cotizacion_id);
+            
+            // PASO 3: Verificar errores en la generación
+            if (is_wp_error($pdf_path)) {
+                error_log('MODULO_VENTAS_PDF_HANDLER: Error en generación: ' . $pdf_path->get_error_message());
+                wp_die($pdf_path->get_error_message(), 'Error PDF', array('response' => 500));
+            }
+            
+            // PASO 4: Verificar que el archivo existe
+            if (!file_exists($pdf_path)) {
+                error_log('MODULO_VENTAS_PDF_HANDLER: Archivo no encontrado: ' . $pdf_path);
+                wp_die(__('Archivo PDF no encontrado', 'modulo-ventas'), 'Error PDF', array('response' => 404));
+            }
+            
+            // PASO 5: Verificar que se puede leer
+            if (!is_readable($pdf_path)) {
+                error_log('MODULO_VENTAS_PDF_HANDLER: Archivo no legible: ' . $pdf_path);
+                wp_die(__('No se puede leer el archivo PDF', 'modulo-ventas'), 'Error PDF', array('response' => 403));
+            }
+            
+            // PASO 6: Obtener información del archivo
+            $filesize = filesize($pdf_path);
+            if ($filesize === false || $filesize <= 0) {
+                error_log('MODULO_VENTAS_PDF_HANDLER: Archivo vacío: ' . $pdf_path);
+                wp_die(__('Archivo PDF vacío o corrupto', 'modulo-ventas'), 'Error PDF', array('response' => 500));
+            }
+            
+            // PASO 7: Obtener información de la cotización para el nombre del archivo
+            $db = new Modulo_Ventas_DB();
+            $cotizacion = $db->obtener_cotizacion($cotizacion_id);
+            
+            $filename = 'cotizacion_' . ($cotizacion ? $cotizacion->folio : $cotizacion_id) . '.pdf';
+            $filename = sanitize_file_name($filename);
+            
+            // PASO 8: Iniciar nuevo buffer de salida limpio
+            ob_start();
+            
+            // PASO 9: Configurar headers sin que generen salida
+            $content_disposition = ($disposition === 'attachment') ? 'attachment' : 'inline';
+            
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: ' . $content_disposition . '; filename="' . $filename . '"');
+            header('Content-Length: ' . $filesize);
+            header('Cache-Control: private, must-revalidate, post-check=0, pre-check=0, max-age=1');
+            header('Pragma: public');
+            header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+            header('X-Robots-Tag: noindex, nofollow');
+            header('X-Content-Type-Options: nosniff');
+            
+            // PASO 10: Limpiar buffer antes de enviar archivo
+            ob_end_clean();
+            
+            // PASO 11: Enviar archivo directamente
+            readfile($pdf_path);
+            
+            // PASO 12: Log de éxito
+            error_log('MODULO_VENTAS_PDF_HANDLER: PDF servido exitosamente - ' . $filename . ' (' . $filesize . ' bytes)');
+            
+        } catch (Exception $e) {
+            // Limpiar buffer en caso de error
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
+            
+            error_log('MODULO_VENTAS_PDF_HANDLER: Exception servir PDF: ' . $e->getMessage());
+            error_log('MODULO_VENTAS_PDF_HANDLER: Exception trace: ' . $e->getTraceAsString());
+            wp_die('Error al servir PDF: ' . $e->getMessage(), 'Error PDF', array('response' => 500));
         }
         
-        // Obtener información de la cotización para el nombre del archivo
-        $db = new Modulo_Ventas_DB();
-        $cotizacion = $db->obtener_cotizacion($cotizacion_id);
-        
-        $filename = 'cotizacion_' . ($cotizacion ? $cotizacion->folio : $cotizacion_id) . '.pdf';
-        $filename = sanitize_file_name($filename);
-        
-        // Headers para servir el PDF
-        $this->enviar_headers_pdf($filename, $disposition);
-        
-        // Enviar archivo
-        readfile($pdf_path);
+        // PASO 13: Terminar ejecución
         exit;
     }
     

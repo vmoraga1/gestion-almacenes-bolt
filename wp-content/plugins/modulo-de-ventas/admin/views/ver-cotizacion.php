@@ -1188,9 +1188,16 @@ if (!empty($cotizacion->vendedor_id)) {
 
 <script>
 jQuery(document).ready(function($) {
-    // Confirmar acciones críticas
-    $('a[href*="action=reject"], a[href*="action=delete"]').on('click', function(e) {
-        if (!confirm('<?php _e('¿Está seguro de realizar esta acción?', 'modulo-ventas'); ?>')) {
+    'use strict';
+    
+    console.log('Ver Cotización: Script cargado');
+    
+    // El manejo de PDFs ahora se hace en modulo-ventas-admin.js
+    // Solo mantener funcionalidades específicas de esta vista
+    
+    // Manejar eliminación con confirmación
+    $('.mv-btn-eliminar').on('click', function(e) {
+        if (!confirm('<?php _e('¿Está seguro de eliminar esta cotización?', 'modulo-ventas'); ?>')) {
             e.preventDefault();
         }
     });
@@ -1201,56 +1208,10 @@ jQuery(document).ready(function($) {
     }).on('mouseleave', function() {
         $(this).removeClass('show-tooltip');
     });
-
-    // Ver PDF en nueva ventana
-    $('.mv-btn-pdf-preview').on('click', function() {
-        var previewUrl = $(this).data('preview-url');
-        window.open(previewUrl, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
-    });
     
-    // Descargar PDF
-    $('.mv-btn-pdf-download').on('click', function() {
-        var downloadUrl = $(this).data('download-url');
-        window.location.href = downloadUrl;
-    });
+    // Los botones PDF ahora se manejan en modulo-ventas-admin.js
+    // Solo agregar indicadores visuales aquí si es necesario
     
-    // Enviar por email (por implementar)
-    $('.mv-btn-email-pdf').on('click', function() {
-        var cotizacionId = $(this).data('cotizacion-id');
-        alert('Función de envío por email en desarrollo');
-        // TODO: Implementar modal para envío por email
-    });
-
-    // Mejorar botones PDF con indicadores de carga
-    $('.mv-pdf-preview-button, .mv-pdf-download-button').on('click', function() {
-        var $btn = $(this);
-        var originalText = $btn.text();
-        var isPreview = $btn.hasClass('mv-pdf-preview-button');
-        
-        // Cambiar texto y deshabilitar
-        $btn.prop('disabled', true);
-        $btn.find('.dashicons').removeClass('dashicons-visibility dashicons-download').addClass('dashicons-update');
-        
-        if (isPreview) {
-            $btn.append(' <?php _e('Generando...', 'modulo-ventas'); ?>');
-        } else {
-            $btn.append(' <?php _e('Preparando descarga...', 'modulo-ventas'); ?>');
-        }
-        
-        // Restaurar después de un tiempo
-        setTimeout(function() {
-            $btn.prop('disabled', false);
-            $btn.text(originalText);
-            
-            if (isPreview) {
-                $btn.prepend('<span class="dashicons dashicons-visibility" style="margin-right: 5px;"></span>');
-            } else {
-                $btn.prepend('<span class="dashicons dashicons-download" style="margin-right: 5px;"></span>');
-            }
-        }, isPreview ? 2000 : 3000);
-    });
-    // Fin PDF
-
     // Función para mostrar modal de envío por email
     function mv_modal_enviar_email(cotizacionId) {
         var email = prompt('<?php _e('Ingrese el email del destinatario:', 'modulo-ventas'); ?>');
@@ -1269,16 +1230,5 @@ jQuery(document).ready(function($) {
         var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email);
     }
-
-    // Mejorar botón de email
-    $('.mv-pdf-email-button').on('click', function() {
-        var $btn = $(this);
-        $btn.find('.dashicons').removeClass('dashicons-email-alt').addClass('dashicons-update');
-        
-        // Restaurar después de la acción
-        setTimeout(function() {
-            $btn.find('.dashicons').removeClass('dashicons-update').addClass('dashicons-email-alt');
-        }, 1000);
-    });
 });
 </script>
