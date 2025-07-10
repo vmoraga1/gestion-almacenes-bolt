@@ -1,8 +1,6 @@
 <?php
 /**
- * CLASE PRINCIPAL PARA GESTIÓN DE PLANTILLAS PDF
- * 
- * Archivo: wp-content/plugins/modulo-de-ventas/includes/class-modulo-ventas-pdf-templates.php
+ * CLASE PRINCIPAL PARA GESTIÓN DE PLANTILLAS PDF - ACTUALIZADA
  */
 
 // Evitar acceso directo
@@ -23,10 +21,19 @@ class Modulo_Ventas_PDF_Templates {
     private $logger;
     
     /**
+     * Procesador de plantillas
+     */
+    private $processor;
+    
+    /**
      * Constructor
      */
     public function __construct() {
         $this->logger = Modulo_Ventas_Logger::get_instance();
+        
+        // Cargar el procesador de plantillas
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-template-processor.php';
+        $this->processor = Modulo_Ventas_PDF_Template_Processor::get_instance();
         
         // Hooks para admin
         add_action('admin_menu', array($this, 'agregar_menu_admin'));
@@ -82,47 +89,55 @@ class Modulo_Ventas_PDF_Templates {
      * Enqueue scripts y estilos para admin
      */
     public function enqueue_admin_scripts($hook) {
-        // CORRECCIÓN: Verificar el hook correcto
-        if (strpos($hook, 'mv-pdf-templates') === false && 
-            strpos($hook, 'plantillas-pdf') === false) {
-            return;
-        }
-        
-        // CodeMirror para editor HTML/CSS
-        wp_enqueue_code_editor(array('type' => 'text/html'));
-        wp_enqueue_code_editor(array('type' => 'text/css'));
-        
-        // Scripts personalizados
-        wp_enqueue_script(
-            'mv-pdf-templates',
-            MODULO_VENTAS_PLUGIN_URL . 'assets/js/pdf-templates.js',
-            array('jquery', 'code-editor'),
-            MODULO_VENTAS_VERSION,
-            true
-        );
-        
-        // Estilos
-        wp_enqueue_style(
-            'mv-pdf-templates',
-            MODULO_VENTAS_PLUGIN_URL . 'assets/css/pdf-templates.css',
-            array(),
-            MODULO_VENTAS_VERSION
-        );
-        
-        // Localizar script
-        wp_localize_script('mv-pdf-templates', 'mvPdfTemplates', array(
-            'ajaxurl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('mv_pdf_templates'),
-            'i18n' => array(
-                'confirmar_eliminar' => __('¿Está seguro de eliminar esta plantilla?', 'modulo-ventas'),
-                'error_general' => __('Ha ocurrido un error. Por favor intente nuevamente.', 'modulo-ventas'),
-                'guardando' => __('Guardando...', 'modulo-ventas'),
-                'cargando' => __('Cargando...', 'modulo-ventas'),
-                'preview' => __('Vista Previa', 'modulo-ventas'),
-                'guardar' => __('Guardar', 'modulo-ventas')
-            )
-        ));
+    // Debug del hook actual
+    error_log("PDF Templates - Hook actual: " . $hook);
+    
+    // CORRECCIÓN: Verificar el hook correcto
+    if (strpos($hook, 'mv-pdf-templates') === false && 
+        strpos($hook, 'plantillas-pdf') === false) {
+        error_log("PDF Templates - Hook no coincide, retornando");
+        return;
     }
+    
+    error_log("PDF Templates - Hook válido, encolando scripts");
+    
+    // CodeMirror para editor HTML/CSS
+    wp_enqueue_code_editor(array('type' => 'text/html'));
+    wp_enqueue_code_editor(array('type' => 'text/css'));
+    
+    // Scripts personalizados - CORRECCIÓN DE LA URL
+    wp_enqueue_script(
+        'mv-pdf-templates',
+        MODULO_VENTAS_PLUGIN_URL . 'assets/js/pdf-templates.js',
+        array('jquery', 'code-editor'),
+        MODULO_VENTAS_VERSION,
+        true
+    );
+    
+    // Estilos
+    wp_enqueue_style(
+        'mv-pdf-templates',
+        MODULO_VENTAS_PLUGIN_URL . 'assets/css/pdf-templates.css',
+        array(),
+        MODULO_VENTAS_VERSION
+    );
+    
+    // Localizar script
+    wp_localize_script('mv-pdf-templates', 'mvPdfTemplates', array(
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('mv_pdf_templates'),
+        'i18n' => array(
+            'confirmar_eliminar' => __('¿Está seguro de eliminar esta plantilla?', 'modulo-ventas'),
+            'error_general' => __('Ha ocurrido un error. Por favor intente nuevamente.', 'modulo-ventas'),
+            'guardando' => __('Guardando...', 'modulo-ventas'),
+            'cargando' => __('Cargando...', 'modulo-ventas'),
+            'preview' => __('Vista Previa', 'modulo-ventas'),
+            'guardar' => __('Guardar', 'modulo-ventas')
+        )
+    ));
+    
+    error_log("PDF Templates - Scripts encolados correctamente");
+}
     
     /**
      * Página principal de administración de plantillas
@@ -234,8 +249,8 @@ class Modulo_Ventas_PDF_Templates {
         
         $result = $wpdb->get_row($wpdb->prepare(
             "SELECT p.* FROM $tabla_plantillas p 
-             INNER JOIN $tabla_config c ON p.id = c.plantilla_id 
-             WHERE c.tipo_documento = %s AND c.activa = 1 AND p.activa = 1",
+            INNER JOIN $tabla_config c ON p.id = c.plantilla_id 
+            WHERE c.tipo_documento = %s AND c.activa = 1 AND p.activa = 1",
             $tipo_documento
         ));
         
@@ -243,8 +258,8 @@ class Modulo_Ventas_PDF_Templates {
         if (!$result) {
             $result = $wpdb->get_row($wpdb->prepare(
                 "SELECT * FROM $tabla_plantillas 
-                 WHERE tipo = %s AND es_predeterminada = 1 AND activa = 1 
-                 ORDER BY id ASC LIMIT 1",
+                WHERE tipo = %s AND es_predeterminada = 1 AND activa = 1 
+                ORDER BY id ASC LIMIT 1",
                 $tipo_documento
             ));
         }
@@ -261,152 +276,95 @@ class Modulo_Ventas_PDF_Templates {
         $tabla = $wpdb->prefix . 'mv_pdf_templates';
         
         // Validar datos requeridos
-        $errores = array();
-        
         if (empty($datos['nombre'])) {
-            $errores[] = __('El nombre de la plantilla es requerido', 'modulo-ventas');
-        }
-        
-        if (empty($datos['html_content'])) {
-            $errores[] = __('El contenido HTML es requerido', 'modulo-ventas');
-        }
-        
-        if (!empty($errores)) {
-            return new WP_Error('datos_invalidos', implode(', ', $errores));
+            return new WP_Error('nombre_requerido', __('El nombre de la plantilla es requerido', 'modulo-ventas'));
         }
         
         // Generar slug único
-        $slug = $this->generar_slug_unico($datos['nombre'], isset($datos['id']) ? $datos['id'] : 0);
+        $slug_base = sanitize_title($datos['nombre']);
+        $slug = $slug_base;
+        $counter = 1;
         
-        // Preparar datos
-        $plantilla_datos = array(
+        // Verificar si el slug ya existe (excluyendo la plantilla actual si estamos editando)
+        $plantilla_id = isset($datos['id']) ? intval($datos['id']) : 0;
+        
+        while (true) {
+            $existing = $wpdb->get_var($wpdb->prepare(
+                "SELECT id FROM $tabla WHERE slug = %s" . ($plantilla_id ? " AND id != %d" : ""),
+                $plantilla_id ? array($slug, $plantilla_id) : array($slug)
+            ));
+            
+            if (!$existing) {
+                break; // Slug disponible
+            }
+            
+            $slug = $slug_base . '-' . $counter;
+            $counter++;
+        }
+        
+        // Preparar datos para insertar/actualizar
+        $datos_db = array(
             'nombre' => sanitize_text_field($datos['nombre']),
             'slug' => $slug,
-            'tipo' => sanitize_text_field($datos['tipo'] ?: 'cotizacion'),
-            'descripcion' => sanitize_textarea_field($datos['descripcion'] ?: ''),
-            'html_content' => $datos['html_content'], // No sanitizar HTML del editor
-            'css_content' => $datos['css_content'] ?: '',
-            'configuracion' => json_encode($datos['configuracion'] ?: array()),
-            'variables_usadas' => $this->extraer_variables_usadas($datos['html_content']),
-            'activa' => isset($datos['activa']) ? intval($datos['activa']) : 1
+            'tipo' => sanitize_text_field($datos['tipo']),
+            'descripcion' => sanitize_textarea_field($datos['descripcion']),
+            'html_content' => $datos['html_content'], // Ya viene sanitizado desde wp_unslash
+            'css_content' => $datos['css_content'], // Ya viene sanitizado desde wp_unslash
+            'configuracion' => is_array($datos['configuracion']) ? json_encode($datos['configuracion']) : '{}',
+            'activa' => intval($datos['activa']),
+            'fecha_actualizacion' => current_time('mysql')
         );
         
-        if (isset($datos['id']) && $datos['id'] > 0) {
+        $datos_format = array('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s');
+        
+        if ($plantilla_id > 0) {
             // Actualizar plantilla existente
-            $plantilla_datos['fecha_modificacion'] = current_time('mysql');
-            
-            $result = $wpdb->update(
+            $resultado = $wpdb->update(
                 $tabla,
-                $plantilla_datos,
-                array('id' => intval($datos['id'])),
-                array('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%s'),
+                $datos_db,
+                array('id' => $plantilla_id),
+                $datos_format,
                 array('%d')
             );
             
-            if ($result === false) {
-                return new WP_Error('error_actualizacion', $wpdb->last_error);
+            if ($resultado === false) {
+                $this->logger->log('Error actualizando plantilla ID ' . $plantilla_id . ': ' . $wpdb->last_error, 'error');
+                return new WP_Error('error_actualizacion', __('Error al actualizar la plantilla', 'modulo-ventas') . ': ' . $wpdb->last_error);
             }
             
-            return intval($datos['id']);
+            $this->logger->log('Plantilla ID ' . $plantilla_id . ' actualizada exitosamente');
+            return $plantilla_id;
             
         } else {
             // Crear nueva plantilla
-            $plantilla_datos['creado_por'] = get_current_user_id();
-            $plantilla_datos['fecha_creacion'] = current_time('mysql');
+            $datos_db['fecha_creacion'] = current_time('mysql');
+            $datos_db['es_predeterminada'] = 0;
             
-            $result = $wpdb->insert($tabla, $plantilla_datos);
+            $datos_format[] = '%s'; // Para fecha_creacion
+            $datos_format[] = '%d'; // Para es_predeterminada
             
-            if ($result === false) {
-                return new WP_Error('error_insercion', $wpdb->last_error);
+            $resultado = $wpdb->insert(
+                $tabla,
+                $datos_db,
+                $datos_format
+            );
+            
+            if ($resultado === false) {
+                $this->logger->log('Error creando nueva plantilla: ' . $wpdb->last_error, 'error');
+                return new WP_Error('error_creacion', __('Error al crear la plantilla', 'modulo-ventas') . ': ' . $wpdb->last_error);
             }
             
-            return $wpdb->insert_id;
+            $nuevo_id = $wpdb->insert_id;
+            $this->logger->log('Nueva plantilla creada con ID: ' . $nuevo_id . ' y slug: ' . $slug);
+            return $nuevo_id;
         }
     }
     
     /**
-     * Generar slug único
+     * Obtener variables disponibles para el editor
      */
-    private function generar_slug_unico($nombre, $excluir_id = 0) {
-        global $wpdb;
-        
-        $tabla = $wpdb->prefix . 'mv_pdf_templates';
-        $slug_base = sanitize_title($nombre);
-        $slug = $slug_base;
-        $contador = 1;
-        
-        while (true) {
-            $existe = $wpdb->get_var($wpdb->prepare(
-                "SELECT COUNT(*) FROM $tabla WHERE slug = %s AND id != %d",
-                $slug,
-                $excluir_id
-            ));
-            
-            if ($existe == 0) {
-                break;
-            }
-            
-            $slug = $slug_base . '-' . $contador;
-            $contador++;
-        }
-        
-        return $slug;
-    }
-    
-    /**
-     * Extraer variables usadas en el HTML
-     */
-    private function extraer_variables_usadas($html_content) {
-        $variables = array();
-        
-        // Buscar variables con sintaxis {{variable}}
-        preg_match_all('/\{\{([^}]+)\}\}/', $html_content, $matches);
-        
-        if (!empty($matches[1])) {
-            foreach ($matches[1] as $variable) {
-                // Limpiar espacios y caracteres especiales
-                $variable = trim($variable);
-                
-                // Remover helpers de Handlebars (como #if, #each)
-                if (!preg_match('/^(#|\/|else|\^)/', $variable)) {
-                    $variables[] = $variable;
-                }
-            }
-        }
-        
-        return implode(',', array_unique($variables));
-    }
-    
-    /**
-     * Obtener variables disponibles
-     */
-    public function obtener_variables_disponibles($tipo_documento = null) {
-        global $wpdb;
-        
-        $tabla = $wpdb->prefix . 'mv_pdf_template_variables';
-        $where = 'activa = 1';
-        $params = array();
-        
-        if ($tipo_documento) {
-            $where .= ' AND (disponible_en LIKE %s OR disponible_en = "")';
-            $params[] = '%' . $tipo_documento . '%';
-        }
-        
-        $sql = "SELECT * FROM $tabla WHERE $where ORDER BY categoria ASC, orden ASC, variable ASC";
-        
-        if (!empty($params)) {
-            $sql = $wpdb->prepare($sql, $params);
-        }
-        
-        $variables = $wpdb->get_results($sql);
-        
-        // Agrupar por categoría
-        $variables_agrupadas = array();
-        foreach ($variables as $variable) {
-            $variables_agrupadas[$variable->categoria][] = $variable;
-        }
-        
-        return $variables_agrupadas;
+    public function obtener_variables_disponibles($tipo = 'cotizacion') {
+        return $this->processor->obtener_variables_disponibles($tipo);
     }
     
     /**
@@ -449,17 +407,369 @@ class Modulo_Ventas_PDF_Templates {
      * Generar preview de plantilla con datos de prueba
      */
     public function generar_preview_plantilla($html_content, $css_content, $cotizacion_id = 0) {
-        // TODO: Implementar en el siguiente paso (motor de templates)
-        throw new Exception(__('Preview de plantillas será implementado en el siguiente paso', 'modulo-ventas'));
+        $this->logger->log("PDF_TEMPLATES: Generando preview de plantilla");
+        
+        try {
+            // Verificar que el procesador esté disponible
+            if (!isset($this->processor) || !$this->processor) {
+                $this->logger->log("PDF_TEMPLATES: Processor no disponible, creando...");
+                require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-template-processor.php';
+                $this->processor = Modulo_Ventas_PDF_Template_Processor::get_instance();
+            }
+            
+            $this->logger->log("PDF_TEMPLATES: Processor disponible, procesando contenido...");
+            
+            // Procesar plantilla con datos
+            if ($cotizacion_id > 0) {
+                $this->logger->log("PDF_TEMPLATES: Usando datos de cotización real: " . $cotizacion_id);
+                // Usar datos de cotización real
+                $plantilla_temp = (object) array(
+                    'html_content' => $html_content,
+                    'css_content' => $css_content
+                );
+                $documento_html = $this->processor->procesar_plantilla($plantilla_temp, $cotizacion_id);
+            } else {
+                $this->logger->log("PDF_TEMPLATES: Usando datos de prueba");
+                // Usar datos de prueba
+                $documento_html = $this->processor->procesar_plantilla_preview($html_content, $css_content);
+            }
+            
+            $this->logger->log("PDF_TEMPLATES: Contenido procesado, preparando directorio...");
+            
+            // Preparar directorio de previews
+            $upload_dir = wp_upload_dir();
+            $preview_dir = $upload_dir['basedir'] . '/modulo-ventas/previews/';
+            
+            // Crear directorio si no existe
+            if (!file_exists($preview_dir)) {
+                wp_mkdir_p($preview_dir);
+                
+                // Crear .htaccess que BLOQUEA acceso directo
+                $htaccess_content = "# Módulo de Ventas - Previews (Protegido)\n";
+                $htaccess_content .= "Order deny,allow\n";
+                $htaccess_content .= "Deny from all\n";
+                $htaccess_content .= "# Solo acceso via AJAX\n";
+                
+                file_put_contents($preview_dir . '.htaccess', $htaccess_content);
+                file_put_contents($preview_dir . 'index.php', '<?php // Silence is golden');
+            }
+            
+            // Generar nombre único para el archivo
+            $preview_filename = 'preview_' . md5(uniqid() . time()) . '.html';
+            $preview_path = $preview_dir . $preview_filename;
+            
+            $this->logger->log("PDF_TEMPLATES: Guardando archivo: " . $preview_path);
+            
+            // Guardar archivo HTML procesado
+            if (file_put_contents($preview_path, $documento_html) === false) {
+                throw new Exception(__('No se pudo guardar el archivo de preview', 'modulo-ventas'));
+            }
+            
+            // Devolver URL de AJAX
+            $preview_nonce = wp_create_nonce('mv_preview_access_' . $preview_filename);
+            $preview_url = admin_url('admin-ajax.php') . '?' . http_build_query(array(
+                'action' => 'mv_servir_preview',
+                'file' => $preview_filename,
+                'nonce' => $preview_nonce
+            ));
+            
+            $this->logger->log("PDF_TEMPLATES: Preview generado exitosamente: " . $preview_url);
+            
+            return $preview_url;
+            
+        } catch (Exception $e) {
+            $this->logger->log("PDF_TEMPLATES: Error generando preview: " . $e->getMessage(), 'error');
+            throw $e;
+        }
     }
-
+    
     /**
-     * Método auxiliar para mostrar tabla de plantillas
+     * Procesar plantilla con datos reales para generar PDF
      */
-    private function mostrar_tabla_plantillas($plantillas, $tipo) {
-        // El código de la función ya está incluido en la vista
+    public function procesar_plantilla_para_pdf($plantilla_id, $cotizacion_id) {
+        $this->logger->log("PDF_TEMPLATES: Procesando plantilla {$plantilla_id} para cotización {$cotizacion_id}");
+        
+        // Obtener plantilla
+        $plantilla = $this->obtener_plantilla($plantilla_id);
+        if (!$plantilla) {
+            throw new Exception(__('Plantilla no encontrada', 'modulo-ventas'));
+        }
+        
+        // Procesar con datos reales
+        return $this->processor->procesar_plantilla($plantilla, $cotizacion_id);
+    }
+    
+    /**
+     * Limpiar archivos de preview antiguos (ejecutar periódicamente)
+     */
+    public function limpiar_previews_antiguos() {
+        $upload_dir = wp_upload_dir();
+        $preview_dir = $upload_dir['basedir'] . '/modulo-ventas/previews/';
+        
+        if (!is_dir($preview_dir)) {
+            return 0;
+        }
+        
+        $archivos = glob($preview_dir . 'preview_*.html');
+        $tiempo_limite = time() - (2 * HOUR_IN_SECONDS); // 2 horas
+        $eliminados = 0;
+        
+        foreach ($archivos as $archivo) {
+            if (filemtime($archivo) < $tiempo_limite) {
+                if (unlink($archivo)) {
+                    $eliminados++;
+                }
+            }
+        }
+        
+        if ($eliminados > 0) {
+            $this->logger->log("PDF_TEMPLATES: Limpieza de previews completada - {$eliminados} archivos eliminados");
+        }
+        
+        return $eliminados;
+    }
+    
+    /**
+     * Crear plantilla predeterminada si no existe
+     */
+    public function crear_plantilla_predeterminada($tipo = 'cotizacion') {
+        // Verificar si ya existe una plantilla predeterminada
+        $existe = $this->obtener_plantilla_activa($tipo);
+        if ($existe) {
+            return;
+        }
+        
+        $this->logger->log("PDF_TEMPLATES: Creando plantilla predeterminada para tipo: {$tipo}");
+        
+        // HTML base para cotización
+        $html_base = '<!DOCTYPE html>
+<div class="documento">
+    <div class="header">
+        <div class="empresa-info">
+            {{logo_empresa}}
+            <h1>{{empresa.nombre}}</h1>
+            <p>{{empresa.direccion}}</p>
+            <p>{{empresa.telefono}} | {{empresa.email}}</p>
+            <p>RUT: {{empresa.rut}}</p>
+        </div>
+        
+        <div class="cotizacion-info">
+            <h2>COTIZACIÓN</h2>
+            <p><strong>N°:</strong> {{cotizacion.numero}}</p>
+            <p><strong>Fecha:</strong> {{fechas.fecha_cotizacion}}</p>
+            <p><strong>Vencimiento:</strong> {{fechas.fecha_vencimiento_formateada}}</p>
+            <p><strong>Estado:</strong> {{cotizacion.estado}}</p>
+        </div>
+    </div>
+    
+    <div class="cliente-info">
+        <h3>Cliente</h3>
+        <p><strong>{{cliente.nombre}}</strong></p>
+        <p>RUT: {{cliente.rut}}</p>
+        <p>{{cliente.direccion}}</p>
+        <p>{{cliente.ciudad}}, {{cliente.region}}</p>
+        <p>{{cliente.telefono}} | {{cliente.email}}</p>
+    </div>
+    
+    <div class="productos">
+        <h3>Productos y Servicios</h3>
+        {{tabla_productos}}
+    </div>
+    
+    <div class="totales-seccion">
+        <div class="totales">
+            <div class="total-fila">
+                <span>Subtotal:</span>
+                <span>${{totales.subtotal_formateado}}</span>
+            </div>
+            <div class="total-fila">
+                <span>Descuento ({{totales.descuento_porcentaje}}%):</span>
+                <span>-${{totales.descuento_formateado}}</span>
+            </div>
+            <div class="total-fila">
+                <span>IVA (19%):</span>
+                <span>${{totales.impuestos_formateado}}</span>
+            </div>
+            <div class="total-fila total-final">
+                <span><strong>TOTAL:</strong></span>
+                <span><strong>${{totales.total_formateado}}</strong></span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="observaciones">
+        <h4>Observaciones</h4>
+        <p>{{cotizacion.observaciones}}</p>
+    </div>
+    
+    <div class="footer">
+        <p>Cotización generada el {{fechas.hoy}} por {{cotizacion.vendedor}}</p>
+        <p>{{empresa.sitio_web}}</p>
+    </div>
+</div>';
+        
+        // CSS base para cotización
+        $css_base = 'body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+    line-height: 1.4;
+    font-size: 12px;
+}
+
+.documento {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #2c5aa0;
+    padding-bottom: 20px;
+}
+
+.empresa-info h1 {
+    color: #2c5aa0;
+    margin: 0 0 10px 0;
+    font-size: 24px;
+}
+
+.cotizacion-info h2 {
+    color: #2c5aa0;
+    margin: 0 0 10px 0;
+    font-size: 20px;
+}
+
+.cliente-info {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.productos-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.productos-tabla th {
+    background-color: #2c5aa0;
+    color: white;
+    padding: 10px 8px;
+    text-align: left;
+    font-size: 11px;
+}
+
+.productos-tabla td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    font-size: 11px;
+}
+
+.productos-tabla tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.totales-seccion {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 25px;
+}
+
+.totales {
+    width: 300px;
+}
+
+.total-fila {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.total-final {
+    border-top: 2px solid #2c5aa0;
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.observaciones {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.footer {
+    text-align: center;
+    color: #666;
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+    font-size: 10px;
+}
+
+.logo-empresa {
+    max-height: 60px;
+    max-width: 180px;
+    margin-bottom: 10px;
+}';
+        
+        // Datos de la plantilla predeterminada
+        $datos_plantilla = array(
+            'nombre' => __('Plantilla Predeterminada - Cotización', 'modulo-ventas'),
+            'tipo' => $tipo,
+            'descripcion' => __('Plantilla básica predeterminada para cotizaciones', 'modulo-ventas'),
+            'html_content' => $html_base,
+            'css_content' => $css_base,
+            'configuracion' => array(),
+            'activa' => 1
+        );
+        
+        // Guardar plantilla
+        $resultado = $this->guardar_plantilla($datos_plantilla);
+        
+        if (!is_wp_error($resultado)) {
+            // Marcar como predeterminada
+            global $wpdb;
+            $tabla = $wpdb->prefix . 'mv_pdf_templates';
+            $wpdb->update(
+                $tabla,
+                array('es_predeterminada' => 1),
+                array('id' => $resultado),
+                array('%d'),
+                array('%d')
+            );
+            
+            $this->logger->log("PDF_TEMPLATES: Plantilla predeterminada creada con ID: {$resultado}");
+        }
+        
+        return $resultado;
     }
 }
+
+// Agregar hook para limpiar previews periódicamente
+if (!wp_next_scheduled('mv_limpiar_previews_plantillas')) {
+    wp_schedule_event(time(), 'hourly', 'mv_limpiar_previews_plantillas');
+}
+
+add_action('mv_limpiar_previews_plantillas', function() {
+    $templates = Modulo_Ventas_PDF_Templates::get_instance();
+    $templates->limpiar_previews_antiguos();
+});
+
+// Hook para limpiar archivos temporales de preview
+add_action('mv_limpiar_preview_temporal', function($filepath) {
+    if (file_exists($filepath)) {
+        unlink($filepath);
+        error_log('PDF_TEMPLATES: Preview temporal eliminado: ' . $filepath);
+    }
+});
 
 // Inicializar la clase
 Modulo_Ventas_PDF_Templates::get_instance();

@@ -86,3 +86,32 @@ Stack trace:
 [2025-07-09 19:57:10] INFO: PDF generado para cotización COT-2025-000024: cotizacion_COT2025000024_2025-07-09.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
 [2025-07-09 19:57:17] INFO: PDF generado para cotización COT-2025-000020: cotizacion_COT2025000020_2025-07-09.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
 [2025-07-09 19:57:33] INFO: PDF generado para cotización COT-2025-000018: cotizacion_COT2025000018_2025-07-09.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-09 20:33:14] INFO: Iniciando creación de cotización | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cliente_id":20,"productos":1,"permitir_sin_stock":"yes"}
+[2025-07-09 20:33:14] INFO: Validación de stock omitida: configurado para permitir cotizaciones sin stock | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-09 20:33:14] INFO: Cotización creada: COT-2025-000025 (ID: 25) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-09 20:33:14] INFO: Cotización creada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cotizacion_id":25}
+[2025-07-09 20:33:14] INFO: Cotización creada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cotizacion_id":25,"folio":"COT-2025-000025"}
+[2025-07-09 20:33:25] INFO: PDF generado para cotización COT-2025-000025: cotizacion_COT2025000025_2025-07-09.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-09 20:55:00] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method Modulo_Ventas_PDF_Templates::mostrar_tabla_plantillas() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\pdf-templates\lista-plantillas.php:76
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates.php(161): include()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates.php(150): Modulo_Ventas_PDF_Templates->mostrar_lista_plantillas()
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_PDF_Templates->pagina_admin_plantillas('')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('toplevel_page_m...')
+#6 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\pdf-templates\\lista-plantillas.php","line":76,"type":1}
+[2025-07-09 20:56:09] INFO: Plugin desactivado | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-09 20:56:18] INFO: Tablas de base de datos creadas/actualizadas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-09 20:56:18] INFO: Plugin activado correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-09 20:56:31] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method Modulo_Ventas_PDF_Templates::mostrar_tabla_plantillas() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\pdf-templates\lista-plantillas.php:76
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates.php(161): include()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-templates.php(150): Modulo_Ventas_PDF_Templates->mostrar_lista_plantillas()
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_PDF_Templates->pagina_admin_plantillas('')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('toplevel_page_m...')
+#6 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\pdf-templates\\lista-plantillas.php","line":76,"type":1}

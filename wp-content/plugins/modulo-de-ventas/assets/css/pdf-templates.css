@@ -1,0 +1,1052 @@
+/* ==========================================================================
+ESTILOS GENERALES
+========================================================================== */
+
+.mv-editor-plantillas {
+    max-width: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+/* ==========================================================================
+TOOLBAR DEL EDITOR
+========================================================================== */
+
+.mv-editor-toolbar {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.mv-editor-toolbar .button {
+    font-size: 13px;
+    height: 32px;
+    line-height: 30px;
+    transition: all 0.2s ease;
+}
+
+.mv-editor-toolbar .button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.mv-editor-toolbar .button-primary {
+    background: #2c5aa0;
+    border-color: #2c5aa0;
+}
+
+.mv-editor-toolbar .button-primary:hover {
+    background: #1e3f73;
+    border-color: #1e3f73;
+}
+
+.mv-editor-status {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.mv-status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+}
+
+.mv-status-indicator.guardado {
+    color: #46b450;
+}
+
+.mv-status-indicator.sin-guardar {
+    color: #dc3232;
+}
+
+.mv-status-indicator::before {
+    content: "●";
+    font-size: 12px;
+}
+
+/* ==========================================================================
+LAYOUT PRINCIPAL DEL EDITOR
+========================================================================== */
+
+.mv-editor-layout {
+    display: flex;
+    gap: 20px;
+    min-height: 600px;
+    margin-bottom: 20px;
+}
+
+.mv-editor-sidebar {
+    flex: 0 0 300px;
+    background: #fff;
+}
+
+.mv-editor-main {
+    flex: 1;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* ==========================================================================
+PANELES LATERALES
+========================================================================== */
+
+.mv-panel {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.mv-panel h3 {
+    background: #f9f9f9;
+    border-bottom: 1px solid #ddd;
+    margin: 0;
+    padding: 12px 15px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c5aa0;
+}
+
+.mv-panel .form-table {
+    margin: 0;
+    padding: 15px;
+}
+
+.mv-panel .form-table th {
+    width: 80px;
+    padding: 8px 0;
+    font-weight: 600;
+    color: #555;
+}
+
+.mv-panel .form-table td {
+    padding: 8px 0;
+}
+
+.mv-panel .form-table input[type="text"],
+.mv-panel .form-table textarea,
+.mv-panel .form-table select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 13px;
+    transition: border-color 0.2s ease;
+}
+
+.mv-panel .form-table input[type="text"]:focus,
+.mv-panel .form-table textarea:focus,
+.mv-panel .form-table select:focus {
+    border-color: #2c5aa0;
+    outline: none;
+    box-shadow: 0 0 0 1px #2c5aa0;
+}
+
+/* ==========================================================================
+VARIABLES DISPONIBLES
+========================================================================== */
+
+#variables-disponibles {
+    padding: 15px;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+#variables-disponibles h4 {
+    margin: 15px 0 8px 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c5aa0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 4px;
+}
+
+#variables-disponibles h4:first-child {
+    margin-top: 0;
+}
+
+.mv-variable-item {
+    padding: 10px 12px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #fff;
+}
+
+.mv-variable-item:hover {
+    background-color: #f0f8ff;
+    border-color: #2c5aa0;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(44, 90, 160, 0.1);
+}
+
+.mv-variable-item code {
+    display: block;
+    font-weight: bold;
+    color: #2c5aa0;
+    font-size: 12px;
+    margin-bottom: 2px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.mv-variable-item small {
+    color: #666;
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+/* ==========================================================================
+CONTENIDO DE AYUDA
+========================================================================== */
+
+.mv-help-content {
+    padding: 15px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.mv-help-content h4 {
+    margin: 15px 0 8px 0;
+    font-size: 13px;
+    color: #2c5aa0;
+    font-weight: 600;
+}
+
+.mv-help-content h4:first-child {
+    margin-top: 0;
+}
+
+.mv-help-content code {
+    display: block;
+    background: #f5f5f5;
+    padding: 6px 10px;
+    border-radius: 3px;
+    margin-bottom: 8px;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 11px;
+    border-left: 3px solid #2c5aa0;
+}
+
+.mv-help-content ul {
+    margin-left: 16px;
+    margin-bottom: 12px;
+}
+
+.mv-help-content li {
+    margin-bottom: 4px;
+    color: #555;
+}
+
+/* ==========================================================================
+TABS DEL EDITOR
+========================================================================== */
+
+.mv-editor-tabs {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    background: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+.mv-tab-btn {
+    background: transparent;
+    border: none;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #666;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.mv-tab-btn:hover {
+    color: #2c5aa0;
+    background: rgba(44, 90, 160, 0.05);
+}
+
+.mv-tab-btn.active {
+    color: #2c5aa0;
+    background: #fff;
+    border-bottom-color: #2c5aa0;
+    font-weight: 600;
+}
+
+.mv-tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #fff;
+}
+
+/* ==========================================================================
+CONTENIDO DE TABS
+========================================================================== */
+
+.mv-tab-content {
+    display: none;
+    height: 500px;
+    position: relative;
+}
+
+.mv-tab-content.active {
+    display: block;
+}
+
+.mv-editor-content {
+    height: 100%;
+    position: relative;
+}
+
+.mv-editor-content .CodeMirror {
+    height: 100% !important;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.mv-editor-content .CodeMirror-scroll {
+    padding: 10px;
+}
+
+.mv-editor-content .CodeMirror-linenumber {
+    color: #999;
+    padding-right: 8px;
+}
+
+.mv-editor-content .CodeMirror-gutters {
+    background: #f8f8f8;
+    border-right: 1px solid #eee;
+}
+
+/* ==========================================================================
+MODAL DE VARIABLES
+========================================================================== */
+
+.mv-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mv-modal-content {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.mv-modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f9f9f9;
+}
+
+.mv-modal-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c5aa0;
+}
+
+.mv-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.mv-modal-close:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.mv-modal-body {
+    padding: 24px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.mv-modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    background: #f9f9f9;
+}
+
+/* ==========================================================================
+VALIDACIÓN DE RESULTADOS
+========================================================================== */
+
+#validacion-resultados {
+    margin-top: 15px;
+}
+
+#validacion-resultados .notice {
+    margin: 5px 0;
+    padding: 8px 12px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+#validacion-resultados .notice-success {
+    background: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+#validacion-resultados .notice-warning {
+    background: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+}
+
+#validacion-resultados .notice-error {
+    background: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+#validacion-resultados ul {
+    margin: 5px 0 0 16px;
+}
+
+#validacion-resultados li {
+    margin-bottom: 2px;
+}
+
+/* ==========================================================================
+LISTA DE PLANTILLAS
+========================================================================== */
+
+.mv-plantillas-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.mv-plantillas-table th {
+    background: #f9f9f9;
+    font-weight: 600;
+    color: #2c5aa0;
+    text-align: left;
+    padding: 12px 8px;
+    border-bottom: 2px solid #ddd;
+}
+
+.mv-plantillas-table td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #eee;
+    vertical-align: top;
+}
+
+.mv-plantillas-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.mv-plantillas-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.mv-plantillas-table tr[data-estado="inactiva"] {
+    opacity: 0.6;
+}
+
+.mv-plantillas-table .row-actions {
+    margin-top: 6px;
+    font-size: 12px;
+}
+
+.mv-plantillas-table .row-actions span {
+    color: #666;
+}
+
+.mv-plantillas-table .row-actions a {
+    color: #0073aa;
+    text-decoration: none;
+}
+
+.mv-plantillas-table .row-actions a:hover {
+    color: #005177;
+}
+
+/* ==========================================================================
+TOGGLE SWITCH
+========================================================================== */
+
+.mv-toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.mv-toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.mv-toggle-switch .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.3s;
+    border-radius: 24px;
+}
+
+.mv-toggle-switch .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.mv-toggle-switch input:checked + .slider {
+    background-color: #2c5aa0;
+}
+
+.mv-toggle-switch input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+/* ==========================================================================
+BADGES Y ETIQUETAS
+========================================================================== */
+
+.mv-tipo-badge {
+    background: #f0f0f1;
+    border-radius: 3px;
+    padding: 4px 8px;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: capitalize;
+    color: #555;
+    display: inline-block;
+}
+
+.mv-estado-badge {
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.mv-estado-badge.activa {
+    background: #d4edda;
+    color: #155724;
+}
+
+.mv-estado-badge.inactiva {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* ==========================================================================
+ESTADÍSTICAS Y PANELS DE INFO
+========================================================================== */
+
+.mv-stats-panel {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 24px;
+    margin: 20px 0;
+    display: flex;
+    gap: 40px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.mv-stats-panel .stat-item {
+    text-align: center;
+    flex: 1;
+}
+
+.mv-stats-panel .stat-item .stat-number {
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 1;
+    margin-bottom: 8px;
+    color: #2c5aa0;
+}
+
+.mv-stats-panel .stat-item .stat-label {
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ==========================================================================
+FILTROS
+========================================================================== */
+
+.mv-filters {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.mv-filters form {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.mv-filters label {
+    font-weight: 500;
+    color: #555;
+    white-space: nowrap;
+}
+
+.mv-filters select {
+    min-width: 140px;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+/* ==========================================================================
+ESTADO VACÍO
+========================================================================== */
+
+.mv-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.mv-empty-state .empty-icon {
+    font-size: 48px;
+    color: #ddd;
+    margin-bottom: 20px;
+    line-height: 1;
+}
+
+.mv-empty-state h2 {
+    color: #555;
+    margin-bottom: 12px;
+    font-size: 20px;
+}
+
+.mv-empty-state p {
+    color: #777;
+    margin-bottom: 30px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+ACCIONES EN LOTE
+========================================================================== */
+
+.mv-bulk-actions {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.mv-bulk-actions h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #2c5aa0;
+    font-size: 16px;
+}
+
+.mv-bulk-actions .actions-grid {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* ==========================================================================
+CAJA DE AYUDA
+========================================================================== */
+
+.mv-help-box {
+    margin-top: 30px;
+    padding: 20px;
+    background: #fff;
+    border-left: 4px solid #2c5aa0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-radius: 0 4px 4px 0;
+}
+
+.mv-help-box h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #2c5aa0;
+    font-size: 16px;
+}
+
+.mv-help-box ul {
+    margin-left: 20px;
+    line-height: 1.6;
+}
+
+.mv-help-box li {
+    margin-bottom: 6px;
+    color: #555;
+}
+
+.mv-help-box p {
+    margin-bottom: 0;
+    color: #555;
+}
+
+.mv-help-box a {
+    color: #2c5aa0;
+    text-decoration: none;
+}
+
+.mv-help-box a:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+RESPONSIVE DESIGN
+========================================================================== */
+
+@media (max-width: 1200px) {
+    .mv-editor-layout {
+        flex-direction: column;
+    }
+    
+    .mv-editor-sidebar {
+        flex: none;
+        order: 2;
+    }
+    
+    .mv-editor-main {
+        order: 1;
+    }
+    
+    .mv-editor-content,
+    .mv-tab-content {
+        height: 400px;
+    }
+    
+    .mv-stats-panel {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 782px) {
+    .mv-editor-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .mv-editor-toolbar .button {
+        margin-bottom: 4px;
+        justify-content: center;
+    }
+    
+    .mv-editor-status {
+        margin-left: 0;
+        justify-content: center;
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid #ddd;
+    }
+    
+    .mv-stats-panel {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .mv-filters form {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .mv-filters select {
+        min-width: 0;
+        width: 100%;
+    }
+    
+    .mv-bulk-actions .actions-grid {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .mv-tab-btn {
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+    
+    .mv-modal-content {
+        width: 95%;
+        margin: 2% auto;
+        max-height: 90vh;
+    }
+    
+    .mv-modal-header {
+        padding: 16px 20px;
+    }
+    
+    .mv-modal-body {
+        padding: 20px;
+    }
+    
+    .mv-modal-footer {
+        padding: 12px 20px;
+        flex-direction: column-reverse;
+        gap: 8px;
+    }
+    
+    .mv-variable-item {
+        padding: 8px 10px;
+    }
+    
+    .mv-plantillas-table {
+        font-size: 13px;
+    }
+    
+    .mv-plantillas-table th,
+    .mv-plantillas-table td {
+        padding: 8px 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .mv-editor-layout {
+        gap: 15px;
+    }
+    
+    .mv-panel {
+        margin-bottom: 15px;
+    }
+    
+    .mv-panel h3 {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+    
+    .mv-panel .form-table {
+        padding: 12px;
+    }
+    
+    #variables-disponibles {
+        padding: 12px;
+        max-height: 250px;
+    }
+    
+    .mv-help-content {
+        padding: 12px;
+    }
+    
+    .mv-stats-panel {
+        padding: 16px;
+    }
+    
+    .mv-stats-panel .stat-item .stat-number {
+        font-size: 24px;
+    }
+    
+    .mv-empty-state {
+        padding: 40px 16px;
+    }
+    
+    .mv-empty-state .empty-icon {
+        font-size: 36px;
+    }
+}
+
+/* ==========================================================================
+ANIMACIONES Y TRANSICIONES
+========================================================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.mv-panel {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.mv-variable-item {
+    animation: slideIn 0.2s ease-out;
+}
+
+.mv-modal-content {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* ==========================================================================
+ESTADOS DE CARGA
+========================================================================== */
+
+.mv-loading {
+    position: relative;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.mv-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #2c5aa0;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+TOOLTIPS
+========================================================================== */
+
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+    opacity: 0;
+    animation: fadeIn 0.2s ease-out forwards;
+}
+
+[data-tooltip]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    border: 5px solid transparent;
+    border-top-color: #333;
+    z-index: 1000;
+}
+
+/* ==========================================================================
+    PRINT STYLES
+========================================================================== */
+
+@media print {
+    .mv-editor-toolbar,
+    .mv-editor-sidebar,
+    .mv-modal-overlay,
+    .mv-help-box {
+        display: none !important;
+    }
+    
+    .mv-editor-layout {
+        flex-direction: column;
+    }
+    
+    .mv-editor-main {
+        flex: none;
+        border: none;
+        box-shadow: none;
+    }
+}

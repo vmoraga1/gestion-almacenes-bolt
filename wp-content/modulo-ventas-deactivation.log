@@ -41,3 +41,47 @@ Backtrace:
 
 --------------------------------------------------------------------------------
 
+2025-07-09 20:56:09 - Plugin siendo desactivado
+Network deactivating: NO
+Backtrace:
+  #0 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324 - {closure}()
+  #1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348 - apply_filters()
+  #2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517 - do_action()
+  #3 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\includes\plugin.php:787 - do_action()
+  #4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\plugins.php:211 - deactivate_plugins()
+
+--------------------------------------------------------------------------------
+
+2025-07-10 03:42:42 - Plugin siendo desactivado
+Network deactivating: NO
+Backtrace:
+  #0 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324 - {closure}()
+  #1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348 - apply_filters()
+  #2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517 - do_action()
+  #3 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\includes\plugin.php:787 - do_action()
+  #4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\plugins.php:211 - deactivate_plugins()
+
+--------------------------------------------------------------------------------
+
+2025-07-10 03:54:15 - Plugin siendo desactivado
+Network deactivating: NO
+Backtrace:
+  #0 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324 - {closure}()
+  #1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348 - apply_filters()
+  #2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517 - do_action()
+  #3 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\includes\plugin.php:787 - do_action()
+  #4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\plugins.php:211 - deactivate_plugins()
+
+--------------------------------------------------------------------------------
+
+2025-07-10 04:08:43 - Plugin siendo desactivado
+Network deactivating: NO
+Backtrace:
+  #0 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:324 - {closure}()
+  #1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php:348 - apply_filters()
+  #2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php:517 - do_action()
+  #3 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\includes\plugin.php:787 - do_action()
+  #4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\plugins.php:211 - deactivate_plugins()
+
+--------------------------------------------------------------------------------
+

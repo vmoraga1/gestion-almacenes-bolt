@@ -44,7 +44,7 @@ $datos = array(
             </button>
         <?php endif; ?>
         
-        <a href="<?php echo admin_url('admin.php?page=modulo-ventas-pdf-templates'); ?>" class="button">
+        <a href="<?php echo admin_url('admin.php?page=mv-pdf-templates'); ?>" class="button">
             <span class="dashicons dashicons-arrow-left-alt2"></span>
             <?php _e('Volver a la Lista', 'modulo-ventas'); ?>
         </a>
@@ -73,106 +73,108 @@ $datos = array(
                 <div class="mv-panel">
                     <h3><?php _e('Información Básica', 'modulo-ventas'); ?></h3>
                     
-                    <table class="form-table">
-                        <tr>
-                            <th scope="row">
-                                <label for="plantilla-nombre"><?php _e('Nombre', 'modulo-ventas'); ?></label>
-                            </th>
-                            <td>
-                                <input type="text" 
-                                       id="plantilla-nombre" 
-                                       name="nombre" 
-                                       value="<?php echo esc_attr($datos['nombre']); ?>" 
-                                       class="regular-text"
-                                       required>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                <label for="plantilla-tipo"><?php _e('Tipo de Documento', 'modulo-ventas'); ?></label>
-                            </th>
-                            <td>
-                                <select id="plantilla-tipo" name="tipo" required>
-                                    <option value="cotizacion" <?php selected($datos['tipo'], 'cotizacion'); ?>><?php _e('Cotización', 'modulo-ventas'); ?></option>
-                                    <option value="venta" <?php selected($datos['tipo'], 'venta'); ?>><?php _e('Venta', 'modulo-ventas'); ?></option>
-                                    <option value="pedido" <?php selected($datos['tipo'], 'pedido'); ?>><?php _e('Pedido', 'modulo-ventas'); ?></option>
-                                    <option value="factura" <?php selected($datos['tipo'], 'factura'); ?>><?php _e('Factura', 'modulo-ventas'); ?></option>
-                                    <option value="general" <?php selected($datos['tipo'], 'general'); ?>><?php _e('General', 'modulo-ventas'); ?></option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">
-                                <label for="plantilla-descripcion"><?php _e('Descripción', 'modulo-ventas'); ?></label>
-                            </th>
-                            <td>
-                                <textarea id="plantilla-descripcion" 
-                                          name="descripcion" 
-                                          class="large-text" 
-                                          rows="3"><?php echo esc_textarea($datos['descripcion']); ?></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><?php _e('Estado', 'modulo-ventas'); ?></th>
-                            <td>
-                                <label>
-                                    <input type="checkbox" 
-                                           id="plantilla-activa" 
-                                           name="activa" 
-                                           value="1" 
-                                           <?php checked($datos['activa'], 1); ?>>
-                                    <?php _e('Plantilla activa', 'modulo-ventas'); ?>
-                                </label>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="mv-field">
+                        <label for="plantilla-nombre"><?php _e('Nombre de la Plantilla', 'modulo-ventas'); ?></label>
+                        <input type="text" id="plantilla-nombre" name="nombre" value="<?php echo esc_attr($datos['nombre']); ?>" class="regular-text" required>
+                    </div>
+                    
+                    <div class="mv-field">
+                        <label for="plantilla-tipo"><?php _e('Tipo de Documento', 'modulo-ventas'); ?></label>
+                        <select id="plantilla-tipo" name="tipo">
+                            <option value="cotizacion" <?php selected($datos['tipo'], 'cotizacion'); ?>><?php _e('Cotización', 'modulo-ventas'); ?></option>
+                            <option value="factura" <?php selected($datos['tipo'], 'factura'); ?>><?php _e('Factura', 'modulo-ventas'); ?></option>
+                            <option value="orden_compra" <?php selected($datos['tipo'], 'orden_compra'); ?>><?php _e('Orden de Compra', 'modulo-ventas'); ?></option>
+                            <option value="guia_despacho" <?php selected($datos['tipo'], 'guia_despacho'); ?>><?php _e('Guía de Despacho', 'modulo-ventas'); ?></option>
+                        </select>
+                    </div>
+                    
+                    <div class="mv-field">
+                        <label for="plantilla-descripcion"><?php _e('Descripción', 'modulo-ventas'); ?></label>
+                        <textarea id="plantilla-descripcion" name="descripcion" rows="3" class="large-text"><?php echo esc_textarea($datos['descripcion']); ?></textarea>
+                    </div>
+                    
+                    <div class="mv-field">
+                        <label>
+                            <input type="checkbox" id="plantilla-activa" name="activa" value="1" <?php checked($datos['activa'], 1); ?>>
+                            <?php _e('Plantilla Activa', 'modulo-ventas'); ?>
+                        </label>
+                    </div>
                 </div>
                 
                 <!-- Variables disponibles -->
                 <div class="mv-panel">
                     <h3><?php _e('Variables Disponibles', 'modulo-ventas'); ?></h3>
+                    <p class="description"><?php _e('Haz clic en una variable para insertarla en el editor.', 'modulo-ventas'); ?></p>
+                    
                     <div id="variables-disponibles">
                         <div class="mv-loading-variables">
                             <span class="spinner is-active"></span>
                             <?php _e('Cargando variables...', 'modulo-ventas'); ?>
                         </div>
                     </div>
+                    
+                    <div style="margin-top: 15px;">
+                        <button type="button" id="btn-insertar-variable" class="button button-small">
+                            <span class="dashicons dashicons-plus-alt"></span>
+                            <?php _e('Ver Todas las Variables', 'modulo-ventas'); ?>
+                        </button>
+                    </div>
                 </div>
                 
-                <!-- Ayuda rápida -->
+                <!-- Acciones rápidas -->
                 <div class="mv-panel">
-                    <h3><?php _e('Ayuda Rápida', 'modulo-ventas'); ?></h3>
-                    <div class="mv-help-content">
-                        <h4><?php _e('Sintaxis de Variables', 'modulo-ventas'); ?></h4>
-                        <code>{{variable}}</code>
+                    <h3><?php _e('Acciones Rápidas', 'modulo-ventas'); ?></h3>
+                    
+                    <div class="mv-quick-actions">
+                        <button type="button" id="btn-formato-html" class="button button-small">
+                            <span class="dashicons dashicons-editor-code"></span>
+                            <?php _e('Formatear HTML', 'modulo-ventas'); ?>
+                        </button>
                         
-                        <h4><?php _e('Condicionales', 'modulo-ventas'); ?></h4>
-                        <code>{{#if variable}}...{{/if}}</code>
+                        <button type="button" id="btn-formato-css" class="button button-small">
+                            <span class="dashicons dashicons-art"></span>
+                            <?php _e('Formatear CSS', 'modulo-ventas'); ?>
+                        </button>
                         
-                        <h4><?php _e('Bucles', 'modulo-ventas'); ?></h4>
-                        <code>{{#each productos}}...{{/each}}</code>
-                        
-                        <h4><?php _e('Formato de Fechas', 'modulo-ventas'); ?></h4>
-                        <code>{{fecha_formato 'DD/MM/YYYY'}}</code>
-                        
-                        <h4><?php _e('Formato de Números', 'modulo-ventas'); ?></h4>
-                        <code>{{numero_formato 2}}</code>
+                        <button type="button" id="btn-css-plantilla" class="button button-small">
+                            <span class="dashicons dashicons-admin-appearance"></span>
+                            <?php _e('CSS Base', 'modulo-ventas'); ?>
+                        </button>
                     </div>
+                </div>
+                
+                <!-- Preview de cotización -->
+                <div class="mv-panel">
+                    <h3><?php _e('Vista Previa', 'modulo-ventas'); ?></h3>
+                    
+                    <div class="mv-field">
+                        <label for="cotizacion-preview"><?php _e('Cotización (opcional)', 'modulo-ventas'); ?></label>
+                        <select id="cotizacion-preview">
+                            <option value="0"><?php _e('Usar datos de ejemplo', 'modulo-ventas'); ?></option>
+                            <?php
+                            // TODO: Cargar cotizaciones disponibles
+                            ?>
+                        </select>
+                    </div>
+                    
+                    <button type="button" id="btn-actualizar-preview" class="button button-small" style="width: 100%;">
+                        <span class="dashicons dashicons-update"></span>
+                        <?php _e('Actualizar Preview', 'modulo-ventas'); ?>
+                    </button>
                 </div>
             </div>
             
-            <!-- Panel principal - Editores -->
-            <div class="mv-editor-main">
-                
-                <!-- Pestañas del editor -->
-                <div class="mv-editor-tabs">
+            <!-- Panel principal - Editor -->
+            <div class="mv-editor-content">
+                <!-- Pestañas -->
+                <div class="mv-tabs">
                     <button type="button" class="mv-tab-btn active" data-tab="html">
-                        <span class="dashicons dashicons-media-code"></span>
-                        <?php _e('HTML', 'modulo-ventas'); ?>
+                        <span class="dashicons dashicons-editor-code"></span>
+                        HTML
                     </button>
                     <button type="button" class="mv-tab-btn" data-tab="css">
-                        <span class="dashicons dashicons-admin-appearance"></span>
-                        <?php _e('CSS', 'modulo-ventas'); ?>
+                        <span class="dashicons dashicons-art"></span>
+                        CSS
                     </button>
                     <button type="button" class="mv-tab-btn" data-tab="preview">
                         <span class="dashicons dashicons-visibility"></span>
@@ -180,76 +182,40 @@ $datos = array(
                     </button>
                 </div>
                 
-                <!-- Contenido de las pestañas -->
-                <div class="mv-editor-content">
-                    
-                    <!-- Editor HTML -->
-                    <div id="tab-html" class="mv-tab-content active">
-                        <div class="mv-editor-header">
-                            <h4><?php _e('Contenido HTML', 'modulo-ventas'); ?></h4>
-                            <div class="mv-editor-controls">
-                                <button type="button" class="button button-small" id="btn-formato-html">
-                                    <?php _e('Formatear Código', 'modulo-ventas'); ?>
-                                </button>
-                                <button type="button" class="button button-small" id="btn-insertar-variable">
-                                    <?php _e('Insertar Variable', 'modulo-ventas'); ?>
-                                </button>
-                            </div>
-                        </div>
-                        <textarea id="html-editor" 
-                                  name="html_content" 
-                                  class="mv-code-editor"><?php echo esc_textarea($datos['html_content']); ?></textarea>
+                <!-- Contenido de pestañas -->
+                <div class="mv-tab-content" id="tab-html">
+                    <div class="mv-editor-header">
+                        <h3><?php _e('Editor HTML', 'modulo-ventas'); ?></h3>
+                        <p class="description">
+                            <?php _e('Utiliza las variables de la barra lateral para personalizar tu plantilla. Ejemplo: {{empresa.nombre}}, {{cliente.nombre}}, etc.', 'modulo-ventas'); ?>
+                        </p>
                     </div>
                     
-                    <!-- Editor CSS -->
-                    <div id="tab-css" class="mv-tab-content" style="display: none;">
-                        <div class="mv-editor-header">
-                            <h4><?php _e('Estilos CSS', 'modulo-ventas'); ?></h4>
-                            <div class="mv-editor-controls">
-                                <button type="button" class="button button-small" id="btn-formato-css">
-                                    <?php _e('Formatear Código', 'modulo-ventas'); ?>
-                                </button>
-                                <button type="button" class="button button-small" id="btn-css-plantilla">
-                                    <?php _e('CSS Base', 'modulo-ventas'); ?>
-                                </button>
-                            </div>
-                        </div>
-                        <textarea id="css-editor" 
-                                  name="css_content" 
-                                  class="mv-code-editor"><?php echo esc_textarea($datos['css_content']); ?></textarea>
+                    <textarea id="html-editor" name="html_content" rows="20" class="large-text code"><?php echo esc_textarea($datos['html_content']); ?></textarea>
+                </div>
+                
+                <div class="mv-tab-content" id="tab-css" style="display: none;">
+                    <div class="mv-editor-header">
+                        <h3><?php _e('Editor CSS', 'modulo-ventas'); ?></h3>
+                        <p class="description">
+                            <?php _e('Define los estilos para tu plantilla PDF. Los estilos se aplicarán al generar el documento.', 'modulo-ventas'); ?>
+                        </p>
                     </div>
                     
-                    <!-- Vista Previa -->
-                    <div id="tab-preview" class="mv-tab-content" style="display: none;">
-                        <div class="mv-editor-header">
-                            <h4><?php _e('Vista Previa del PDF', 'modulo-ventas'); ?></h4>
-                            <div class="mv-editor-controls">
-                                <select id="cotizacion-preview">
-                                    <option value="0"><?php _e('Usar datos de ejemplo', 'modulo-ventas'); ?></option>
-                                    <?php
-                                    // Obtener algunas cotizaciones para preview
-                                    global $wpdb;
-                                    $tabla_cotizaciones = $wpdb->prefix . 'mv_cotizaciones';
-                                    $cotizaciones = $wpdb->get_results(
-                                        "SELECT id, folio FROM $tabla_cotizaciones 
-                                         WHERE estado != 'eliminada' 
-                                         ORDER BY fecha DESC 
-                                         LIMIT 10"
-                                    );
-                                    foreach ($cotizaciones as $cot) {
-                                        echo '<option value="' . $cot->id . '">' . esc_html($cot->folio) . '</option>';
-                                    }
-                                    ?>
-                                </select>
-                                <button type="button" class="button" id="btn-actualizar-preview">
-                                    <?php _e('Actualizar Preview', 'modulo-ventas'); ?>
-                                </button>
-                            </div>
-                        </div>
-                        <div id="preview-container">
-                            <div class="mv-preview-placeholder">
-                                <p><?php _e('Haz clic en "Actualizar Preview" para ver la vista previa', 'modulo-ventas'); ?></p>
-                            </div>
+                    <textarea id="css-editor" name="css_content" rows="20" class="large-text code"><?php echo esc_textarea($datos['css_content']); ?></textarea>
+                </div>
+                
+                <div class="mv-tab-content" id="tab-preview" style="display: none;">
+                    <div class="mv-editor-header">
+                        <h3><?php _e('Vista Previa del Documento', 'modulo-ventas'); ?></h3>
+                        <p class="description">
+                            <?php _e('Previsualización de cómo se verá el documento PDF generado.', 'modulo-ventas'); ?>
+                        </p>
+                    </div>
+                    
+                    <div id="preview-container">
+                        <div class="mv-preview-placeholder">
+                            <p><?php _e('Haz clic en "Vista Previa" para ver cómo se verá tu plantilla.', 'modulo-ventas'); ?></p>
                         </div>
                     </div>
                 </div>
@@ -258,45 +224,43 @@ $datos = array(
     </form>
 </div>
 
-<!-- Modal para seleccionar variables -->
+<!-- Modal de variables -->
 <div id="modal-variables" class="mv-modal" style="display: none;">
     <div class="mv-modal-content">
         <div class="mv-modal-header">
             <h3><?php _e('Insertar Variable', 'modulo-ventas'); ?></h3>
             <button type="button" class="mv-modal-close">&times;</button>
         </div>
+        
         <div class="mv-modal-body">
+            <p><?php _e('Selecciona una variable para insertar en el editor:', 'modulo-ventas'); ?></p>
             <div id="lista-variables-modal">
-                <!-- Se carga dinámicamente -->
+                <!-- Las variables se cargarán aquí via AJAX -->
             </div>
         </div>
+        
         <div class="mv-modal-footer">
-            <button type="button" class="button button-primary" id="btn-insertar-variable-modal">
-                <?php _e('Insertar', 'modulo-ventas'); ?>
-            </button>
-            <button type="button" class="button mv-modal-close">
-                <?php _e('Cancelar', 'modulo-ventas'); ?>
-            </button>
+            <button type="button" class="button mv-modal-close"><?php _e('Cancelar', 'modulo-ventas'); ?></button>
+            <button type="button" id="btn-insertar-variable-modal" class="button button-primary"><?php _e('Insertar', 'modulo-ventas'); ?></button>
         </div>
     </div>
 </div>
 
 <style>
-/* Estilos para el editor de plantillas */
+/* Estilos específicos para el editor de plantillas */
 .mv-editor-plantillas {
-    max-width: none;
+    margin-right: 20px;
 }
 
 .mv-editor-toolbar {
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 15px;
-    margin-bottom: 20px;
     display: flex;
     align-items: center;
     gap: 10px;
-    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: white;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
 }
 
 .mv-editor-status {
@@ -306,176 +270,163 @@ $datos = array(
 .mv-editor-layout {
     display: flex;
     gap: 20px;
-    min-height: 600px;
+    height: 600px;
 }
 
 .mv-editor-sidebar {
     flex: 0 0 300px;
-    background: #fff;
-}
-
-.mv-editor-main {
-    flex: 1;
-    background: #fff;
-    border: 1px solid #ddd;
+    background: white;
+    border: 1px solid #ccd0d4;
     border-radius: 4px;
-}
-
-.mv-panel {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 20px;
-}
-
-.mv-panel h3 {
-    background: #f9f9f9;
-    border-bottom: 1px solid #ddd;
-    margin: 0;
-    padding: 12px 15px;
-    font-size: 14px;
-}
-
-.mv-panel .form-table {
-    margin: 0;
-    padding: 15px;
-}
-
-.mv-panel .form-table th {
-    width: 80px;
-    padding: 8px 0;
-}
-
-.mv-panel .form-table td {
-    padding: 8px 0;
-}
-
-#variables-disponibles {
-    padding: 15px;
-    max-height: 300px;
     overflow-y: auto;
 }
 
-.mv-variable-item {
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    margin-bottom: 5px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.mv-variable-item:hover {
-    background-color: #f0f8ff;
-}
-
-.mv-variable-item code {
-    display: block;
-    font-weight: bold;
-    color: #0073aa;
-}
-
-.mv-variable-item small {
-    color: #666;
-    font-size: 11px;
-}
-
-.mv-help-content {
-    padding: 15px;
-    font-size: 12px;
-}
-
-.mv-help-content h4 {
-    margin: 15px 0 5px 0;
-    font-size: 12px;
-}
-
-.mv-help-content code {
-    display: block;
-    background: #f0f0f0;
-    padding: 3px 6px;
-    border-radius: 3px;
-    margin-bottom: 10px;
-}
-
-.mv-editor-tabs {
-    display: flex;
-    border-bottom: 1px solid #ddd;
-    background: #f9f9f9;
-}
-
-.mv-tab-btn {
-    border: none;
-    background: none;
-    padding: 12px 20px;
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.mv-tab-btn:hover {
-    background: #f0f0f0;
-}
-
-.mv-tab-btn.active {
-    background: #fff;
-    border-bottom-color: #2271b1;
-    color: #2271b1;
-}
-
 .mv-editor-content {
-    position: relative;
-    height: calc(100vh - 200px);
-    min-height: 500px;
-}
-
-.mv-tab-content {
-    height: 100%;
+    flex: 1;
+    background: white;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
     display: flex;
     flex-direction: column;
 }
 
-.mv-editor-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.mv-panel {
     padding: 15px;
-    border-bottom: 1px solid #ddd;
-    background: #f9f9f9;
+    border-bottom: 1px solid #eee;
 }
 
-.mv-editor-header h4 {
-    margin: 0;
+.mv-panel:last-child {
+    border-bottom: none;
+}
+
+.mv-panel h3 {
+    margin: 0 0 15px 0;
+    color: #1e1e1e;
     font-size: 14px;
 }
 
-.mv-editor-controls {
+.mv-field {
+    margin-bottom: 15px;
+}
+
+.mv-field:last-child {
+    margin-bottom: 0;
+}
+
+.mv-field label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.mv-field input,
+.mv-field select,
+.mv-field textarea {
+    width: 100%;
+}
+
+.mv-quick-actions {
     display: flex;
-    gap: 5px;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.mv-code-editor {
-    flex: 1;
+.mv-quick-actions .button {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.mv-tabs {
+    display: flex;
+    border-bottom: 1px solid #ccd0d4;
+}
+
+.mv-tab-btn {
+    padding: 12px 20px;
+    background: #f6f7f7;
     border: none;
-    resize: none;
-    outline: none;
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-    line-height: 1.5;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-#preview-container {
+.mv-tab-btn:hover {
+    background: #e9ecef;
+}
+
+.mv-tab-btn.active {
+    background: white;
+    border-bottom-color: #0073aa;
+    color: #0073aa;
+}
+
+.mv-tab-content {
     flex: 1;
     padding: 20px;
     overflow: auto;
 }
 
-.mv-preview-placeholder {
-    text-align: center;
-    padding: 100px 20px;
+.mv-editor-header {
+    margin-bottom: 15px;
+}
+
+.mv-editor-header h3 {
+    margin: 0 0 5px 0;
+    color: #1e1e1e;
+}
+
+.mv-editor-header .description {
+    margin: 0;
+    color: #646970;
+    font-size: 13px;
+}
+
+#html-editor,
+#css-editor {
+    font-family: Consolas, Monaco, monospace;
+    font-size: 13px;
+}
+
+#variables-disponibles {
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 10px;
+    background: #fafafa;
+}
+
+.mv-variable-item {
+    padding: 8px;
+    margin-bottom: 5px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.mv-variable-item:hover {
+    background: #f0f8ff;
+    border-color: #0073aa;
+}
+
+.mv-variable-item code {
+    display: block;
+    color: #0073aa;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.mv-variable-item small {
     color: #666;
+    font-size: 11px;
+    line-height: 1.3;
 }
 
 .mv-loading-variables {
@@ -484,25 +435,34 @@ $datos = array(
     color: #666;
 }
 
+.mv-preview-placeholder {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+    border: 2px dashed #ddd;
+    border-radius: 4px;
+}
+
 /* Modal */
 .mv-modal {
     position: fixed;
-    z-index: 100000;
-    left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .mv-modal-content {
-    background-color: #fff;
-    margin: 5% auto;
-    padding: 0;
-    border: 1px solid #ddd;
+    background: white;
     border-radius: 4px;
-    width: 80%;
-    max-width: 600px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    width: 600px;
+    max-width: 90vw;
     max-height: 80vh;
     display: flex;
     flex-direction: column;
@@ -579,7 +539,7 @@ $datos = array(
 </style>
 
 <script>
-jQuery(document).ready(function($) {
+/*jQuery(document).ready(function($) {
     console.log('Editor de plantillas PDF cargado');
     
     // Variables globales
@@ -598,7 +558,7 @@ jQuery(document).ready(function($) {
     
     /**
      * Inicializar editores CodeMirror
-     */
+     *
     function initCodeEditors() {
         // Editor HTML
         var htmlSettings = wp.codeEditor.defaultSettings ? _.clone(wp.codeEditor.defaultSettings) : {};
@@ -641,7 +601,7 @@ jQuery(document).ready(function($) {
     
     /**
      * Configurar event handlers
-     */
+     *
     function setupEventHandlers() {
         // Navegación entre pestañas
         $('.mv-tab-btn').on('click', function() {
@@ -699,7 +659,7 @@ jQuery(document).ready(function($) {
     
     /**
      * Cargar variables disponibles
-     */
+     *
     function cargarVariablesDisponibles() {
         $('#variables-disponibles').html('<div class="mv-loading-variables"><span class="spinner is-active"></span> Cargando variables...</div>');
         
@@ -726,7 +686,7 @@ jQuery(document).ready(function($) {
     
     /**
      * Mostrar variables en el sidebar
-     */
+     *
     function mostrarVariablesDisponibles(variables) {
         var html = '';
         
@@ -745,5 +705,5 @@ jQuery(document).ready(function($) {
     }
     
     console.log('Sistema de plantillas PDF - Editor inicializado');
-});
+});*/
 </script>

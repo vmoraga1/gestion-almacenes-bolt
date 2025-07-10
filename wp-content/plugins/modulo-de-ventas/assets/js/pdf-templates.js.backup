@@ -7,7 +7,7 @@ jQuery(document).ready(function($) {
     
     console.log('PDF Templates JS: Iniciando versión actualizada...');
     
-    // Variables globales - CORREGIDAS para ser accesibles
+    // Variables globales
     var htmlEditor, cssEditor;
     var plantillaId = $('#plantilla-id').val();
     var tipoActual = $('#plantilla-tipo').val();
@@ -15,28 +15,6 @@ jQuery(document).ready(function($) {
     var cambiosSinGuardar = false;
     var previewWindow = null;
     var validacionTimeout = null;
-    
-    // Hacer variables y funciones globalmente accesibles
-    window.mvPdfEditor = {
-        htmlEditor: null,
-        cssEditor: null,
-        plantillaId: plantillaId,
-        tipoActual: tipoActual,
-        cambiosSinGuardar: false
-    };
-    
-    // Funciones globales para debugging
-    window.guardarPlantilla = guardarPlantilla;
-    window.generarPreview = generarPreview;
-    window.mvDebugEditor = function() {
-        console.log('Estado del editor:', {
-            htmlEditor: htmlEditor,
-            cssEditor: cssEditor,
-            plantillaId: plantillaId,
-            tipoActual: tipoActual,
-            cambiosSinGuardar: cambiosSinGuardar
-        });
-    };
     
     // Verificar que mvPdfTemplates esté disponible
     if (typeof mvPdfTemplates === 'undefined') {
@@ -137,7 +115,6 @@ jQuery(document).ready(function($) {
             });
             
             htmlEditor = wp.codeEditor.initialize($('#html-editor'), htmlSettings);
-            window.mvPdfEditor.htmlEditor = htmlEditor;
             
             // Editor CSS
             var cssSettings = wp.codeEditor.defaultSettings ? _.clone(wp.codeEditor.defaultSettings) : {};
@@ -160,17 +137,16 @@ jQuery(document).ready(function($) {
             });
             
             cssEditor = wp.codeEditor.initialize($('#css-editor'), cssSettings);
-            window.mvPdfEditor.cssEditor = cssEditor;
             
             // Event listeners para detectar cambios
-            if (htmlEditor && htmlEditor.codemirror) {
+            if (htmlEditor) {
                 htmlEditor.codemirror.on('change', function() {
                     marcarCambiosSinGuardar();
                     validarPlantillaConDelay();
                 });
             }
             
-            if (cssEditor && cssEditor.codemirror) {
+            if (cssEditor) {
                 cssEditor.codemirror.on('change', function() {
                     marcarCambiosSinGuardar();
                     validarPlantillaConDelay();
@@ -185,7 +161,7 @@ jQuery(document).ready(function($) {
     }
     
     /**
-     * Configurar event handlers - CORREGIDOS
+     * Configurar event handlers
      */
     function setupEventHandlers() {
         // Tabs del editor
@@ -194,22 +170,14 @@ jQuery(document).ready(function($) {
             cambiarTab(tab);
         });
         
-        // Botón guardar - CORREGIDO selector
-        $('#btn-guardar-plantilla').on('click', function(e) {
+        // Botón guardar
+        $('#guardar-plantilla').on('click', function(e) {
             e.preventDefault();
-            console.log('PDF Templates: Botón guardar clickeado');
             guardarPlantilla();
         });
         
-        // Botón preview - CORREGIDO selector
-        $('#btn-preview-plantilla').on('click', function(e) {
-            e.preventDefault();
-            console.log('PDF Templates: Botón preview clickeado');
-            generarPreview();
-        });
-        
-        // Botón actualizar preview
-        $('#btn-actualizar-preview').on('click', function(e) {
+        // Botón preview
+        $('#preview-plantilla').on('click', function(e) {
             e.preventDefault();
             generarPreview();
         });
@@ -220,19 +188,19 @@ jQuery(document).ready(function($) {
             cargarPlantillaPredeterminada();
         });
         
-        // Formatear código - CORREGIDOS selectores
-        $('#btn-formato-html').on('click', function(e) {
+        // Formatear código
+        $('#formatear-html').on('click', function(e) {
             e.preventDefault();
             formatearHtml();
         });
         
-        $('#btn-formato-css').on('click', function(e) {
+        $('#formatear-css').on('click', function(e) {
             e.preventDefault();
             formatearCss();
         });
         
         // Insertar CSS base
-        $('#btn-css-plantilla').on('click', function(e) {
+        $('#insertar-css-base').on('click', function(e) {
             e.preventDefault();
             insertarCssBase();
         });
@@ -243,17 +211,17 @@ jQuery(document).ready(function($) {
             insertarVariable(variable);
         });
         
-        // Modal de variables - CORREGIDOS selectores
-        $('#btn-insertar-variable').on('click', function(e) {
+        // Modal de variables
+        $('#abrir-modal-variables').on('click', function(e) {
             e.preventDefault();
             abrirModalVariables();
         });
         
-        $('.mv-modal-close').on('click', function() {
+        $('#cerrar-modal-variables, .mv-modal-overlay').on('click', function() {
             cerrarModalVariables();
         });
         
-        $('#btn-insertar-variable-modal').on('click', function() {
+        $('#insertar-variable-seleccionada').on('click', function() {
             insertarVariableSeleccionada();
         });
         
@@ -282,35 +250,27 @@ jQuery(document).ready(function($) {
                 return 'Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?';
             }
         });
-        
-        console.log('PDF Templates: Event handlers configurados');
     }
     
     /**
-     * Cargar variables disponibles - CORREGIDO
+     * Cargar variables disponibles
      */
     function cargarVariablesDisponibles() {
-        $('#variables-disponibles').html('<div class="mv-loading-variables"><span class="spinner is-active"></span> ' + (mvPdfTemplates.i18n.cargando || 'Cargando...') + '</div>');
-        
         $.ajax({
             url: mvPdfTemplates.ajaxurl,
             type: 'POST',
             data: {
                 action: 'mv_obtener_variables',
                 nonce: mvPdfTemplates.nonce,
-                tipo_documento: tipoActual // CORREGIDO nombre del parámetro
+                tipo: tipoActual
             },
             success: function(response) {
-                console.log('PDF Templates: Variables cargadas:', response);
                 if (response.success) {
-                    mostrarVariablesDisponibles(response.data);
-                } else {
-                    $('#variables-disponibles').html('<p>Error: ' + (response.data.message || 'No se pudieron cargar las variables') + '</p>');
+                    mostrarVariablesDisponibles(response.data.variables);
                 }
             },
-            error: function(xhr, status, error) {
-                console.error('PDF Templates: Error cargando variables:', error);
-                $('#variables-disponibles').html('<p>Error de conexión</p>');
+            error: function() {
+                console.error('Error cargando variables');
             }
         });
     }
@@ -342,29 +302,22 @@ jQuery(document).ready(function($) {
     }
     
     /**
-     * Mostrar variables disponibles en el sidebar - CORREGIDO
+     * Mostrar variables disponibles en el sidebar
      */
     function mostrarVariablesDisponibles(variables) {
         var $container = $('#variables-disponibles');
         $container.empty();
         
-        if (!variables || Object.keys(variables).length === 0) {
-            $container.html('<p>No hay variables disponibles</p>');
-            return;
-        }
-        
         $.each(variables, function(grupo, vars) {
-            $container.append('<h4 style="margin: 15px 0 8px 0; color: #2271b1; font-size: 12px; text-transform: uppercase;">' + grupo + '</h4>');
+            $container.append('<h4>' + grupo + '</h4>');
             
-            if (Array.isArray(vars)) {
-                $.each(vars, function(i, variable) {
-                    var $item = $('<div class="mv-variable-item" data-variable="' + variable.variable + '" title="' + variable.descripcion + '">' +
-                                 '<code>{{' + variable.variable + '}}</code>' +
-                                 '<small>' + variable.descripcion + '</small>' +
-                                 '</div>');
-                    $container.append($item);
-                });
-            }
+            $.each(vars, function(i, variable) {
+                var $item = $('<div class="mv-variable-item" data-variable="' + variable.variable + '">' +
+                             '<code>{{' + variable.variable + '}}</code>' +
+                             '<small>' + variable.descripcion + '</small>' +
+                             '</div>');
+                $container.append($item);
+            });
         });
     }
     
@@ -373,16 +326,16 @@ jQuery(document).ready(function($) {
      */
     function cambiarTab(tab) {
         $('.mv-tab-btn').removeClass('active');
-        $('.mv-tab-content').hide();
+        $('.mv-tab-content').removeClass('active');
         
         $('[data-tab="' + tab + '"]').addClass('active');
-        $('#tab-' + tab).show();
+        $('#tab-' + tab).addClass('active');
         
         // Refrescar editor al cambiar tab
         setTimeout(function() {
-            if (tab === 'html' && htmlEditor && htmlEditor.codemirror) {
+            if (tab === 'html' && htmlEditor) {
                 htmlEditor.codemirror.refresh();
-            } else if (tab === 'css' && cssEditor && cssEditor.codemirror) {
+            } else if (tab === 'css' && cssEditor) {
                 cssEditor.codemirror.refresh();
             }
         }, 100);
@@ -393,15 +346,8 @@ jQuery(document).ready(function($) {
      */
     function marcarCambiosSinGuardar() {
         cambiosSinGuardar = true;
-        window.mvPdfEditor.cambiosSinGuardar = true;
-        
-        // Actualizar indicador visual si existe
-        if ($('#estado-cambios').length) {
-            $('#estado-cambios').text('Cambios sin guardar').removeClass('guardado').addClass('sin-guardar');
-        }
-        
-        // Habilitar botón guardar si existe
-        $('#btn-guardar-plantilla').prop('disabled', false);
+        $('#estado-cambios').text('Cambios sin guardar').removeClass('guardado').addClass('sin-guardar');
+        $('#guardar-plantilla').prop('disabled', false);
     }
     
     /**
@@ -409,61 +355,42 @@ jQuery(document).ready(function($) {
      */
     function marcarComoGuardado() {
         cambiosSinGuardar = false;
-        window.mvPdfEditor.cambiosSinGuardar = false;
-        
-        if ($('#estado-cambios').length) {
-            $('#estado-cambios').text('Guardado').removeClass('sin-guardar').addClass('guardado');
-        }
+        $('#estado-cambios').text('Guardado').removeClass('sin-guardar').addClass('guardado');
     }
     
     /**
-     * Guardar plantilla - FUNCIÓN PRINCIPAL CORREGIDA
+     * Guardar plantilla
      */
     function guardarPlantilla() {
-        console.log('PDF Templates: Iniciando guardado de plantilla...');
-        
-        var $boton = $('#btn-guardar-plantilla');
+        var $boton = $('#guardar-plantilla');
         var textoOriginal = $boton.text();
         
-        // Validar campos requeridos
-        var nombre = $('#plantilla-nombre').val().trim();
-        if (!nombre) {
-            mostrarNotificacion('El nombre de la plantilla es requerido', 'error');
-            $('#plantilla-nombre').focus();
-            return;
-        }
-        
-        $boton.prop('disabled', true).text(mvPdfTemplates.i18n.guardando || 'Guardando...');
+        $boton.prop('disabled', true).text(mvPdfTemplates.i18n.guardando);
         
         var datos = {
             action: 'mv_guardar_plantilla',
             nonce: mvPdfTemplates.nonce,
             id: plantillaId,
-            nombre: nombre,
+            nombre: $('#plantilla-nombre').val(),
             tipo: $('#plantilla-tipo').val(),
             descripcion: $('#plantilla-descripcion').val(),
-            html_content: htmlEditor && htmlEditor.codemirror ? htmlEditor.codemirror.getValue() : '',
-            css_content: cssEditor && cssEditor.codemirror ? cssEditor.codemirror.getValue() : '',
+            html_content: htmlEditor ? htmlEditor.codemirror.getValue() : '',
+            css_content: cssEditor ? cssEditor.codemirror.getValue() : '',
             activa: $('#plantilla-activa').is(':checked') ? 1 : 0
         };
-        
-        console.log('PDF Templates: Datos a enviar:', datos);
         
         $.ajax({
             url: mvPdfTemplates.ajaxurl,
             type: 'POST',
             data: datos,
             success: function(response) {
-                console.log('PDF Templates: Respuesta del servidor:', response);
-                
                 if (response.success) {
-                    mostrarNotificacion(response.data.message || 'Plantilla guardada exitosamente', 'success');
+                    mostrarNotificacion(response.data.message, 'success');
                     marcarComoGuardado();
                     
                     // Actualizar ID si es nueva plantilla
                     if (!plantillaId && response.data.plantilla_id) {
                         plantillaId = response.data.plantilla_id;
-                        window.mvPdfEditor.plantillaId = plantillaId;
                         $('#plantilla-id').val(plantillaId);
                         
                         // Actualizar URL sin recargar página
@@ -473,12 +400,11 @@ jQuery(document).ready(function($) {
                         }
                     }
                 } else {
-                    mostrarNotificacion(response.data.message || 'Error al guardar la plantilla', 'error');
+                    mostrarNotificacion(response.data.message, 'error');
                 }
             },
-            error: function(xhr, status, error) {
-                console.error('PDF Templates: Error AJAX guardando:', error);
-                mostrarNotificacion(mvPdfTemplates.i18n.error_general || 'Error de conexión', 'error');
+            error: function() {
+                mostrarNotificacion(mvPdfTemplates.i18n.error_general, 'error');
             },
             complete: function() {
                 $boton.prop('disabled', false).text(textoOriginal);
@@ -487,42 +413,35 @@ jQuery(document).ready(function($) {
     }
     
     /**
-     * Generar preview de plantilla - FUNCIÓN PRINCIPAL CORREGIDA
+     * Generar preview de plantilla
      */
     function generarPreview(cotizacionId) {
-        console.log('PDF Templates: Iniciando generación de preview...');
-        
-        var $boton = $('#btn-preview-plantilla');
+        var $boton = $('#preview-plantilla');
         var textoOriginal = $boton.text();
         
-        $boton.prop('disabled', true).text(mvPdfTemplates.i18n.cargando || 'Generando...');
+        $boton.prop('disabled', true).text(mvPdfTemplates.i18n.cargando);
         
         var datos = {
             action: 'mv_preview_plantilla',
             nonce: mvPdfTemplates.nonce,
-            html_content: htmlEditor && htmlEditor.codemirror ? htmlEditor.codemirror.getValue() : '',
-            css_content: cssEditor && cssEditor.codemirror ? cssEditor.codemirror.getValue() : '',
+            html_content: htmlEditor ? htmlEditor.codemirror.getValue() : '',
+            css_content: cssEditor ? cssEditor.codemirror.getValue() : '',
             cotizacion_id: cotizacionId || 0
         };
-        
-        console.log('PDF Templates: Datos preview a enviar:', datos);
         
         $.ajax({
             url: mvPdfTemplates.ajaxurl,
             type: 'POST',
             data: datos,
             success: function(response) {
-                console.log('PDF Templates: Respuesta preview del servidor:', response);
-                
                 if (response.success) {
                     abrirPreview(response.data.preview_url);
                 } else {
-                    mostrarNotificacion(response.data.message || 'Error al generar preview', 'error');
+                    mostrarNotificacion(response.data.message, 'error');
                 }
             },
-            error: function(xhr, status, error) {
-                console.error('PDF Templates: Error AJAX preview:', error);
-                mostrarNotificacion(mvPdfTemplates.i18n.error_general || 'Error de conexión', 'error');
+            error: function() {
+                mostrarNotificacion(mvPdfTemplates.i18n.error_general, 'error');
             },
             complete: function() {
                 $boton.prop('disabled', false).text(textoOriginal);
@@ -534,15 +453,14 @@ jQuery(document).ready(function($) {
      * Abrir preview en nueva ventana
      */
     function abrirPreview(url) {
-        console.log('PDF Templates: Abriendo preview en:', url);
-        
         // Cerrar preview anterior si existe
         if (previewWindow && !previewWindow.closed) {
             previewWindow.close();
         }
         
-        // Para URLs de AJAX, abrir en nueva pestaña/ventana
+        // Para URLs de AJAX, abrir en la misma ventana con target específico
         if (url.indexOf('admin-ajax.php') !== -1) {
+            // Abrir en nueva pestaña/ventana
             previewWindow = window.open(
                 url, 
                 'preview-plantilla',
@@ -556,7 +474,7 @@ jQuery(document).ready(function($) {
                 window.open(url, '_blank');
             }
         } else {
-            // Para URLs directas
+            // Para URLs directas (si las hubiera)
             previewWindow = window.open(url, '_blank');
         }
     }
@@ -581,15 +499,15 @@ jQuery(document).ready(function($) {
                 if (response.success && response.data.plantilla) {
                     var plantilla = response.data.plantilla;
                     
-                    if (htmlEditor && htmlEditor.codemirror) {
+                    if (htmlEditor) {
                         htmlEditor.codemirror.setValue(plantilla.html_content || '');
                     }
-                    if (cssEditor && cssEditor.codemirror) {
+                    if (cssEditor) {
                         cssEditor.codemirror.setValue(plantilla.css_content || '');
                     }
                     
                     marcarCambiosSinGuardar();
-                    mostrarNotificacion(response.data.message || 'Plantilla cargada', 'success');
+                    mostrarNotificacion(response.data.message, 'success');
                     
                     // Cambiar a pestaña HTML
                     cambiarTab('html');
@@ -598,7 +516,7 @@ jQuery(document).ready(function($) {
                 }
             },
             error: function() {
-                mostrarNotificacion(mvPdfTemplates.i18n.error_general || 'Error de conexión', 'error');
+                mostrarNotificacion(mvPdfTemplates.i18n.error_general, 'error');
             }
         });
     }
@@ -621,8 +539,8 @@ jQuery(document).ready(function($) {
             data: {
                 action: 'mv_validar_plantilla',
                 nonce: mvPdfTemplates.nonce,
-                html_content: htmlEditor && htmlEditor.codemirror ? htmlEditor.codemirror.getValue() : '',
-                css_content: cssEditor && cssEditor.codemirror ? cssEditor.codemirror.getValue() : ''
+                html_content: htmlEditor ? htmlEditor.codemirror.getValue() : '',
+                css_content: cssEditor ? cssEditor.codemirror.getValue() : ''
             },
             success: function(response) {
                 if (response.success) {
@@ -637,14 +555,12 @@ jQuery(document).ready(function($) {
      */
     function mostrarResultadosValidacion(datos) {
         var $validacion = $('#validacion-resultados');
-        if (!$validacion.length) return;
-        
         $validacion.empty();
         
         if (datos.valida) {
             $validacion.append('<div class="notice notice-success inline"><p>✓ Plantilla válida</p></div>');
         } else {
-            if (datos.errores && datos.errores.length > 0) {
+            if (datos.errores.length > 0) {
                 var html = '<div class="notice notice-error inline"><p><strong>Errores:</strong></p><ul>';
                 $.each(datos.errores, function(i, error) {
                     html += '<li>' + error + '</li>';
@@ -654,7 +570,7 @@ jQuery(document).ready(function($) {
             }
         }
         
-        if (datos.advertencias && datos.advertencias.length > 0) {
+        if (datos.advertencias.length > 0) {
             var html = '<div class="notice notice-warning inline"><p><strong>Advertencias:</strong></p><ul>';
             $.each(datos.advertencias, function(i, advertencia) {
                 html += '<li>' + advertencia + '</li>';
@@ -670,7 +586,7 @@ jQuery(document).ready(function($) {
     function insertarVariable(variable) {
         var editor = $('.mv-tab-btn.active').data('tab') === 'html' ? htmlEditor : cssEditor;
         
-        if (editor && editor.codemirror) {
+        if (editor) {
             var cursor = editor.codemirror.getCursor();
             editor.codemirror.replaceRange('{{' + variable + '}}', cursor);
             editor.codemirror.focus();
@@ -696,11 +612,11 @@ jQuery(document).ready(function($) {
             data: {
                 action: 'mv_obtener_variables',
                 nonce: mvPdfTemplates.nonce,
-                tipo_documento: tipoActual
+                tipo: tipoActual
             },
             success: function(response) {
                 if (response.success) {
-                    mostrarVariablesEnModal(response.data);
+                    mostrarVariablesEnModal(response.data.variables);
                 }
             }
         });
@@ -712,14 +628,12 @@ jQuery(document).ready(function($) {
         $.each(variables, function(grupo, vars) {
             html += '<h4>' + grupo + '</h4>';
             
-            if (Array.isArray(vars)) {
-                $.each(vars, function(i, variable) {
-                    html += '<label style="display: block; margin-bottom: 10px;">';
-                    html += '<input type="radio" name="variable_modal" value="' + variable.variable + '" style="margin-right: 10px;">';
-                    html += '<code>{{' + variable.variable + '}}</code> - ' + variable.descripcion;
-                    html += '</label>';
-                });
-            }
+            $.each(vars, function(i, variable) {
+                html += '<label style="display: block; margin-bottom: 10px;">';
+                html += '<input type="radio" name="variable_modal" value="' + variable.variable + '" style="margin-right: 10px;">';
+                html += '<code>{{' + variable.variable + '}}</code> - ' + variable.descripcion;
+                html += '</label>';
+            });
         });
         
         $('#lista-variables-modal').html(html);
@@ -737,7 +651,7 @@ jQuery(document).ready(function($) {
      * Formatear código
      */
     function formatearHtml() {
-        if (htmlEditor && htmlEditor.codemirror && typeof html_beautify === 'function') {
+        if (htmlEditor && typeof html_beautify === 'function') {
             var formatted = html_beautify(htmlEditor.codemirror.getValue(), {
                 indent_size: 2,
                 wrap_line_length: 80
@@ -747,7 +661,7 @@ jQuery(document).ready(function($) {
     }
     
     function formatearCss() {
-        if (cssEditor && cssEditor.codemirror && typeof css_beautify === 'function') {
+        if (cssEditor && typeof css_beautify === 'function') {
             var formatted = css_beautify(cssEditor.codemirror.getValue(), {
                 indent_size: 2
             });
@@ -828,7 +742,7 @@ body {
     font-size: 14px;
 }`;
         
-        if (cssEditor && cssEditor.codemirror) {
+        if (cssEditor) {
             cssEditor.codemirror.setValue(cssBase);
             cambiarTab('css');
         }
@@ -849,20 +763,20 @@ body {
             },
             success: function(response) {
                 if (response.success) {
-                    mostrarNotificacion(response.data.message || 'Estado actualizado', 'success');
+                    mostrarNotificacion(response.data.message, 'success');
                     
                     // Actualizar texto de estado
                     var $row = $('tr[data-plantilla-id="' + plantillaId + '"]');
                     $row.find('.mv-estado-text').text(activa ? 'Activa' : 'Inactiva');
                     $row.attr('data-estado', activa ? 'activa' : 'inactiva');
                 } else {
-                    mostrarNotificacion(response.data.message || 'Error al cambiar estado', 'error');
+                    mostrarNotificacion(response.data.message, 'error');
                     // Revertir toggle
                     $('input[data-plantilla-id="' + plantillaId + '"]').prop('checked', !activa);
                 }
             },
             error: function() {
-                mostrarNotificacion(mvPdfTemplates.i18n.error_general || 'Error de conexión', 'error');
+                mostrarNotificacion(mvPdfTemplates.i18n.error_general, 'error');
                 // Revertir toggle
                 $('input[data-plantilla-id="' + plantillaId + '"]').prop('checked', !activa);
             }
@@ -880,18 +794,18 @@ body {
             },
             success: function(response) {
                 if (response.success) {
-                    mostrarNotificacion(response.data.message || 'Plantilla duplicada', 'success');
+                    mostrarNotificacion(response.data.message, 'success');
                     
                     // Recargar página después de 2 segundos
                     setTimeout(function() {
                         location.reload();
                     }, 2000);
                 } else {
-                    mostrarNotificacion(response.data.message || 'Error al duplicar', 'error');
+                    mostrarNotificacion(response.data.message, 'error');
                 }
             },
             error: function() {
-                mostrarNotificacion(mvPdfTemplates.i18n.error_general || 'Error de conexión', 'error');
+                mostrarNotificacion(mvPdfTemplates.i18n.error_general, 'error');
             }
         });
     }
@@ -907,18 +821,18 @@ body {
             },
             success: function(response) {
                 if (response.success) {
-                    mostrarNotificacion(response.data.message || 'Plantilla eliminada', 'success');
+                    mostrarNotificacion(response.data.message, 'success');
                     
                     // Remover fila de la tabla
                     $('tr[data-plantilla-id="' + plantillaId + '"]').fadeOut(function() {
                         $(this).remove();
                     });
                 } else {
-                    mostrarNotificacion(response.data.message || 'Error al eliminar', 'error');
+                    mostrarNotificacion(response.data.message, 'error');
                 }
             },
             error: function() {
-                mostrarNotificacion(mvPdfTemplates.i18n.error_general || 'Error de conexión', 'error');
+                mostrarNotificacion(mvPdfTemplates.i18n.error_general, 'error');
             }
         });
     }
@@ -951,32 +865,29 @@ body {
                             if (previewResponse.success) {
                                 abrirPreview(previewResponse.data.preview_url);
                             } else {
-                                mostrarNotificacion(previewResponse.data.message || 'Error en preview', 'error');
+                                mostrarNotificacion(previewResponse.data.message, 'error');
                             }
                         }
                     });
                 } else {
-                    mostrarNotificacion(response.data.message || 'Error obteniendo plantilla', 'error');
+                    mostrarNotificacion(response.data.message, 'error');
                 }
             }
         });
     }
     
     /**
-     * Mostrar notificaciones - MEJORADO
+     * Mostrar notificaciones
      */
     function mostrarNotificacion(mensaje, tipo) {
         tipo = tipo || 'info';
         
         var $notice = $('<div class="notice notice-' + tipo + ' is-dismissible"><p>' + mensaje + '</p></div>');
         
-        // Buscar ubicación para la notificación
         if ($('.wp-header-end').length) {
             $notice.insertAfter('.wp-header-end');
         } else if ($('.wrap h1').length) {
             $notice.insertAfter('.wrap h1');
-        } else if ($('.mv-editor-plantillas h1').length) {
-            $notice.insertAfter('.mv-editor-plantillas h1');
         } else {
             $notice.prependTo('.wrap');
         }

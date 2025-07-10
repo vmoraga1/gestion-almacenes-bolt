@@ -80,7 +80,7 @@ class Modulo_Ventas_PDF_Templates_DB {
             version varchar(10) NOT NULL DEFAULT '1.0',
             creado_por bigint(20) UNSIGNED NOT NULL,
             fecha_creacion datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            fecha_modificacion datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            fecha_actualizacion datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (id),
             UNIQUE KEY slug (slug),
             KEY tipo (tipo),
@@ -94,6 +94,9 @@ class Modulo_Ventas_PDF_Templates_DB {
         if ($wpdb->last_error) {
             error_log('Error creando tabla de plantillas PDF: ' . $wpdb->last_error);
         }
+
+        // MIGRACIÓN
+        $this->migrar_columna_fecha($wpdb, $tabla_plantillas);
     }
     
     /**
@@ -419,122 +422,122 @@ class Modulo_Ventas_PDF_Templates_DB {
      */
     private function obtener_html_plantilla_por_defecto() {
         return '<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Cotización {{cotizacion.folio}}</title>
-</head>
-<body>
-    <div class="documento">
-        <!-- Header -->
-        <div class="header">
-            <div class="empresa-info">
-                <h1>{{empresa.nombre}}</h1>
-                <div class="empresa-datos">
-                    <p>{{empresa.direccion}}</p>
-                    <p>Tel: {{empresa.telefono}} | Email: {{empresa.email}}</p>
-                    {{#if empresa.rut}}<p>RUT: {{empresa.rut}}</p>{{/if}}
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Cotización {{cotizacion.folio}}</title>
+            </head>
+            <body>
+                <div class="documento">
+                    <!-- Header -->
+                    <div class="header">
+                        <div class="empresa-info">
+                            <h1>{{empresa.nombre}}</h1>
+                            <div class="empresa-datos">
+                                <p>{{empresa.direccion}}</p>
+                                <p>Tel: {{empresa.telefono}} | Email: {{empresa.email}}</p>
+                                {{#if empresa.rut}}<p>RUT: {{empresa.rut}}</p>{{/if}}
+                            </div>
+                        </div>
+                        <div class="documento-info">
+                            <h2>COTIZACIÓN</h2>
+                            <div class="documento-datos">
+                                <p><strong>N°:</strong> {{cotizacion.folio}}</p>
+                                <p><strong>Fecha:</strong> {{cotizacion.fecha}}</p>
+                                {{#if cotizacion.fecha_expiracion}}
+                                <p><strong>Válida hasta:</strong> {{cotizacion.fecha_expiracion}}</p>
+                                {{/if}}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Información del Cliente -->
+                    <div class="cliente-seccion">
+                        <h3>INFORMACIÓN DEL CLIENTE</h3>
+                        <div class="cliente-datos">
+                            <p><strong>Cliente:</strong> {{cliente.nombre}}</p>
+                            {{#if cliente.rut}}<p><strong>RUT:</strong> {{cliente.rut}}</p>{{/if}}
+                            {{#if cliente.direccion}}<p><strong>Dirección:</strong> {{cliente.direccion}}</p>{{/if}}
+                            {{#if cliente.telefono}}<p><strong>Teléfono:</strong> {{cliente.telefono}}</p>{{/if}}
+                            {{#if cliente.email}}<p><strong>Email:</strong> {{cliente.email}}</p>{{/if}}
+                        </div>
+                    </div>
+                    
+                    <!-- Tabla de Productos -->
+                    <div class="productos-seccion">
+                        <table class="productos-tabla">
+                            <thead>
+                                <tr>
+                                    <th class="producto-desc">Descripción</th>
+                                    <th class="producto-cant">Cant.</th>
+                                    <th class="producto-precio">Precio Unit.</th>
+                                    <th class="producto-subtotal">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each productos}}
+                                <tr>
+                                    <td class="producto-desc">
+                                        {{#if this.sku}}<strong>[{{this.sku}}]</strong> {{/if}}
+                                        {{this.nombre}}
+                                        {{#if this.descripcion}}<br><small>{{this.descripcion}}</small>{{/if}}
+                                    </td>
+                                    <td class="producto-cant">{{this.cantidad}}</td>
+                                    <td class="producto-precio">${{this.precio_unitario}}</td>
+                                    <td class="producto-subtotal">${{this.subtotal}}</td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Totales -->
+                    <div class="totales-seccion">
+                        <div class="totales-tabla">
+                            {{#if cotizacion.subtotal}}
+                            <div class="total-fila">
+                                <span class="total-label">Subtotal:</span>
+                                <span class="total-valor">${{cotizacion.subtotal}}</span>
+                            </div>
+                            {{/if}}
+                            {{#if cotizacion.descuento_global}}
+                            <div class="total-fila">
+                                <span class="total-label">Descuento:</span>
+                                <span class="total-valor">-${{cotizacion.descuento_global}}</span>
+                            </div>
+                            {{/if}}
+                            {{#if cotizacion.iva}}
+                            <div class="total-fila">
+                                <span class="total-label">IVA (19%):</span>
+                                <span class="total-valor">${{cotizacion.iva}}</span>
+                            </div>
+                            {{/if}}
+                            <div class="total-fila total-final">
+                                <span class="total-label"><strong>TOTAL:</strong></span>
+                                <span class="total-valor"><strong>${{cotizacion.total}}</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Términos y Condiciones -->
+                    <div class="terminos-seccion">
+                        <h4>Términos y Condiciones</h4>
+                        <ul>
+                            <li>Esta cotización tiene una validez de 30 días desde la fecha de emisión.</li>
+                            <li>Los precios incluyen IVA y están sujetos a cambios sin previo aviso.</li>
+                            <li>Para confirmar el pedido, se requiere una señal del 50% del valor total.</li>
+                            <li>Los tiempos de entrega se confirmarán al momento de la orden de compra.</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div class="footer">
+                        <p>Gracias por confiar en {{empresa.nombre}}</p>
+                        {{#if vendedor.nombre}}<p><em>Atendido por: {{vendedor.nombre}}</em></p>{{/if}}
+                    </div>
                 </div>
-            </div>
-            <div class="documento-info">
-                <h2>COTIZACIÓN</h2>
-                <div class="documento-datos">
-                    <p><strong>N°:</strong> {{cotizacion.folio}}</p>
-                    <p><strong>Fecha:</strong> {{cotizacion.fecha}}</p>
-                    {{#if cotizacion.fecha_expiracion}}
-                    <p><strong>Válida hasta:</strong> {{cotizacion.fecha_expiracion}}</p>
-                    {{/if}}
-                </div>
-            </div>
-        </div>
-        
-        <!-- Información del Cliente -->
-        <div class="cliente-seccion">
-            <h3>INFORMACIÓN DEL CLIENTE</h3>
-            <div class="cliente-datos">
-                <p><strong>Cliente:</strong> {{cliente.nombre}}</p>
-                {{#if cliente.rut}}<p><strong>RUT:</strong> {{cliente.rut}}</p>{{/if}}
-                {{#if cliente.direccion}}<p><strong>Dirección:</strong> {{cliente.direccion}}</p>{{/if}}
-                {{#if cliente.telefono}}<p><strong>Teléfono:</strong> {{cliente.telefono}}</p>{{/if}}
-                {{#if cliente.email}}<p><strong>Email:</strong> {{cliente.email}}</p>{{/if}}
-            </div>
-        </div>
-        
-        <!-- Tabla de Productos -->
-        <div class="productos-seccion">
-            <table class="productos-tabla">
-                <thead>
-                    <tr>
-                        <th class="producto-desc">Descripción</th>
-                        <th class="producto-cant">Cant.</th>
-                        <th class="producto-precio">Precio Unit.</th>
-                        <th class="producto-subtotal">Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each productos}}
-                    <tr>
-                        <td class="producto-desc">
-                            {{#if this.sku}}<strong>[{{this.sku}}]</strong> {{/if}}
-                            {{this.nombre}}
-                            {{#if this.descripcion}}<br><small>{{this.descripcion}}</small>{{/if}}
-                        </td>
-                        <td class="producto-cant">{{this.cantidad}}</td>
-                        <td class="producto-precio">${{this.precio_unitario}}</td>
-                        <td class="producto-subtotal">${{this.subtotal}}</td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- Totales -->
-        <div class="totales-seccion">
-            <div class="totales-tabla">
-                {{#if cotizacion.subtotal}}
-                <div class="total-fila">
-                    <span class="total-label">Subtotal:</span>
-                    <span class="total-valor">${{cotizacion.subtotal}}</span>
-                </div>
-                {{/if}}
-                {{#if cotizacion.descuento_global}}
-                <div class="total-fila">
-                    <span class="total-label">Descuento:</span>
-                    <span class="total-valor">-${{cotizacion.descuento_global}}</span>
-                </div>
-                {{/if}}
-                {{#if cotizacion.iva}}
-                <div class="total-fila">
-                    <span class="total-label">IVA (19%):</span>
-                    <span class="total-valor">${{cotizacion.iva}}</span>
-                </div>
-                {{/if}}
-                <div class="total-fila total-final">
-                    <span class="total-label"><strong>TOTAL:</strong></span>
-                    <span class="total-valor"><strong>${{cotizacion.total}}</strong></span>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Términos y Condiciones -->
-        <div class="terminos-seccion">
-            <h4>Términos y Condiciones</h4>
-            <ul>
-                <li>Esta cotización tiene una validez de 30 días desde la fecha de emisión.</li>
-                <li>Los precios incluyen IVA y están sujetos a cambios sin previo aviso.</li>
-                <li>Para confirmar el pedido, se requiere una señal del 50% del valor total.</li>
-                <li>Los tiempos de entrega se confirmarán al momento de la orden de compra.</li>
-            </ul>
-        </div>
-        
-        <!-- Footer -->
-        <div class="footer">
-            <p>Gracias por confiar en {{empresa.nombre}}</p>
-            {{#if vendedor.nombre}}<p><em>Atendido por: {{vendedor.nombre}}</em></p>{{/if}}
-        </div>
-    </div>
-</body>
-</html>';
+            </body>
+            </html>';
     }
     
     /**
@@ -542,222 +545,261 @@ class Modulo_Ventas_PDF_Templates_DB {
      */
     private function obtener_css_plantilla_por_defecto() {
         return 'body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    color: #333;
-    line-height: 1.4;
-}
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            line-height: 1.4;
+        }
 
-.documento {
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-}
+        .documento {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-/* Header */
-.header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
-    border-bottom: 2px solid #2c5aa0;
-    padding-bottom: 20px;
-}
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #2c5aa0;
+            padding-bottom: 20px;
+        }
 
-.empresa-info h1 {
-    color: #2c5aa0;
-    margin: 0 0 10px 0;
-    font-size: 24px;
-}
+        .empresa-info h1 {
+            color: #2c5aa0;
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
 
-.empresa-datos p {
-    margin: 2px 0;
-    font-size: 12px;
-}
+        .empresa-datos p {
+            margin: 2px 0;
+            font-size: 12px;
+        }
 
-.documento-info {
-    text-align: right;
-}
+        .documento-info {
+            text-align: right;
+        }
 
-.documento-info h2 {
-    color: #2c5aa0;
-    margin: 0 0 10px 0;
-    font-size: 20px;
-}
+        .documento-info h2 {
+            color: #2c5aa0;
+            margin: 0 0 10px 0;
+            font-size: 20px;
+        }
 
-.documento-datos p {
-    margin: 2px 0;
-    font-size: 12px;
-}
+        .documento-datos p {
+            margin: 2px 0;
+            font-size: 12px;
+        }
 
-/* Cliente */
-.cliente-seccion {
-    margin-bottom: 25px;
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 5px;
-}
+        /* Cliente */
+        .cliente-seccion {
+            margin-bottom: 25px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+        }
 
-.cliente-seccion h3 {
-    color: #2c5aa0;
-    margin: 0 0 10px 0;
-    font-size: 14px;
-    border-bottom: 1px solid #dee2e6;
-    padding-bottom: 5px;
-}
+        .cliente-seccion h3 {
+            color: #2c5aa0;
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 5px;
+        }
 
-.cliente-datos p {
-    margin: 3px 0;
-    font-size: 12px;
-}
+        .cliente-datos p {
+            margin: 3px 0;
+            font-size: 12px;
+        }
 
-/* Tabla de Productos */
-.productos-seccion {
-    margin-bottom: 25px;
-}
+        /* Tabla de Productos */
+        .productos-seccion {
+            margin-bottom: 25px;
+        }
 
-.productos-tabla {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
+        .productos-tabla {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
 
-.productos-tabla th {
-    background-color: #2c5aa0;
-    color: white;
-    padding: 10px 8px;
-    text-align: left;
-    font-size: 12px;
-    font-weight: bold;
-}
+        .productos-tabla th {
+            background-color: #2c5aa0;
+            color: white;
+            padding: 10px 8px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: bold;
+        }
 
-.productos-tabla td {
-    padding: 8px;
-    border-bottom: 1px solid #dee2e6;
-    font-size: 11px;
-}
+        .productos-tabla td {
+            padding: 8px;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 11px;
+        }
 
-.producto-desc {
-    width: 50%;
-}
+        .producto-desc {
+            width: 50%;
+        }
 
-.producto-cant {
-    width: 15%;
-    text-align: center;
-}
+        .producto-cant {
+            width: 15%;
+            text-align: center;
+        }
 
-.producto-precio {
-    width: 20%;
-    text-align: right;
-}
+        .producto-precio {
+            width: 20%;
+            text-align: right;
+        }
 
-.producto-subtotal {
-    width: 15%;
-    text-align: right;
-    font-weight: bold;
-}
+        .producto-subtotal {
+            width: 15%;
+            text-align: right;
+            font-weight: bold;
+        }
 
-.productos-tabla tbody tr:nth-child(even) {
-    background-color: #f8f9fa;
-}
+        .productos-tabla tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
 
-/* Totales */
-.totales-seccion {
-    margin-bottom: 25px;
-    display: flex;
-    justify-content: flex-end;
-}
+        /* Totales */
+        .totales-seccion {
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: flex-end;
+        }
 
-.totales-tabla {
-    min-width: 250px;
-}
+        .totales-tabla {
+            min-width: 250px;
+        }
 
-.total-fila {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
-    border-bottom: 1px solid #dee2e6;
-}
+        .total-fila {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
 
-.total-final {
-    border-top: 2px solid #2c5aa0;
-    border-bottom: 2px solid #2c5aa0;
-    margin-top: 10px;
-    padding-top: 10px;
-    font-size: 14px;
-}
+        .total-final {
+            border-top: 2px solid #2c5aa0;
+            border-bottom: 2px solid #2c5aa0;
+            margin-top: 10px;
+            padding-top: 10px;
+            font-size: 14px;
+        }
 
-.total-label {
-    font-size: 12px;
-}
+        .total-label {
+            font-size: 12px;
+        }
 
-.total-valor {
-    font-size: 12px;
-    text-align: right;
-}
+        .total-valor {
+            font-size: 12px;
+            text-align: right;
+        }
 
-/* Términos */
-.terminos-seccion {
-    margin-bottom: 25px;
-    border-top: 1px solid #dee2e6;
-    padding-top: 20px;
-}
+        /* Términos */
+        .terminos-seccion {
+            margin-bottom: 25px;
+            border-top: 1px solid #dee2e6;
+            padding-top: 20px;
+        }
 
-.terminos-seccion h4 {
-    color: #2c5aa0;
-    margin: 0 0 10px 0;
-    font-size: 13px;
-}
+        .terminos-seccion h4 {
+            color: #2c5aa0;
+            margin: 0 0 10px 0;
+            font-size: 13px;
+        }
 
-.terminos-seccion ul {
-    margin: 0;
-    padding-left: 20px;
-}
+        .terminos-seccion ul {
+            margin: 0;
+            padding-left: 20px;
+        }
 
-.terminos-seccion li {
-    margin-bottom: 5px;
-    font-size: 10px;
-    line-height: 1.3;
-}
+        .terminos-seccion li {
+            margin-bottom: 5px;
+            font-size: 10px;
+            line-height: 1.3;
+        }
 
-/* Footer */
-.footer {
-    text-align: center;
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #dee2e6;
-    font-size: 11px;
-    color: #666;
-}
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            font-size: 11px;
+            color: #666;
+        }
 
-.footer p {
-    margin: 5px 0;
-}
+        .footer p {
+            margin: 5px 0;
+        }
 
-/* Utilidades */
-.text-center { text-align: center; }
-.text-right { text-align: right; }
-.font-bold { font-weight: bold; }
-.font-italic { font-style: italic; }
+        /* Utilidades */
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .font-bold { font-weight: bold; }
+        .font-italic { font-style: italic; }
 
-/* Responsive adjustments for PDF */
-@media print {
-    .documento {
-        padding: 10px;
+        /* Responsive adjustments for PDF */
+        @media print {
+            .documento {
+                padding: 10px;
+            }
+            
+            .header {
+                page-break-inside: avoid;
+            }
+            
+            .productos-tabla {
+                page-break-inside: auto;
+            }
+            
+            .productos-tabla tr {
+                page-break-inside: avoid;
+            }
+        }';
     }
-    
-    .header {
-        page-break-inside: avoid;
-    }
-    
-    .productos-tabla {
-        page-break-inside: auto;
-    }
-    
-    .productos-tabla tr {
-        page-break-inside: avoid;
-    }
-}';
+
+    /**
+     * Migrar columna Fecha
+     */
+    private function migrar_columna_fecha($wpdb, $tabla_plantillas) {
+        // Verificar si existe la columna antigua
+        $columnas = $wpdb->get_col("SHOW COLUMNS FROM $tabla_plantillas");
+        
+        if (in_array('fecha_modificacion', $columnas)) {
+            // Si existe fecha_modificacion pero NO fecha_actualizacion
+            if (!in_array('fecha_actualizacion', $columnas)) {
+                // Renombrar la columna
+                $resultado = $wpdb->query("
+                    ALTER TABLE $tabla_plantillas 
+                    CHANGE fecha_modificacion fecha_actualizacion 
+                    datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                ");
+                
+                if ($resultado !== false) {
+                    error_log('MODULO_VENTAS: Columna fecha_modificacion renombrada a fecha_actualizacion');
+                } else {
+                    error_log('MODULO_VENTAS: Error renombrando columna: ' . $wpdb->last_error);
+                }
+            } else {
+                // Si ambas existen, eliminar la antigua
+                $wpdb->query("ALTER TABLE $tabla_plantillas DROP COLUMN fecha_modificacion");
+                error_log('MODULO_VENTAS: Columna fecha_modificacion duplicada eliminada');
+            }
+        } elseif (!in_array('fecha_actualizacion', $columnas)) {
+            // Si no existe ninguna, agregar fecha_actualizacion
+            $wpdb->query("
+                ALTER TABLE $tabla_plantillas 
+                ADD COLUMN fecha_actualizacion datetime NOT NULL DEFAULT CURRENT_TIMESTAMP 
+                ON UPDATE CURRENT_TIMESTAMP 
+                AFTER fecha_creacion
+            ");
+            error_log('MODULO_VENTAS: Columna fecha_actualizacion agregada');
+        }
     }
 }
 

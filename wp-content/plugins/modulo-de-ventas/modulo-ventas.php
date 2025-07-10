@@ -51,7 +51,7 @@ add_action('deactivate_plugin', function($plugin, $network_deactivating) {
     }
 }, 10, 2);
 
-// También agregar un shutdown handler para capturar errores fatales
+// Shutdown handler para capturar errores fatales
 register_shutdown_function(function() {
     $error = error_get_last();
     if ($error && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
@@ -177,6 +177,12 @@ class Modulo_Ventas {
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-cotizaciones.php';
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-integration.php';
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf.php';
+
+        // Sistema de plantillas PDF personalizables (NUEVO)
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates-db.php';
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-template-processor.php';
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates.php';
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates-ajax.php';
         
         // PDF Handler - VERIFICAR ARCHIVO EXISTE
         $pdf_handler_path = MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-handler.php';
@@ -185,11 +191,6 @@ class Modulo_Ventas {
         } else {
             error_log('MODULO_VENTAS: PDF Handler no encontrado en: ' . $pdf_handler_path);
         }
-        
-        // Plantillas PDF personalizables
-        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates-db.php';
-        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates.php';
-        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates-ajax.php';
         
         // AJAX siempre se carga
         require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/class-modulo-ventas-ajax.php';
@@ -213,6 +214,16 @@ class Modulo_Ventas {
             $this->pdf_handler = new Modulo_Ventas_PDF_Handler();
         } else {
             error_log('MODULO_VENTAS: Clase Modulo_Ventas_PDF_Handler no encontrada');
+        }
+
+        // Sistema de plantillas PDF (NUEVO) - también para frontend si es necesario
+        if (!isset($this->pdf_templates)) {
+            $this->pdf_templates = Modulo_Ventas_PDF_Templates::get_instance();
+            
+            // AJAX handler para plantillas PDF
+            new Modulo_Ventas_PDF_Templates_Ajax();
+            
+            error_log('MODULO_VENTAS: Sistema de plantillas PDF inicializado globalmente');
         }
         
         // Ajax SIEMPRE se necesita (tanto en admin como en peticiones AJAX)
@@ -425,6 +436,10 @@ class Modulo_Ventas {
         // Crear instancia temporal de DB para la activación
         $db = new Modulo_Ventas_DB();
         $db->crear_tablas();
+
+        // Crear tablas de plantillas PDF
+        $pdf_db = new Modulo_Ventas_PDF_Templates_DB();
+        $pdf_db->crear_tablas();
         
         // Crear directorios necesarios
         $this->crear_directorios();
@@ -474,17 +489,16 @@ class Modulo_Ventas {
             $upload_dir['basedir'] . '/modulo-ventas/cotizaciones',
             $upload_dir['basedir'] . '/modulo-ventas/logs',
             $upload_dir['basedir'] . '/modulo-ventas/temp',
+            $upload_dir['basedir'] . '/modulo-ventas/pdfs',
+            $upload_dir['basedir'] . '/modulo-ventas/previews',
         );
         
         foreach ($dirs as $dir) {
             if (!file_exists($dir)) {
                 wp_mkdir_p($dir);
                 
-                // Crear archivo .htaccess para proteger los directorios
-                $htaccess = $dir . '/.htaccess';
-                if (!file_exists($htaccess)) {
-                    file_put_contents($htaccess, 'deny from all');
-                }
+                // Configuración específica por directorio
+                $this->crear_htaccess_directorio($dir);
             }
         }
     }
@@ -551,6 +565,317 @@ class Modulo_Ventas {
     
     public function get_logger() {
         return $this->logger;
+    }
+
+    /**
+     * Manejar requests de PDF vía URL
+     */
+    public function manejar_requests_pdf() {
+        // Verificar si es un request para PDF
+        if (!isset($_GET['mv_pdf']) || !isset($_GET['cotizacion_id'])) {
+            return;
+        }
+        
+        $cotizacion_id = intval($_GET['cotizacion_id']);
+        $accion = sanitize_text_field($_GET['mv_pdf']);
+        
+        // Verificar permisos básicos
+        if (!current_user_can('read') && !$this->verificar_acceso_publico($cotizacion_id)) {
+            wp_die(__('No tienes permisos para acceder a este PDF', 'modulo-ventas'));
+        }
+        
+        try {
+            switch ($accion) {
+                case 'generar':
+                case 'download':
+                    $this->generar_pdf_cotizacion($cotizacion_id, $accion === 'download');
+                    break;
+                    
+                case 'preview':
+                    $this->generar_pdf_cotizacion($cotizacion_id, false, true);
+                    break;
+                    
+                default:
+                    wp_die(__('Acción no válida', 'modulo-ventas'));
+            }
+            
+        } catch (Exception $e) {
+            if (isset($this->logger)) {
+                $this->logger->log('MODULO_VENTAS: Error generando PDF: ' . $e->getMessage(), 'error');
+            }
+            wp_die(__('Error generando PDF: ', 'modulo-ventas') . $e->getMessage());
+        }
+    }
+
+    /**
+     * Verificar acceso público a cotización
+     */
+    private function verificar_acceso_publico($cotizacion_id) {
+        global $wpdb;
+        $tabla = $wpdb->prefix . 'mv_cotizaciones';
+        
+        $token = isset($_GET['token']) ? sanitize_text_field($_GET['token']) : '';
+        
+        if (empty($token)) {
+            return false;
+        }
+        
+        $cotizacion = $wpdb->get_row($wpdb->prepare(
+            "SELECT id FROM $tabla WHERE id = %d AND token_publico = %s",
+            $cotizacion_id,
+            $token
+        ));
+        
+        return !empty($cotizacion);
+    }
+
+    /**
+     * Generar PDF de cotización usando plantillas
+     */
+    private function generar_pdf_cotizacion($cotizacion_id, $descargar = false, $preview = false) {
+        if (isset($this->logger)) {
+            $this->logger->log("MODULO_VENTAS: Generando PDF para cotización {$cotizacion_id}");
+        }
+        
+        // Verificar que el sistema de plantillas esté disponible
+        if (!isset($this->pdf_templates)) {
+            throw new Exception(__('Sistema de plantillas no disponible', 'modulo-ventas'));
+        }
+        
+        // Obtener plantilla activa para cotizaciones
+        $plantilla = $this->pdf_templates->obtener_plantilla_activa('cotizacion');
+        
+        if (!$plantilla) {
+            throw new Exception(__('No hay plantilla activa para cotizaciones', 'modulo-ventas'));
+        }
+        
+        // Procesar plantilla con datos reales
+        $documento_html = $this->pdf_templates->procesar_plantilla_para_pdf($plantilla->id, $cotizacion_id);
+        
+        // Verificar si tenemos PDF Handler disponible
+        if (!class_exists('Modulo_Ventas_PDF_Handler') || !isset($this->pdf_handler)) {
+            // Fallback: mostrar HTML directamente para preview
+            if ($preview) {
+                header('Content-Type: text/html; charset=utf-8');
+                echo $documento_html;
+                exit;
+            } else {
+                throw new Exception(__('Sistema PDF no disponible', 'modulo-ventas'));
+            }
+        }
+        
+        // Generar PDF usando TCPDF
+        $this->generar_pdf_con_tcpdf($documento_html, $cotizacion_id, $descargar, $preview);
+    }
+
+    /**
+     * Generar PDF usando TCPDF con el HTML procesado
+     */
+    private function generar_pdf_con_tcpdf($html_content, $cotizacion_id, $descargar = false, $preview = false) {
+        // Cargar TCPDF si no está disponible
+        if (!class_exists('TCPDF')) {
+            $this->cargar_tcpdf_global();
+        }
+        
+        if (!class_exists('TCPDF')) {
+            throw new Exception(__('TCPDF no está disponible', 'modulo-ventas'));
+        }
+        
+        try {
+            // Obtener datos de la cotización para el nombre del archivo
+            global $wpdb;
+            $tabla = $wpdb->prefix . 'mv_cotizaciones';
+            $cotizacion = $wpdb->get_row($wpdb->prepare(
+                "SELECT numero, fecha_creacion FROM $tabla WHERE id = %d",
+                $cotizacion_id
+            ));
+            
+            $nombre_archivo = $cotizacion ? 
+                sanitize_file_name('cotizacion_' . $cotizacion->numero . '.pdf') : 
+                'cotizacion_' . $cotizacion_id . '.pdf';
+            
+            // Configurar TCPDF
+            $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+            
+            // Configuración del documento
+            $pdf->SetCreator('Módulo de Ventas');
+            $pdf->SetAuthor(get_bloginfo('name'));
+            $pdf->SetTitle('Cotización ' . ($cotizacion ? $cotizacion->numero : $cotizacion_id));
+            $pdf->SetSubject('Cotización generada automáticamente');
+            
+            // Configurar página
+            $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+            $pdf->SetMargins(15, 15, 15);
+            $pdf->SetHeaderMargin(5);
+            $pdf->SetFooterMargin(10);
+            $pdf->SetAutoPageBreak(TRUE, 25);
+            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+            
+            // Desactivar header y footer por defecto
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(false);
+            
+            // Agregar página
+            $pdf->AddPage();
+            
+            // Convertir HTML a PDF
+            $pdf->writeHTML($html_content, true, false, true, false, '');
+            
+            // Definir modo de salida
+            if ($preview) {
+                $output_mode = 'I'; // Inline (mostrar en navegador)
+            } else if ($descargar) {
+                $output_mode = 'D'; // Download (forzar descarga)
+            } else {
+                $output_mode = 'I'; // Por defecto inline
+            }
+            
+            // Limpiar buffer de salida antes de enviar PDF
+            if (ob_get_length()) {
+                ob_end_clean();
+            }
+            
+            // Enviar PDF
+            $pdf->Output($nombre_archivo, $output_mode);
+            
+            // Log de éxito
+            if (isset($this->logger)) {
+                $this->logger->log("MODULO_VENTAS: PDF generado exitosamente para cotización {$cotizacion_id}");
+            }
+            
+            // Terminar ejecución para evitar output adicional
+            exit;
+            
+        } catch (Exception $e) {
+            if (isset($this->logger)) {
+                $this->logger->log('MODULO_VENTAS: Error en TCPDF: ' . $e->getMessage(), 'error');
+            }
+            throw new Exception(__('Error generando PDF: ', 'modulo-ventas') . $e->getMessage());
+        }
+    }
+
+    /**
+     * Generar URL para PDF de cotización
+     */
+    public function generar_url_pdf($cotizacion_id, $accion = 'generar', $incluir_token = false) {
+        $args = array(
+            'mv_pdf' => $accion,
+            'cotizacion_id' => $cotizacion_id
+        );
+        
+        // Incluir token público si se solicita
+        if ($incluir_token) {
+            $token = $this->generar_token_publico($cotizacion_id);
+            if ($token) {
+                $args['token'] = $token;
+            }
+        }
+        
+        return add_query_arg($args, home_url());
+    }
+
+    /**
+     * Generar token público para cotización
+     */
+    private function generar_token_publico($cotizacion_id) {
+        global $wpdb;
+        $tabla = $wpdb->prefix . 'mv_cotizaciones';
+        
+        // Verificar si ya tiene token
+        $token_existente = $wpdb->get_var($wpdb->prepare(
+            "SELECT token_publico FROM $tabla WHERE id = %d",
+            $cotizacion_id
+        ));
+        
+        if ($token_existente) {
+            return $token_existente;
+        }
+        
+        // Generar nuevo token
+        $token = wp_generate_password(32, false);
+        
+        $resultado = $wpdb->update(
+            $tabla,
+            array('token_publico' => $token),
+            array('id' => $cotizacion_id),
+            array('%s'),
+            array('%d')
+        );
+        
+        return $resultado !== false ? $token : null;
+    }
+
+    /**
+     * Obtener instancia del sistema de plantillas
+     */
+    public function get_pdf_templates() {
+        return isset($this->pdf_templates) ? $this->pdf_templates : null;
+    }
+
+    /**
+     * Modificar htaccess para preview de PDF
+     */
+    private function crear_htaccess_directorio($directorio) {
+        $htaccess_path = $directorio . '/.htaccess';
+        
+        // Obtener el nombre del directorio
+        $dir_name = basename($directorio);
+        
+        switch ($dir_name) {
+            case 'previews':
+                // Permitir acceso a archivos HTML de preview
+                $contenido = "# Módulo de Ventas - Previews\n";
+                $contenido .= "Options -Indexes\n";
+                $contenido .= "<Files \"*.html\">\n";
+                $contenido .= "    Order allow,deny\n";
+                $contenido .= "    Allow from all\n";
+                $contenido .= "    Require all granted\n";
+                $contenido .= "</Files>\n";
+                $contenido .= "<Files \"*.htm\">\n";
+                $contenido .= "    Order allow,deny\n";
+                $contenido .= "    Allow from all\n";
+                $contenido .= "    Require all granted\n";
+                $contenido .= "</Files>\n";
+                $contenido .= "# Bloquear otros tipos de archivo\n";
+                $contenido .= "<FilesMatch \"\\.(php|phtml|php3|php4|php5|pl|py|jsp|asp|sh|cgi)\$\">\n";
+                $contenido .= "    Order deny,allow\n";
+                $contenido .= "    Deny from all\n";
+                $contenido .= "</FilesMatch>\n";
+                break;
+                
+            case 'pdfs':
+                // Permitir acceso a archivos PDF
+                $contenido = "# Módulo de Ventas - PDFs\n";
+                $contenido .= "Options -Indexes\n";
+                $contenido .= "<Files \"*.pdf\">\n";
+                $contenido .= "    Order allow,deny\n";
+                $contenido .= "    Allow from all\n";
+                $contenido .= "    Require all granted\n";
+                $contenido .= "</Files>\n";
+                $contenido .= "# Bloquear archivos ejecutables\n";
+                $contenido .= "<FilesMatch \"\\.(php|phtml|php3|php4|php5|pl|py|jsp|asp|sh|cgi)\$\">\n";
+                $contenido .= "    Order deny,allow\n";
+                $contenido .= "    Deny from all\n";
+                $contenido .= "</FilesMatch>\n";
+                break;
+                
+            default:
+                // Para otros directorios, bloquear todo excepto index.php
+                $contenido = "# Módulo de Ventas - Protegido\n";
+                $contenido .= "Options -Indexes\n";
+                $contenido .= "Order deny,allow\n";
+                $contenido .= "Deny from all\n";
+                $contenido .= "<Files \"index.php\">\n";
+                $contenido .= "    Allow from all\n";
+                $contenido .= "</Files>\n";
+                break;
+        }
+        
+        // Escribir archivo .htaccess
+        if (!file_exists($htaccess_path)) {
+            file_put_contents($htaccess_path, $contenido);
+            error_log("MODULO_VENTAS: .htaccess creado para directorio: $dir_name");
+        }
     }
 }
 
@@ -851,4 +1176,407 @@ add_action('admin_notices', function() {
         </div>
         <?php
     }
+});
+
+// Hook para procesar requests de PDF
+add_action('template_redirect', function() {
+    $plugin = Modulo_Ventas::get_instance();
+    if (method_exists($plugin, 'manejar_requests_pdf')) {
+        $plugin->manejar_requests_pdf();
+    }
+}, 5);
+
+// Hook para limpiar previews de plantillas periódicamente
+add_action('wp_loaded', function() {
+    if (!wp_next_scheduled('mv_limpiar_previews_plantillas')) {
+        wp_schedule_event(time(), 'hourly', 'mv_limpiar_previews_plantillas');
+    }
+});
+
+// Hook para ejecutar la limpieza
+add_action('mv_limpiar_previews_plantillas', function() {
+    try {
+        $pdf_templates = Modulo_Ventas_PDF_Templates::get_instance();
+        if ($pdf_templates && method_exists($pdf_templates, 'limpiar_previews_antiguos')) {
+            $eliminados = $pdf_templates->limpiar_previews_antiguos();
+            error_log("MODULO_VENTAS: Limpieza automática de previews - {$eliminados} archivos eliminados");
+        }
+    } catch (Exception $e) {
+        error_log("MODULO_VENTAS: Error en limpieza de previews: " . $e->getMessage());
+    }
+});
+
+// Agregar endpoints personalizados para PDFs
+add_action('init', function() {
+    add_rewrite_rule(
+        '^pdf/cotizacion/([0-9]+)/?$',
+        'index.php?mv_pdf=generar&cotizacion_id=$matches[1]',
+        'top'
+    );
+    
+    add_rewrite_rule(
+        '^pdf/cotizacion/([0-9]+)/download/?$',
+        'index.php?mv_pdf=download&cotizacion_id=$matches[1]',
+        'top'
+    );
+    
+    add_rewrite_rule(
+        '^pdf/cotizacion/([0-9]+)/preview/?$',
+        'index.php?mv_pdf=preview&cotizacion_id=$matches[1]',
+        'top'
+    );
+});
+
+// Registrar query vars personalizadas
+add_filter('query_vars', function($vars) {
+    $vars[] = 'mv_pdf';
+    $vars[] = 'cotizacion_id';
+    $vars[] = 'token';
+    return $vars;
+});
+
+// Hook para flush rewrite rules en activación (agregar al final del hook de activación existente)
+register_activation_hook(MODULO_VENTAS_PLUGIN_FILE, function() {
+    flush_rewrite_rules();
+});
+
+register_deactivation_hook(MODULO_VENTAS_PLUGIN_FILE, function() {
+    flush_rewrite_rules();
+    wp_clear_scheduled_hook('mv_limpiar_previews_plantillas');
+});
+
+// ===================================================================
+// PÁGINA DE DEBUG TEMPORAL
+// ===================================================================
+
+// Agregar al final de modulo-ventas.php para debug:
+add_action('wp_ajax_mv_test_template_processing', function() {
+    if (!current_user_can('manage_options')) {
+        wp_die('Sin permisos');
+    }
+    
+    echo '<h2>Test de Procesamiento de Plantillas</h2>';
+    
+    try {
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-template-processor.php';
+        $processor = Modulo_Ventas_PDF_Template_Processor::get_instance();
+        
+        // Test simple
+        $html_test = '<h1>Empresa: {{empresa.nombre}}</h1>
+<p>Cliente: {{cliente.nombre}}</p>
+<p>RUT Cliente: {{cliente.rut}}</p>
+<p>Cotización: {{cotizacion.numero}}</p>
+<p>Total: ${{totales.total_formateado}}</p>
+<p>Fecha: {{fechas.fecha_cotizacion}}</p>';
+        
+        echo '<h3>HTML Original:</h3>';
+        echo '<pre>' . esc_html($html_test) . '</pre>';
+        
+        $html_procesado = $processor->procesar_plantilla_preview($html_test, '');
+        
+        echo '<h3>HTML Procesado:</h3>';
+        echo '<pre>' . esc_html($html_procesado) . '</pre>';
+        
+        echo '<h3>Vista Renderizada:</h3>';
+        echo '<div style="border: 1px solid #ccc; padding: 20px; background: white;">';
+        echo $html_procesado;
+        echo '</div>';
+        
+    } catch (Exception $e) {
+        echo '<p style="color: red;">Error: ' . esc_html($e->getMessage()) . '</p>';
+    }
+    
+    wp_die();
+});
+
+// Debug para preview de plantillas
+add_action('wp_ajax_mv_debug_preview_plantilla', function() {
+    if (!current_user_can('manage_options')) {
+        wp_die('Sin permisos para debug');
+    }
+    
+    echo '<h2>Debug Preview Plantilla Predeterminada</h2>';
+    
+    try {
+        // Verificar que las clases existen
+        if (!class_exists('Modulo_Ventas_PDF_Templates')) {
+            echo '<p style="color: red;">❌ Clase Modulo_Ventas_PDF_Templates no encontrada</p>';
+            wp_die();
+        }
+        
+        echo '<p style="color: green;">✅ Clase Modulo_Ventas_PDF_Templates encontrada</p>';
+        
+        // Obtener instancia
+        $pdf_templates = Modulo_Ventas_PDF_Templates::get_instance();
+        
+        if (!$pdf_templates) {
+            echo '<p style="color: red;">❌ No se pudo crear instancia de PDF Templates</p>';
+            wp_die();
+        }
+        
+        echo '<p style="color: green;">✅ Instancia de PDF Templates creada</p>';
+        
+        // Verificar processor
+        $reflection = new ReflectionClass($pdf_templates);
+        $processor_property = $reflection->getProperty('processor');
+        $processor_property->setAccessible(true);
+        $processor = $processor_property->getValue($pdf_templates);
+        
+        if (!$processor) {
+            echo '<p style="color: orange;">⚠️ Processor no inicializado, intentando crear...</p>';
+            
+            // Intentar cargar processor manualmente
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-template-processor.php';
+            $processor = Modulo_Ventas_PDF_Template_Processor::get_instance();
+            $processor_property->setValue($pdf_templates, $processor);
+            
+            echo '<p style="color: green;">✅ Processor creado manualmente</p>';
+        } else {
+            echo '<p style="color: green;">✅ Processor ya disponible</p>';
+        }
+        
+        // Buscar plantilla predeterminada
+        $plantilla = $pdf_templates->obtener_plantilla_activa('cotizacion');
+        
+        if (!$plantilla) {
+            echo '<p style="color: orange;">⚠️ No hay plantilla activa, creando plantilla predeterminada...</p>';
+            
+            $pdf_templates->crear_plantilla_predeterminada('cotizacion');
+            $plantilla = $pdf_templates->obtener_plantilla_activa('cotizacion');
+            
+            if (!$plantilla) {
+                echo '<p style="color: red;">❌ No se pudo crear plantilla predeterminada</p>';
+                wp_die();
+            }
+            
+            echo '<p style="color: green;">✅ Plantilla predeterminada creada</p>';
+        } else {
+            echo '<p style="color: green;">✅ Plantilla activa encontrada</p>';
+        }
+        
+        echo '<h3>Información de la plantilla:</h3>';
+        echo '<p><strong>ID:</strong> ' . $plantilla->id . '</p>';
+        echo '<p><strong>Nombre:</strong> ' . esc_html($plantilla->nombre) . '</p>';
+        echo '<p><strong>Tipo:</strong> ' . esc_html($plantilla->tipo) . '</p>';
+        
+        // Mostrar fragmento del HTML
+        $html_fragment = substr($plantilla->html_content, 0, 300);
+        echo '<h3>HTML (primeros 300 caracteres):</h3>';
+        echo '<pre>' . esc_html($html_fragment) . '...</pre>';
+        
+        // Test de procesamiento básico
+        echo '<h3>Test de procesamiento de variables:</h3>';
+        
+        $test_html = '<h1>Empresa: {{empresa.nombre}}</h1><p>Cliente: {{cliente.nombre}}</p><p>Total: ${{totales.total_formateado}}</p>';
+        
+        echo '<h4>HTML de test:</h4>';
+        echo '<pre>' . esc_html($test_html) . '</pre>';
+        
+        try {
+            $html_procesado = $processor->procesar_plantilla_preview($test_html, '');
+            
+            echo '<h4>HTML procesado:</h4>';
+            echo '<pre>' . esc_html($html_procesado) . '</pre>';
+            
+            echo '<h4>Vista renderizada:</h4>';
+            echo '<div style="border: 1px solid #ccc; padding: 15px; background: white; margin: 10px 0;">';
+            echo $html_procesado;
+            echo '</div>';
+            
+        } catch (Exception $e) {
+            echo '<p style="color: red;">❌ Error en procesamiento: ' . esc_html($e->getMessage()) . '</p>';
+        }
+        
+        // Test del preview completo
+        echo '<h3>Test de preview completo:</h3>';
+        
+        try {
+            $preview_url = $pdf_templates->generar_preview_plantilla(
+                $plantilla->html_content,
+                $plantilla->css_content,
+                0
+            );
+            
+            echo '<p style="color: green;">✅ Preview generado exitosamente</p>';
+            echo '<p><strong>URL:</strong> <a href="' . esc_url($preview_url) . '" target="_blank">' . esc_html($preview_url) . '</a></p>';
+            
+        } catch (Exception $e) {
+            echo '<p style="color: red;">❌ Error generando preview: ' . esc_html($e->getMessage()) . '</p>';
+            echo '<p><strong>Trace:</strong></p>';
+            echo '<pre>' . esc_html($e->getTraceAsString()) . '</pre>';
+        }
+        
+    } catch (Exception $e) {
+        echo '<p style="color: red;">❌ Error general: ' . esc_html($e->getMessage()) . '</p>';
+        echo '<pre>' . esc_html($e->getTraceAsString()) . '</pre>';
+    }
+    
+    wp_die();
+});
+
+// Debug para preview desde editor - SIN NONCE
+add_action('wp_ajax_mv_test_editor_preview', function() {
+    if (!current_user_can('manage_options')) {
+        wp_die('Sin permisos');
+    }
+    
+    echo '<h2>Test Preview - Debug Nonce</h2>';
+    
+    // Verificar nonce
+    $nonce_correcto = wp_create_nonce('mv_pdf_templates');
+    echo '<p>Nonce generado: ' . $nonce_correcto . '</p>';
+    
+    $html_test = '<h1>{{empresa.nombre}}</h1><p>{{cliente.nombre}}</p>';
+    
+    try {
+        // Test directo (sin AJAX)
+        $pdf_templates = Modulo_Ventas_PDF_Templates::get_instance();
+        $preview_url = $pdf_templates->generar_preview_plantilla($html_test, '', 0);
+        
+        echo '<h3>✅ Test directo funciona:</h3>';
+        echo '<p><a href="' . esc_url($preview_url) . '" target="_blank">Ver preview con variables</a></p>';
+        
+    } catch (Exception $e) {
+        echo '<p style="color: red;">❌ Error: ' . esc_html($e->getMessage()) . '</p>';
+    }
+    
+    // JavaScript test
+    echo '<script>
+        console.log("=== DEBUG ===");
+        if (typeof mvPdfTemplates !== "undefined") {
+            console.log("mvPdfTemplates disponible:", mvPdfTemplates);
+            
+            jQuery.ajax({
+                url: mvPdfTemplates.ajaxurl,
+                type: "POST", 
+                data: {
+                    action: "mv_preview_plantilla",
+                    nonce: mvPdfTemplates.nonce,
+                    html_content: "' . esc_js($html_test) . '",
+                    css_content: "",
+                    cotizacion_id: 0
+                },
+                success: function(response) {
+                    console.log("✅ AJAX OK:", response);
+                },
+                error: function(xhr, status, error) {
+                    console.log("❌ AJAX Error:", xhr.responseText);
+                }
+            });
+        } else {
+            console.log("mvPdfTemplates NO disponible");
+        }
+    </script>';
+    
+    wp_die();
+});
+
+// Debug para verificar enqueue de scripts
+add_action('wp_ajax_mv_debug_enqueue', function() {
+    if (!current_user_can('manage_options')) {
+        wp_die('Sin permisos');
+    }
+    
+    echo '<h2>Debug Enqueue de Scripts</h2>';
+    
+    // Verificar hook actual
+    global $hook_suffix;
+    echo '<p><strong>Hook actual:</strong> ' . ($hook_suffix ?: 'No definido') . '</p>';
+    
+    // Verificar que la clase de templates existe
+    if (class_exists('Modulo_Ventas_PDF_Templates')) {
+        echo '<p style="color: green;">✅ Clase PDF Templates existe</p>';
+        
+        $pdf_templates = Modulo_Ventas_PDF_Templates::get_instance();
+        echo '<p style="color: green;">✅ Instancia creada</p>';
+        
+        // Verificar que el método enqueue existe
+        if (method_exists($pdf_templates, 'enqueue_admin_scripts')) {
+            echo '<p style="color: green;">✅ Método enqueue_admin_scripts existe</p>';
+        } else {
+            echo '<p style="color: red;">❌ Método enqueue_admin_scripts NO existe</p>';
+        }
+        
+    } else {
+        echo '<p style="color: red;">❌ Clase PDF Templates NO existe</p>';
+    }
+    
+    // Verificar scripts enqueued
+    global $wp_scripts;
+    echo '<h3>Scripts Enqueued:</h3>';
+    
+    if (isset($wp_scripts->registered['mv-pdf-templates'])) {
+        echo '<p style="color: green;">✅ Script mv-pdf-templates registrado</p>';
+        $script = $wp_scripts->registered['mv-pdf-templates'];
+        echo '<p>Archivo: ' . $script->src . '</p>';
+        echo '<p>Dependencias: ' . implode(', ', $script->deps) . '</p>';
+    } else {
+        echo '<p style="color: red;">❌ Script mv-pdf-templates NO registrado</p>';
+    }
+    
+    if (in_array('mv-pdf-templates', $wp_scripts->queue)) {
+        echo '<p style="color: green;">✅ Script mv-pdf-templates en cola</p>';
+    } else {
+        echo '<p style="color: red;">❌ Script mv-pdf-templates NO en cola</p>';
+    }
+    
+    // Verificar archivo JavaScript
+    $js_path = MODULO_VENTAS_PLUGIN_URL . 'assets/js/pdf-templates.js';
+    $js_file = MODULO_VENTAS_PLUGIN_DIR . 'assets/js/pdf-templates.js';
+    
+    echo '<h3>Archivo JavaScript:</h3>';
+    echo '<p>URL: ' . $js_path . '</p>';
+    echo '<p>Ruta: ' . $js_file . '</p>';
+    echo '<p>Existe: ' . (file_exists($js_file) ? '✅ SÍ' : '❌ NO') . '</p>';
+    
+    if (file_exists($js_file)) {
+        echo '<p>Tamaño: ' . number_format(filesize($js_file)) . ' bytes</p>';
+        echo '<p>Modificado: ' . date('Y-m-d H:i:s', filemtime($js_file)) . '</p>';
+    }
+    
+    // Test de forzar enqueue
+    echo '<h3>Test de Forzar Enqueue:</h3>';
+    
+    // Simular hook de admin
+    $_GET['page'] = 'mv-pdf-templates';
+    $test_hook = 'modulo-ventas_page_mv-pdf-templates';
+    
+    if ($pdf_templates && method_exists($pdf_templates, 'enqueue_admin_scripts')) {
+        echo '<p>Ejecutando enqueue_admin_scripts con hook: ' . $test_hook . '</p>';
+        
+        ob_start();
+        $pdf_templates->enqueue_admin_scripts($test_hook);
+        $output = ob_get_clean();
+        
+        if ($output) {
+            echo '<p>Output del enqueue:</p>';
+            echo '<pre>' . esc_html($output) . '</pre>';
+        } else {
+            echo '<p>Sin output del enqueue</p>';
+        }
+        
+        // Verificar después del enqueue forzado
+        if (wp_script_is('mv-pdf-templates', 'registered')) {
+            echo '<p style="color: green;">✅ Script registrado después del enqueue forzado</p>';
+        }
+        
+        if (wp_script_is('mv-pdf-templates', 'enqueued')) {
+            echo '<p style="color: green;">✅ Script enqueued después del forzado</p>';
+        }
+    }
+    
+    // Verificar localización
+    echo '<h3>Verificar Localización:</h3>';
+    
+    if (isset($wp_scripts->registered['mv-pdf-templates'])) {
+        $script = $wp_scripts->registered['mv-pdf-templates'];
+        if (isset($script->extra['data'])) {
+            echo '<p style="color: green;">✅ Datos de localización encontrados</p>';
+            echo '<pre>' . esc_html($script->extra['data']) . '</pre>';
+        } else {
+            echo '<p style="color: red;">❌ Sin datos de localización</p>';
+        }
+    }
+    
+    wp_die();
 });
