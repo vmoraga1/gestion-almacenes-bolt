@@ -161,5 +161,4 @@
                 new Intl.NumberFormat('es-CL').format(amount);
         }
     };
-
 })(jQuery);

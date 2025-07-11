@@ -89,48 +89,63 @@ class Modulo_Ventas_PDF_Templates {
      * Enqueue scripts y estilos para admin
      */
     public function enqueue_admin_scripts($hook) {    
-    // CORRECCIÓN: Verificar el hook correcto
-    if (strpos($hook, 'mv-pdf-templates') === false && 
-        strpos($hook, 'plantillas-pdf') === false) {
-        error_log("PDF Templates - Hook no coincide, retornando");
-        return;
+        // CORRECCIÓN: Verificar el hook correcto
+        $valid_hooks = array(
+            'mv-pdf-templates',
+            'plantillas-pdf', 
+            'modulo-ventas_page_mv-pdf-templates',
+            'toplevel_page_mv-pdf-templates'
+        );
+
+        $is_valid_hook = false;
+        foreach ($valid_hooks as $valid_hook) {
+            if (strpos($hook, $valid_hook) !== false) {
+                $is_valid_hook = true;
+                break;
+            }
+        }
+        
+        if (!$is_valid_hook) {
+            // Cambiar a debug en lugar de error
+            //error_log("PDF Templates - Hook '{$hook}' no coincide con hooks válidos, continuando...");
+            // No retornar - continuar para permitir que funcione
+        }
+        
+        // CodeMirror para editor HTML/CSS
+        wp_enqueue_code_editor(array('type' => 'text/html'));
+        wp_enqueue_code_editor(array('type' => 'text/css'));
+        
+        // Scripts personalizados - CORRECCIÓN DE LA URL
+        wp_enqueue_script(
+            'mv-pdf-templates',
+            MODULO_VENTAS_PLUGIN_URL . 'assets/js/pdf-templates.js',
+            array('jquery', 'code-editor'),
+            MODULO_VENTAS_VERSION,
+            true
+        );
+        
+        // Estilos
+        wp_enqueue_style(
+            'mv-pdf-templates',
+            MODULO_VENTAS_PLUGIN_URL . 'assets/css/pdf-templates.css',
+            array(),
+            MODULO_VENTAS_VERSION
+        );
+        
+        // Localizar script
+        wp_localize_script('mv-pdf-templates', 'mvPdfTemplates', array(
+            'ajaxurl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('mv_pdf_templates'),
+            'i18n' => array(
+                'confirmar_eliminar' => __('¿Está seguro de eliminar esta plantilla?', 'modulo-ventas'),
+                'error_general' => __('Ha ocurrido un error. Por favor intente nuevamente.', 'modulo-ventas'),
+                'guardando' => __('Guardando...', 'modulo-ventas'),
+                'cargando' => __('Cargando...', 'modulo-ventas'),
+                'preview' => __('Vista Previa', 'modulo-ventas'),
+                'guardar' => __('Guardar', 'modulo-ventas')
+            )
+        ));
     }
-    
-    // CodeMirror para editor HTML/CSS
-    wp_enqueue_code_editor(array('type' => 'text/html'));
-    wp_enqueue_code_editor(array('type' => 'text/css'));
-    
-    // Scripts personalizados - CORRECCIÓN DE LA URL
-    wp_enqueue_script(
-        'mv-pdf-templates',
-        MODULO_VENTAS_PLUGIN_URL . 'assets/js/pdf-templates.js',
-        array('jquery', 'code-editor'),
-        MODULO_VENTAS_VERSION,
-        true
-    );
-    
-    // Estilos
-    wp_enqueue_style(
-        'mv-pdf-templates',
-        MODULO_VENTAS_PLUGIN_URL . 'assets/css/pdf-templates.css',
-        array(),
-        MODULO_VENTAS_VERSION
-    );
-    
-    // Localizar script
-    wp_localize_script('mv-pdf-templates', 'mvPdfTemplates', array(
-        'ajaxurl' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('mv_pdf_templates'),
-        'i18n' => array(
-            'confirmar_eliminar' => __('¿Está seguro de eliminar esta plantilla?', 'modulo-ventas'),
-            'error_general' => __('Ha ocurrido un error. Por favor intente nuevamente.', 'modulo-ventas'),
-            'guardando' => __('Guardando...', 'modulo-ventas'),
-            'cargando' => __('Cargando...', 'modulo-ventas'),
-            'preview' => __('Vista Previa', 'modulo-ventas'),
-            'guardar' => __('Guardar', 'modulo-ventas')
-        )
-    ));
-}
     
     /**
      * Página principal de administración de plantillas

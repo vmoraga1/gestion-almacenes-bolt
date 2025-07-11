@@ -319,8 +319,7 @@ jQuery(document).ready(function($) {
                     select.empty().append('<option value="">Datos de prueba</option>');
                     
                     $.each(response.data.cotizaciones, function(i, cot) {
-                        var texto = cot.numero + ' - ' + (cot.cliente_nombre || 'Sin cliente') + ' ($' + 
-                                   new Intl.NumberFormat('es-CL').format(cot.total) + ')';
+                        var texto = cot.folio + ' - ' + (cot.cliente_nombre || 'Sin cliente') + ' ($' + Number(cot.total).toLocaleString() + ')';                                   new Intl.NumberFormat('es-CL').format(cot.total) + ')';
                         select.append('<option value="' + cot.id + '">' + texto + '</option>');
                     });
                 }

@@ -607,3 +607,185 @@ Stack trace:
 [2025-07-11 08:25:18] INFO: MPDF: PDF guardado exitosamente en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000025.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
 [2025-07-11 08:25:18] INFO: PDF: Generado exitosamente con mPDF: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000025.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
 [2025-07-11 08:25:18] INFO: PDF_TEMPLATES: PDF generado exitosamente: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000025.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:27:35] INFO: PDF_TEMPLATES: Iniciando generación con TCPDF para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:27:35] INFO: PDF_TEMPLATES: Usando método generar_pdf_desde_plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:27:35] INFO: PDF: Iniciando generación para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:27:36] INFO: MPDF: Librería cargada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:27:36] INFO: MPDF: Iniciando generación para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:27:36] INFO: TEMPLATE_PROCESSOR: Procesando plantilla ID 4 para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:27:36] INFO: TEMPLATE_PROCESSOR: Plantilla procesada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:27:36] INFO: MPDF: HTML procesado (21555 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:27:36] INFO: MPDF: CSS optimizado para mPDF | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:27:45] INFO: MPDF: PDF guardado exitosamente en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:27:45] INFO: PDF: Generado exitosamente con mPDF: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:27:45] INFO: PDF_TEMPLATES: PDF generado exitosamente: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:28:57] INFO: PDF: Iniciando generación para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:28:57] INFO: MPDF: Librería cargada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:28:57] INFO: MPDF: Iniciando generación para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:28:58] INFO: TEMPLATE_PROCESSOR: Procesando plantilla ID 4 para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:28:58] INFO: TEMPLATE_PROCESSOR: Plantilla procesada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:28:58] INFO: MPDF: HTML procesado (24676 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:28:58] INFO: MPDF: CSS optimizado para mPDF | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:29:02] INFO: MPDF: PDF guardado exitosamente en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:29:02] INFO: PDF: Generado exitosamente con mPDF: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:30:20] INFO: PDF_TEMPLATES: Iniciando generación con TCPDF para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:30:20] INFO: PDF_TEMPLATES: Usando método generar_pdf_desde_plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:30:20] INFO: PDF: Iniciando generación para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:30:20] INFO: MPDF: Librería cargada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:30:20] INFO: MPDF: Iniciando generación para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:30:20] INFO: TEMPLATE_PROCESSOR: Procesando plantilla ID 4 para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:30:20] INFO: TEMPLATE_PROCESSOR: Plantilla procesada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:30:20] INFO: MPDF: HTML procesado (24676 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:30:20] INFO: MPDF: CSS optimizado para mPDF | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:30:24] INFO: MPDF: PDF guardado exitosamente en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:30:24] INFO: PDF: Generado exitosamente con mPDF: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:30:24] INFO: PDF_TEMPLATES: PDF generado exitosamente: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:37:48] INFO: PDF: Iniciando generación para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:37:48] INFO: MPDF: Librería cargada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:37:48] INFO: MPDF: Iniciando generación para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:37:48] INFO: TEMPLATE_PROCESSOR: Procesando plantilla ID 4 para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:37:48] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:37:48] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:37:48] INFO: TEMPLATE_PROCESSOR: Plantilla procesada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:37:48] INFO: MPDF: HTML procesado (5809 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:37:48] INFO: MPDF: CSS optimizado para mPDF | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:37:48] INFO: MPDF: PDF guardado exitosamente en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:37:48] INFO: PDF: Generado exitosamente con mPDF: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:42:55] INFO: PDF_TEMPLATES: Iniciando generación con TCPDF para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:42:55] INFO: PDF_TEMPLATES: Usando método generar_pdf_desde_plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:42:55] INFO: PDF: Iniciando generación para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:42:55] INFO: MPDF: Librería cargada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:42:55] INFO: MPDF: Iniciando generación para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:42:55] INFO: TEMPLATE_PROCESSOR: Procesando plantilla ID 4 para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:42:55] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:42:55] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:42:55] INFO: TEMPLATE_PROCESSOR: Plantilla procesada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:42:55] INFO: MPDF: HTML procesado (5809 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:42:55] INFO: MPDF: CSS optimizado para mPDF | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:42:55] INFO: MPDF: PDF guardado exitosamente en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:42:55] INFO: PDF: Generado exitosamente con mPDF: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:42:55] INFO: PDF_TEMPLATES: PDF generado exitosamente: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:50:05] INFO: PDF: Iniciando generación para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:50:05] INFO: MPDF: Librería cargada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:50:05] INFO: MPDF: Iniciando generación para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:50:05] INFO: TEMPLATE_PROCESSOR: Procesando plantilla ID 4 para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:50:05] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:50:05] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:50:05] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.fecha_expiracion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:50:05] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: sistema.usuario | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:50:05] INFO: TEMPLATE_PROCESSOR: Plantilla procesada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:50:05] INFO: MPDF: HTML procesado (12533 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:50:05] INFO: MPDF: CSS optimizado para mPDF | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:50:06] INFO: MPDF: PDF guardado exitosamente en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:50:06] INFO: PDF: Generado exitosamente con mPDF: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:51:46] INFO: PDF_TEMPLATES: Generando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:51:46] INFO: PDF_TEMPLATES: Processor disponible, procesando contenido... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:51:46] INFO: PDF_TEMPLATES: Usando datos de prueba | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:51:46] INFO: TEMPLATE_PROCESSOR: Procesando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:51:46] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:51:46] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:51:46] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.fecha_expiracion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:51:46] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: sistema.usuario | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:51:46] INFO: PDF_TEMPLATES: Contenido procesado, preparando directorio... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:51:46] INFO: PDF_TEMPLATES: Guardando archivo: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/previews/preview_a79b1f898b7c1588f0afeeecfb5f98f2.html | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 19:51:46] INFO: PDF_TEMPLATES: Preview generado exitosamente: http://localhost/gestion-almacenes-bolt/wp-admin/admin-ajax.php?action=mv_servir_preview&file=preview_a79b1f898b7c1588f0afeeecfb5f98f2.html&nonce=8589cb3aa5 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:01:37] INFO: PDF_TEMPLATES: Iniciando generación con TCPDF para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:01:37] INFO: PDF_TEMPLATES: Usando método generar_pdf_desde_plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:01:37] INFO: PDF: Iniciando generación para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:01:37] INFO: MPDF: Librería cargada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:01:37] INFO: MPDF: Iniciando generación para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:01:37] INFO: TEMPLATE_PROCESSOR: Procesando plantilla ID 4 para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:01:37] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:01:37] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:01:37] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.fecha_expiracion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:01:37] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: sistema.usuario | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:01:37] INFO: TEMPLATE_PROCESSOR: Plantilla procesada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:01:37] INFO: MPDF: HTML procesado (12533 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:01:37] INFO: MPDF: CSS optimizado para mPDF | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:01:38] INFO: MPDF: PDF guardado exitosamente en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:01:38] INFO: PDF: Generado exitosamente con mPDF: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:01:38] INFO: PDF_TEMPLATES: PDF generado exitosamente: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:00] INFO: PDF_TEMPLATES: Iniciando generación con TCPDF para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:00] INFO: PDF_TEMPLATES: Usando método generar_pdf_desde_plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:00] INFO: PDF: Iniciando generación para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:00] INFO: MPDF: Librería cargada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:00] INFO: MPDF: Iniciando generación para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:00] INFO: TEMPLATE_PROCESSOR: Procesando plantilla ID 4 para cotización 26 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:00] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:00] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:00] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.fecha_expiracion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:00] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: sistema.usuario | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:00] INFO: TEMPLATE_PROCESSOR: Plantilla procesada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:00] INFO: MPDF: HTML procesado (12533 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:00] INFO: MPDF: CSS optimizado para mPDF | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:00] INFO: MPDF: PDF guardado exitosamente en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:00] INFO: PDF: Generado exitosamente con mPDF: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:00] INFO: PDF_TEMPLATES: PDF generado exitosamente: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000026.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:27] INFO: PDF_TEMPLATES: Generando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:27] INFO: PDF_TEMPLATES: Processor disponible, procesando contenido... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:27] INFO: PDF_TEMPLATES: Usando datos de prueba | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:27] INFO: TEMPLATE_PROCESSOR: Procesando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:27] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:27] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:27] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.fecha_expiracion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:27] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: sistema.usuario | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:27] INFO: PDF_TEMPLATES: Contenido procesado, preparando directorio... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:27] INFO: PDF_TEMPLATES: Guardando archivo: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/previews/preview_747bfacc6ae41e44c1fc68d70590c007.html | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:02:27] INFO: PDF_TEMPLATES: Preview generado exitosamente: http://localhost/gestion-almacenes-bolt/wp-admin/admin-ajax.php?action=mv_servir_preview&file=preview_747bfacc6ae41e44c1fc68d70590c007.html&nonce=a153319d6e | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:03:02] INFO: PDF_TEMPLATES: Generando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:03:02] INFO: PDF_TEMPLATES: Processor disponible, procesando contenido... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:03:02] INFO: PDF_TEMPLATES: Usando datos de prueba | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:03:02] INFO: TEMPLATE_PROCESSOR: Procesando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:03:02] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:03:02] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:03:02] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.fecha_expiracion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:03:02] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: sistema.usuario | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:03:02] INFO: PDF_TEMPLATES: Contenido procesado, preparando directorio... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:03:02] INFO: PDF_TEMPLATES: Guardando archivo: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/previews/preview_d94664e19da328dc82d244a2fc5f2709.html | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:03:02] INFO: PDF_TEMPLATES: Preview generado exitosamente: http://localhost/gestion-almacenes-bolt/wp-admin/admin-ajax.php?action=mv_servir_preview&file=preview_d94664e19da328dc82d244a2fc5f2709.html&nonce=f338142229 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:43] INFO: Iniciando creación de cotización | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cliente_id":15,"productos":3,"permitir_sin_stock":"yes"}
+[2025-07-11 21:05:43] INFO: Validación de stock omitida: configurado para permitir cotizaciones sin stock | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:43] INFO: Cotización creada: COT-2025-000027 (ID: 27) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:43] INFO: Cotización creada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cotizacion_id":27}
+[2025-07-11 21:05:43] INFO: Cotización creada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cotizacion_id":27,"folio":"COT-2025-000027"}
+[2025-07-11 21:05:57] INFO: PDF_TEMPLATES: Iniciando generación con TCPDF para cotización 27 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:57] INFO: PDF_TEMPLATES: Usando método generar_pdf_desde_plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:57] INFO: PDF: Iniciando generación para cotización 27 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:57] INFO: MPDF: Librería cargada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:57] INFO: MPDF: Iniciando generación para cotización 27 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:57] INFO: TEMPLATE_PROCESSOR: Procesando plantilla ID 4 para cotización 27 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:57] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:57] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:57] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.fecha_expiracion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:57] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: sistema.usuario | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:57] INFO: TEMPLATE_PROCESSOR: Plantilla procesada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:57] INFO: MPDF: HTML procesado (13556 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:57] INFO: MPDF: CSS optimizado para mPDF | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:58] INFO: MPDF: PDF guardado exitosamente en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000027.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:58] INFO: PDF: Generado exitosamente con mPDF: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000027.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:05:58] INFO: PDF_TEMPLATES: PDF generado exitosamente: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000027.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:09:16] INFO: Cliente creado: Ronaldhiño Gaucho (ID: 25) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:09:16] INFO: Cliente creado rápidamente: Ronaldhiño Gaucho (ID: 25) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:23] INFO: Iniciando creación de cotización | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cliente_id":25,"productos":5,"permitir_sin_stock":"yes"}
+[2025-07-11 21:10:23] INFO: Validación de stock omitida: configurado para permitir cotizaciones sin stock | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:23] INFO: Cotización creada: COT-2025-000028 (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:23] INFO: Cotización creada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cotizacion_id":28}
+[2025-07-11 21:10:23] INFO: Cotización creada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cotizacion_id":28,"folio":"COT-2025-000028"}
+[2025-07-11 21:10:32] INFO: PDF_TEMPLATES: Iniciando generación con TCPDF para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:32] INFO: PDF_TEMPLATES: Usando método generar_pdf_desde_plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:32] INFO: PDF: Iniciando generación para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:32] INFO: MPDF: Librería cargada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:32] INFO: MPDF: Iniciando generación para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:32] INFO: TEMPLATE_PROCESSOR: Procesando plantilla ID 4 para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:32] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:32] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:32] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.fecha_expiracion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:32] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: sistema.usuario | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:32] INFO: TEMPLATE_PROCESSOR: Plantilla procesada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:32] INFO: MPDF: HTML procesado (15654 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:32] INFO: MPDF: CSS optimizado para mPDF | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:33] INFO: MPDF: PDF guardado exitosamente en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000028.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:33] INFO: PDF: Generado exitosamente con mPDF: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000028.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:10:33] INFO: PDF_TEMPLATES: PDF generado exitosamente: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000028.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:13:10] INFO: Nota agregada al cliente ID: 25 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 21:14:59] INFO: TEMPLATE_PROCESSOR: Procesando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1

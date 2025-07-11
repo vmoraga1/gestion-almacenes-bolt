@@ -534,7 +534,7 @@ class Modulo_Ventas_PDF_Templates_Ajax {
         
         // Obtener últimas 10 cotizaciones para preview
         $cotizaciones = $wpdb->get_results(
-            "SELECT c.id, c.numero, c.fecha_creacion, c.total, cl.nombre as cliente_nombre
+            "SELECT c.id, c.folio, c.fecha_creacion, c.total, cl.razon_social as cliente_nombre
             FROM $tabla_cotizaciones c
             LEFT JOIN $tabla_clientes cl ON c.cliente_id = cl.id
             ORDER BY c.fecha_creacion DESC
