@@ -28,6 +28,8 @@ class Modulo_Ventas_PDF {
      */
     private $config;
     
+    private $use_mpdf = true;
+
     /**
      * Constructor
      */
@@ -178,65 +180,47 @@ class Modulo_Ventas_PDF {
     }
 
     /**
-     * Generar PDF de cotización usando plantillas personalizables
+     * Generar PDF usando tcPDF (antes era: generar_pdf_cotizacion)
      */
-    public function generar_pdf_cotizacion($cotizacion_id) {
+    public function generar_con_tcpdf($cotizacion_id) {
         error_log("MODULO_VENTAS_PDF: Iniciando generación con plantillas para cotización {$cotizacion_id}");
+        $this->logger->log("PDF: Usando TCPDF como fallback");
         
-        try {
-            // PASO 1: Verificar TCPDF
+            try {
+            // 1. Verificar TCPDF
             if (!$this->verificar_tcpdf()) {
-                error_log('MODULO_VENTAS_PDF: TCPDF no verificado');
-                return new WP_Error('tcpdf_missing', __('TCPDF no está instalado. Ejecute: composer install en el directorio del plugin', 'modulo-ventas'));
+                return new WP_Error('tcpdf_missing', __('TCPDF no está instalado', 'modulo-ventas'));
             }
             
-            // PASO 2: Obtener plantilla activa para cotizaciones
-            if (!class_exists('Modulo_Ventas_PDF_Templates')) {
-                require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates.php';
-            }
+            // 2. Obtener HTML procesado del sistema de plantillas
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates.php';
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-template-processor.php';
             
-            $templates_manager = Modulo_Ventas_PDF_Templates::get_instance();
-            $plantilla = $templates_manager->obtener_plantilla_activa('cotizacion');
-            
-            if (!$plantilla) {
-                error_log('MODULO_VENTAS_PDF: No hay plantilla activa para cotizaciones, usando método tradicional');
-                return $this->generar_pdf_cotizacion_tradicional($cotizacion_id);
-            }
-            
-            error_log("MODULO_VENTAS_PDF: Usando plantilla: {$plantilla->nombre} (ID: {$plantilla->id})");
-            
-            // PASO 3: Cargar procesador de plantillas
-            if (!class_exists('Modulo_Ventas_PDF_Template_Processor')) {
-                require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-template-processor.php';
-            }
-            
+            $pdf_templates = Modulo_Ventas_PDF_Templates::get_instance();
             $processor = Modulo_Ventas_PDF_Template_Processor::get_instance();
             
-            // PASO 4: Procesar plantilla con datos reales
-            $html_documento = $processor->procesar_plantilla($plantilla, $cotizacion_id, 'cotizacion');
-            
-            if (is_wp_error($html_documento)) {
-                error_log('MODULO_VENTAS_PDF: Error procesando plantilla: ' . $html_documento->get_error_message());
-                return $html_documento;
+            // Obtener plantilla activa
+            $plantilla = $pdf_templates->obtener_plantilla_activa('cotizacion');
+            if (!$plantilla) {
+                return new WP_Error('no_template', __('No hay plantilla activa para cotizaciones', 'modulo-ventas'));
             }
             
-            error_log('MODULO_VENTAS_PDF: Plantilla procesada exitosamente, generando PDF...');
+            // Procesar plantilla para obtener HTML completo
+            $documento_html = $processor->procesar_plantilla($plantilla, $cotizacion_id, 'cotizacion');
             
-            // PASO 5: Convertir HTML a PDF usando TCPDF
-            $pdf_path = $this->convertir_html_a_pdf($html_documento, $cotizacion_id, $plantilla);
+            // 3. Convertir HTML a PDF usando TCPDF
+            $pdf_path = $this->convertir_html_a_pdf_tcpdf($documento_html, $cotizacion_id);
             
             if (is_wp_error($pdf_path)) {
-                error_log('MODULO_VENTAS_PDF: Error convirtiendo a PDF: ' . $pdf_path->get_error_message());
                 return $pdf_path;
             }
             
-            error_log("MODULO_VENTAS_PDF: PDF generado exitosamente: {$pdf_path}");
+            $this->logger->log("PDF: PDF generado exitosamente con TCPDF: {$pdf_path}");
             return $pdf_path;
             
         } catch (Exception $e) {
-            error_log('MODULO_VENTAS_PDF: Exception en generación: ' . $e->getMessage());
-            error_log('MODULO_VENTAS_PDF: Exception trace: ' . $e->getTraceAsString());
-            return new WP_Error('pdf_generation_error', $e->getMessage());
+            $this->logger->log('PDF: Error en TCPDF: ' . $e->getMessage());
+            return new WP_Error('pdf_generation_error', 'Error generando PDF con TCPDF: ' . $e->getMessage());
         }
     }
     
@@ -952,57 +936,88 @@ class Modulo_Ventas_PDF {
     }
 
     /**
-     * Generar PDF usando sistema de plantillas HTML (NUEVO MÉTODO)
+     * Generar PDF usando sistema de plantillas HTML
      */
     public function generar_pdf_desde_plantilla($cotizacion_id) {
-        error_log("MODULO_VENTAS_PDF: Generando PDF desde plantilla para cotización {$cotizacion_id}");
-        
         try {
-            // 1. Verificar TCPDF
-            if (!$this->verificar_tcpdf()) {
-                return new WP_Error('tcpdf_missing', __('TCPDF no está instalado', 'modulo-ventas'));
+            $this->logger->log("PDF: Iniciando generación para cotización {$cotizacion_id}");
+            
+            // Decidir qué motor usar
+            if ($this->use_mpdf && $this->mpdf_disponible()) {
+                return $this->generar_con_mpdf($cotizacion_id);
+            } else {
+                // Fallback a TCPDF
+                return $this->generar_con_tcpdf($cotizacion_id);
             }
-            
-            // 2. Obtener HTML procesado del sistema de plantillas
-            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates.php';
-            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-template-processor.php';
-            
-            $pdf_templates = Modulo_Ventas_PDF_Templates::get_instance();
-            $processor = Modulo_Ventas_PDF_Template_Processor::get_instance();
-            
-            // Obtener plantilla activa
-            $plantilla = $pdf_templates->obtener_plantilla_activa('cotizacion');
-            if (!$plantilla) {
-                return new WP_Error('no_template', __('No hay plantilla activa para cotizaciones', 'modulo-ventas'));
-            }
-            
-            error_log("MODULO_VENTAS_PDF: Plantilla obtenida: {$plantilla->nombre}");
-            
-            // Procesar plantilla para obtener HTML completo
-            $documento_html = $processor->procesar_plantilla($plantilla, $cotizacion_id, 'cotizacion');
-            
-            error_log("MODULO_VENTAS_PDF: HTML procesado (" . strlen($documento_html) . " caracteres)");
-            
-            // 3. Convertir HTML a PDF usando TCPDF
-            $pdf_path = $this->convertir_html_a_pdf($documento_html, $cotizacion_id);
-            
-            if (is_wp_error($pdf_path)) {
-                return $pdf_path;
-            }
-            
-            error_log("MODULO_VENTAS_PDF: PDF generado exitosamente: {$pdf_path}");
-            return $pdf_path;
             
         } catch (Exception $e) {
-            error_log('MODULO_VENTAS_PDF: Error en generar_pdf_desde_plantilla: ' . $e->getMessage());
+            $this->logger->log('PDF: Error general: ' . $e->getMessage());
             return new WP_Error('pdf_generation_error', 'Error generando PDF: ' . $e->getMessage());
         }
     }
 
     /**
+     * Verificar si mPDF está disponible
+     */
+    private function mpdf_disponible() {
+        try {
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-mpdf.php';
+            return class_exists('Modulo_Ventas_mPDF');
+        } catch (Exception $e) {
+            $this->logger->log('PDF: mPDF no disponible: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Generar PDF usando mPDF
+     */
+    private function generar_con_mpdf($cotizacion_id) {
+        try {
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-mpdf.php';
+            
+            $mpdf_generator = new Modulo_Ventas_mPDF();
+            $resultado = $mpdf_generator->generar_pdf_desde_plantilla($cotizacion_id);
+            
+            if (is_wp_error($resultado)) {
+                $this->logger->log('PDF: Error mPDF, usando fallback TCPDF');
+                return $this->generar_con_tcpdf($cotizacion_id);
+            }
+            
+            $this->logger->log("PDF: Generado exitosamente con mPDF: {$resultado}");
+            return $resultado;
+            
+        } catch (Exception $e) {
+            $this->logger->log('PDF: Error con mPDF, usando TCPDF: ' . $e->getMessage());
+            return $this->generar_con_tcpdf($cotizacion_id);
+        }
+    }
+
+    /**
+     * Configuración: Cambiar motor PDF
+     */
+    public function establecer_motor_pdf($motor = 'mpdf') {
+        $this->use_mpdf = ($motor === 'mpdf');
+        $this->logger->log("PDF: Motor cambiado a: " . ($this->use_mpdf ? 'mPDF' : 'TCPDF'));
+    }
+
+    /**
+     * Obtener información del motor actual
+     */
+    public function obtener_info_motor() {
+        $info = array(
+            'motor_actual' => $this->use_mpdf ? 'mPDF' : 'TCPDF',
+            'mpdf_disponible' => $this->mpdf_disponible(),
+            'tcpdf_disponible' => $this->verificar_tcpdf()
+        );
+        
+        return $info;
+    }
+
+    /**
      * Convertir HTML a PDF usando TCPDF (NUEVO MÉTODO)
      */
-    private function convertir_html_a_pdf($html_content, $cotizacion_id) {
+    private function convertir_html_a_pdf_tcpdf($html_content, $cotizacion_id) {
         try {
             // Obtener datos para nombre del archivo
             global $wpdb;
