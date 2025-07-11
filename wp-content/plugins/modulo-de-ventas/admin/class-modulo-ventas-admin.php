@@ -258,6 +258,16 @@ class Modulo_Ventas_Admin {
                 'modulo-ventas-diagnostico',
                 array($this, 'pagina_diagnostico_pdf')
             );
+
+            // NUEVA PÁGINA DE TEST
+            add_submenu_page(
+                'modulo-ventas',
+                __('Test Plantillas PDF', 'modulo-ventas'),
+                __('Test Plantillas', 'modulo-ventas'),
+                'manage_options',
+                'mv-test-plantillas',
+                array($this, 'pagina_test_plantillas')
+            );
         }
 
         // Configuración
@@ -3218,6 +3228,104 @@ class Modulo_Ventas_Admin {
     // Página Ventas
     public function pagina_ventas() {
         echo "Ventas aún en desarrollo";
+    }
+
+    /**
+     * Página de test de plantillas PDF - VERSIÓN SIMPLE
+     */
+    public function pagina_test_plantillas() {
+        // Debug básico
+        echo '<div class="wrap">';
+        echo '<h1>🧪 Test de Plantillas PDF - Debug</h1>';
+        
+        // Test 1: Verificar que la función se ejecuta
+        echo '<h2>1. Función ejecutándose</h2>';
+        echo '<p style="color: green;">✅ La función pagina_test_plantillas() está ejecutándose correctamente</p>';
+        
+        // Test 2: Verificar permisos
+        echo '<h2>2. Permisos</h2>';
+        if (current_user_can('manage_options')) {
+            echo '<p style="color: green;">✅ Usuario tiene permisos de manage_options</p>';
+        } else {
+            echo '<p style="color: red;">❌ Usuario NO tiene permisos de manage_options</p>';
+        }
+        
+        // Test 3: Verificar WP_DEBUG
+        echo '<h2>3. WordPress Debug</h2>';
+        echo '<p>WP_DEBUG: ' . (WP_DEBUG ? '<span style="color: green;">Activado</span>' : '<span style="color: orange;">Desactivado</span>') . '</p>';
+        
+        // Test 4: Verificar clases
+        echo '<h2>4. Clases Disponibles</h2>';
+        $clases = array(
+            'Modulo_Ventas_PDF_Templates',
+            'Modulo_Ventas_PDF_Template_Processor', 
+            'Modulo_Ventas_PDF',
+            'Modulo_Ventas_DB'
+        );
+        
+        foreach ($clases as $clase) {
+            if (class_exists($clase)) {
+                echo '<p style="color: green;">✅ ' . $clase . '</p>';
+            } else {
+                echo '<p style="color: red;">❌ ' . $clase . ' (No encontrada)</p>';
+            }
+        }
+        
+        // Test 5: Verificar archivos
+        echo '<h2>5. Archivos de Test</h2>';
+        $archivo_test = MODULO_VENTAS_PLUGIN_DIR . 'admin/views/test-plantillas-integration.php';
+        if (file_exists($archivo_test)) {
+            echo '<p style="color: green;">✅ Archivo test-plantillas-integration.php existe</p>';
+            echo '<p><strong>Ruta:</strong> ' . $archivo_test . '</p>';
+            
+            // Intentar incluir el archivo
+            echo '<h3>Intentando incluir archivo:</h3>';
+            try {
+                ob_start();
+                include $archivo_test;
+                $contenido = ob_get_clean();
+                
+                if (!empty($contenido)) {
+                    echo '<p style="color: green;">✅ Archivo incluido exitosamente</p>';
+                    echo '<div style="border: 1px solid #ccc; padding: 10px; background: #f9f9f9;">';
+                    echo $contenido;
+                    echo '</div>';
+                } else {
+                    echo '<p style="color: orange;">⚠️ Archivo incluido pero no generó contenido</p>';
+                }
+            } catch (Exception $e) {
+                echo '<p style="color: red;">❌ Error incluyendo archivo: ' . esc_html($e->getMessage()) . '</p>';
+            }
+            
+        } else {
+            echo '<p style="color: red;">❌ Archivo test-plantillas-integration.php NO existe</p>';
+            echo '<p><strong>Ruta esperada:</strong> ' . $archivo_test . '</p>';
+            
+            // Listar archivos en la carpeta admin
+            $admin_dir = MODULO_VENTAS_PLUGIN_DIR . 'admin/';
+            if (is_dir($admin_dir)) {
+                echo '<h4>Archivos en carpeta admin:</h4>';
+                $archivos = scandir($admin_dir);
+                echo '<ul>';
+                foreach ($archivos as $archivo) {
+                    if ($archivo !== '.' && $archivo !== '..') {
+                        echo '<li>' . esc_html($archivo) . '</li>';
+                    }
+                }
+                echo '</ul>';
+            }
+        }
+        
+        // Test 6: Info del sistema
+        echo '<h2>6. Información del Sistema</h2>';
+        echo '<ul>';
+        echo '<li><strong>Plugin Dir:</strong> ' . MODULO_VENTAS_PLUGIN_DIR . '</li>';
+        echo '<li><strong>Plugin URL:</strong> ' . MODULO_VENTAS_PLUGIN_URL . '</li>';
+        echo '<li><strong>WordPress Version:</strong> ' . get_bloginfo('version') . '</li>';
+        echo '<li><strong>PHP Version:</strong> ' . phpversion() . '</li>';
+        echo '</ul>';
+        
+        echo '</div>';
     }
 
 } // Fin de la clase

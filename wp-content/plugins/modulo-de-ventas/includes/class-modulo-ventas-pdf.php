@@ -176,157 +176,261 @@ class Modulo_Ventas_PDF {
         
         return wp_parse_args($configuracion_guardada, $defaults);
     }
-    
+
     /**
-     * Generar PDF de cotización
+     * Generar PDF de cotización usando plantillas personalizables
      */
     public function generar_pdf_cotizacion($cotizacion_id) {
-        error_log("MODULO_VENTAS_PDF: Iniciando generación para cotización {$cotizacion_id}");
+        error_log("MODULO_VENTAS_PDF: Iniciando generación con plantillas para cotización {$cotizacion_id}");
         
         try {
+            // PASO 1: Verificar TCPDF
             if (!$this->verificar_tcpdf()) {
                 error_log('MODULO_VENTAS_PDF: TCPDF no verificado');
                 return new WP_Error('tcpdf_missing', __('TCPDF no está instalado. Ejecute: composer install en el directorio del plugin', 'modulo-ventas'));
             }
             
-            if (!class_exists('TCPDF')) {
-                error_log('MODULO_VENTAS_PDF: Clase TCPDF no existe');
-                return new WP_Error('tcpdf_not_loaded', __('No se pudo cargar la clase TCPDF', 'modulo-ventas'));
+            // PASO 2: Obtener plantilla activa para cotizaciones
+            if (!class_exists('Modulo_Ventas_PDF_Templates')) {
+                require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates.php';
             }
             
-            error_log('MODULO_VENTAS_PDF: TCPDF OK, obteniendo datos...');
+            $templates_manager = Modulo_Ventas_PDF_Templates::get_instance();
+            $plantilla = $templates_manager->obtener_plantilla_activa('cotizacion');
+            
+            if (!$plantilla) {
+                error_log('MODULO_VENTAS_PDF: No hay plantilla activa para cotizaciones, usando método tradicional');
+                return $this->generar_pdf_cotizacion_tradicional($cotizacion_id);
+            }
+            
+            error_log("MODULO_VENTAS_PDF: Usando plantilla: {$plantilla->nombre} (ID: {$plantilla->id})");
+            
+            // PASO 3: Cargar procesador de plantillas
+            if (!class_exists('Modulo_Ventas_PDF_Template_Processor')) {
+                require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-template-processor.php';
+            }
+            
+            $processor = Modulo_Ventas_PDF_Template_Processor::get_instance();
+            
+            // PASO 4: Procesar plantilla con datos reales
+            $html_documento = $processor->procesar_plantilla($plantilla, $cotizacion_id, 'cotizacion');
+            
+            if (is_wp_error($html_documento)) {
+                error_log('MODULO_VENTAS_PDF: Error procesando plantilla: ' . $html_documento->get_error_message());
+                return $html_documento;
+            }
+            
+            error_log('MODULO_VENTAS_PDF: Plantilla procesada exitosamente, generando PDF...');
+            
+            // PASO 5: Convertir HTML a PDF usando TCPDF
+            $pdf_path = $this->convertir_html_a_pdf($html_documento, $cotizacion_id, $plantilla);
+            
+            if (is_wp_error($pdf_path)) {
+                error_log('MODULO_VENTAS_PDF: Error convirtiendo a PDF: ' . $pdf_path->get_error_message());
+                return $pdf_path;
+            }
+            
+            error_log("MODULO_VENTAS_PDF: PDF generado exitosamente: {$pdf_path}");
+            return $pdf_path;
+            
+        } catch (Exception $e) {
+            error_log('MODULO_VENTAS_PDF: Exception en generación: ' . $e->getMessage());
+            error_log('MODULO_VENTAS_PDF: Exception trace: ' . $e->getTraceAsString());
+            return new WP_Error('pdf_generation_error', $e->getMessage());
+        }
+    }
+    
+    /*
+     * Convertir HTML procesado a PDF (Reemplazado al final)
+     *
+    private function convertir_html_a_pdf($html_content, $cotizacion_id, $plantilla = null) {
+        try {
+            // Cargar TCPDF
+            if (!class_exists('TCPDF')) {
+                require_once MODULO_VENTAS_PLUGIN_DIR . 'vendor/tecnickcom/tcpdf/tcpdf.php';
+            }
+            
+            // Obtener configuración de la plantilla
+            $config_plantilla = array();
+            if ($plantilla && !empty($plantilla->configuracion)) {
+                $config_plantilla = json_decode($plantilla->configuracion, true) ?: array();
+            }
+            
+            // Configuración del PDF
+            $orientacion = isset($config_plantilla['papel_orientacion']) ? $config_plantilla['papel_orientacion'] : 'P';
+            $tamano = isset($config_plantilla['papel_tamano']) ? $config_plantilla['papel_tamano'] : 'A4';
+            $margenes = isset($config_plantilla['margenes']) ? $config_plantilla['margenes'] : array(
+                'superior' => 15,
+                'inferior' => 15,
+                'izquierdo' => 15,
+                'derecho' => 15
+            );
+            
+            // Crear instancia TCPDF
+            $pdf = new TCPDF($orientacion, PDF_UNIT, $tamano, true, 'UTF-8', false);
+            
+            // Configurar metadatos
+            $cotizacion = $this->db->obtener_cotizacion($cotizacion_id);
+            $titulo = 'Cotización ' . ($cotizacion ? $cotizacion->folio : $cotizacion_id);
+            
+            $pdf->SetCreator('Módulo de Ventas');
+            $pdf->SetAuthor(get_bloginfo('name'));
+            $pdf->SetTitle($titulo);
+            $pdf->SetSubject('Cotización');
+            
+            // Configurar márgenes
+            $pdf->SetMargins(
+                $margenes['izquierdo'], 
+                $margenes['superior'], 
+                $margenes['derecho']
+            );
+            $pdf->SetAutoPageBreak(TRUE, $margenes['inferior']);
+            
+            // Desactivar header y footer predeterminados
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(false);
+            
+            // Agregar página
+            $pdf->AddPage();
+            
+            // Escribir contenido HTML
+            $pdf->writeHTML($html_content, true, false, true, false, '');
+            
+            // Generar ruta de archivo
+            $upload_dir = wp_upload_dir();
+            $pdf_dir = $upload_dir['basedir'] . '/modulo-ventas/pdfs';
+            
+            // Crear directorio si no existe
+            if (!file_exists($pdf_dir)) {
+                wp_mkdir_p($pdf_dir);
+                
+                // Crear .htaccess para proteger archivos
+                $htaccess_content = "Order deny,allow\nDeny from all\n";
+                file_put_contents($pdf_dir . '/.htaccess', $htaccess_content);
+            }
+            
+            // Generar nombre único
+            $timestamp = current_time('Y-m-d_H-i-s');
+            $filename = "cotizacion-{$cotizacion_id}_{$timestamp}.pdf";
+            $pdf_path = $pdf_dir . '/' . $filename;
+            
+            // Guardar PDF
+            $pdf->Output($pdf_path, 'F');
+            
+            // Verificar que el archivo se creó
+            if (!file_exists($pdf_path) || filesize($pdf_path) == 0) {
+                return new WP_Error('pdf_save_error', __('Error al guardar el archivo PDF', 'modulo-ventas'));
+            }
+            
+            error_log("MODULO_VENTAS_PDF: PDF guardado en: {$pdf_path}");
+            return $pdf_path;
+            
+        } catch (Exception $e) {
+            error_log('MODULO_VENTAS_PDF: Error en convertir_html_a_pdf: ' . $e->getMessage());
+            return new WP_Error('pdf_conversion_error', $e->getMessage());
+        }
+    }*/
+
+    /**
+     * Método de fallback: Generar PDF con método tradicional si no hay plantillas
+     */
+    private function generar_pdf_cotizacion_tradicional($cotizacion_id) {
+        error_log("MODULO_VENTAS_PDF: Usando método tradicional para cotización {$cotizacion_id}");
+        
+        // Aquí mantener el código original de generación que ya funciona
+        // Este será el fallback si las plantillas fallan
+        
+        try {
+            if (!class_exists('TCPDF')) {
+                require_once MODULO_VENTAS_PLUGIN_DIR . 'vendor/tecnickcom/tcpdf/tcpdf.php';
+            }
             
             // Obtener datos
             $cotizacion = $this->db->obtener_cotizacion($cotizacion_id);
             if (!$cotizacion) {
-                error_log("MODULO_VENTAS_PDF: Cotización {$cotizacion_id} no encontrada");
                 return new WP_Error('invalid_quote', __('Cotización no encontrada', 'modulo-ventas'));
             }
             
-            error_log("MODULO_VENTAS_PDF: Cotización obtenida - Folio: {$cotizacion->folio}");
-            
             $cliente = $this->db->obtener_cliente($cotizacion->cliente_id);
             if (!$cliente) {
-                error_log("MODULO_VENTAS_PDF: Cliente {$cotizacion->cliente_id} no encontrado");
                 return new WP_Error('invalid_client', __('Cliente no encontrado', 'modulo-ventas'));
             }
             
-            error_log("MODULO_VENTAS_PDF: Cliente obtenido - {$cliente->razon_social}");
-            
             $items = $this->db->obtener_items_cotizacion($cotizacion_id);
-            error_log("MODULO_VENTAS_PDF: Items obtenidos - Cantidad: " . count($items));
             
-            if (empty($items)) {
-                error_log("MODULO_VENTAS_PDF: ERROR - No hay items en la cotización");
-                return new WP_Error('no_items', __('La cotización no tiene productos', 'modulo-ventas'));
+            // Generar PDF con diseño básico
+            $pdf = new TCPDF('P', PDF_UNIT, 'A4', true, 'UTF-8', false);
+            
+            $pdf->SetCreator('Módulo de Ventas');
+            $pdf->SetAuthor(get_bloginfo('name'));
+            $pdf->SetTitle('Cotización ' . $cotizacion->folio);
+            
+            $pdf->SetMargins(15, 27, 15);
+            $pdf->SetAutoPageBreak(TRUE, 25);
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(false);
+            
+            $pdf->AddPage();
+            
+            // Contenido básico
+            $pdf->SetFont('helvetica', 'B', 20);
+            $pdf->Cell(0, 15, 'COTIZACIÓN', 0, 1, 'C');
+            
+            $pdf->SetFont('helvetica', '', 12);
+            $pdf->Cell(0, 8, 'N° ' . $cotizacion->folio, 0, 1, 'C');
+            $pdf->Ln(10);
+            
+            // Info cliente
+            $pdf->SetFont('helvetica', 'B', 12);
+            $pdf->Cell(0, 8, 'Cliente: ' . $cliente->razon_social, 0, 1, 'L');
+            $pdf->SetFont('helvetica', '', 10);
+            $pdf->Cell(0, 6, 'RUT: ' . $cliente->rut, 0, 1, 'L');
+            $pdf->Ln(5);
+            
+            // Tabla básica de productos
+            $pdf->SetFont('helvetica', 'B', 9);
+            $pdf->Cell(80, 8, 'Descripción', 1, 0, 'L');
+            $pdf->Cell(20, 8, 'Cant.', 1, 0, 'C');
+            $pdf->Cell(30, 8, 'Precio', 1, 0, 'R');
+            $pdf->Cell(30, 8, 'Total', 1, 1, 'R');
+            
+            $pdf->SetFont('helvetica', '', 9);
+            foreach ($items as $item) {
+                $pdf->Cell(80, 6, $item->descripcion, 1, 0, 'L');
+                $pdf->Cell(20, 6, $item->cantidad, 1, 0, 'C');
+                $pdf->Cell(30, 6, '$' . number_format($item->precio_unitario, 0, ',', '.'), 1, 0, 'R');
+                $pdf->Cell(30, 6, '$' . number_format($item->subtotal, 0, ',', '.'), 1, 1, 'R');
             }
             
-            $vendedor = null;
-            if (isset($cotizacion->vendedor_id) && $cotizacion->vendedor_id) {
-                $vendedor = get_userdata($cotizacion->vendedor_id);
-                error_log("MODULO_VENTAS_PDF: Vendedor obtenido - " . ($vendedor ? $vendedor->display_name : 'No encontrado'));
-            } else {
-                error_log("MODULO_VENTAS_PDF: No hay vendedor asignado");
+            // Total
+            $pdf->Ln(5);
+            $pdf->SetFont('helvetica', 'B', 11);
+            $pdf->Cell(130, 8, 'TOTAL:', 0, 0, 'R');
+            $pdf->Cell(30, 8, '$' . number_format($cotizacion->total, 0, ',', '.'), 1, 1, 'R');
+            
+            // Guardar
+            $upload_dir = wp_upload_dir();
+            $pdf_dir = $upload_dir['basedir'] . '/modulo-ventas/pdfs';
+            
+            if (!file_exists($pdf_dir)) {
+                wp_mkdir_p($pdf_dir);
             }
             
-            error_log('MODULO_VENTAS_PDF: Creando instancia PDF...');
+            $timestamp = current_time('Y-m-d_H-i-s');
+            $filename = "cotizacion-{$cotizacion_id}_{$timestamp}.pdf";
+            $pdf_path = $pdf_dir . '/' . $filename;
             
-            // Crear PDF con manejo de errores
-            try {
-                $pdf = $this->crear_instancia_pdf();
-                error_log('MODULO_VENTAS_PDF: Instancia PDF creada');
-            } catch (Exception $e) {
-                error_log('MODULO_VENTAS_PDF: Error creando instancia PDF: ' . $e->getMessage());
-                return new WP_Error('pdf_creation_error', 'Error creando PDF: ' . $e->getMessage());
+            $pdf->Output($pdf_path, 'F');
+            
+            if (!file_exists($pdf_path)) {
+                return new WP_Error('pdf_save_error', __('Error al guardar PDF', 'modulo-ventas'));
             }
             
-            // Configurar documento
-            try {
-                $pdf->SetCreator('Módulo de Ventas');
-                $pdf->SetAuthor($this->config['empresa_nombre']);
-                $pdf->SetTitle('Cotización ' . $cotizacion->folio);
-                $pdf->SetSubject('Cotización de venta');
-                $pdf->SetKeywords('cotización, venta, presupuesto');
-                
-                error_log('MODULO_VENTAS_PDF: Metadatos configurados');
-                
-                // Agregar página
-                $pdf->AddPage();
-                error_log('MODULO_VENTAS_PDF: Página agregada');
-                
-                // Generar contenido paso a paso
-                $this->generar_header($pdf, $cotizacion);
-                error_log('MODULO_VENTAS_PDF: Header generado');
-                
-                $this->generar_info_empresa($pdf);
-                error_log('MODULO_VENTAS_PDF: Info empresa generada');
-                
-                $this->generar_info_cotizacion($pdf, $cotizacion, $cliente, $vendedor);
-                error_log('MODULO_VENTAS_PDF: Info cotización generada');
-                
-                $this->generar_tabla_productos($pdf, $items, $cotizacion);
-                error_log('MODULO_VENTAS_PDF: Tabla productos generada');
-                
-                $this->generar_totales($pdf, $cotizacion);
-                error_log('MODULO_VENTAS_PDF: Totales generados');
-                
-                $this->generar_terminos($pdf, $cotizacion);
-                error_log('MODULO_VENTAS_PDF: Términos generados');
-                
-            } catch (Exception $e) {
-                error_log('MODULO_VENTAS_PDF: Error generando contenido: ' . $e->getMessage());
-                return new WP_Error('content_generation_error', 'Error generando contenido: ' . $e->getMessage());
-            }
-            
-            // Generar archivo
-            try {
-                $filename = $this->generar_nombre_archivo($cotizacion);
-                $filepath = $this->obtener_ruta_archivo($filename);
-                
-                error_log("MODULO_VENTAS_PDF: Guardando en: {$filepath}");
-                
-                // Asegurar que el directorio existe
-                $this->crear_directorio_pdf();
-                
-                // Guardar PDF
-                $result = $pdf->Output($filepath, 'F');
-                error_log("MODULO_VENTAS_PDF: Output result: " . ($result ? 'true' : 'false'));
-                
-                // Verificar que se guardó
-                if (!file_exists($filepath)) {
-                    error_log("MODULO_VENTAS_PDF: ERROR - Archivo no se guardó: {$filepath}");
-                    return new WP_Error('file_not_saved', 'El archivo PDF no se pudo guardar');
-                }
-                
-                $filesize = filesize($filepath);
-                error_log("MODULO_VENTAS_PDF: Archivo guardado exitosamente - {$filesize} bytes");
-                
-                // Log de éxito
-                if ($this->logger) {
-                    $this->logger->log("PDF generado para cotización {$cotizacion->folio}: {$filename}", 'info');
-                }
-                
-                return $filepath;
-                
-            } catch (Exception $e) {
-                error_log('MODULO_VENTAS_PDF: Error guardando archivo: ' . $e->getMessage());
-                return new WP_Error('file_save_error', 'Error guardando archivo: ' . $e->getMessage());
-            }
+            return $pdf_path;
             
         } catch (Exception $e) {
-            error_log('MODULO_VENTAS_PDF: Exception general: ' . $e->getMessage());
-            error_log('MODULO_VENTAS_PDF: Exception trace: ' . $e->getTraceAsString());
-            
-            if ($this->logger) {
-                $this->logger->log('Error generando PDF: ' . $e->getMessage(), 'error');
-            }
-            return new WP_Error('pdf_generation_error', 'Error al generar PDF: ' . $e->getMessage());
-            
-        } catch (Error $e) {
-            error_log('MODULO_VENTAS_PDF: Error fatal: ' . $e->getMessage());
-            error_log('MODULO_VENTAS_PDF: Error trace: ' . $e->getTraceAsString());
-            
-            return new WP_Error('pdf_fatal_error', 'Error fatal generando PDF: ' . $e->getMessage());
+            error_log('MODULO_VENTAS_PDF: Error en método tradicional: ' . $e->getMessage());
+            return new WP_Error('pdf_traditional_error', $e->getMessage());
         }
     }
     
@@ -845,5 +949,289 @@ class Modulo_Ventas_PDF {
         
         // Por implementar en futura versión
         return new WP_Error('in_development', __('Generación de reportes en desarrollo', 'modulo-ventas'));
+    }
+
+    /**
+     * Generar PDF usando sistema de plantillas HTML (NUEVO MÉTODO)
+     */
+    public function generar_pdf_desde_plantilla($cotizacion_id) {
+        error_log("MODULO_VENTAS_PDF: Generando PDF desde plantilla para cotización {$cotizacion_id}");
+        
+        try {
+            // 1. Verificar TCPDF
+            if (!$this->verificar_tcpdf()) {
+                return new WP_Error('tcpdf_missing', __('TCPDF no está instalado', 'modulo-ventas'));
+            }
+            
+            // 2. Obtener HTML procesado del sistema de plantillas
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates.php';
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-template-processor.php';
+            
+            $pdf_templates = Modulo_Ventas_PDF_Templates::get_instance();
+            $processor = Modulo_Ventas_PDF_Template_Processor::get_instance();
+            
+            // Obtener plantilla activa
+            $plantilla = $pdf_templates->obtener_plantilla_activa('cotizacion');
+            if (!$plantilla) {
+                return new WP_Error('no_template', __('No hay plantilla activa para cotizaciones', 'modulo-ventas'));
+            }
+            
+            error_log("MODULO_VENTAS_PDF: Plantilla obtenida: {$plantilla->nombre}");
+            
+            // Procesar plantilla para obtener HTML completo
+            $documento_html = $processor->procesar_plantilla($plantilla, $cotizacion_id, 'cotizacion');
+            
+            error_log("MODULO_VENTAS_PDF: HTML procesado (" . strlen($documento_html) . " caracteres)");
+            
+            // 3. Convertir HTML a PDF usando TCPDF
+            $pdf_path = $this->convertir_html_a_pdf($documento_html, $cotizacion_id);
+            
+            if (is_wp_error($pdf_path)) {
+                return $pdf_path;
+            }
+            
+            error_log("MODULO_VENTAS_PDF: PDF generado exitosamente: {$pdf_path}");
+            return $pdf_path;
+            
+        } catch (Exception $e) {
+            error_log('MODULO_VENTAS_PDF: Error en generar_pdf_desde_plantilla: ' . $e->getMessage());
+            return new WP_Error('pdf_generation_error', 'Error generando PDF: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Convertir HTML a PDF usando TCPDF (NUEVO MÉTODO)
+     */
+    private function convertir_html_a_pdf($html_content, $cotizacion_id) {
+        try {
+            // Obtener datos para nombre del archivo
+            global $wpdb;
+            $tabla = $wpdb->prefix . 'mv_cotizaciones';
+            $cotizacion = $wpdb->get_row($wpdb->prepare(
+                "SELECT folio, fecha FROM $tabla WHERE id = %d",
+                $cotizacion_id
+            ));
+            
+            $nombre_archivo = $cotizacion ? 
+                sanitize_file_name('cotizacion_' . $cotizacion->folio . '.pdf') : 
+                'cotizacion_' . $cotizacion_id . '.pdf';
+            
+            // Configurar TCPDF optimizado para HTML
+            $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+            
+            // Configuración del documento
+            $pdf->SetCreator('Módulo de Ventas');
+            $pdf->SetAuthor(get_bloginfo('name'));
+            $pdf->SetTitle('Cotización ' . ($cotizacion ? $cotizacion->folio : $cotizacion_id));
+            $pdf->SetSubject('Cotización generada desde plantilla');
+            
+            // Configurar página para mejor rendering de HTML
+            $pdf->SetMargins(10, 10, 10);  // Márgenes más pequeños
+            $pdf->SetHeaderMargin(5);
+            $pdf->SetFooterMargin(10);
+            $pdf->SetAutoPageBreak(TRUE, 15);
+            $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+            
+            // Desactivar header y footer por defecto
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(false);
+            
+            // Configuraciones especiales para mejor rendering de CSS
+            $pdf->setFontSubsetting(true);
+            $pdf->SetFont('helvetica', '', 11);
+            
+            // Agregar página
+            $pdf->AddPage();
+            
+            // Procesar HTML para compatibilidad con TCPDF
+            $html_optimizado = $this->optimizar_html_para_tcpdf($html_content);
+            
+            error_log("MODULO_VENTAS_PDF: HTML optimizado para TCPDF");
+            
+            // Convertir HTML a PDF
+            $pdf->writeHTML($html_optimizado, true, false, true, false, '');
+            
+            // Crear directorio si no existe
+            $upload_dir = wp_upload_dir();
+            $pdf_dir = $upload_dir['basedir'] . '/modulo-ventas/pdfs';
+            
+            if (!file_exists($pdf_dir)) {
+                wp_mkdir_p($pdf_dir);
+            }
+            
+            // Generar nombre único para el archivo
+            $timestamp = current_time('Y-m-d_H-i-s');
+            $filename = 'cotizacion-' . $cotizacion_id . '_' . $timestamp . '.pdf';
+            $filepath = $pdf_dir . '/' . $filename;
+            
+            // Guardar PDF
+            $pdf->Output($filepath, 'F');
+            
+            // Verificar que se creó el archivo
+            if (!file_exists($filepath)) {
+                return new WP_Error('save_error', __('Error al guardar archivo PDF', 'modulo-ventas'));
+            }
+            
+            // Devolver URL del archivo
+            $file_url = $upload_dir['baseurl'] . '/modulo-ventas/pdfs/' . $filename;
+            
+            error_log("MODULO_VENTAS_PDF: PDF guardado en: {$filepath}");
+            
+            return $file_url;
+            
+        } catch (Exception $e) {
+            error_log('MODULO_VENTAS_PDF: Error en convertir_html_a_pdf: ' . $e->getMessage());
+            return new WP_Error('conversion_error', 'Error convirtiendo HTML a PDF: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Optimizar HTML para compatibilidad con TCPDF (NUEVO MÉTODO)
+     */
+    private function optimizar_html_para_tcpdf($html_content) {
+        error_log("MODULO_VENTAS_PDF: Iniciando optimización HTML para TCPDF");
+        
+        // Extraer contenido del body y CSS
+        preg_match('/<body[^>]*>(.*?)<\/body>/is', $html_content, $matches);
+        $body_content = isset($matches[1]) ? $matches[1] : $html_content;
+        
+        preg_match('/<style[^>]*>(.*?)<\/style>/is', $html_content, $css_matches);
+        $css_content = isset($css_matches[1]) ? $css_matches[1] : '';
+        
+        // LIMPIEZA AGRESIVA
+        error_log("MODULO_VENTAS_PDF: Limpiando CSS problemático");
+        
+        // 1. Limpiar CSS problemático
+        $css_limpio = $this->limpiar_css_tcpdf($css_content);
+        
+        // 2. Convertir flexbox a estructura de tabla
+        error_log("MODULO_VENTAS_PDF: Convirtiendo flexbox a tablas");
+        $body_content = $this->convertir_flexbox_simple($body_content);
+        
+        // 3. Limpiar HTML problemático
+        $body_content = $this->limpiar_html_tcpdf($body_content);
+        
+        // Reconstruir HTML limpio
+        $html_final = '<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <style>' . $css_limpio . '</style>
+    </head>
+    <body>' . $body_content . '</body>
+    </html>';
+        
+        error_log("MODULO_VENTAS_PDF: HTML optimizado completado");
+        return $html_final;
+    }
+
+    /**
+     * AGREGAR este método para limpiar CSS
+     */
+    private function limpiar_css_tcpdf($css_content) {
+        // Eliminar propiedades problemáticas específicas
+        $problematicas = array(
+            '/display\s*:\s*flex[^;]*;/i' => '',
+            '/display\s*:\s*grid[^;]*;/i' => '',
+            '/justify-content\s*:[^;]*;/i' => '',
+            '/align-items\s*:[^;]*;/i' => '',
+            '/flex\s*:[^;]*;/i' => '',
+            '/transform\s*:[^;]*;/i' => '',
+            '/border-radius\s*:[^;]*;/i' => '',
+            '/box-shadow\s*:[^;]*;/i' => '',
+            '/text-shadow\s*:[^;]*;/i' => '',
+            '/transition\s*:[^;]*;/i' => '',
+            '/animation\s*:[^;]*;/i' => '',
+            '/@media[^{]*\{[^{}]*(\{[^{}]*\}[^{}]*)*\}/i' => ''
+        );
+        
+        foreach ($problematicas as $patron => $reemplazo) {
+            $css_content = preg_replace($patron, $reemplazo, $css_content);
+        }
+        
+        // CSS básico y seguro
+        $css_base = '
+            body { font-family: Arial, sans-serif; font-size: 11px; margin: 15px; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+            th, td { border: 1px solid #333; padding: 6px; font-size: 10px; }
+            th { background-color: #f0f0f0; font-weight: bold; }
+            .header-simple { width: 100%; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+            .empresa-simple { width: 60%; display: inline-block; vertical-align: top; }
+            .cotizacion-simple { width: 35%; display: inline-block; vertical-align: top; text-align: right; }
+            .cliente-simple { background-color: #f8f8f8; padding: 10px; margin-bottom: 15px; }
+            .totales-simple { text-align: right; margin-top: 15px; }
+            h1 { font-size: 18px; margin: 0 0 10px 0; }
+            h2 { font-size: 16px; margin: 0 0 10px 0; }
+            h3 { font-size: 14px; margin: 0 0 10px 0; }
+            p { margin: 0 0 5px 0; }
+        ';
+        
+        return $css_base . ' ' . $css_content;
+    }
+
+    /**
+     * AGREGAR este método para convertir flexbox
+     */
+    private function convertir_flexbox_simple($html_content) {
+        // Convertir header con flexbox a estructura simple
+        $html_content = preg_replace(
+            '/<div class="header"[^>]*>/i',
+            '<div class="header-simple">',
+            $html_content
+        );
+        
+        // Convertir elementos dentro del header
+        $html_content = preg_replace(
+            '/<div class="empresa-info"[^>]*>/i',
+            '<div class="empresa-simple">',
+            $html_content
+        );
+        
+        $html_content = preg_replace(
+            '/<div class="cotizacion-info"[^>]*>/i',
+            '<div class="cotizacion-simple">',
+            $html_content
+        );
+        
+        // Convertir sección cliente
+        $html_content = preg_replace(
+            '/<div class="cliente-seccion"[^>]*>/i',
+            '<div class="cliente-simple">',
+            $html_content
+        );
+        
+        $html_content = preg_replace(
+            '/<div class="cliente-datos"[^>]*>/i',
+            '<div>',
+            $html_content
+        );
+        
+        // Simplificar totales
+        $html_content = preg_replace(
+            '/<div class="totales-seccion"[^>]*>/i',
+            '<div class="totales-simple">',
+            $html_content
+        );
+        
+        return $html_content;
+    }
+
+    /**
+     * AGREGAR este método para limpiar HTML
+     */
+    private function limpiar_html_tcpdf($html_content) {
+        // Remover scripts y links
+        $html_content = preg_replace('/<script[^>]*>.*?<\/script>/is', '', $html_content);
+        $html_content = preg_replace('/<link[^>]*>/i', '', $html_content);
+        
+        // Simplificar divs complejos
+        $html_content = preg_replace('/<div class="dato-linea"[^>]*>/i', '<p>', $html_content);
+        $html_content = str_replace('</div>', '</p>', $html_content);
+        
+        // Limpiar clases CSS complejas que no necesitamos
+        $html_content = preg_replace('/class="[^"]*cotizacion-header[^"]*"/i', 'style="background: #f0f0f0; padding: 10px; text-align: center;"', $html_content);
+        $html_content = preg_replace('/class="[^"]*total-fila[^"]*"/i', 'style="padding: 5px 0; border-bottom: 1px solid #ccc;"', $html_content);
+        
+        return $html_content;
     }
 }

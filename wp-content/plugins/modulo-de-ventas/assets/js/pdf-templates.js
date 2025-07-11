@@ -4,9 +4,7 @@
 
 jQuery(document).ready(function($) {
     'use strict';
-    
-    console.log('PDF Templates JS: Iniciando versión actualizada...');
-    
+        
     // Variables globales - CORREGIDAS para ser accesibles
     var htmlEditor, cssEditor;
     var plantillaId = $('#plantilla-id').val();
@@ -57,9 +55,7 @@ jQuery(document).ready(function($) {
     /**
      * Inicializar editor de plantillas
      */
-    function inicializarEditor() {
-        console.log('PDF Templates: Inicializando editor...');
-        
+    function inicializarEditor() {        
         // Esperar a que CodeMirror esté disponible
         setTimeout(function() {
             initCodeEditors();
@@ -73,8 +69,6 @@ jQuery(document).ready(function($) {
      * Inicializar funcionalidades de la lista
      */
     function inicializarLista() {
-        console.log('PDF Templates: Inicializando lista...');
-        
         // Toggle de estado de plantillas
         $('.plantilla-toggle-estado').on('change', function() {
             var plantillaId = $(this).data('plantilla-id');
@@ -176,9 +170,7 @@ jQuery(document).ready(function($) {
                     validarPlantillaConDelay();
                 });
             }
-            
-            console.log('PDF Templates: Editores CodeMirror inicializados');
-            
+                        
         } catch (error) {
             console.error('Error inicializando editores:', error);
         }
@@ -197,14 +189,12 @@ jQuery(document).ready(function($) {
         // Botón guardar - CORREGIDO selector
         $('#btn-guardar-plantilla').on('click', function(e) {
             e.preventDefault();
-            console.log('PDF Templates: Botón guardar clickeado');
             guardarPlantilla();
         });
         
         // Botón preview - CORREGIDO selector
         $('#btn-preview-plantilla').on('click', function(e) {
             e.preventDefault();
-            console.log('PDF Templates: Botón preview clickeado');
             generarPreview();
         });
         
@@ -282,8 +272,6 @@ jQuery(document).ready(function($) {
                 return 'Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?';
             }
         });
-        
-        console.log('PDF Templates: Event handlers configurados');
     }
     
     /**
@@ -301,7 +289,6 @@ jQuery(document).ready(function($) {
                 tipo_documento: tipoActual // CORREGIDO nombre del parámetro
             },
             success: function(response) {
-                console.log('PDF Templates: Variables cargadas:', response);
                 if (response.success) {
                     mostrarVariablesDisponibles(response.data);
                 } else {
@@ -419,9 +406,7 @@ jQuery(document).ready(function($) {
     /**
      * Guardar plantilla - FUNCIÓN PRINCIPAL CORREGIDA
      */
-    function guardarPlantilla() {
-        console.log('PDF Templates: Iniciando guardado de plantilla...');
-        
+    function guardarPlantilla() {        
         var $boton = $('#btn-guardar-plantilla');
         var textoOriginal = $boton.text();
         
@@ -446,15 +431,12 @@ jQuery(document).ready(function($) {
             css_content: cssEditor && cssEditor.codemirror ? cssEditor.codemirror.getValue() : '',
             activa: $('#plantilla-activa').is(':checked') ? 1 : 0
         };
-        
-        console.log('PDF Templates: Datos a enviar:', datos);
-        
+                
         $.ajax({
             url: mvPdfTemplates.ajaxurl,
             type: 'POST',
             data: datos,
             success: function(response) {
-                console.log('PDF Templates: Respuesta del servidor:', response);
                 
                 if (response.success) {
                     mostrarNotificacion(response.data.message || 'Plantilla guardada exitosamente', 'success');
@@ -489,9 +471,7 @@ jQuery(document).ready(function($) {
     /**
      * Generar preview de plantilla - FUNCIÓN PRINCIPAL CORREGIDA
      */
-    function generarPreview(cotizacionId) {
-        console.log('PDF Templates: Iniciando generación de preview...');
-        
+    function generarPreview(cotizacionId) {        
         var $boton = $('#btn-preview-plantilla');
         var textoOriginal = $boton.text();
         
@@ -504,16 +484,12 @@ jQuery(document).ready(function($) {
             css_content: cssEditor && cssEditor.codemirror ? cssEditor.codemirror.getValue() : '',
             cotizacion_id: cotizacionId || 0
         };
-        
-        console.log('PDF Templates: Datos preview a enviar:', datos);
-        
+                
         $.ajax({
             url: mvPdfTemplates.ajaxurl,
             type: 'POST',
             data: datos,
-            success: function(response) {
-                console.log('PDF Templates: Respuesta preview del servidor:', response);
-                
+            success: function(response) {                
                 if (response.success) {
                     abrirPreview(response.data.preview_url);
                 } else {
@@ -533,9 +509,7 @@ jQuery(document).ready(function($) {
     /**
      * Abrir preview en nueva ventana
      */
-    function abrirPreview(url) {
-        console.log('PDF Templates: Abriendo preview en:', url);
-        
+    function abrirPreview(url) {        
         // Cerrar preview anterior si existe
         if (previewWindow && !previewWindow.closed) {
             previewWindow.close();
@@ -837,22 +811,15 @@ body {
     /**
      * Funciones para la lista de plantillas
      */
-    function cambiarEstadoPlantilla(plantillaId, activa) {
-        console.log('=== INICIO cambiarEstadoPlantilla ===');
-        console.log('DEBUG: plantillaId =', plantillaId, 'activa =', activa);
-        
+    function cambiarEstadoPlantilla(plantillaId, activa) {        
         var $checkbox = $('input[data-plantilla-id="' + plantillaId + '"]');
         var $row = $('tr[data-plantilla-id="' + plantillaId + '"]');
         
         // Obtener tipo de plantilla
         var tipoPlantilla = $row.find('.mv-tipo-badge').text().trim();
-        
-        console.log('DEBUG: tipoPlantilla =', '"' + tipoPlantilla + '"');
-        
+                
         // Si se está activando, hacer petición previa para obtener nombres
-        if (activa) {
-            console.log('DEBUG: Activando - verificando si hay conflictos...');
-            
+        if (activa) {            
             // Hacer una petición AJAX previa para obtener información de las plantillas
             $.ajax({
                 url: mvPdfTemplates.ajaxurl,
@@ -863,9 +830,7 @@ body {
                     tipo: tipoPlantilla.toLowerCase(),
                     activas_solo: true
                 },
-                success: function(response) {
-                    console.log('DEBUG: Respuesta obtener_plantillas_tipo:', response);
-                    
+                success: function(response) {                    
                     if (response.success && response.data && response.data.length > 0) {
                         // Hay plantillas activas del mismo tipo
                         var plantillasActivas = response.data.filter(function(p) {
@@ -894,13 +859,10 @@ body {
                                                 '• Se desactivará automáticamente: "' + nombreOtra + '"\n' +
                                                 '• La página se recargará para mostrar los cambios\n\n' +
                                                 '¿Desea continuar?';
-                                    
-                                    console.log('DEBUG: Mensaje con nombres reales:', mensaje);
-                                    
+                                                                        
                                     if (confirm(mensaje)) {
                                         ejecutarCambioEstado(plantillaId, activa, $checkbox, $row);
                                     } else {
-                                        console.log('DEBUG: Usuario canceló la operación');
                                         $checkbox.prop('checked', false);
                                     }
                                 },
@@ -928,7 +890,6 @@ body {
                     }
                 },
                 error: function() {
-                    console.log('DEBUG: Error obteniendo plantillas, procediendo sin confirmación');
                     ejecutarCambioEstado(plantillaId, activa, $checkbox, $row);
                 }
             });
@@ -941,9 +902,7 @@ body {
     /**
      * Función auxiliar para ejecutar el cambio de estado
      */
-    function ejecutarCambioEstado(plantillaId, activa, $checkbox, $row) {
-        console.log('DEBUG: Ejecutando cambio de estado...');
-        
+    function ejecutarCambioEstado(plantillaId, activa, $checkbox, $row) {        
         $.ajax({
             url: mvPdfTemplates.ajaxurl,
             type: 'POST',
@@ -956,14 +915,11 @@ body {
             beforeSend: function() {
                 $checkbox.prop('disabled', true);
             },
-            success: function(response) {
-                console.log('DEBUG: Respuesta cambio de estado:', response);
-                
+            success: function(response) {                
                 if (response.success) {
                     mostrarNotificacion(response.data.message, 'success');
                     
                     if (response.data.requiere_recarga) {
-                        console.log('DEBUG: Recargando página en 2 segundos...');
                         setTimeout(function() {
                             location.reload();
                         }, 2000);
@@ -980,14 +936,11 @@ body {
                 }
             },
             error: function(xhr, status, error) {
-                console.log('DEBUG: Error AJAX:', error);
                 mostrarNotificacion(mvPdfTemplates.i18n.error_general, 'error');
                 $checkbox.prop('checked', !activa);
                 $checkbox.prop('disabled', false);
             }
         });
-        
-        console.log('=== FIN cambiarEstadoPlantilla ===');
     }
 
     /**
@@ -1179,6 +1132,4 @@ body {
         // Scroll hacia arriba para mostrar notificación
         $('html, body').animate({ scrollTop: 0 }, 500);
     }
-    
-    console.log('PDF Templates JS: Inicialización completa');
 });

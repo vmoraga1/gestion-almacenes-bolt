@@ -88,18 +88,13 @@ class Modulo_Ventas_PDF_Templates {
     /**
      * Enqueue scripts y estilos para admin
      */
-    public function enqueue_admin_scripts($hook) {
-    // Debug del hook actual
-    error_log("PDF Templates - Hook actual: " . $hook);
-    
+    public function enqueue_admin_scripts($hook) {    
     // CORRECCIÓN: Verificar el hook correcto
     if (strpos($hook, 'mv-pdf-templates') === false && 
         strpos($hook, 'plantillas-pdf') === false) {
         error_log("PDF Templates - Hook no coincide, retornando");
         return;
     }
-    
-    error_log("PDF Templates - Hook válido, encolando scripts");
     
     // CodeMirror para editor HTML/CSS
     wp_enqueue_code_editor(array('type' => 'text/html'));
@@ -135,8 +130,6 @@ class Modulo_Ventas_PDF_Templates {
             'guardar' => __('Guardar', 'modulo-ventas')
         )
     ));
-    
-    error_log("PDF Templates - Scripts encolados correctamente");
 }
     
     /**
@@ -756,6 +749,53 @@ class Modulo_Ventas_PDF_Templates {
      * Generar PDF de cotización real
      */
     public function generar_pdf_cotizacion($cotizacion_id) {
+        $this->logger->log("PDF_TEMPLATES: Iniciando generación con TCPDF para cotización {$cotizacion_id}");
+        
+        try {
+            // Verificar si tenemos la clase PDF disponible
+            if (!class_exists('Modulo_Ventas_PDF')) {
+                require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf.php';
+            }
+            
+            if (!class_exists('Modulo_Ventas_PDF')) {
+                $this->logger->log("PDF_TEMPLATES: Clase Modulo_Ventas_PDF no disponible, usando método HTML", 'warning');
+                return $this->generar_html_temporal($cotizacion_id);
+            }
+            
+            // Usar el nuevo método que convierte HTML a PDF
+            $pdf_generator = new Modulo_Ventas_PDF();
+            
+            // Verificar si el nuevo método existe
+            if (method_exists($pdf_generator, 'generar_pdf_desde_plantilla')) {
+                $this->logger->log("PDF_TEMPLATES: Usando método generar_pdf_desde_plantilla");
+                $resultado = $pdf_generator->generar_pdf_desde_plantilla($cotizacion_id);
+            } else {
+                $this->logger->log("PDF_TEMPLATES: Método generar_pdf_desde_plantilla no existe, usando método tradicional");
+                $resultado = $pdf_generator->generar_pdf_cotizacion($cotizacion_id);
+            }
+            
+            if (is_wp_error($resultado)) {
+                $this->logger->log("PDF_TEMPLATES: Error generando PDF: " . $resultado->get_error_message(), 'error');
+                // Fallback a HTML si falla PDF
+                return $this->generar_html_temporal($cotizacion_id);
+            }
+            
+            $this->logger->log("PDF_TEMPLATES: PDF generado exitosamente: {$resultado}");
+            return $resultado;
+            
+        } catch (Exception $e) {
+            $this->logger->log("PDF_TEMPLATES: Excepción generando PDF: " . $e->getMessage(), 'error');
+            // Fallback a HTML si hay excepción
+            return $this->generar_html_temporal($cotizacion_id);
+        }
+    }
+
+    /**
+     * Generar HTML temporal (fallback) - NUEVO MÉTODO
+     */
+    private function generar_html_temporal($cotizacion_id) {
+        $this->logger->log("PDF_TEMPLATES: Generando HTML temporal para cotización {$cotizacion_id}");
+        
         // Cargar procesador
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-template-processor.php';
         $processor = Modulo_Ventas_PDF_Template_Processor::get_instance();
@@ -770,14 +810,44 @@ class Modulo_Ventas_PDF_Templates {
         // Procesar plantilla con datos reales
         $documento_html = $processor->procesar_plantilla($plantilla, $cotizacion_id, 'cotizacion');
         
-        // Guardar PDF
-        $pdf_path = $this->guardar_pdf_temporal($documento_html, 'cotizacion-' . $cotizacion_id);
+        // Guardar como HTML temporal
+        $html_path = $this->guardar_html_temporal($documento_html, 'cotizacion-' . $cotizacion_id);
         
-        if (is_wp_error($pdf_path)) {
-            return $pdf_path;
+        if (is_wp_error($html_path)) {
+            return $html_path;
         }
         
-        return $pdf_path;
+        return $html_path;
+    }
+
+    /**
+     * Guardar HTML temporal - NUEVO MÉTODO
+     */
+    private function guardar_html_temporal($html_content, $filename_base) {
+        // Crear directorio temporal si no existe
+        $upload_dir = wp_upload_dir();
+        $temp_dir = $upload_dir['basedir'] . '/modulo-ventas/pdfs';
+        
+        if (!file_exists($temp_dir)) {
+            wp_mkdir_p($temp_dir);
+        }
+        
+        // Generar nombre único para el archivo
+        $timestamp = current_time('Y-m-d_H-i-s');
+        $filename = $filename_base . '_' . $timestamp . '.html';
+        $filepath = $temp_dir . '/' . $filename;
+        
+        // Guardar archivo HTML
+        $resultado = file_put_contents($filepath, $html_content);
+        
+        if ($resultado === false) {
+            return new WP_Error('save_error', __('Error al guardar archivo HTML', 'modulo-ventas'));
+        }
+        
+        // Devolver URL del archivo
+        $file_url = $upload_dir['baseurl'] . '/modulo-ventas/pdfs/' . $filename;
+        
+        return $file_url;
     }
     
     /**

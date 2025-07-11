@@ -845,65 +845,114 @@ class Modulo_Ventas_Ajax {
             
             // === GENERAR PDF ===
             error_log("MODULO_VENTAS_AJAX: Generando PDF para cotización {$cotizacion_id}...");
-            
-            $pdf_generator = new Modulo_Ventas_PDF();
-            $pdf_path = $pdf_generator->generar_pdf_cotizacion($cotizacion_id);
-            
-            if (is_wp_error($pdf_path)) {
-                error_log('MODULO_VENTAS_AJAX: Error generando PDF: ' . $pdf_path->get_error_message());
-                $mensaje = 'Error generando PDF: ' . $pdf_path->get_error_message();
+
+            // USAR EL NUEVO SISTEMA DE PLANTILLAS que genera archivos locales
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates.php';
+            $pdf_templates = Modulo_Ventas_PDF_Templates::get_instance();
+
+            $pdf_result = $pdf_templates->generar_pdf_cotizacion($cotizacion_id);
+
+            if (is_wp_error($pdf_result)) {
+                error_log('MODULO_VENTAS_AJAX: Error generando PDF: ' . $pdf_result->get_error_message());
+                $mensaje = 'Error generando PDF: ' . $pdf_result->get_error_message();
                 if ($is_post) {
                     wp_send_json_error(array('message' => $mensaje));
                     return;
                 } else {
                     wp_die($mensaje, 'Error PDF', array('response' => 500));
                     return;
+                }
+            }
+
+            // $pdf_result puede ser una URL, necesitamos convertirla a path local
+            if (filter_var($pdf_result, FILTER_VALIDATE_URL)) {
+                // Es una URL, convertir a path local
+                $upload_dir = wp_upload_dir();
+                $upload_url = $upload_dir['baseurl'] . '/modulo-ventas/pdfs/';
+                $upload_path = $upload_dir['basedir'] . '/modulo-ventas/pdfs/';
+                
+                if (strpos($pdf_result, $upload_url) === 0) {
+                    $pdf_path = str_replace($upload_url, $upload_path, $pdf_result);
+                    $pdf_url = $pdf_result; // Guardamos la URL también
+                } else {
+                    // URL externa o inesperada
+                    error_log('MODULO_VENTAS_AJAX: URL inesperada: ' . $pdf_result);
+                    $mensaje = 'URL de PDF inesperada';
+                    if ($is_post) {
+                        wp_send_json_error(array('message' => $mensaje));
+                        return;
+                    } else {
+                        wp_die($mensaje, 'Error PDF', array('response' => 500));
+                        return;
+                    }
+                }
+            } else {
+                // Es un path local
+                $pdf_path = $pdf_result;
+                
+                // Convertir path a URL
+                $upload_dir = wp_upload_dir();
+                $upload_path = $upload_dir['basedir'] . '/modulo-ventas/pdfs/';
+                $upload_url = $upload_dir['baseurl'] . '/modulo-ventas/pdfs/';
+                
+                if (strpos($pdf_path, $upload_path) === 0) {
+                    $pdf_url = str_replace($upload_path, $upload_url, $pdf_path);
+                } else {
+                    // Path fuera del directorio esperado
+                    $filename = basename($pdf_path);
+                    $pdf_url = $upload_url . $filename;
                 }
             }
             
             // === VERIFICAR ARCHIVO ===
             if (!file_exists($pdf_path)) {
-                error_log('MODULO_VENTAS_AJAX: Archivo PDF no existe: ' . $pdf_path);
-                $mensaje = 'El archivo PDF no se pudo crear';
+                error_log('MODULO_VENTAS_AJAX: Archivo PDF no existe en path: ' . $pdf_path);
+                error_log('MODULO_VENTAS_AJAX: PDF result original: ' . $pdf_result);
+                
+                $mensaje = 'El archivo PDF no se pudo crear en la ubicación esperada';
                 if ($is_post) {
-                    wp_send_json_error(array('message' => $mensaje));
+                    wp_send_json_error(array(
+                        'message' => $mensaje,
+                        'debug' => array(
+                            'pdf_result' => $pdf_result,
+                            'pdf_path' => $pdf_path,
+                            'file_exists' => false,
+                            'is_url' => filter_var($pdf_result, FILTER_VALIDATE_URL)
+                        )
+                    ));
                     return;
                 } else {
                     wp_die($mensaje, 'Error PDF', array('response' => 500));
                     return;
                 }
             }
-            
-            error_log('MODULO_VENTAS_AJAX: PDF generado exitosamente: ' . $pdf_path);
+
+            error_log('MODULO_VENTAS_AJAX: PDF generado exitosamente en: ' . $pdf_path);
+            error_log('MODULO_VENTAS_AJAX: PDF URL: ' . $pdf_url);
             
             // === RESPUESTA SEGÚN MÉTODO ===
             if ($is_post) {
-                // AJAX POST - Retornar JSON con URLs
+                // AJAX POST - Retornar JSON con URLs DIRECTAS
                 $cotizacion = $this->db->obtener_cotizacion($cotizacion_id);
                 $filename = basename($pdf_path);
-                
-                // Crear URLs seguras para preview y descarga
-                $preview_url = add_query_arg(array(
-                    'action' => 'mv_generar_pdf_cotizacion',
-                    'cotizacion_id' => $cotizacion_id,
-                    'modo' => 'preview',
-                    '_wpnonce' => wp_create_nonce('mv_pdf_cotizacion_' . $cotizacion_id)
-                ), admin_url('admin-ajax.php'));
-                
-                $download_url = add_query_arg(array(
-                    'action' => 'mv_generar_pdf_cotizacion',
-                    'cotizacion_id' => $cotizacion_id,
-                    'modo' => 'download',
-                    '_wpnonce' => wp_create_nonce('mv_pdf_cotizacion_' . $cotizacion_id)
-                ), admin_url('admin-ajax.php'));
+                $file_size = filesize($pdf_path);
                 
                 wp_send_json_success(array(
                     'message' => 'PDF generado exitosamente',
                     'filename' => $filename,
-                    'preview_url' => $preview_url,
-                    'download_url' => $download_url,
+                    'preview_url' => $pdf_url,  // URL directa para preview
+                    'download_url' => $pdf_url, // URL directa para descarga
+                    'direct_url' => $pdf_url,   // URL directa al archivo
                     'folio' => $cotizacion ? $cotizacion->folio : "COT-{$cotizacion_id}",
-                    'file_size' => number_format(filesize($pdf_path)) . ' bytes'
+                    'file_size' => number_format($file_size) . ' bytes',
+                    'debug' => array(
+                        'pdf_result_original' => $pdf_result,
+                        'pdf_path' => $pdf_path,
+                        'pdf_url' => $pdf_url,
+                        'file_exists' => file_exists($pdf_path),
+                        'file_size' => $file_size,
+                        'method_used' => 'PDF_Templates'
+                    )
                 ));
                 
             } else {
