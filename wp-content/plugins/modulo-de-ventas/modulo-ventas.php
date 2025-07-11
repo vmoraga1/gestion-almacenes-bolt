@@ -1245,6 +1245,66 @@ register_deactivation_hook(MODULO_VENTAS_PLUGIN_FILE, function() {
     wp_clear_scheduled_hook('mv_limpiar_previews_plantillas');
 });
 
+/**
+ * Hook de activación mínimo para plantillas PDF
+ */
+register_activation_hook(__FILE__, 'modulo_ventas_activar_pdf_templates');
+
+function modulo_ventas_activar_pdf_templates() {
+    // Cargar mini-instalador
+    require_once plugin_dir_path(__FILE__) . 'includes/class-modulo-ventas-pdf-installer.php';
+    
+    // Verificar e instalar si es necesario
+    Modulo_Ventas_PDF_Installer::verificar_e_instalar();
+    
+    error_log('MODULO_VENTAS: Sistema de plantillas PDF verificado/instalado');
+}
+
+/**
+ * Verificar instalación en admin_init
+ */
+add_action('admin_init', 'modulo_ventas_verificar_pdf_templates');
+
+function modulo_ventas_verificar_pdf_templates() {
+    // Solo ejecutar en admin
+    if (!is_admin()) {
+        return;
+    }
+    
+    // Solo ejecutar una vez por sesión
+    if (get_transient('mv_pdf_check_done')) {
+        return;
+    }
+    
+    // Cargar mini-instalador
+    require_once plugin_dir_path(__FILE__) . 'includes/class-modulo-ventas-pdf-installer.php';
+    
+    // Verificar si las tablas existen
+    if (!Modulo_Ventas_PDF_Installer::tablas_existen()) {
+        Modulo_Ventas_PDF_Installer::verificar_e_instalar();
+        
+        // Mostrar mensaje de éxito
+        add_action('admin_notices', function() {
+            echo '<div class="notice notice-success is-dismissible">';
+            echo '<p><strong>Módulo de Ventas:</strong> Sistema de plantillas PDF instalado exitosamente.</p>';
+            echo '</div>';
+        });
+    }
+    
+    // Marcar como verificado por 1 hora
+    set_transient('mv_pdf_check_done', true, HOUR_IN_SECONDS);
+}
+
+/**
+ * Hook para limpiar previews temporales
+ */
+add_action('mv_limpiar_preview_temporal', function($filepath) {
+    if (file_exists($filepath)) {
+        unlink($filepath);
+        error_log('MODULO_VENTAS: Preview temporal eliminado: ' . basename($filepath));
+    }
+});
+
 // ===================================================================
 // PÁGINA DE DEBUG TEMPORAL
 // ===================================================================

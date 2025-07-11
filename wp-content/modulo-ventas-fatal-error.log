@@ -705,3 +705,11 @@ Line: 664
 
 --------------------------------------------------------------------------------
 
+2025-07-10 10:05:58 - Error fatal detectado
+Type: 4
+Message: syntax error, unexpected token "*", expecting "function" or "const"
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php
+Line: 957
+
+--------------------------------------------------------------------------------
+

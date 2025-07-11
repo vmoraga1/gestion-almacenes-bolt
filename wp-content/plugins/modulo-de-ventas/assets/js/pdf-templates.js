@@ -838,6 +838,112 @@ body {
      * Funciones para la lista de plantillas
      */
     function cambiarEstadoPlantilla(plantillaId, activa) {
+        console.log('=== INICIO cambiarEstadoPlantilla ===');
+        console.log('DEBUG: plantillaId =', plantillaId, 'activa =', activa);
+        
+        var $checkbox = $('input[data-plantilla-id="' + plantillaId + '"]');
+        var $row = $('tr[data-plantilla-id="' + plantillaId + '"]');
+        
+        // Obtener tipo de plantilla
+        var tipoPlantilla = $row.find('.mv-tipo-badge').text().trim();
+        
+        console.log('DEBUG: tipoPlantilla =', '"' + tipoPlantilla + '"');
+        
+        // Si se está activando, hacer petición previa para obtener nombres
+        if (activa) {
+            console.log('DEBUG: Activando - verificando si hay conflictos...');
+            
+            // Hacer una petición AJAX previa para obtener información de las plantillas
+            $.ajax({
+                url: mvPdfTemplates.ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'mv_obtener_plantillas_tipo',
+                    nonce: mvPdfTemplates.nonce,
+                    tipo: tipoPlantilla.toLowerCase(),
+                    activas_solo: true
+                },
+                success: function(response) {
+                    console.log('DEBUG: Respuesta obtener_plantillas_tipo:', response);
+                    
+                    if (response.success && response.data && response.data.length > 0) {
+                        // Hay plantillas activas del mismo tipo
+                        var plantillasActivas = response.data.filter(function(p) {
+                            return parseInt(p.id) !== parseInt(plantillaId);
+                        });
+                        
+                        if (plantillasActivas.length > 0) {
+                            var nombreOtra = plantillasActivas[0].nombre || 'Otra plantilla';
+                            
+                            // Obtener nombre de la plantilla actual haciendo otra petición
+                            $.ajax({
+                                url: mvPdfTemplates.ajaxurl,
+                                type: 'POST',
+                                data: {
+                                    action: 'mv_obtener_plantilla',
+                                    nonce: mvPdfTemplates.nonce,
+                                    plantilla_id: plantillaId
+                                },
+                                success: function(response2) {
+                                    var nombreActual = 'Plantilla ID ' + plantillaId;
+                                    if (response2.success && response2.data && response2.data.nombre) {
+                                        nombreActual = response2.data.nombre;
+                                    }
+                                    
+                                    var mensaje = 'Al activar "' + nombreActual + '" (tipo: ' + tipoPlantilla + '):\n\n' +
+                                                '• Se desactivará automáticamente: "' + nombreOtra + '"\n' +
+                                                '• La página se recargará para mostrar los cambios\n\n' +
+                                                '¿Desea continuar?';
+                                    
+                                    console.log('DEBUG: Mensaje con nombres reales:', mensaje);
+                                    
+                                    if (confirm(mensaje)) {
+                                        ejecutarCambioEstado(plantillaId, activa, $checkbox, $row);
+                                    } else {
+                                        console.log('DEBUG: Usuario canceló la operación');
+                                        $checkbox.prop('checked', false);
+                                    }
+                                },
+                                error: function() {
+                                    // Si falla obtener el nombre, usar genérico
+                                    var mensaje = 'Al activar esta plantilla (tipo: ' + tipoPlantilla + '):\n\n' +
+                                                '• Se desactivará automáticamente: "' + nombreOtra + '"\n' +
+                                                '• La página se recargará para mostrar los cambios\n\n' +
+                                                '¿Desea continuar?';
+                                    
+                                    if (confirm(mensaje)) {
+                                        ejecutarCambioEstado(plantillaId, activa, $checkbox, $row);
+                                    } else {
+                                        $checkbox.prop('checked', false);
+                                    }
+                                }
+                            });
+                        } else {
+                            // No hay conflictos, proceder directamente
+                            ejecutarCambioEstado(plantillaId, activa, $checkbox, $row);
+                        }
+                    } else {
+                        // No hay plantillas activas del mismo tipo, proceder directamente
+                        ejecutarCambioEstado(plantillaId, activa, $checkbox, $row);
+                    }
+                },
+                error: function() {
+                    console.log('DEBUG: Error obteniendo plantillas, procediendo sin confirmación');
+                    ejecutarCambioEstado(plantillaId, activa, $checkbox, $row);
+                }
+            });
+        } else {
+            // Es desactivación, proceder directamente
+            ejecutarCambioEstado(plantillaId, activa, $checkbox, $row);
+        }
+    }
+
+    /**
+     * Función auxiliar para ejecutar el cambio de estado
+     */
+    function ejecutarCambioEstado(plantillaId, activa, $checkbox, $row) {
+        console.log('DEBUG: Ejecutando cambio de estado...');
+        
         $.ajax({
             url: mvPdfTemplates.ajaxurl,
             type: 'POST',
@@ -845,28 +951,110 @@ body {
                 action: 'mv_cambiar_estado_plantilla',
                 nonce: mvPdfTemplates.nonce,
                 plantilla_id: plantillaId,
-                activa: activa
+                activa: activa ? 1 : 0
+            },
+            beforeSend: function() {
+                $checkbox.prop('disabled', true);
             },
             success: function(response) {
+                console.log('DEBUG: Respuesta cambio de estado:', response);
+                
                 if (response.success) {
-                    mostrarNotificacion(response.data.message || 'Estado actualizado', 'success');
+                    mostrarNotificacion(response.data.message, 'success');
                     
-                    // Actualizar texto de estado
-                    var $row = $('tr[data-plantilla-id="' + plantillaId + '"]');
-                    $row.find('.mv-estado-text').text(activa ? 'Activa' : 'Inactiva');
-                    $row.attr('data-estado', activa ? 'activa' : 'inactiva');
+                    if (response.data.requiere_recarga) {
+                        console.log('DEBUG: Recargando página en 2 segundos...');
+                        setTimeout(function() {
+                            location.reload();
+                        }, 2000);
+                    } else {
+                        $row.find('.mv-estado-text').text('Inactiva');
+                        $row.attr('data-estado', 'inactiva');
+                        $checkbox.prop('disabled', false);
+                    }
                 } else {
-                    mostrarNotificacion(response.data.message || 'Error al cambiar estado', 'error');
-                    // Revertir toggle
-                    $('input[data-plantilla-id="' + plantillaId + '"]').prop('checked', !activa);
+                    var tipoNotificacion = response.data.codigo === 'REQUIERE_REEMPLAZO' ? 'warning' : 'error';
+                    mostrarNotificacion(response.data.message, tipoNotificacion);
+                    $checkbox.prop('checked', !activa);
+                    $checkbox.prop('disabled', false);
                 }
             },
-            error: function() {
-                mostrarNotificacion(mvPdfTemplates.i18n.error_general || 'Error de conexión', 'error');
-                // Revertir toggle
-                $('input[data-plantilla-id="' + plantillaId + '"]').prop('checked', !activa);
+            error: function(xhr, status, error) {
+                console.log('DEBUG: Error AJAX:', error);
+                mostrarNotificacion(mvPdfTemplates.i18n.error_general, 'error');
+                $checkbox.prop('checked', !activa);
+                $checkbox.prop('disabled', false);
             }
         });
+        
+        console.log('=== FIN cambiarEstadoPlantilla ===');
+    }
+
+    /**
+     * Función auxiliar para destacar plantillas del mismo tipo
+     */
+    function destacarPlantillasDelMismoTipo(tipo, plantillaActualId) {
+        // Remover destacados previos
+        $('.mv-plantilla-destacada').removeClass('mv-plantilla-destacada');
+        
+        // Destacar plantillas del mismo tipo (excepto la actual)
+        $('.mv-plantillas-table tbody tr').each(function() {
+            var $row = $(this);
+            var otroId = $row.data('plantilla-id');
+            var otroTipo = $row.find('.mv-tipo-badge').text().toLowerCase().trim();
+            
+            if (otroId != plantillaActualId && otroTipo === tipo) {
+                $row.addClass('mv-plantilla-destacada');
+            }
+        });
+        
+        // Remover destacado después de 5 segundos
+        setTimeout(function() {
+            $('.mv-plantilla-destacada').removeClass('mv-plantilla-destacada');
+        }, 5000);
+    }
+
+    /**
+     * Función mejorada para mostrar notificaciones con diferentes tipos
+     */
+    function mostrarNotificacion(mensaje, tipo) {
+        tipo = tipo || 'info';
+        
+        // Mapear tipos a clases de WordPress
+        var claseWordPress = 'notice-info';
+        switch(tipo) {
+            case 'success':
+                claseWordPress = 'notice-success';
+                break;
+            case 'error':
+                claseWordPress = 'notice-error';
+                break;
+            case 'warning':
+                claseWordPress = 'notice-warning';
+                break;
+            default:
+                claseWordPress = 'notice-info';
+        }
+        
+        var $notice = $('<div class="notice ' + claseWordPress + ' is-dismissible"><p>' + mensaje + '</p></div>');
+        
+        if ($('.wp-header-end').length) {
+            $notice.insertAfter('.wp-header-end');
+        } else if ($('.wrap h1').length) {
+            $notice.insertAfter('.wrap h1');
+        } else {
+            $notice.prependTo('.wrap');
+        }
+        
+        // Auto-remover después de 6 segundos (más tiempo para mensajes importantes)
+        setTimeout(function() {
+            $notice.fadeOut(function() {
+                $(this).remove();
+            });
+        }, 6000);
+        
+        // Scroll hacia arriba para mostrar notificación
+        $('html, body').animate({ scrollTop: 0 }, 500);
     }
     
     function duplicarPlantilla(plantillaId) {

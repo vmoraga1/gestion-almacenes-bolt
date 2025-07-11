@@ -1049,3 +1049,77 @@ Stack trace:
 [2025-07-10 07:03:40] INFO: PDF_TEMPLATES: Guardando archivo: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/previews/preview_1db460b65e634fad3c3611a648cabc0c.html | Usuario: hostpanish (ID: 1) | IP: ::1
 [2025-07-10 07:03:40] INFO: PDF_TEMPLATES: Preview generado exitosamente: http://localhost/gestion-almacenes-bolt/wp-admin/admin-ajax.php?action=mv_servir_preview&file=preview_1db460b65e634fad3c3611a648cabc0c.html&nonce=60cd10ea07 | Usuario: hostpanish (ID: 1) | IP: ::1
 [2025-07-10 07:09:29] INFO: PDF_TEMPLATES: Limpieza de previews completada - 9 archivos eliminados | IP: ::1
+[2025-07-10 09:33:47] INFO: PDF_TEMPLATES: Limpieza de previews completada - 5 archivos eliminados | IP: ::1
+[2025-07-10 09:33:57] INFO: Plugin desactivado | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:13] INFO: Tablas de base de datos creadas/actualizadas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:13] INFO: Plugin activado correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] INFO: PDF_TEMPLATES: Generando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] INFO: PDF_TEMPLATES: Processor disponible, procesando contenido... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] INFO: PDF_TEMPLATES: Usando datos de prueba | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] INFO: TEMPLATE_PROCESSOR: Procesando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: #if empresa.rut | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: /if | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: #if cotizacion.fecha_expiracion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.fecha_expiracion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: /if | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: #if cliente.rut | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: /if | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: #if cliente.direccion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: /if | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: #if cliente.telefono | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: /if | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: #if cliente.email | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: /if | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: #each productos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: #if this.sku | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: this.sku | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: /if | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: this.nombre | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: #if this.descripcion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: this.descripcion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: /if | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: this.cantidad | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: this.precio_unitario | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: this.subtotal | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: /each | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: #if cotizacion.subtotal | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: /if | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: #if cotizacion.descuento_global | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.descuento_global | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: /if | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: #if cotizacion.iva | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.iva | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: /if | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: #if vendedor.nombre | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: vendedor.nombre | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: /if | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] INFO: PDF_TEMPLATES: Contenido procesado, preparando directorio... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] INFO: PDF_TEMPLATES: Guardando archivo: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/previews/preview_bfd78934a839c4396b966d9e4cdb5a5f.html | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:43] INFO: PDF_TEMPLATES: Preview generado exitosamente: http://localhost/gestion-almacenes-bolt/wp-admin/admin-ajax.php?action=mv_servir_preview&file=preview_bfd78934a839c4396b966d9e4cdb5a5f.html&nonce=4bfb02273e | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:52] INFO: PDF_TEMPLATES: Generando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:52] INFO: PDF_TEMPLATES: Processor disponible, procesando contenido... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:52] INFO: PDF_TEMPLATES: Usando datos de prueba | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:52] INFO: TEMPLATE_PROCESSOR: Procesando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:52] INFO: PDF_TEMPLATES: Contenido procesado, preparando directorio... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:52] INFO: PDF_TEMPLATES: Guardando archivo: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/previews/preview_2a9dc6772196ed1e794322f148a37c42.html | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:34:52] INFO: PDF_TEMPLATES: Preview generado exitosamente: http://localhost/gestion-almacenes-bolt/wp-admin/admin-ajax.php?action=mv_servir_preview&file=preview_2a9dc6772196ed1e794322f148a37c42.html&nonce=f94edfe6b0 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:35:18] INFO: PDF generado para cotización COT-2025-000026: cotizacion_COT2025000026_2025-07-10.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 09:36:22] INFO: Plantilla ID 1 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 10:03:15] INFO: PDF_TEMPLATES: Generando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 10:03:15] INFO: PDF_TEMPLATES: Processor disponible, procesando contenido... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 10:03:15] INFO: PDF_TEMPLATES: Usando datos de prueba | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 10:03:15] INFO: TEMPLATE_PROCESSOR: Procesando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 10:03:15] INFO: PDF_TEMPLATES: Contenido procesado, preparando directorio... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 10:03:15] INFO: PDF_TEMPLATES: Guardando archivo: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/previews/preview_3178d9558009d05a80409b0fffa6201c.html | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 10:03:15] INFO: PDF_TEMPLATES: Preview generado exitosamente: http://localhost/gestion-almacenes-bolt/wp-admin/admin-ajax.php?action=mv_servir_preview&file=preview_3178d9558009d05a80409b0fffa6201c.html&nonce=107f717857 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 10:03:25] INFO: PDF_TEMPLATES: Generando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 10:03:25] INFO: PDF_TEMPLATES: Processor disponible, procesando contenido... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 10:03:25] INFO: PDF_TEMPLATES: Usando datos de prueba | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 10:03:25] INFO: TEMPLATE_PROCESSOR: Procesando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 10:03:25] INFO: PDF_TEMPLATES: Contenido procesado, preparando directorio... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 10:03:25] INFO: PDF_TEMPLATES: Guardando archivo: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/previews/preview_03210731914ef2de68531911f5904c46.html | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 10:03:25] INFO: PDF_TEMPLATES: Preview generado exitosamente: http://localhost/gestion-almacenes-bolt/wp-admin/admin-ajax.php?action=mv_servir_preview&file=preview_03210731914ef2de68531911f5904c46.html&nonce=115fdb1487 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-10 10:05:58] EMERGENCY: Error Fatal: syntax error, unexpected token "*", expecting "function" or "const" | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-ajax.php","line":957,"type":4}
+[2025-07-10 10:06:10] INFO: PDF generado para cotización COT-2025-000026: cotizacion_COT2025000026_2025-07-10.pdf | Usuario: hostpanish (ID: 1) | IP: ::1

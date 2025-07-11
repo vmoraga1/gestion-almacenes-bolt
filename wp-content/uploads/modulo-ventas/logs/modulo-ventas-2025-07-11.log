@@ -1,0 +1,15 @@
+[2025-07-11 02:57:48] INFO: PDF_TEMPLATES: Generando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 02:57:48] INFO: PDF_TEMPLATES: Processor disponible, procesando contenido... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 02:57:48] INFO: PDF_TEMPLATES: Usando datos de prueba | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 02:57:48] INFO: TEMPLATE_PROCESSOR: Procesando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 02:57:48] INFO: PDF_TEMPLATES: Contenido procesado, preparando directorio... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 02:57:48] INFO: PDF_TEMPLATES: Guardando archivo: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/previews/preview_f8ba35dc33fe18e384193bdeba9ff861.html | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 02:57:48] INFO: PDF_TEMPLATES: Preview generado exitosamente: http://localhost/gestion-almacenes-bolt/wp-admin/admin-ajax.php?action=mv_servir_preview&file=preview_f8ba35dc33fe18e384193bdeba9ff861.html&nonce=71a4f6a592 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 03:07:34] INFO: PDF_TEMPLATES: Generando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 03:07:34] INFO: PDF_TEMPLATES: Processor disponible, procesando contenido... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 03:07:34] INFO: PDF_TEMPLATES: Usando datos de prueba | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 03:07:34] INFO: TEMPLATE_PROCESSOR: Procesando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 03:07:34] INFO: PDF_TEMPLATES: Contenido procesado, preparando directorio... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 03:07:34] INFO: PDF_TEMPLATES: Guardando archivo: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/previews/preview_2708af36f1f5b01f565fd6c3946f12c4.html | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 03:07:34] INFO: PDF_TEMPLATES: Preview generado exitosamente: http://localhost/gestion-almacenes-bolt/wp-admin/admin-ajax.php?action=mv_servir_preview&file=preview_2708af36f1f5b01f565fd6c3946f12c4.html&nonce=ac264d4855 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-11 03:08:15] INFO: Nueva plantilla creada con ID: 5 y slug: cotizacion-prueba | Usuario: hostpanish (ID: 1) | IP: ::1

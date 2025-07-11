@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documento PDF</title>
+    <style>
+        body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: #f8f8f8;
+}
+
+.factura {
+  background: white;
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+  border: 1px solid #ccc;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid #000;
+  padding-bottom: 10px;
+}
+
+.logo img {
+  height: 80px;
+}
+
+.info-empresa {
+  flex-grow: 1;
+  padding: 0 20px;
+}
+
+.datos-factura {
+  text-align: right;
+  font-size: 14px;
+}
+
+.datos-cliente, .totales {
+  margin-top: 20px;
+}
+
+.detalle-productos table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.detalle-productos th, .detalle-productos td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.detalle-productos th {
+  background-color: #f0f0f0;
+}
+
+.totales p {
+  text-align: right;
+  font-size: 16px;
+  margin: 5px 0;
+}
+
+footer {
+  margin-top: 30px;
+  text-align: center;
+  font-size: 12px;
+  color: #555;
+}
+
+    </style>
+</head>
+<body>
+    <div class="documento">
+        <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Factura de Venta</title>
+  <link rel="stylesheet" href="estilo.css" />
+</head>
+<body>
+  <div class="factura">
+    <header>
+      <div class="logo">
+        <img src="" alt="Logo Empresa" />
+      </div>
+      <div class="info-empresa">
+        <h1>Factura Electrónica</h1>
+        <p><strong>RUT:</strong> 77.777.777-7</p>
+        <p><strong>Nombre Empresa:</strong> Desabolt</p>
+        <p><strong>Dirección:</strong> Dirección no configurada</p>
+        <p><strong>Giro:</strong> Venta de productos electrónicos</p>
+      </div>
+      <div class="datos-factura">
+        <p><strong>Nº:</strong> 33</p>
+        <p><strong>Folio:</strong> COT-2025-001</p>
+        <p><strong>Fecha:</strong> 2025-07-10 23:07:34</p>
+		<p><strong>Fecha vencimiento:</strong> 2025-08-10</p>
+		<p><strong>Vendedor:</strong> Juan Pérez - Ejecutivo de Ventas</p>
+      </div>
+    </header>
+
+    <section class="datos-cliente">
+      <h2>Datos del Cliente</h2>
+      <p><strong>RUT:</strong> 76.543.210-K</p>
+      <p><strong>Nombre:</strong> Tecnología y Servicios Empresariales Ltda.</p>
+      <p><strong>Dirección:</strong> Av. Providencia 1234, Oficina 567</p>
+      <p><strong>Comuna:</strong> Santiago</p>
+	  <p><strong>Email:</strong> contacto@techservicios.cl</p>
+	  <p><strong>Teléfono:</strong> +56 2 2345 6789</p>
+    </section>
+
+    <section class="detalle-productos">
+      <table class="productos-tabla" style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 10px;">
+                    <thead>
+                        <tr>
+                            <th style="background-color: #0073aa; color: white; border: 1px solid #0073aa; padding: 8px; text-align: left; font-weight: bold;">Código</th>
+                            <th style="background-color: #0073aa; color: white; border: 1px solid #0073aa; padding: 8px; text-align: left; font-weight: bold;">Producto/Servicio</th>
+                            <th style="background-color: #0073aa; color: white; border: 1px solid #0073aa; padding: 8px; text-align: center; font-weight: bold;">Cantidad</th>
+                            <th style="background-color: #0073aa; color: white; border: 1px solid #0073aa; padding: 8px; text-align: right; font-weight: bold;">Precio Unit.</th>
+                            <th style="background-color: #0073aa; color: white; border: 1px solid #0073aa; padding: 8px; text-align: right; font-weight: bold;">Descuento</th>
+                            <th style="background-color: #0073aa; color: white; border: 1px solid #0073aa; padding: 8px; text-align: right; font-weight: bold;">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody><tr style="background-color: #ffffff;">
+                        <td style="border: 1px solid #ddd; padding: 8px; vertical-align: top;">PROD001</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; vertical-align: top;">
+                            <strong>Laptop HP Pavilion 15</strong><br><small style="color: #666;">Laptop HP Pavilion 15 con procesador Intel Core i5</small></td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: top;">2</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top;">$650.000</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top;">$0</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top;">$1.300.000</td>
+                    </tr><tr style="background-color: #f9f9f9;">
+                        <td style="border: 1px solid #ddd; padding: 8px; vertical-align: top;">SERV001</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; vertical-align: top;">
+                            <strong>Instalación y Configuración</strong><br><small style="color: #666;">Servicio de instalación y configuración de software</small></td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: top;">1</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top;">$75.000</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top;">$5.000</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top;">$70.000</td>
+                    </tr><tr style="background-color: #ffffff;">
+                        <td style="border: 1px solid #ddd; padding: 8px; vertical-align: top;">ACC001</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; vertical-align: top;">
+                            <strong>Mouse Inalámbrico</strong><br><small style="color: #666;">Mouse inalámbrico ergonómico</small></td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: top;">2</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top;">$25.000</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top;">$0</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top;">$50.000</td>
+                    </tr></tbody></table>
+    </section>
+
+    <section class="totales">
+      <p><strong>Subtotal:</strong> 1.420.000</p>
+      <p><strong>IVA (19%):</strong> 242.820</p>
+      <p><strong>Total:</strong> 1.520.820</p>
+    </section>
+
+    <footer>
+      <p>Resolución SII Nº 0 del 01/01/2025</p>
+      <p>Representación impresa del DTE</p>
+    </footer>
+  </div>
+</body>
+</html>
+COT-2025-001
+    </div>
+</body>
+</html>

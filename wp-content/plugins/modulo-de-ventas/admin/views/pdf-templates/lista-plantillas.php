@@ -355,3 +355,52 @@ jQuery(document).ready(function($) {
     );
 });
 </script>
+
+<?php
+/**
+ * FUNCIÓN PARA LIMPIAR PLANTILLAS DUPLICADAS
+ * Ejecutar una sola vez desde wp-admin/admin.php?page=mv-pdf-templates
+ */
+
+function mv_limpiar_plantillas_duplicadas() {
+    global $wpdb;
+    
+    $tabla = $wpdb->prefix . 'mv_pdf_templates';
+    
+    // Encontrar plantillas duplicadas por tipo
+    $plantillas = $wpdb->get_results("
+        SELECT id, nombre, slug, tipo, es_predeterminada 
+        FROM $tabla 
+        WHERE tipo = 'cotizacion' 
+        ORDER BY es_predeterminada DESC, fecha_creacion ASC
+    ");
+    
+    echo '<div class="notice notice-info"><p><strong>Plantillas encontradas:</strong></p>';
+    foreach ($plantillas as $plantilla) {
+        echo '<p>ID: ' . $plantilla->id . ' - ' . $plantilla->nombre . ' (Predeterminada: ' . ($plantilla->es_predeterminada ? 'Sí' : 'No') . ')</p>';
+    }
+    echo '</div>';
+    
+    // Eliminar la plantilla "Plantilla Estándar - Cotización" si existe
+    $plantilla_antigua = $wpdb->get_row($wpdb->prepare(
+        "SELECT id FROM $tabla WHERE nombre LIKE %s",
+        '%Plantilla Estándar%'
+    ));
+    
+    if ($plantilla_antigua) {
+        $wpdb->delete($tabla, array('id' => $plantilla_antigua->id), array('%d'));
+        echo '<div class="notice notice-success"><p>Plantilla antigua eliminada: ID ' . $plantilla_antigua->id . '</p></div>';
+    }
+    
+    // Asegurar que solo hay una plantilla predeterminada
+    $wpdb->query("UPDATE $tabla SET es_predeterminada = 0 WHERE tipo = 'cotizacion'");
+    $wpdb->query("UPDATE $tabla SET es_predeterminada = 1 WHERE slug = 'plantilla-predeterminada-cotizacion'");
+    
+    echo '<div class="notice notice-success"><p>Plantillas limpiadas exitosamente</p></div>';
+}
+
+// Agregar temporalmente al final del archivo lista-plantillas.php
+if (isset($_GET['limpiar_duplicadas']) && $_GET['limpiar_duplicadas'] == '1') {
+    mv_limpiar_plantillas_duplicadas();
+}
+?>

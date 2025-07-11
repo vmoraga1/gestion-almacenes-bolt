@@ -474,3 +474,28 @@ h2.hndle {
     font-size: 11px;
     text-align: center;
 }
+
+/* Destacado de plantillas del mismo tipo */
+.mv-plantilla-destacada {
+    background-color: #fff3cd !important;
+    border-left: 4px solid #ffc107 !important;
+    animation: pulsoDestacado 2s ease-in-out;
+}
+
+@keyframes pulsoDestacado {
+    0%, 100% { 
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4); 
+    }
+    50% { 
+        box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); 
+    }
+}
+
+/* Estilo para notificaciones de warning */
+.notice-warning {
+    border-left-color: #ffc107;
+}
+
+.notice-warning p {
+    color: #856404;
+}

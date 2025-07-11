@@ -360,12 +360,12 @@ class Modulo_Ventas_PDF_Templates {
         }
     }
     
-    /**
+    /*
      * Obtener variables disponibles para el editor
-     */
+     *
     public function obtener_variables_disponibles($tipo = 'cotizacion') {
         return $this->processor->obtener_variables_disponibles($tipo);
-    }
+    }*/
     
     /**
      * Obtener configuración actual de plantillas
@@ -750,6 +750,74 @@ class Modulo_Ventas_PDF_Templates {
         }
         
         return $resultado;
+    }
+
+    /**
+     * Generar PDF de cotización real
+     */
+    public function generar_pdf_cotizacion($cotizacion_id) {
+        // Cargar procesador
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-template-processor.php';
+        $processor = Modulo_Ventas_PDF_Template_Processor::get_instance();
+        
+        // Obtener plantilla activa para cotizaciones
+        $plantilla = $this->obtener_plantilla_activa('cotizacion');
+        
+        if (!$plantilla) {
+            return new WP_Error('no_template', __('No hay plantilla activa para cotizaciones', 'modulo-ventas'));
+        }
+        
+        // Procesar plantilla con datos reales
+        $documento_html = $processor->procesar_plantilla($plantilla, $cotizacion_id, 'cotizacion');
+        
+        // Guardar PDF
+        $pdf_path = $this->guardar_pdf_temporal($documento_html, 'cotizacion-' . $cotizacion_id);
+        
+        if (is_wp_error($pdf_path)) {
+            return $pdf_path;
+        }
+        
+        return $pdf_path;
+    }
+    
+    /**
+     * Guardar PDF temporal
+     */
+    private function guardar_pdf_temporal($html_content, $filename_base) {
+        // Crear directorio temporal si no existe
+        $upload_dir = wp_upload_dir();
+        $temp_dir = $upload_dir['basedir'] . '/modulo-ventas/pdfs';
+        
+        if (!file_exists($temp_dir)) {
+            wp_mkdir_p($temp_dir);
+        }
+        
+        // Generar nombre único para el archivo
+        $timestamp = current_time('Y-m-d_H-i-s');
+        $filename = $filename_base . '_' . $timestamp . '.html';
+        $filepath = $temp_dir . '/' . $filename;
+        
+        // Guardar archivo HTML (para luego convertir a PDF)
+        $resultado = file_put_contents($filepath, $html_content);
+        
+        if ($resultado === false) {
+            return new WP_Error('save_error', __('Error al guardar archivo PDF', 'modulo-ventas'));
+        }
+        
+        // Devolver URL del archivo
+        $file_url = $upload_dir['baseurl'] . '/modulo-ventas/pdfs/' . $filename;
+        
+        return $file_url;
+    }
+    
+    /**
+     * Obtener variables disponibles para el procesador
+     */
+    public function obtener_variables_disponibles($tipo_documento = 'cotizacion') {
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-template-processor.php';
+        $processor = Modulo_Ventas_PDF_Template_Processor::get_instance();
+        
+        return $processor->obtener_variables_disponibles($tipo_documento);
     }
 }
 

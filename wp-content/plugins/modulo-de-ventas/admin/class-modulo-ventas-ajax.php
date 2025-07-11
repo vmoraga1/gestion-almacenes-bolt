@@ -732,8 +732,8 @@ class Modulo_Ventas_Ajax {
             'message' => sprintf(__('Cotización enviada exitosamente a %s', 'modulo-ventas'), $email_destino)
         ));
     }
-    
-    /**
+
+    /*
      * Generar PDF de cotización
      */
     public function generar_pdf_cotizacion() {

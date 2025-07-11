@@ -24,6 +24,60 @@ $cotizaciones_table->prepare_items();
 // Obtener estadísticas
 $db = new Modulo_Ventas_DB();
 $estadisticas = $db->obtener_estadisticas_cotizaciones();
+
+/**
+ * Agregar esta función donde se muestre la lista de cotizaciones
+ */
+function mv_mostrar_boton_pdf_cotizacion($cotizacion_id) {
+    $nonce = wp_create_nonce('mv_pdf_nonce');
+    ?>
+    <button type="button" 
+            class="button button-small mv-generar-pdf-cotizacion" 
+            data-cotizacion-id="<?php echo $cotizacion_id; ?>"
+            data-nonce="<?php echo $nonce; ?>"
+            title="Generar PDF">
+        <span class="dashicons dashicons-media-document"></span>
+        PDF
+    </button>
+    
+    <script>
+    jQuery(document).ready(function($) {
+        $('.mv-generar-pdf-cotizacion').on('click', function() {
+            var $btn = $(this);
+            var cotizacionId = $btn.data('cotizacion-id');
+            var nonce = $btn.data('nonce');
+            
+            $btn.prop('disabled', true).text('Generando...');
+            
+            $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'generar_pdf_cotizacion',
+                    cotizacion_id: cotizacionId,
+                    nonce: nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Abrir PDF en nueva ventana
+                        window.open(response.data.pdf_url, '_blank');
+                        alert('PDF generado exitosamente');
+                    } else {
+                        alert('Error: ' + response.data.message);
+                    }
+                },
+                error: function() {
+                    alert('Error de conexión');
+                },
+                complete: function() {
+                    $btn.prop('disabled', false).text('PDF');
+                }
+            });
+        });
+    });
+    </script>
+    <?php
+}
 ?>
 
 <div class="wrap">

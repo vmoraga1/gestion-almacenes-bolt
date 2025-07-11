@@ -337,49 +337,152 @@ class Modulo_Ventas_PDF_Templates_Ajax {
      * AJAX: Cambiar estado de plantilla (activa/inactiva)
      */
     public function cambiar_estado_plantilla() {
+        error_log("=== INICIO CAMBIAR_ESTADO_PLANTILLA ===");
+        
         check_ajax_referer('mv_pdf_templates', 'nonce');
         
         if (!current_user_can('manage_options')) {
+            error_log("ERROR: Sin permisos");
             wp_send_json_error(array('message' => __('Sin permisos', 'modulo-ventas')));
         }
         
         $plantilla_id = intval($_POST['plantilla_id']);
-        $activa = isset($_POST['activa']) && $_POST['activa'];
+        $activa = isset($_POST['activa']) ? (bool)$_POST['activa'] : false;
+        
+        error_log("DEBUG: plantilla_id = $plantilla_id, activa = " . ($activa ? 'true' : 'false'));
+        error_log("DEBUG: _POST['activa'] = " . (isset($_POST['activa']) ? $_POST['activa'] : 'no existe'));
         
         if (!$plantilla_id) {
+            error_log("ERROR: ID inválido");
             wp_send_json_error(array('message' => __('ID de plantilla inválido', 'modulo-ventas')));
         }
         
-        // Verificar que la plantilla existe
-        $plantilla = $this->templates_manager->obtener_plantilla($plantilla_id);
-        if (!$plantilla) {
-            wp_send_json_error(array('message' => __('Plantilla no encontrada', 'modulo-ventas')));
-        }
-        
-        // Actualizar estado
         global $wpdb;
         $tabla = $wpdb->prefix . 'mv_pdf_templates';
         
+        // Obtener información de la plantilla
+        $plantilla = $wpdb->get_row($wpdb->prepare(
+            "SELECT tipo, nombre, activa FROM $tabla WHERE id = %d",
+            $plantilla_id
+        ));
+        
+        if (!$plantilla) {
+            error_log("ERROR: Plantilla no encontrada");
+            wp_send_json_error(array('message' => __('Plantilla no encontrada', 'modulo-ventas')));
+        }
+        
+        error_log("DEBUG: Plantilla encontrada - ID: $plantilla_id, Nombre: '{$plantilla->nombre}', Tipo: '{$plantilla->tipo}', Estado actual: {$plantilla->activa}");
+        
+        // VALIDACIÓN PARA DESACTIVACIÓN
+        if (!$activa) {
+            error_log("DEBUG: Intentando DESACTIVAR plantilla");
+            
+            // Verificar cuántas plantillas activas hay del mismo tipo
+            $plantillas_activas_tipo = $wpdb->get_var($wpdb->prepare(
+                "SELECT COUNT(*) FROM $tabla WHERE tipo = %s AND activa = 1",
+                $plantilla->tipo
+            ));
+            
+            error_log("DEBUG: Plantillas activas del tipo '{$plantilla->tipo}': $plantillas_activas_tipo");
+            
+            // Si solo hay una plantilla activa del tipo y se quiere desactivar
+            if ($plantillas_activas_tipo <= 1) {
+                error_log("DEBUG: Solo hay 1 o menos plantillas activas del tipo");
+                
+                // Verificar si hay otras plantillas disponibles del mismo tipo
+                $otras_plantillas_tipo = $wpdb->get_var($wpdb->prepare(
+                    "SELECT COUNT(*) FROM $tabla WHERE tipo = %s AND id != %d",
+                    $plantilla->tipo,
+                    $plantilla_id
+                ));
+                
+                error_log("DEBUG: Otras plantillas disponibles del tipo '{$plantilla->tipo}': $otras_plantillas_tipo");
+                
+                if ($otras_plantillas_tipo > 0) {
+                    error_log("DEBUG: BLOQUEANDO desactivación - hay otras plantillas disponibles");
+                    wp_send_json_error(array(
+                        'message' => sprintf(
+                            __('No se puede desactivar "%s". Para desactivar esta plantilla tipo "%s", primero debe activar otra plantilla del mismo tipo.', 'modulo-ventas'),
+                            $plantilla->nombre,
+                            ucfirst($plantilla->tipo)
+                        ),
+                        'codigo' => 'REQUIERE_REEMPLAZO'
+                    ));
+                } else {
+                    error_log("DEBUG: BLOQUEANDO desactivación - es la única plantilla del tipo");
+                    wp_send_json_error(array(
+                        'message' => sprintf(
+                            __('No se puede desactivar "%s". Es la única plantilla disponible para el tipo "%s".', 'modulo-ventas'),
+                            $plantilla->nombre,
+                            ucfirst($plantilla->tipo)
+                        ),
+                        'codigo' => 'UNICA_PLANTILLA'
+                    ));
+                }
+            }
+        } else {
+            error_log("DEBUG: Intentando ACTIVAR plantilla");
+        }
+        
+        // Si llegamos aquí, la operación está permitida
+        
+        // Si se está activando, desactivar todas las otras plantillas del mismo tipo
+        if ($activa) {
+            // Obtener nombre de la plantilla actualmente activa del mismo tipo
+            $plantilla_actual_activa = $wpdb->get_var($wpdb->prepare(
+                "SELECT nombre FROM $tabla WHERE tipo = %s AND activa = 1 AND id != %d LIMIT 1",
+                $plantilla->tipo,
+                $plantilla_id
+            ));
+            
+            error_log("DEBUG: Plantilla actualmente activa del mismo tipo: " . ($plantilla_actual_activa ? $plantilla_actual_activa : 'ninguna'));
+            
+            // Desactivar todas las otras plantillas del mismo tipo
+            $resultado_desactivacion = $wpdb->update(
+                $tabla,
+                array('activa' => 0),
+                array('tipo' => $plantilla->tipo),
+                array('%d'),
+                array('%s')
+            );
+            
+            error_log("DEBUG: Resultado desactivación masiva: $resultado_desactivacion");
+        }
+        
+        // Actualizar el estado de la plantilla solicitada
         $resultado = $wpdb->update(
             $tabla,
-            array(
-                'activa' => $activa ? 1 : 0,
-                'fecha_actualizacion' => current_time('mysql')
-            ),
+            array('activa' => $activa ? 1 : 0),
             array('id' => $plantilla_id),
-            array('%d', '%s'),
+            array('%d'),
             array('%d')
         );
         
+        error_log("DEBUG: Resultado actualización plantilla principal: $resultado");
+        
         if ($resultado === false) {
+            error_log("ERROR: Fallo al actualizar la base de datos");
             wp_send_json_error(array('message' => __('Error al cambiar estado de plantilla', 'modulo-ventas')));
         }
         
-        $mensaje = $activa ? 
-            __('Plantilla activada exitosamente', 'modulo-ventas') : 
-            __('Plantilla desactivada exitosamente', 'modulo-ventas');
+        // Mensaje apropiado según la acción
+        if ($activa) {
+            $mensaje = isset($plantilla_actual_activa) && $plantilla_actual_activa ? 
+                sprintf(__('Plantilla "%s" activada exitosamente. Se ha desactivado "%s".', 'modulo-ventas'), $plantilla->nombre, $plantilla_actual_activa) :
+                sprintf(__('Plantilla "%s" activada exitosamente.', 'modulo-ventas'), $plantilla->nombre);
+        } else {
+            $mensaje = sprintf(__('Plantilla "%s" desactivada exitosamente.', 'modulo-ventas'), $plantilla->nombre);
+        }
         
-        wp_send_json_success(array('message' => $mensaje));
+        error_log("DEBUG: Mensaje final: $mensaje");
+        error_log("=== FIN CAMBIAR_ESTADO_PLANTILLA ===");
+        
+        wp_send_json_success(array(
+            'message' => $mensaje,
+            'plantilla_id' => $plantilla_id,
+            'nuevo_estado' => $activa,
+            'requiere_recarga' => $activa
+        ));
     }
     
     /**
