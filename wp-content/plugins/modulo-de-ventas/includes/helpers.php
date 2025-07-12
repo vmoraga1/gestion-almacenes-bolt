@@ -1297,6 +1297,21 @@ if (!function_exists('mv_get_configuracion_completa')) {
             'info_empresa' => get_option('modulo_ventas_info_empresa', ''),
             'terminos_condiciones' => get_option('modulo_ventas_terminos_condiciones', ''),
             
+            // NUEVOS CAMPOS DE EMPRESA - AÑADIR ESTOS:
+            'nombre_empresa' => get_option('modulo_ventas_nombre_empresa', get_option('blogname')),
+            'rut_empresa' => get_option('modulo_ventas_rut_empresa', ''),
+            'direccion_empresa' => get_option('modulo_ventas_direccion_empresa', ''),
+            'ciudad_empresa' => get_option('modulo_ventas_ciudad_empresa', ''),
+            'region_empresa' => get_option('modulo_ventas_region_empresa', ''),
+            'telefono_empresa' => get_option('modulo_ventas_telefono_empresa', ''),
+            'email_empresa' => get_option('modulo_ventas_email_empresa', get_option('admin_email')),
+            
+            // NUEVOS CAMPOS PDF AVANZADO - AÑADIR ESTOS:
+            'pdf_engine' => get_option('modulo_ventas_pdf_engine', 'mpdf'),
+            'pdf_formato' => get_option('modulo_ventas_pdf_formato', 'A4'),
+            'pdf_orientacion' => get_option('modulo_ventas_pdf_orientacion', 'portrait'),
+            'pdf_compresion' => get_option('modulo_ventas_pdf_compresion', 'yes'),
+
             // Avanzado
             'log_level' => get_option('modulo_ventas_log_level', 'info'),
             'log_retention_days' => get_option('modulo_ventas_log_retention_days', 30),
@@ -1323,7 +1338,19 @@ if (!function_exists('mv_procesar_configuracion')) {
                 'modulo_ventas_moneda_predeterminada',
                 'modulo_ventas_decimales_precio',
                 'modulo_ventas_decimales_cantidad',
-                'modulo_ventas_log_level'
+                'modulo_ventas_log_level',
+
+                // Campos PDF "Datos Empresa"
+                'modulo_ventas_nombre_empresa',
+                'modulo_ventas_email_empresa',
+                'modulo_ventas_rut_empresa',
+                'modulo_ventas_direccion_empresa', 
+                'modulo_ventas_ciudad_empresa',
+                'modulo_ventas_region_empresa',
+                'modulo_ventas_telefono_empresa',
+                'modulo_ventas_pdf_engine',
+                'modulo_ventas_pdf_formato',
+                'modulo_ventas_pdf_orientacion'
             );
             
             $opciones_numero = array(
@@ -1348,8 +1375,37 @@ if (!function_exists('mv_procesar_configuracion')) {
                 'modulo_ventas_notificar_nueva_cotizacion',
                 'modulo_ventas_crear_cliente_automatico',
                 'modulo_ventas_conversion_automatica',
-                'modulo_ventas_debug_mode'
+                'modulo_ventas_debug_mode',
+                'modulo_ventas_pdf_compresion'
             );
+
+            // Campos de plantillas (añadir procesamiento especial)
+            $plantillas_config = array();
+            foreach ($post_data as $key => $value) {
+                if (strpos($key, 'plantilla_') === 0 && !empty($value)) {
+                    $tipo = str_replace('plantilla_', '', $key);
+                    $plantillas_config[$tipo] = intval($value);
+                }
+            }
+
+            // Guardar configuración de plantillas
+            if (!empty($plantillas_config)) {
+                global $wpdb;
+                $tabla_config = $wpdb->prefix . 'mv_pdf_templates_config';
+                
+                foreach ($plantillas_config as $tipo => $plantilla_id) {
+                    $wpdb->replace(
+                        $tabla_config,
+                        array(
+                            'tipo_documento' => $tipo,
+                            'plantilla_id' => $plantilla_id,
+                            'activa' => 1,
+                            'fecha_asignacion' => current_time('mysql')
+                        ),
+                        array('%s', '%d', '%d', '%s')
+                    );
+                }
+            }
             
             // Procesar opciones de texto
             foreach ($opciones_texto as $opcion) {
@@ -1375,6 +1431,28 @@ if (!function_exists('mv_procesar_configuracion')) {
                         $valor = intval($valor);
                         if ($valor < 0 || $valor > 3) {
                             return array('success' => false, 'message' => __('Los decimales de cantidad deben estar entre 0 y 3.', 'modulo-ventas'));
+                        }
+                    }
+                    
+                    // NUEVAS VALIDACIONES PARA CAMPOS PDF
+                    if ($opcion === 'modulo_ventas_pdf_formato') {
+                        $formatos_validos = array('A4', 'Letter', 'Legal');
+                        if (!in_array($valor, $formatos_validos)) {
+                            return array('success' => false, 'message' => __('Formato de PDF no válido.', 'modulo-ventas'));
+                        }
+                    }
+                    
+                    if ($opcion === 'modulo_ventas_pdf_orientacion') {
+                        $orientaciones_validas = array('portrait', 'landscape');
+                        if (!in_array($valor, $orientaciones_validas)) {
+                            return array('success' => false, 'message' => __('Orientación de PDF no válida.', 'modulo-ventas'));
+                        }
+                    }
+                    
+                    if ($opcion === 'modulo_ventas_pdf_engine') {
+                        $motores_validos = array('mpdf', 'tcpdf');
+                        if (!in_array($valor, $motores_validos)) {
+                            return array('success' => false, 'message' => __('Motor de PDF no válido.', 'modulo-ventas'));
                         }
                     }
                     

@@ -46,40 +46,34 @@ class Modulo_Ventas_mPDF {
      */
     public function generar_pdf_desde_plantilla($cotizacion_id) {
         try {
-            $this->logger->log("MPDF: Iniciando generación para cotización {$cotizacion_id}");
+            $this->logger->log("MPDF: Generando PDF sincronizado para cotización {$cotizacion_id}");
             
-            // 1. Obtener HTML procesado del sistema de plantillas existente
-            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates.php';
-            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-template-processor.php';
-            
-            $pdf_templates = Modulo_Ventas_PDF_Templates::get_instance();
-            $processor = Modulo_Ventas_PDF_Template_Processor::get_instance();
+            // Usar el nuevo sistema de sincronización visual
+            $sync_system = Modulo_Ventas_mPDF_Visual_Sync::get_instance();
             
             // Obtener plantilla activa
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates.php';
+            $pdf_templates = Modulo_Ventas_PDF_Templates::get_instance();
             $plantilla = $pdf_templates->obtener_plantilla_activa('cotizacion');
+            
             if (!$plantilla) {
                 return new WP_Error('no_template', 'No hay plantilla activa para cotizaciones');
             }
             
-            // Procesar plantilla para obtener HTML completo
-            $documento_html = $processor->procesar_plantilla($plantilla, $cotizacion_id, 'cotizacion');
-            if (is_wp_error($documento_html)) {
-                return $documento_html;
-            }
+            // Generar HTML sincronizado para PDF
+            $documento_html = $sync_system->sincronizar_plantilla_para_mpdf($plantilla, $cotizacion_id, false);
             
-            $this->logger->log("MPDF: HTML procesado (" . strlen($documento_html) . " caracteres)");
+            $this->logger->log("MPDF: HTML sincronizado generado (" . strlen($documento_html) . " caracteres)");
             
-            // 2. Optimizar CSS para mPDF
-            $documento_html = $this->optimizar_css_para_mpdf($documento_html);
-            
-            // 3. Convertir a PDF usando mPDF
+            // Convertir a PDF usando mPDF
             return $this->convertir_html_a_pdf($documento_html, $cotizacion_id);
             
         } catch (Exception $e) {
-            $this->logger->log('MPDF: Error en generar_pdf_desde_plantilla: ' . $e->getMessage());
+            $this->logger->log('MPDF: Error en PDF sincronizado: ' . $e->getMessage(), 'error');
             return new WP_Error('pdf_generation_error', 'Error generando PDF: ' . $e->getMessage());
         }
     }
+
     
     /**
      * Optimizar CSS para mPDF (reemplazar Flexbox con alternativas)
@@ -219,10 +213,14 @@ class Modulo_Ventas_mPDF {
             $this->mpdf = new \Mpdf\Mpdf($config);
             
             // Configurar metadatos
-            $this->mpdf->SetTitle('Cotización ' . ($cotizacion ? $cotizacion->folio : $cotizacion_id));
+            $this->mpdf->SetTitle('Cotización ' . $cotizacion_folio);
             $this->mpdf->SetAuthor(get_bloginfo('name'));
             $this->mpdf->SetCreator('Módulo de Ventas - mPDF');
             
+            $this->mpdf->SetDisplayMode('fullpage');
+            $this->mpdf->showWatermarkText = false;
+            $this->mpdf->showWatermarkImage = false;
+
             // Escribir HTML
             $this->mpdf->WriteHTML($html_content);
             

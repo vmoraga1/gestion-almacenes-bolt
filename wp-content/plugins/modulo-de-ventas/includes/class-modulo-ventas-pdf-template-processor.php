@@ -16,21 +16,121 @@ class Modulo_Ventas_PDF_Template_Processor {
     private static $instance = null;
     
     /**
+     * Datos de la cotización/documento actual
+     */
+    private $cotizacion_data;
+
+    /**
      * Logger
      */
     private $logger;
     
     /**
-     * Datos de la cotización actual
-     */
-    private $cotizacion_data = null;
-    
-    /**
      * Constructor
      */
     public function __construct() {
-        $this->logger = Modulo_Ventas_Logger::get_instance();
+        $this->cotizacion_data = null;
+        
+        // Inicializar logger si existe
+        if (class_exists('Modulo_Ventas_Logger')) {
+            $this->logger = Modulo_Ventas_Logger::get_instance();
+        }
     }
+
+    /**
+     * Cargar datos para procesar template
+     */
+    public function cargar_datos($datos) {
+        if (is_array($datos)) {
+            $this->cotizacion_data = (object) $datos;
+        } elseif (is_object($datos)) {
+            $this->cotizacion_data = $datos;
+        } else {
+            $this->cotizacion_data = new stdClass();
+        }
+        
+        // Asegurar que tenga las propiedades básicas
+        if (!isset($this->cotizacion_data->id)) {
+            $this->cotizacion_data->id = 0;
+        }
+        
+        if (!isset($this->cotizacion_data->tipo_documento)) {
+            $this->cotizacion_data->tipo_documento = 'cotizacion';
+        }
+        
+        return $this;
+    }
+
+    /**
+     * Procesar template HTML con los datos cargados
+     */
+    public function procesar_template($html_template) {
+        if (!$this->cotizacion_data) {
+            return $html_template;
+        }
+        
+        // Convertir objeto a array para fácil acceso
+        $datos = is_object($this->cotizacion_data) ? (array) $this->cotizacion_data : $this->cotizacion_data;
+        
+        // Procesar variables simples
+        $html_procesado = $this->procesar_variables_simples($html_template, $datos);
+        
+        // Procesar variables complejas
+        $html_procesado = $this->procesar_variables_complejas($html_procesado, $datos);
+        
+        return $html_procesado;
+    }
+
+    /**
+     * Procesar CSS con los datos cargados
+     */
+    public function procesar_css($css_template) {
+        if (!$this->cotizacion_data) {
+            return $css_template;
+        }
+        
+        // Por ahora, CSS no necesita procesamiento de variables
+        // Pero podemos agregar funcionalidad aquí en el futuro
+        return $css_template;
+    }
+
+    /**
+     * Procesar variables simples como {{variable}}
+     */
+    private function procesar_variables_simples($html, $datos) {
+        // Buscar todas las variables con el patrón {{variable}}
+        preg_match_all('/\{\{([^}]+)\}\}/', $html, $matches);
+        
+        foreach ($matches[0] as $i => $variable_completa) {
+            $variable = trim($matches[1][$i]);
+            $valor = $this->obtener_valor_variable($variable, $datos);
+            $html = str_replace($variable_completa, $valor, $html);
+        }
+        
+        return $html;
+    }
+
+    /**
+     * Procesar variables complejas como tablas
+     */
+    private function procesar_variables_complejas($html, $datos) {
+        // Procesar tabla de productos si existe
+        if (strpos($html, '{{tabla_productos}}') !== false) {
+            $tabla_html = $this->generar_tabla_productos($datos);
+            $html = str_replace('{{tabla_productos}}', $tabla_html, $html);
+        }
+        
+        // Procesar logo de empresa si existe
+        if (strpos($html, '{{logo_empresa}}') !== false) {
+            $logo_html = $this->procesar_logo_empresa($datos);
+            $html = str_replace('{{logo_empresa}}', $logo_html, $html);
+        }
+        
+        return $html;
+    }
+
+    
+
     
     /**
      * Obtener instancia singleton
@@ -609,39 +709,46 @@ class Modulo_Ventas_PDF_Template_Processor {
     /**
      * Procesar logo de empresa
      */
-    private function procesar_logo_empresa($logo_url) {
-        if (empty($logo_url)) {
-            return '';
+    private function procesar_logo_empresa($datos) {
+        $logo_url = '';
+        
+        if (isset($datos['logo_empresa']) && $datos['logo_empresa']) {
+            $logo_url = $datos['logo_empresa'];
+        } elseif (isset($datos['empresa']['logo']) && $datos['empresa']['logo']) {
+            $logo_url = $datos['empresa']['logo'];
         }
         
-        // Asegurar que sea una URL completa
-        if (!filter_var($logo_url, FILTER_VALIDATE_URL)) {
-            $logo_url = home_url($logo_url);
+        if ($logo_url) {
+            return '<img src="' . esc_url($logo_url) . '" alt="Logo" class="logo-empresa" style="max-height: 80px; max-width: 200px;">';
         }
         
-        return '<img src="' . esc_url($logo_url) . '" alt="Logo" class="logo-empresa" style="max-height: 80px; max-width: 200px;">';
+        return '';
     }
     
     /**
      * Generar documento HTML final
      */
-    private function generar_documento_final($html_procesado, $css_procesado) {
+    public function generar_documento_final($html_procesado, $css_procesado) {
         $documento = '<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documento PDF</title>
-    <style>
-        ' . $css_procesado . '
-    </style>
-</head>
-<body>
-    <div class="documento">
-        ' . $html_procesado . '
-    </div>
-</body>
-</html>';
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Documento PDF</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .tabla-productos { width: 100%; border-collapse: collapse; }
+            .tabla-productos th, .tabla-productos td { border: 1px solid #ddd; padding: 8px; }
+            .tabla-productos th { background: #f5f5f5; }
+            ' . $css_procesado . '
+        </style>
+    </head>
+    <body>
+        <div class="documento">
+            ' . $html_procesado . '
+        </div>
+    </body>
+    </html>';
         
         return $documento;
     }
@@ -751,5 +858,424 @@ class Modulo_Ventas_PDF_Template_Processor {
         $preview_url = $upload_dir['baseurl'] . '/modulo-ventas/temp/' . $filename;
         
         return $preview_url;
+    }
+
+    /**
+     * Obtener datos reales para preview según el tipo de documento
+     */
+    public function obtener_datos_preview($tipo_documento = 'cotizacion') {
+        global $wpdb;
+        
+        switch ($tipo_documento) {
+            case 'cotizacion':
+                return $this->obtener_ultima_cotizacion_para_preview();
+                
+            case 'venta':
+                return $this->obtener_ultima_venta_para_preview();
+                
+            case 'pedido':
+                return $this->obtener_ultimo_pedido_para_preview();
+                
+            default:
+                return $this->obtener_datos_prueba($tipo_documento);
+        }
+    }
+
+    /**
+     * Obtener datos de la última cotización real
+     */
+    private function obtener_ultima_cotizacion_para_preview() {
+        global $wpdb;
+        
+        $tabla_cotizaciones = $wpdb->prefix . 'mv_cotizaciones';
+        $tabla_items = $wpdb->prefix . 'mv_cotizaciones_items';
+        $tabla_clientes = $wpdb->prefix . 'mv_clientes';
+        
+        // CORREGIDO: Usar get_row() sin prepare() cuando no hay parámetros dinámicos
+        $cotizacion = $wpdb->get_row(
+            "SELECT c.*, cl.razon_social, cl.rut, cl.email, cl.telefono,
+                    cl.direccion_facturacion, cl.ciudad_facturacion, cl.region_facturacion,
+                    cl.giro_comercial
+            FROM {$tabla_cotizaciones} c
+            LEFT JOIN {$tabla_clientes} cl ON c.cliente_id = cl.id
+            WHERE c.estado != 'eliminada'
+            ORDER BY c.fecha_creacion DESC
+            LIMIT 1"
+        );
+        
+        if (!$cotizacion) {
+            // Si no hay cotizaciones, usar datos de prueba
+            return $this->obtener_datos_prueba('cotizacion');
+        }
+        
+        // Verificar que la cotización tenga ID
+        if (!isset($cotizacion->id) || empty($cotizacion->id)) {
+            error_log('MODULO_VENTAS: Cotización sin ID encontrada');
+            return $this->obtener_datos_prueba('cotizacion');
+        }
+        
+        // Obtener items de la cotización - AQUÍ SÍ usar prepare() porque hay parámetro dinámico
+        $items = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM {$tabla_items} WHERE cotizacion_id = %d ORDER BY orden ASC",
+            $cotizacion->id
+        ));
+        
+        // CORREGIDO: Verificar que la función existe antes de llamarla
+        if (function_exists('obtener_datos_empresa')) {
+            $datos_empresa = obtener_datos_empresa();
+        } else {
+            // Fallback: obtener datos directamente
+            $datos_empresa = $this->obtener_datos_empresa_fallback();
+        }
+        
+        // Formatear datos para el template
+        $datos_formatted = array(
+            'cotizacion' => array(
+                'numero' => isset($cotizacion->folio) ? $cotizacion->folio : 'SIN-FOLIO',
+                'fecha' => date('d/m/Y', strtotime($cotizacion->fecha_creacion)),
+                'fecha_vencimiento' => isset($cotizacion->fecha_vencimiento) && $cotizacion->fecha_vencimiento 
+                    ? date('d/m/Y', strtotime($cotizacion->fecha_vencimiento)) 
+                    : date('d/m/Y', strtotime('+30 days')),
+                'estado' => isset($cotizacion->estado) ? ucfirst($cotizacion->estado) : 'Sin estado',
+                'observaciones' => isset($cotizacion->observaciones) && $cotizacion->observaciones 
+                    ? $cotizacion->observaciones 
+                    : 'Sin observaciones',
+                'vendedor' => isset($cotizacion->vendedor) && $cotizacion->vendedor 
+                    ? $cotizacion->vendedor 
+                    : 'Sin asignar',
+                'validez' => isset($cotizacion->validez) && $cotizacion->validez 
+                    ? $cotizacion->validez 
+                    : '30 días',
+                'condiciones_pago' => isset($cotizacion->condiciones_pago) && $cotizacion->condiciones_pago 
+                    ? $cotizacion->condiciones_pago 
+                    : 'Contado'
+            ),
+            
+            'cliente' => array(
+                'nombre' => isset($cotizacion->razon_social) && $cotizacion->razon_social 
+                    ? $cotizacion->razon_social 
+                    : 'Cliente sin nombre',
+                'rut' => isset($cotizacion->rut) && $cotizacion->rut 
+                    ? $this->formatear_rut_fallback($cotizacion->rut) 
+                    : 'Sin RUT',
+                'email' => isset($cotizacion->email) && $cotizacion->email 
+                    ? $cotizacion->email 
+                    : 'Sin email',
+                'telefono' => isset($cotizacion->telefono) && $cotizacion->telefono 
+                    ? $cotizacion->telefono 
+                    : 'Sin teléfono',
+                'direccion' => isset($cotizacion->direccion_facturacion) && $cotizacion->direccion_facturacion 
+                    ? $cotizacion->direccion_facturacion 
+                    : 'Sin dirección',
+                'ciudad' => isset($cotizacion->ciudad_facturacion) && $cotizacion->ciudad_facturacion 
+                    ? $cotizacion->ciudad_facturacion 
+                    : 'Sin ciudad',
+                'region' => isset($cotizacion->region_facturacion) && $cotizacion->region_facturacion 
+                    ? $cotizacion->region_facturacion 
+                    : 'Sin región',
+                'giro' => isset($cotizacion->giro_comercial) && $cotizacion->giro_comercial 
+                    ? $cotizacion->giro_comercial 
+                    : 'Sin giro comercial'
+            ),
+            
+            'empresa' => array(
+                'nombre' => isset($datos_empresa->nombre) ? $datos_empresa->nombre : 'Sin nombre',
+                'direccion' => isset($datos_empresa->direccion) ? $datos_empresa->direccion : 'Sin dirección',
+                'ciudad' => isset($datos_empresa->ciudad) ? $datos_empresa->ciudad : 'Sin ciudad',
+                'region' => isset($datos_empresa->region) ? $datos_empresa->region : 'Sin región',
+                'telefono' => isset($datos_empresa->telefono) ? $datos_empresa->telefono : 'Sin teléfono',
+                'email' => isset($datos_empresa->email) ? $datos_empresa->email : 'Sin email',
+                'rut' => isset($datos_empresa->rut) ? $datos_empresa->rut : 'Sin RUT',
+                'sitio_web' => isset($datos_empresa->sitio_web) ? $datos_empresa->sitio_web : home_url()
+            ),
+            
+            'productos' => $this->formatear_productos_cotizacion($items),
+            
+            'totales' => array(
+                'subtotal' => isset($cotizacion->subtotal) ? floatval($cotizacion->subtotal) : 0,
+                'subtotal_formateado' => number_format(
+                    isset($cotizacion->subtotal) ? floatval($cotizacion->subtotal) : 0, 
+                    0, ',', '.'
+                ),
+                'descuento' => isset($cotizacion->descuento) ? floatval($cotizacion->descuento) : 0,
+                'descuento_formateado' => number_format(
+                    isset($cotizacion->descuento) ? floatval($cotizacion->descuento) : 0, 
+                    0, ',', '.'
+                ),
+                'impuestos' => isset($cotizacion->impuestos) ? floatval($cotizacion->impuestos) : 0,
+                'impuestos_formateado' => number_format(
+                    isset($cotizacion->impuestos) ? floatval($cotizacion->impuestos) : 0, 
+                    0, ',', '.'
+                ),
+                'total' => isset($cotizacion->total) ? floatval($cotizacion->total) : 0,
+                'total_formateado' => number_format(
+                    isset($cotizacion->total) ? floatval($cotizacion->total) : 0, 
+                    0, ',', '.'
+                ),
+                'descuento_porcentaje' => isset($cotizacion->descuento_porcentaje) ? floatval($cotizacion->descuento_porcentaje) : 0
+            ),
+            
+            'fechas' => array(
+                'hoy' => date('d/m/Y'),
+                'fecha_cotizacion' => date('d/m/Y', strtotime($cotizacion->fecha_creacion)),
+                'fecha_vencimiento_formateada' => isset($cotizacion->fecha_vencimiento) && $cotizacion->fecha_vencimiento 
+                    ? date('d/m/Y', strtotime($cotizacion->fecha_vencimiento)) 
+                    : date('d/m/Y', strtotime('+30 days'))
+            ),
+            
+            // Variables adicionales
+            'logo_empresa' => isset($datos_empresa->logo) ? $datos_empresa->logo : '',
+            'info_empresa' => isset($datos_empresa->info_adicional) ? $datos_empresa->info_adicional : '',
+            'terminos_condiciones' => get_option('modulo_ventas_terminos_condiciones', 'Términos y condiciones de configuración')
+        );
+        
+        return $datos_formatted;
+    }
+
+    /**
+     * AGREGAR: Método fallback para obtener datos de empresa
+     */
+    private function obtener_datos_empresa_fallback() {
+        $datos_empresa = new stdClass();
+        
+        $datos_empresa->nombre = get_option('modulo_ventas_nombre_empresa', get_bloginfo('name'));
+        $datos_empresa->direccion = get_option('modulo_ventas_direccion_empresa', '');
+        $datos_empresa->ciudad = get_option('modulo_ventas_ciudad_empresa', '');
+        $datos_empresa->region = get_option('modulo_ventas_region_empresa', '');
+        $datos_empresa->telefono = get_option('modulo_ventas_telefono_empresa', '');
+        $datos_empresa->email = get_option('modulo_ventas_email_empresa', get_bloginfo('admin_email'));
+        $datos_empresa->rut = get_option('modulo_ventas_rut_empresa', '');
+        $datos_empresa->sitio_web = home_url();
+        
+        // Logo
+        $logo_id = get_option('modulo_ventas_logo_empresa', '');
+        if ($logo_id) {
+            $logo_url = wp_get_attachment_url($logo_id);
+            $datos_empresa->logo = $logo_url ? $logo_url : '';
+        } else {
+            $datos_empresa->logo = '';
+        }
+        
+        // Info adicional
+        $datos_empresa->info_adicional = get_option('modulo_ventas_info_empresa', '');
+        
+        return $datos_empresa;
+    }
+
+    /**
+     * Formatear productos de cotización para template
+     */
+    private function formatear_productos_cotizacion($items) {
+        $productos = array();
+        
+        if (!is_array($items)) {
+            return $productos;
+        }
+        
+        foreach ($items as $item) {
+            $productos[] = array(
+                'nombre' => isset($item->nombre_producto) ? $item->nombre_producto : 'Producto sin nombre',
+                'descripcion' => isset($item->descripcion) ? $item->descripcion : '',
+                'cantidad' => isset($item->cantidad) ? intval($item->cantidad) : 0,
+                'precio_unitario' => isset($item->precio_unitario) ? floatval($item->precio_unitario) : 0,
+                'precio_unitario_formateado' => '$' . number_format(isset($item->precio_unitario) ? $item->precio_unitario : 0, 0, ',', '.'),
+                'subtotal' => isset($item->subtotal) ? floatval($item->subtotal) : 0,
+                'subtotal_formateado' => '$' . number_format(isset($item->subtotal) ? $item->subtotal : 0, 0, ',', '.'),
+                'descuento' => isset($item->descuento) ? floatval($item->descuento) : 0,
+                'descuento_formateado' => '$' . number_format(isset($item->descuento) ? $item->descuento : 0, 0, ',', '.')
+            );
+        }
+        
+        return $productos;
+    }
+
+    /**
+     * Obtener datos de la última venta (placeholder)
+     */
+    private function obtener_ultima_venta_para_preview() {
+        // Por ahora usar datos de prueba, implementar cuando esté el módulo de ventas
+        return $this->obtener_datos_prueba('venta');
+    }
+
+    /**
+     * Obtener datos del último pedido (placeholder)
+     */
+    private function obtener_ultimo_pedido_para_preview() {
+        // Por ahora usar datos de prueba, implementar cuando esté el módulo de pedidos
+        return $this->obtener_datos_prueba('pedido');
+    }
+
+    /**
+     * Obtener datos de prueba para preview
+     */
+    public function obtener_datos_prueba($tipo_documento = 'cotizacion') {
+        // CORREGIDO: Obtener datos de empresa con fallback
+        if (function_exists('obtener_datos_empresa')) {
+            $datos_empresa = obtener_datos_empresa();
+        } else {
+            $datos_empresa = $this->obtener_datos_empresa_fallback();
+        }
+        
+        switch ($tipo_documento) {
+            case 'cotizacion':
+                return $this->obtener_datos_prueba_cotizacion($datos_empresa);
+            
+            case 'venta':
+                return $this->obtener_datos_prueba_venta($datos_empresa);
+                
+            case 'pedido':
+                return $this->obtener_datos_prueba_pedido($datos_empresa);
+                
+            default:
+                return $this->obtener_datos_prueba_cotizacion($datos_empresa);
+        }
+    }
+
+    /**
+     * Datos de prueba específicos para cotización
+     */
+    private function obtener_datos_prueba_cotizacion($datos_empresa) {
+        return array(
+            'cotizacion' => array(
+                'numero' => 'COT-001',
+                'fecha' => date('d/m/Y'),
+                'fecha_vencimiento' => date('d/m/Y', strtotime('+30 days')),
+                'estado' => 'Borrador',
+                'observaciones' => 'Esta es una cotización de prueba para visualizar la plantilla',
+                'vendedor' => 'Juan Pérez',
+                'validez' => '30 días',
+                'condiciones_pago' => 'Contado contra entrega'
+            ),
+            
+            'cliente' => array(
+                'nombre' => 'Empresa Cliente de Prueba S.A.',
+                'rut' => '12.345.678-9',
+                'email' => 'contacto@clienteprueba.cl',
+                'telefono' => '+56 9 8765 4321',
+                'direccion' => 'Av. Providencia 1234, Oficina 567',
+                'ciudad' => 'Santiago',
+                'region' => 'Metropolitana',
+                'giro' => 'Servicios de Consultoría'
+            ),
+            
+            'empresa' => array(
+                'nombre' => isset($datos_empresa->nombre) ? $datos_empresa->nombre : 'Empresa de Prueba',
+                'direccion' => isset($datos_empresa->direccion) ? $datos_empresa->direccion : 'Dirección de Prueba',
+                'ciudad' => isset($datos_empresa->ciudad) ? $datos_empresa->ciudad : 'Ciudad',
+                'region' => isset($datos_empresa->region) ? $datos_empresa->region : 'Región',
+                'telefono' => isset($datos_empresa->telefono) ? $datos_empresa->telefono : '+56 2 1234 5678',
+                'email' => isset($datos_empresa->email) ? $datos_empresa->email : 'contacto@empresa.cl',
+                'rut' => isset($datos_empresa->rut) ? $datos_empresa->rut : '98.765.432-1',
+                'sitio_web' => isset($datos_empresa->sitio_web) ? $datos_empresa->sitio_web : home_url()
+            ),
+            
+            'productos' => array(
+                array(
+                    'nombre' => 'Consultoría en Gestión Empresarial',
+                    'descripcion' => 'Análisis y optimización de procesos empresariales',
+                    'cantidad' => 20,
+                    'precio_unitario' => 50000,
+                    'precio_unitario_formateado' => '$50.000',
+                    'subtotal' => 1000000,
+                    'subtotal_formateado' => '$1.000.000',
+                    'descuento' => 0,
+                    'descuento_formateado' => '$0'
+                ),
+                array(
+                    'nombre' => 'Capacitación de Personal',
+                    'descripcion' => 'Programa de capacitación para equipos de trabajo',
+                    'cantidad' => 15,
+                    'precio_unitario' => 35000,
+                    'precio_unitario_formateado' => '$35.000',
+                    'subtotal' => 525000,
+                    'subtotal_formateado' => '$525.000',
+                    'descuento' => 25000,
+                    'descuento_formateado' => '$25.000'
+                )
+            ),
+            
+            'totales' => array(
+                'subtotal' => 1525000,
+                'subtotal_formateado' => '1.525.000',
+                'descuento' => 25000,
+                'descuento_formateado' => '25.000',
+                'impuestos' => 285000,
+                'impuestos_formateado' => '285.000',
+                'total' => 1785000,
+                'total_formateado' => '1.785.000',
+                'descuento_porcentaje' => 1.6
+            ),
+            
+            'fechas' => array(
+                'hoy' => date('d/m/Y'),
+                'fecha_cotizacion' => date('d/m/Y'),
+                'fecha_vencimiento_formateada' => date('d/m/Y', strtotime('+30 days'))
+            ),
+            
+            'logo_empresa' => isset($datos_empresa->logo) ? $datos_empresa->logo : '',
+            'info_empresa' => isset($datos_empresa->info_adicional) ? $datos_empresa->info_adicional : 'Información adicional de la empresa',
+            'terminos_condiciones' => get_option('modulo_ventas_terminos_condiciones', 'Términos y condiciones: Los precios son válidos por 30 días.')
+        );
+    }
+
+    /**
+     * Datos de prueba para venta (placeholder)
+     */
+    private function obtener_datos_prueba_venta($datos_empresa) {
+        $datos = $this->obtener_datos_prueba_cotizacion($datos_empresa);
+        
+        // Modificar algunos campos específicos para venta
+        $datos['venta'] = $datos['cotizacion'];
+        $datos['venta']['numero'] = 'VEN-001';
+        $datos['venta']['estado'] = 'Completada';
+        unset($datos['cotizacion']);
+        
+        return $datos;
+    }
+
+    /**
+     * Datos de prueba para pedido (placeholder)
+     */
+    private function obtener_datos_prueba_pedido($datos_empresa) {
+        $datos = $this->obtener_datos_prueba_cotizacion($datos_empresa);
+        
+        // Modificar algunos campos específicos para pedido
+        $datos['pedido'] = $datos['cotizacion'];
+        $datos['pedido']['numero'] = 'PED-001';
+        $datos['pedido']['estado'] = 'En Proceso';
+        unset($datos['cotizacion']);
+        
+        return $datos;
+    }
+
+    /**
+     * Generar HTML optimizado para mPDF (si no existe)
+     */
+    public function generar_html_para_mpdf($html_procesado, $css_procesado) {
+        return $this->generar_documento_final($html_procesado, $css_procesado);
+    }
+
+    private function formatear_rut_fallback($rut) {
+        if (function_exists('mv_formatear_rut')) {
+            return mv_formatear_rut($rut);
+        }
+        
+        // Fallback: formateo básico
+        $rut = preg_replace('/[^0-9kK]/', '', $rut);
+        
+        if (strlen($rut) < 2) {
+            return $rut;
+        }
+        
+        $dv = substr($rut, -1);
+        $numero = substr($rut, 0, -1);
+        
+        // Formatear con puntos
+        $numero = strrev($numero);
+        $numero = chunk_split($numero, 3, '.');
+        $numero = strrev($numero);
+        $numero = ltrim($numero, '.');
+        
+        return $numero . '-' . $dv;
     }
 }

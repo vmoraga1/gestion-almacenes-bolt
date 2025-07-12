@@ -12,30 +12,46 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// Definir tab activa
+$tab_activa = isset($_GET['tab']) ? sanitize_text_field($_GET['tab']) : 'general';
+
 // Obtener configuración actual
 $config = mv_get_configuracion_completa();
 
-// Procesar formulario si se envió
+// Inicializar variables de mensajes
 $mensaje_guardado = '';
 $error_message = '';
 
+// Procesar formulario si se envió
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mv_config_nonce'])) {
     if (!wp_verify_nonce($_POST['mv_config_nonce'], 'mv_guardar_configuracion')) {
         $error_message = __('Error de seguridad. Por favor, intenta de nuevo.', 'modulo-ventas');
     } else {
-        $resultado = mv_procesar_configuracion($_POST);
-        if ($resultado['success']) {
-            $mensaje_guardado = __('Configuración guardada exitosamente.', 'modulo-ventas');
-            // Recargar configuración
-            $config = mv_get_configuracion_completa();
+        if (function_exists('mv_procesar_configuracion')) {
+            $resultado = mv_procesar_configuracion($_POST);
+            if (is_array($resultado) && isset($resultado['success']) && $resultado['success']) {
+                $mensaje_guardado = __('Configuración guardada exitosamente.', 'modulo-ventas');
+                // Recargar configuración
+                $config = mv_get_configuracion_completa();
+            } else {
+                $error_message = isset($resultado['message']) ? $resultado['message'] : 'Error al guardar la configuración.';
+            }
         } else {
-            $error_message = $resultado['message'];
+            $error_message = 'Función mv_procesar_configuracion no disponible.';
         }
     }
 }
 
-// Obtener almacenes si el plugin está activo
-$almacenes = mv_get_almacenes(false);
+// Obtener almacenes si están disponibles
+$almacenes = array();
+if (function_exists('mv_get_almacenes')) {
+    try {
+        $almacenes = mv_get_almacenes(false);
+    } catch (Exception $e) {
+        // Ignorar errores de almacenes
+    }
+}
+
 ?>
 
 <div class="wrap mv-configuracion">
@@ -93,9 +109,8 @@ $almacenes = mv_get_almacenes(false);
     <form method="post" action="" enctype="multipart/form-data" class="mv-config-form">
         <?php wp_nonce_field('mv_guardar_configuracion', 'mv_config_nonce'); ?>
         
-        <div class="mv-tab-content">
-            
-            <?php if ($tab_activa === 'general') : ?>
+        <div class="mv-configuracion mv-config-tab-content">
+        <?php if ($tab_activa === 'general') : ?>
             <!-- TAB GENERAL -->
             <div class="mv-tab-panel">
                 <h2><?php _e('Configuración General', 'modulo-ventas'); ?></h2>
@@ -462,69 +477,404 @@ $almacenes = mv_get_almacenes(false);
             </div>
             
             <?php elseif ($tab_activa === 'pdf') : ?>
-            <!-- TAB PDF Y DOCUMENTOS -->
+            <!-- TAB PDF Y DOCUMENTOS - VERSIÓN CONSOLIDADA -->
             <div class="mv-tab-panel">
                 <h2><?php _e('Configuración de PDF y Documentos', 'modulo-ventas'); ?></h2>
                 
-                <table class="form-table" role="presentation">
-                    <tr>
-                        <th scope="row">
-                            <label for="logo_empresa"><?php _e('Logo de la Empresa', 'modulo-ventas'); ?></label>
-                        </th>
-                        <td>
-                            <input type="file" 
-                                name="modulo_ventas_logo_empresa" 
-                                id="logo_empresa" 
-                                accept="image/*" />
-                            <?php if ($config['logo_empresa']) : ?>
-                                <br><br>
-                                <img src="<?php echo esc_url($config['logo_empresa']); ?>" 
-                                    alt="Logo actual" 
-                                    style="max-width: 200px; max-height: 100px;" />
-                                <br>
-                                <label>
-                                    <input type="checkbox" name="modulo_ventas_eliminar_logo" value="yes" />
-                                    <?php _e('Eliminar logo actual', 'modulo-ventas'); ?>
-                                </label>
-                            <?php endif; ?>
-                            <p class="description">
-                                <?php _e('Logo que aparecerá en los PDFs de cotizaciones. Tamaño recomendado: 300x150px', 'modulo-ventas'); ?>
-                            </p>
-                        </td>
-                    </tr>
+                <!-- SECCIÓN 1: INFORMACIÓN DE LA EMPRESA -->
+                <div class="mv-pdf-section" style="background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; padding: 20px; margin-bottom: 25px;">
+                    <h3 style="margin-top: 0; color: #2c5aa0; border-bottom: 2px solid #2c5aa0; padding-bottom: 10px;">
+                        📄 <?php _e('Información de la Empresa', 'modulo-ventas'); ?>
+                    </h3>
+                    <p class="description" style="margin-bottom: 20px;">
+                        <?php _e('Esta información aparecerá en todos los documentos PDF generados por el sistema.', 'modulo-ventas'); ?>
+                    </p>
                     
-                    <tr>
-                        <th scope="row">
-                            <label for="info_empresa"><?php _e('Información de la Empresa', 'modulo-ventas'); ?></label>
-                        </th>
-                        <td>
-                            <textarea name="modulo_ventas_info_empresa" 
-                                    id="info_empresa" 
-                                    rows="6" 
-                                    cols="70" 
-                                    class="large-text"><?php echo esc_textarea($config['info_empresa']); ?></textarea>
-                            <p class="description">
-                                <?php _e('Información que aparecerá en el header de los PDFs (nombre, dirección, teléfono, etc.)', 'modulo-ventas'); ?>
-                            </p>
-                        </td>
-                    </tr>
+                    <table class="form-table" role="presentation">
+                        <tr>
+                            <th scope="row">
+                                <label for="logo_empresa"><?php _e('Logo de la Empresa', 'modulo-ventas'); ?></label>
+                            </th>
+                            <td>
+                                <input type="file" 
+                                    name="modulo_ventas_logo_empresa" 
+                                    id="logo_empresa" 
+                                    accept="image/*" />
+                                <?php if ($config['logo_empresa']) : ?>
+                                    <br><br>
+                                    <img src="<?php echo esc_url($config['logo_empresa']); ?>" 
+                                        alt="Logo actual" 
+                                        style="max-width: 200px; max-height: 100px; border: 1px solid #ddd; padding: 5px;" />
+                                    <br><br>
+                                    <label>
+                                        <input type="checkbox" name="modulo_ventas_eliminar_logo" value="yes" />
+                                        <?php _e('Eliminar logo actual', 'modulo-ventas'); ?>
+                                    </label>
+                                <?php endif; ?>
+                                <p class="description">
+                                    <?php _e('Logo que aparecerá en los PDFs. Tamaño recomendado: 300x150px. Formatos: JPG, PNG, SVG', 'modulo-ventas'); ?>
+                                </p>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th scope="row">
+                                <label for="info_empresa"><?php _e('Nombre de la Empresa', 'modulo-ventas'); ?></label>
+                            </th>
+                            <td>
+                                <input type="text" 
+                                    name="modulo_ventas_nombre_empresa" 
+                                    id="nombre_empresa" 
+                                    value="<?php echo esc_attr(get_option('modulo_ventas_nombre_empresa', get_option('blogname'))); ?>" 
+                                    class="regular-text" />
+                                <p class="description">
+                                    <?php _e('Nombre legal o comercial de la empresa', 'modulo-ventas'); ?>
+                                </p>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th scope="row">
+                                <label for="rut_empresa"><?php _e('RUT de la Empresa', 'modulo-ventas'); ?></label>
+                            </th>
+                            <td>
+                                <input type="text" 
+                                    name="modulo_ventas_rut_empresa" 
+                                    id="rut_empresa" 
+                                    value="<?php echo esc_attr(get_option('modulo_ventas_rut_empresa', '')); ?>" 
+                                    class="regular-text" 
+                                    placeholder="12.345.678-9" />
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th scope="row">
+                                <label for="info_empresa"><?php _e('Información Adicional de la Empresa', 'modulo-ventas'); ?></label>
+                            </th>
+                            <td>
+                                <textarea name="modulo_ventas_info_empresa" 
+                                        id="info_empresa" 
+                                        rows="4" 
+                                        cols="70" 
+                                        class="large-text"><?php echo esc_textarea($config['info_empresa']); ?></textarea>
+                                <p class="description">
+                                    <?php _e('Información adicional que aparecerá en el header de los PDFs (giro comercial, descripción, etc.). Disponible como {{info_empresa}}', 'modulo-ventas'); ?>
+                                </p>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th scope="row">
+                                <label for="direccion_empresa"><?php _e('Dirección', 'modulo-ventas'); ?></label>
+                            </th>
+                            <td>
+                                <input type="text" 
+                                    name="modulo_ventas_direccion_empresa" 
+                                    id="direccion_empresa" 
+                                    value="<?php echo esc_attr(get_option('modulo_ventas_direccion_empresa', '')); ?>" 
+                                    class="regular-text" 
+                                    placeholder="Av. Principal 123" />
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th scope="row">
+                                <label for="ciudad_empresa"><?php _e('Ciudad y Región', 'modulo-ventas'); ?></label>
+                            </th>
+                            <td>
+                                <div style="display: flex; gap: 10px;">
+                                    <input type="text" 
+                                        name="modulo_ventas_ciudad_empresa" 
+                                        id="ciudad_empresa" 
+                                        value="<?php echo esc_attr(get_option('modulo_ventas_ciudad_empresa', '')); ?>" 
+                                        class="regular-text" 
+                                        placeholder="Santiago" 
+                                        style="flex: 1;" />
+                                    <input type="text" 
+                                        name="modulo_ventas_region_empresa" 
+                                        id="region_empresa" 
+                                        value="<?php echo esc_attr(get_option('modulo_ventas_region_empresa', '')); ?>" 
+                                        class="regular-text" 
+                                        placeholder="Región Metropolitana" 
+                                        style="flex: 2;" />
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th scope="row">
+                                <label for="telefono_empresa"><?php _e('Contacto', 'modulo-ventas'); ?></label>
+                            </th>
+                            <td>
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                    <input type="text" 
+                                        name="modulo_ventas_telefono_empresa" 
+                                        id="telefono_empresa" 
+                                        value="<?php echo esc_attr(get_option('modulo_ventas_telefono_empresa', '')); ?>" 
+                                        class="regular-text" 
+                                        placeholder="+56 2 2345 6789" 
+                                        style="flex: 1; min-width: 200px;" />
+                                    <input type="email" 
+                                        name="modulo_ventas_email_empresa" 
+                                        id="email_empresa" 
+                                        value="<?php echo esc_attr(get_option('modulo_ventas_email_empresa', get_option('admin_email'))); ?>" 
+                                        class="regular-text" 
+                                        placeholder="contacto@empresa.com" 
+                                        style="flex: 1; min-width: 200px;" />
+                                </div>
+                                <p class="description">
+                                    <?php _e('Teléfono y email de contacto que aparecerán en los PDFs', 'modulo-ventas'); ?>
+                                </p>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th scope="row">
+                                <label for="terminos_condiciones"><?php _e('Términos y Condiciones', 'modulo-ventas'); ?></label>
+                            </th>
+                            <td>
+                                <textarea name="modulo_ventas_terminos_condiciones" 
+                                        id="terminos_condiciones" 
+                                        rows="6" 
+                                        cols="70" 
+                                        class="large-text"><?php echo esc_textarea($config['terminos_condiciones']); ?></textarea>
+                                <p class="description">
+                                    <?php _e('Términos y condiciones que aparecerán al final de los documentos PDF.', 'modulo-ventas'); ?>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <!-- SECCIÓN 2: ASIGNACIÓN DE PLANTILLAS -->
+                <div class="mv-pdf-section" style="background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; padding: 20px; margin-bottom: 25px;">
+                    <h3 style="margin-top: 0; color: #2c5aa0; border-bottom: 2px solid #2c5aa0; padding-bottom: 10px;">
+                        🎨 <?php _e('Asignación de Plantillas por Tipo de Documento', 'modulo-ventas'); ?>
+                    </h3>
+                    <p class="description" style="margin-bottom: 20px;">
+                        <?php _e('Configura qué plantilla se utilizará para cada tipo de documento. Solo aparecen plantillas activas.', 'modulo-ventas'); ?>
+                    </p>
                     
-                    <tr>
-                        <th scope="row">
-                            <label for="terminos_condiciones"><?php _e('Términos y Condiciones', 'modulo-ventas'); ?></label>
-                        </th>
-                        <td>
-                            <textarea name="modulo_ventas_terminos_condiciones" 
-                                    id="terminos_condiciones" 
-                                    rows="8" 
-                                    cols="70" 
-                                    class="large-text"><?php echo esc_textarea($config['terminos_condiciones']); ?></textarea>
-                            <p class="description">
-                                <?php _e('Términos y condiciones que aparecerán en los PDFs de cotización.', 'modulo-ventas'); ?>
-                            </p>
-                        </td>
-                    </tr>
-                </table>
+                    <?php
+                    // Obtener plantillas disponibles
+                    global $wpdb;
+                    $tabla_plantillas = $wpdb->prefix . 'mv_pdf_templates';
+                    $plantillas_disponibles = $wpdb->get_results("
+                        SELECT id, nombre, tipo, descripcion 
+                        FROM $tabla_plantillas 
+                        WHERE activa = 1 
+                        ORDER BY tipo, nombre
+                    ");
+                    
+                    // Agrupar plantillas por tipo
+                    $plantillas_por_tipo = array();
+                    foreach ($plantillas_disponibles as $plantilla) {
+                        $plantillas_por_tipo[$plantilla->tipo][] = $plantilla;
+                    }
+                    
+                    // Obtener configuración actual de plantillas
+                    $tabla_config = $wpdb->prefix . 'mv_pdf_templates_config';
+                    $config_plantillas = $wpdb->get_results("
+                        SELECT tipo_documento, plantilla_id 
+                        FROM $tabla_config
+                    ");
+                    $config_actual = array();
+                    foreach ($config_plantillas as $config_item) {
+                        $config_actual[$config_item->tipo_documento] = $config_item->plantilla_id;
+                    }
+                    
+                    // Tipos de documentos
+                    $tipos_documentos = array(
+                        'cotizacion' => __('Cotización', 'modulo-ventas'),
+                        'factura' => __('Factura', 'modulo-ventas'),
+                        'boleta' => __('Boleta', 'modulo-ventas'),
+                        'orden_compra' => __('Orden de Compra', 'modulo-ventas'),
+                        'guia_despacho' => __('Guía de Despacho', 'modulo-ventas'),
+                    );
+                    ?>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                        <?php foreach ($tipos_documentos as $tipo => $nombre_tipo) : ?>
+                            <div class="plantilla-config-item" style="background: white; border: 1px solid #ddd; border-radius: 4px; padding: 15px;">
+                                <h4 style="margin-top: 0; color: #2c5aa0; display: flex; align-items: center; gap: 10px;">
+                                    <?php 
+                                    $iconos = array(
+                                        'cotizacion' => '💰',
+                                        'factura' => '🧾', 
+                                        'boleta' => '🧾',
+                                        'orden_compra' => '📋',
+                                        'guia_despacho' => '📦'
+                                    );
+                                    echo $iconos[$tipo] ?? '📄';
+                                    ?>
+                                    <?php echo esc_html($nombre_tipo); ?>
+                                    
+                                    <!-- Estado de configuración -->
+                                    <span class="config-status" style="margin-left: auto; font-size: 12px;">
+                                        <?php if (isset($config_actual[$tipo])) : ?>
+                                            <span style="color: #46b450;">● Configurado</span>
+                                        <?php else : ?>
+                                            <span style="color: #dc3232;">● Sin configurar</span>
+                                        <?php endif; ?>
+                                    </span>
+                                </h4>
+                                
+                                <select name="plantilla_<?php echo $tipo; ?>" 
+                                        class="regular-text plantilla-selector" 
+                                        data-tipo="<?php echo $tipo; ?>">
+                                    <option value=""><?php _e('-- Seleccionar plantilla --', 'modulo-ventas'); ?></option>
+                                    <?php if (isset($plantillas_por_tipo[$tipo])) : ?>
+                                        <?php foreach ($plantillas_por_tipo[$tipo] as $plantilla) : ?>
+                                            <option value="<?php echo $plantilla->id; ?>" 
+                                                    <?php selected($config_actual[$tipo] ?? '', $plantilla->id); ?>>
+                                                <?php echo esc_html($plantilla->nombre); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
+                                
+                                <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+                                    <button type="button" 
+                                            class="button button-small preview-plantilla" 
+                                            data-tipo="<?php echo $tipo; ?>"
+                                            <?php echo !isset($config_actual[$tipo]) ? 'disabled' : ''; ?>>
+                                        👁️ <?php _e('Preview', 'modulo-ventas'); ?>
+                                    </button>
+                                    <a href="<?php echo admin_url('admin.php?page=mv-pdf-templates&action=new&tipo=' . $tipo); ?>" 
+                                    class="button button-small">
+                                        ➕ <?php _e('Nueva', 'modulo-ventas'); ?>
+                                    </a>
+                                    <?php if (isset($config_actual[$tipo])) : ?>
+                                        <a href="<?php echo admin_url('admin.php?page=mv-pdf-templates&action=edit&plantilla_id=' . $config_actual[$tipo]); ?>" 
+                                        class="button button-small">
+                                            ✏️ <?php _e('Editar', 'modulo-ventas'); ?>
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+                
+                <!-- SECCIÓN 3: GESTIÓN DE PLANTILLAS -->
+                <div class="mv-pdf-section" style="background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; padding: 20px; margin-bottom: 25px;">
+                    <h3 style="margin-top: 0; color: #2c5aa0; border-bottom: 2px solid #2c5aa0; padding-bottom: 10px;">
+                        🛠️ <?php _e('Gestión de Plantillas', 'modulo-ventas'); ?>
+                    </h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div style="text-align: center; padding: 20px; background: white; border-radius: 4px; border: 1px solid #ddd;">
+                            <div style="font-size: 32px; color: #2c5aa0; margin-bottom: 10px;">
+                                <?php echo count($plantillas_disponibles); ?>
+                            </div>
+                            <div style="font-weight: bold; margin-bottom: 5px;"><?php _e('Plantillas Activas', 'modulo-ventas'); ?></div>
+                            <a href="<?php echo admin_url('admin.php?page=mv-pdf-templates'); ?>" class="button button-small">
+                                <?php _e('Ver Todas', 'modulo-ventas'); ?>
+                            </a>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 20px; background: white; border-radius: 4px; border: 1px solid #ddd;">
+                            <div style="font-size: 32px; color: #46b450; margin-bottom: 10px;">
+                                <?php echo count(array_filter($config_actual)); ?>
+                            </div>
+                            <div style="font-weight: bold; margin-bottom: 5px;"><?php _e('Tipos Configurados', 'modulo-ventas'); ?></div>
+                            <span style="font-size: 12px; color: #666;">
+                                de <?php echo count($tipos_documentos); ?> disponibles
+                            </span>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 20px; background: white; border-radius: 4px; border: 1px solid #ddd;">
+                            <div style="font-size: 24px; color: #2c5aa0; margin-bottom: 10px;">📄</div>
+                            <div style="font-weight: bold; margin-bottom: 10px;"><?php _e('Acciones Rápidas', 'modulo-ventas'); ?></div>
+                            <div style="display: flex; flex-direction: column; gap: 5px;">
+                                <a href="<?php echo admin_url('admin.php?page=mv-pdf-templates&action=new'); ?>" class="button button-small">
+                                    <?php _e('Nueva Plantilla', 'modulo-ventas'); ?>
+                                </a>
+                                <button type="button" class="button button-small test-pdf-generation">
+                                    <?php _e('Test Sistema PDF', 'modulo-ventas'); ?>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- SECCIÓN 4: CONFIGURACIÓN AVANZADA -->
+                <div class="mv-pdf-section" style="background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; padding: 20px;">
+                    <h3 style="margin-top: 0; color: #2c5aa0; border-bottom: 2px solid #2c5aa0; padding-bottom: 10px;">
+                        ⚙️ <?php _e('Configuración Avanzada de PDF', 'modulo-ventas'); ?>
+                    </h3>
+                    
+                    <table class="form-table" role="presentation">
+                        <tr>
+                            <th scope="row">
+                                <label for="pdf_engine"><?php _e('Motor de PDF', 'modulo-ventas'); ?></label>
+                            </th>
+                            <td>
+                                <select name="modulo_ventas_pdf_engine" id="pdf_engine" class="regular-text">
+                                    <option value="mpdf" <?php selected(get_option('modulo_ventas_pdf_engine', 'mpdf'), 'mpdf'); ?>>
+                                        mPDF (Recomendado)
+                                    </option>
+                                    <option value="tcpdf" <?php selected(get_option('modulo_ventas_pdf_engine', 'mpdf'), 'tcpdf'); ?>>
+                                        TCPDF (Fallback)
+                                    </option>
+                                </select>
+                                <p class="description">
+                                    <?php _e('Motor utilizado para generar los PDFs. mPDF ofrece mejor compatibilidad con CSS.', 'modulo-ventas'); ?>
+                                </p>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th scope="row">
+                                <label for="pdf_formato"><?php _e('Formato de Página', 'modulo-ventas'); ?></label>
+                            </th>
+                            <td>
+                                <select name="modulo_ventas_pdf_formato" id="pdf_formato" class="regular-text">
+                                    <option value="A4" <?php selected(get_option('modulo_ventas_pdf_formato', 'A4'), 'A4'); ?>>A4</option>
+                                    <option value="Letter" <?php selected(get_option('modulo_ventas_pdf_formato', 'A4'), 'Letter'); ?>>Letter</option>
+                                    <option value="Legal" <?php selected(get_option('modulo_ventas_pdf_formato', 'A4'), 'Legal'); ?>>Legal</option>
+                                </select>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th scope="row">
+                                <label for="pdf_orientacion"><?php _e('Orientación', 'modulo-ventas'); ?></label>
+                            </th>
+                            <td>
+                                <select name="modulo_ventas_pdf_orientacion" id="pdf_orientacion" class="regular-text">
+                                    <option value="portrait" <?php selected(get_option('modulo_ventas_pdf_orientacion', 'portrait'), 'portrait'); ?>>
+                                        <?php _e('Retrato (Vertical)', 'modulo-ventas'); ?>
+                                    </option>
+                                    <option value="landscape" <?php selected(get_option('modulo_ventas_pdf_orientacion', 'portrait'), 'landscape'); ?>>
+                                        <?php _e('Paisaje (Horizontal)', 'modulo-ventas'); ?>
+                                    </option>
+                                </select>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th scope="row">
+                                <label for="pdf_compresion"><?php _e('Compresión de PDF', 'modulo-ventas'); ?></label>
+                            </th>
+                            <td>
+                                <fieldset>
+                                    <label>
+                                        <input type="checkbox" 
+                                            name="modulo_ventas_pdf_compresion" 
+                                            id="pdf_compresion" 
+                                            value="yes" 
+                                            <?php checked(get_option('modulo_ventas_pdf_compresion', 'yes'), 'yes'); ?> />
+                                        <?php _e('Activar compresión para archivos más pequeños', 'modulo-ventas'); ?>
+                                    </label>
+                                    <p class="description">
+                                        <?php _e('Reduce el tamaño de los archivos PDF generados.', 'modulo-ventas'); ?>
+                                    </p>
+                                </fieldset>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
             
             <?php elseif ($tab_activa === 'avanzado') : ?>
@@ -595,7 +945,6 @@ $almacenes = mv_get_almacenes(false);
                     </tr>
                 </table>
             </div>
-            
             <?php endif; ?>
         </div>
         
@@ -626,23 +975,45 @@ $almacenes = mv_get_almacenes(false);
     height: 16px;
 }
 
-.mv-tab-content {
-    background: white;
-    padding: 20px;
-    border: 1px solid #ccd0d4;
-    border-top: none;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+/* CSS MÁS ESPECÍFICO para evitar conflictos */
+.mv-configuracion .mv-config-tab-content {
+    background: white !important;
+    padding: 20px !important;
+    border-top: none !important;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.04) !important;
+    display: block !important;
+    height: auto !important;
+    position: static !important;
+    visibility: visible !important;
+}
+
+/* Asegurar que el panel de tab también sea visible */
+.mv-configuracion .mv-tab-panel {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.mv-configuracion .form-table {
+    display: table !important;
+    width: 100% !important;
 }
 
 .mv-configuracion .form-table th {
     width: 220px;
     padding-left: 10px;
     vertical-align: top;
+    display: table-cell !important;
 }
 
 .mv-configuracion .form-table td {
     padding-top: 15px;
     padding-bottom: 15px;
+    display: table-cell !important;
+}
+
+.mv-configuracion .form-table tr {
+    display: table-row !important;
 }
 
 .mv-configuracion .description {
@@ -676,10 +1047,11 @@ $almacenes = mv_get_almacenes(false);
     padding: 5px 12px;
 }
 
-.mv-tab-panel h2 {
-    margin-top: 0;
+.mv-configuracion .mv-tab-panel h2 {
+    margin-top: 15px;
     padding-bottom: 10px;
     border-bottom: 1px solid #e5e5e5;
+    display: block !important;
 }
 
 .mv-reserva-tiempo {
@@ -718,6 +1090,42 @@ jQuery(document).ready(function($) {
     
     $('#reservar_stock').change(toggleDependentOptions);
     toggleDependentOptions();
+
+    // Cambio en selector de plantilla
+    $('.plantilla-selector').on('change', function() {
+        var $this = $(this);
+        var $container = $this.closest('.plantilla-config-item');
+        var $status = $container.find('.config-status span');
+        var $preview = $container.find('.preview-plantilla');
+        
+        if ($this.val()) {
+            $status.removeClass().addClass('').css('color', '#46b450').html('● Configurado');
+            $preview.prop('disabled', false);
+        } else {
+            $status.removeClass().addClass('').css('color', '#dc3232').html('● Sin configurar');
+            $preview.prop('disabled', true);
+        }
+    });
+    
+    // Preview de plantilla
+    $('.preview-plantilla').on('click', function() {
+        var tipo = $(this).data('tipo');
+        var plantillaId = $('select[name="plantilla_' + tipo + '"]').val();
+        
+        if (!plantillaId) {
+            alert('Selecciona una plantilla primero');
+            return;
+        }
+        
+        // Abrir preview en nueva ventana
+        var url = ajaxurl + '?action=mv_preview_plantilla&plantilla_id=' + plantillaId + '&tipo=' + tipo;
+        window.open(url, 'preview-plantilla', 'width=800,height=600,scrollbars=yes');
+    });
+    
+    // Test del sistema PDF
+    $('.test-pdf-generation').on('click', function() {
+        window.open('/wp-admin/admin-ajax.php?action=mv_test_mpdf_visual_comparison', 'test-pdf', 'width=1000,height=800,scrollbars=yes');
+    });
     
     // Validación del formulario
     $('.mv-config-form').on('submit', function(e) {

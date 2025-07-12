@@ -904,6 +904,37 @@ class Modulo_Ventas_PDF_Templates {
         
         return $processor->obtener_variables_disponibles($tipo_documento);
     }
+
+    /**
+     * Método para preview sincronizado
+     */
+    public function generar_preview_sincronizado($plantilla_id, $cotizacion_id = null) {
+        $this->logger->log("PDF_TEMPLATES: Generando preview sincronizado con mPDF");
+        
+        try {
+            // Obtener plantilla
+            global $wpdb;
+            $tabla = $wpdb->prefix . 'mv_pdf_templates';
+            $plantilla = $wpdb->get_row($wpdb->prepare(
+                "SELECT * FROM $tabla WHERE id = %d",
+                $plantilla_id
+            ));
+            
+            if (!$plantilla) {
+                throw new Exception('Plantilla no encontrada');
+            }
+            
+            // Usar sistema de sincronización
+            $sync_system = Modulo_Ventas_mPDF_Visual_Sync::get_instance();
+            $html_preview = $sync_system->sincronizar_plantilla_para_mpdf($plantilla, $cotizacion_id, true);
+            
+            return $html_preview;
+            
+        } catch (Exception $e) {
+            $this->logger->log("PDF_TEMPLATES: Error en preview sincronizado: " . $e->getMessage(), 'error');
+            throw $e;
+        }
+    }
 }
 
 // Agregar hook para limpiar previews periódicamente

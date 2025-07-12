@@ -901,3 +901,123 @@ Line: 2690
 
 --------------------------------------------------------------------------------
 
+2025-07-12 21:08:35 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Call to undefined method Modulo_Ventas_PDF_Template_Processor::obtener_datos_prueba() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php:773
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php(3166): Modulo_Ventas_PDF_Template_Processor->obtener_datos_preview(NULL)
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Ajax->ajax_preview_mpdf_sincronizado_datos_reales('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(192): do_action('wp_ajax_mv_prev...')
+#5 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php
+Line: 773
+
+--------------------------------------------------------------------------------
+
+2025-07-12 21:09:57 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Call to undefined method Modulo_Ventas_PDF_Template_Processor::obtener_datos_prueba() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php:773
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php(3166): Modulo_Ventas_PDF_Template_Processor->obtener_datos_preview(NULL)
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Ajax->ajax_preview_mpdf_sincronizado_datos_reales('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(192): do_action('wp_ajax_mv_prev...')
+#5 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php
+Line: 773
+
+--------------------------------------------------------------------------------
+
+2025-07-12 21:10:47 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Call to undefined method Modulo_Ventas_PDF_Template_Processor::obtener_datos_prueba() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php:773
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php(3166): Modulo_Ventas_PDF_Template_Processor->obtener_datos_preview(NULL)
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Ajax->ajax_preview_mpdf_sincronizado_datos_reales('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(192): do_action('wp_ajax_mv_prev...')
+#5 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php
+Line: 773
+
+--------------------------------------------------------------------------------
+
+2025-07-12 21:13:20 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Call to undefined method Modulo_Ventas_PDF_Template_Processor::obtener_datos_prueba() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php:773
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php(3166): Modulo_Ventas_PDF_Template_Processor->obtener_datos_preview(NULL)
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Ajax->ajax_preview_mpdf_sincronizado_datos_reales('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(192): do_action('wp_ajax_mv_prev...')
+#5 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php
+Line: 773
+
+--------------------------------------------------------------------------------
+
+2025-07-12 22:16:22 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Call to undefined function obtener_datos_empresa() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php:817
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php(764): Modulo_Ventas_PDF_Template_Processor->obtener_ultima_cotizacion_para_preview()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php(1792): Modulo_Ventas_PDF_Template_Processor->obtener_datos_preview('cotizacion')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Ajax->ajax_obtener_preview_real('')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(192): do_action('wp_ajax_mv_obte...')
+#6 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php
+Line: 817
+
+--------------------------------------------------------------------------------
+
+2025-07-12 22:27:20 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Call to undefined method Modulo_Ventas_PDF_Template_Processor::cargar_datos() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php:1798
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Ajax->ajax_obtener_preview_real('')
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(192): do_action('wp_ajax_mv_obte...')
+#4 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php
+Line: 1798
+
+--------------------------------------------------------------------------------
+
+2025-07-12 22:36:39 - Error fatal detectado
+Type: 64
+Message: Cannot redeclare Modulo_Ventas_PDF_Template_Processor::obtener_valor_variable()
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php
+Line: 609
+
+--------------------------------------------------------------------------------
+
+2025-07-12 22:36:43 - Error fatal detectado
+Type: 64
+Message: Cannot redeclare Modulo_Ventas_PDF_Template_Processor::obtener_valor_variable()
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php
+Line: 609
+
+--------------------------------------------------------------------------------
+
+2025-07-12 22:37:16 - Error fatal detectado
+Type: 64
+Message: Cannot redeclare Modulo_Ventas_PDF_Template_Processor::obtener_valor_variable()
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php
+Line: 609
+
+--------------------------------------------------------------------------------
+

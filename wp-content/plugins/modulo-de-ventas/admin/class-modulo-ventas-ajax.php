@@ -48,16 +48,15 @@ class Modulo_Ventas_Ajax {
         add_action('wp_ajax_mv_test_pdf_simple', array($this, 'test_pdf_simple'));
         add_action('wp_ajax_mv_crear_directorios_pdf', array($this, 'crear_directorios_pdf'));
         add_action('wp_ajax_mv_servir_pdf', array($this, 'servir_pdf'));
+        add_action('wp_ajax_mv_obtener_preview_real', array($this, 'ajax_obtener_preview_real'));
+        add_action('wp_ajax_mv_vista_previa_datos_reales', array($this, 'ajax_vista_previa_datos_reales'));
+        add_action('wp_ajax_mv_preview_mpdf_sincronizado_datos_reales', array($this, 'ajax_preview_mpdf_sincronizado_datos_reales'));
 
         // Si necesitas soporte para usuarios no logueados (no recomendado para PDFs)
         // add_action('wp_ajax_nopriv_mv_generar_pdf_cotizacion', array($this, 'generar_pdf_cotizacion'));
         
         // Hook para manejar PDFs vía GET
         add_action('init', array($this, 'manejar_pdf_requests'));
-
-        // IMPORTANTE: Quitar hooks duplicados del PDF Handler para evitar conflictos
-        //remove_action('wp_ajax_mv_generar_pdf_cotizacion', array($this->pdf_handler, 'ajax_generar_pdf'));
-        //remove_action('wp_ajax_mv_descargar_pdf_cotizacion', array($this->pdf_handler, 'ajax_descargar_pdf'));
     }
     
     /**
@@ -1766,6 +1765,59 @@ class Modulo_Ventas_Ajax {
             wp_die('Error interno: ' . $e->getMessage(), 'Error PDF');
         }
     }
+
+    /**
+     * AJAX: Obtener preview con datos reales
+     */
+    public function ajax_obtener_preview_real() {
+        // Verificar permisos
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(array('message' => 'Sin permisos'));
+        }
+        
+        // Verificar nonce
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mv_pdf_templates_nonce')) {
+            wp_send_json_error(array('message' => 'Nonce inválido'));
+        }
+        
+        $tipo_documento = isset($_POST['tipo_documento']) ? sanitize_text_field($_POST['tipo_documento']) : 'cotizacion';
+        $html_template = isset($_POST['html']) ? $_POST['html'] : '';
+        $css_template = isset($_POST['css']) ? $_POST['css'] : '';
+        
+        try {
+            // Crear instancia del procesador
+            $processor = new Modulo_Ventas_PDF_Template_Processor();
+            
+            // Obtener datos reales
+            $datos_reales = $processor->obtener_datos_preview($tipo_documento);
+            
+            // Verificar si son datos reales o de prueba
+            $es_datos_reales = !empty($datos_reales['cotizacion']['numero']) && $datos_reales['cotizacion']['numero'] !== 'COT-001';
+            
+            // Procesar template con datos reales
+            $processor->cargar_datos($datos_reales);
+            $html_procesado = $processor->procesar_template($html_template);
+            $css_procesado = $processor->procesar_css($css_template);
+            
+            // Generar documento final
+            $documento_final = $processor->generar_documento_final($html_procesado, $css_procesado);
+            
+            wp_send_json_success(array(
+                'html' => $documento_final,
+                'datos_usados' => array(
+                    'tipo' => $es_datos_reales ? 'real' : 'prueba',
+                    'documento' => $tipo_documento,
+                    'mensaje' => $es_datos_reales 
+                        ? 'Preview generado con datos de la última ' . $tipo_documento . ' real (' . $datos_reales['cotizacion']['numero'] . ')'
+                        : 'Preview generado con datos de prueba (no hay ' . $tipo_documento . 's reales)'
+                )
+            ));
+            
+        } catch (Exception $e) {
+            error_log('Error en preview real: ' . $e->getMessage());
+            wp_send_json_error(array('message' => 'Error al generar preview: ' . $e->getMessage()));
+        }
+    }
     
     /**
      * Obtener almacenes
@@ -2994,5 +3046,243 @@ class Modulo_Ventas_Ajax {
         
         // Por implementar: sistema de backup
         wp_send_json_error(array('message' => __('Función de backup en desarrollo', 'modulo-ventas')));
+    }
+
+    /**
+     * AJAX: Vista previa con datos reales en nueva ventana
+     */
+    public function ajax_vista_previa_datos_reales() {
+        // Verificar permisos
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(array('message' => 'Sin permisos'));
+        }
+        
+        // CORREGIDO: Usar el mismo nonce que el resto del sistema
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mv_pdf_templates_nonce')) {
+            wp_send_json_error(array('message' => 'Nonce inválido'));
+        }
+        
+        $plantilla_id = isset($_POST['plantilla_id']) ? intval($_POST['plantilla_id']) : 0;
+        $usar_datos_reales = isset($_POST['usar_datos_reales']) ? (bool)$_POST['usar_datos_reales'] : true;
+        
+        if (!$plantilla_id) {
+            wp_send_json_error(array('message' => 'ID de plantilla inválido'));
+        }
+        
+        try {
+            // Obtener plantilla
+            global $wpdb;
+            $tabla_plantillas = $wpdb->prefix . 'mv_pdf_templates';
+            
+            $plantilla = $wpdb->get_row($wpdb->prepare(
+                "SELECT * FROM $tabla_plantillas WHERE id = %d",
+                $plantilla_id
+            ));
+            
+            if (!$plantilla) {
+                wp_send_json_error(array('message' => 'Plantilla no encontrada'));
+            }
+            
+            // Crear procesador
+            $processor = new Modulo_Ventas_PDF_Template_Processor();
+            
+            // CORREGIDO: Obtener datos según el tipo
+            if ($usar_datos_reales) {
+                $datos = $processor->obtener_datos_preview($plantilla->tipo_documento);
+            } else {
+                // CORREGIDO: Usar método que sabemos que existe
+                $datos = $this->obtener_datos_prueba_fallback($plantilla->tipo_documento);
+            }
+            
+            // Procesar plantilla
+            $processor->cargar_datos($datos);
+            $html_procesado = $processor->procesar_template($plantilla->contenido_html);
+            $css_procesado = $processor->procesar_css($plantilla->contenido_css);
+            
+            // Generar documento final
+            $documento_final = $processor->generar_documento_final($html_procesado, $css_procesado);
+            
+            // Agregar información adicional para debugging
+            $info_datos = $usar_datos_reales ? 'datos reales' : 'datos de prueba';
+            $documento_con_info = str_replace(
+                '</body>',
+                '<div style="position: fixed; bottom: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 5px 10px; border-radius: 3px; font-size: 12px; z-index: 9999;">
+                    Preview con ' . $info_datos . '
+                </div></body>',
+                $documento_final
+            );
+            
+            wp_send_json_success(array(
+                'html' => $documento_con_info,
+                'tipo_datos' => $usar_datos_reales ? 'real' : 'prueba',
+                'mensaje' => 'Vista previa generada con ' . $info_datos
+            ));
+            
+        } catch (Exception $e) {
+            error_log('Error en vista previa: ' . $e->getMessage());
+            wp_send_json_error(array('message' => 'Error al generar vista previa: ' . $e->getMessage()));
+        }
+    }
+
+    /**
+     * AJAX: Preview mPDF sincronizado con datos reales
+     */
+    public function ajax_preview_mpdf_sincronizado_datos_reales() {
+        // Verificar permisos
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(array('message' => 'Sin permisos'));
+        }
+        
+        // CORREGIDO: Usar el mismo nonce que el resto del sistema
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mv_pdf_templates_nonce')) {
+            wp_send_json_error(array('message' => 'Nonce inválido'));
+        }
+        
+        $plantilla_id = isset($_POST['plantilla_id']) ? intval($_POST['plantilla_id']) : 0;
+        $usar_datos_reales = isset($_POST['usar_datos_reales']) ? (bool)$_POST['usar_datos_reales'] : true;
+        
+        if (!$plantilla_id) {
+            wp_send_json_error(array('message' => 'ID de plantilla inválido'));
+        }
+        
+        try {
+            // Obtener plantilla
+            global $wpdb;
+            $tabla_plantillas = $wpdb->prefix . 'mv_pdf_templates';
+            
+            $plantilla = $wpdb->get_row($wpdb->prepare(
+                "SELECT * FROM $tabla_plantillas WHERE id = %d",
+                $plantilla_id
+            ));
+            
+            if (!$plantilla) {
+                wp_send_json_error(array('message' => 'Plantilla no encontrada'));
+            }
+            
+            // Crear procesador
+            $processor = new Modulo_Ventas_PDF_Template_Processor();
+            
+            // CORREGIDO: Obtener datos según el tipo
+            if ($usar_datos_reales) {
+                $datos = $processor->obtener_datos_preview($plantilla->tipo_documento);
+            } else {
+                // CORREGIDO: Usar método que sabemos que existe
+                $datos = $this->obtener_datos_prueba_fallback($plantilla->tipo_documento);
+            }
+            
+            // Procesar plantilla
+            $processor->cargar_datos($datos);
+            $html_procesado = $processor->procesar_template($plantilla->contenido_html);
+            $css_procesado = $processor->procesar_css($plantilla->contenido_css);
+            
+            // Generar documento final
+            $documento_final = $processor->generar_documento_final($html_procesado, $css_procesado);
+            
+            // Agregar marca de agua con tipo de datos
+            $marca_agua = $usar_datos_reales ? 'PREVIEW - DATOS REALES' : 'PREVIEW - DATOS DE PRUEBA';
+            $html_con_marca = str_replace(
+                '<body',
+                '<body data-preview-type="' . ($usar_datos_reales ? 'real' : 'prueba') . '"',
+                $documento_final
+            );
+            
+            wp_send_json_success(array(
+                'html' => $html_con_marca,
+                'tipo_datos' => $usar_datos_reales ? 'real' : 'prueba',
+                'mensaje' => 'Preview mPDF generado con ' . ($usar_datos_reales ? 'datos reales' : 'datos de prueba')
+            ));
+            
+        } catch (Exception $e) {
+            error_log('Error en preview mPDF: ' . $e->getMessage());
+            wp_send_json_error(array('message' => 'Error al generar preview mPDF: ' . $e->getMessage()));
+        }
+    }
+
+    /**
+     * AGREGAR: Método fallback para datos de prueba
+     */
+    private function obtener_datos_prueba_fallback($tipo_documento = 'cotizacion') {
+        // Datos de prueba básicos
+        return array(
+            'cotizacion' => array(
+                'numero' => 'COT-001',
+                'fecha' => date('d/m/Y'),
+                'fecha_vencimiento' => date('d/m/Y', strtotime('+30 days')),
+                'estado' => 'Borrador',
+                'observaciones' => 'Datos de prueba para preview',
+                'vendedor' => 'Vendedor de Prueba',
+                'validez' => '30 días',
+                'condiciones_pago' => 'Contado'
+            ),
+            
+            'cliente' => array(
+                'nombre' => 'Cliente de Prueba S.A.',
+                'rut' => '12.345.678-9',
+                'email' => 'cliente@prueba.cl',
+                'telefono' => '+56 9 1234 5678',
+                'direccion' => 'Calle de Prueba 123',
+                'ciudad' => 'Santiago',
+                'region' => 'Metropolitana',
+                'giro' => 'Actividad de Prueba'
+            ),
+            
+            'empresa' => array(
+                'nombre' => get_option('modulo_ventas_nombre_empresa', 'Empresa de Prueba'),
+                'direccion' => get_option('modulo_ventas_direccion_empresa', 'Dirección de Prueba'),
+                'ciudad' => get_option('modulo_ventas_ciudad_empresa', 'Ciudad'),
+                'region' => get_option('modulo_ventas_region_empresa', 'Región'),
+                'telefono' => get_option('modulo_ventas_telefono_empresa', '+56 2 1234 5678'),
+                'email' => get_option('modulo_ventas_email_empresa', 'contacto@empresa.cl'),
+                'rut' => get_option('modulo_ventas_rut_empresa', '98.765.432-1'),
+                'sitio_web' => home_url()
+            ),
+            
+            'productos' => array(
+                array(
+                    'nombre' => 'Producto de Prueba 1',
+                    'descripcion' => 'Descripción del producto de prueba',
+                    'cantidad' => 2,
+                    'precio_unitario' => 10000,
+                    'precio_unitario_formateado' => '$10.000',
+                    'subtotal' => 20000,
+                    'subtotal_formateado' => '$20.000',
+                    'descuento' => 0,
+                    'descuento_formateado' => '$0'
+                ),
+                array(
+                    'nombre' => 'Producto de Prueba 2',
+                    'descripcion' => 'Otra descripción de prueba',
+                    'cantidad' => 1,
+                    'precio_unitario' => 15000,
+                    'precio_unitario_formateado' => '$15.000',
+                    'subtotal' => 15000,
+                    'subtotal_formateado' => '$15.000',
+                    'descuento' => 0,
+                    'descuento_formateado' => '$0'
+                )
+            ),
+            
+            'totales' => array(
+                'subtotal' => 35000,
+                'subtotal_formateado' => '35.000',
+                'descuento' => 0,
+                'descuento_formateado' => '0',
+                'impuestos' => 6650,
+                'impuestos_formateado' => '6.650',
+                'total' => 41650,
+                'total_formateado' => '41.650',
+                'descuento_porcentaje' => 0
+            ),
+            
+            'fechas' => array(
+                'hoy' => date('d/m/Y'),
+                'fecha_cotizacion' => date('d/m/Y'),
+                'fecha_vencimiento_formateada' => date('d/m/Y', strtotime('+30 days'))
+            ),
+            
+            'logo_empresa' => '',
+            'info_empresa' => 'Información adicional de prueba',
+            'terminos_condiciones' => 'Términos y condiciones de prueba'
+        );
     }
 }

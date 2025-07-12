@@ -183,6 +183,7 @@ class Modulo_Ventas {
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-template-processor.php';
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates.php';
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates-ajax.php';
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-mpdf-visual-sync.php';
         
         // PDF Handler - VERIFICAR ARCHIVO EXISTE
         $pdf_handler_path = MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-handler.php';
@@ -4227,3 +4228,440 @@ add_action('wp_ajax_mv_upgrade_safe_template', function() {
     
     wp_die();
 });
+
+/**
+ * SOLUCIÓN 1: Corregir el endpoint AJAX en modulo-ventas.php
+ * Reemplazar el endpoint mv_preview_mpdf_sincronizado con este código corregido:
+ */
+add_action('wp_ajax_mv_preview_mpdf_sincronizado', function() {
+    // Verificar permisos
+    if (!current_user_can('edit_posts')) {
+        wp_send_json_error(array('message' => 'Sin permisos'));
+    }
+    
+    // Verificar nonce
+    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mv_nonce')) {
+        wp_send_json_error(array('message' => 'Error de seguridad'));
+    }
+    
+    // Obtener y validar plantilla_id
+    $plantilla_id = isset($_POST['plantilla_id']) ? intval($_POST['plantilla_id']) : 0;
+    if (!$plantilla_id) {
+        wp_send_json_error(array('message' => 'ID de plantilla no válido'));
+    }
+    
+    $cotizacion_id = isset($_POST['cotizacion_id']) ? intval($_POST['cotizacion_id']) : null;
+    
+    try {
+        // Verificar que la clase existe
+        if (!class_exists('Modulo_Ventas_PDF_Templates')) {
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates.php';
+        }
+        
+        if (!class_exists('Modulo_Ventas_mPDF_Visual_Sync')) {
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-mpdf-visual-sync.php';
+        }
+        
+        // Obtener plantilla
+        global $wpdb;
+        $tabla = $wpdb->prefix . 'mv_pdf_templates';
+        $plantilla = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM $tabla WHERE id = %d",
+            $plantilla_id
+        ));
+        
+        if (!$plantilla) {
+            wp_send_json_error(array('message' => 'Plantilla no encontrada con ID: ' . $plantilla_id));
+        }
+        
+        // Generar preview sincronizado
+        $sync_system = Modulo_Ventas_mPDF_Visual_Sync::get_instance();
+        $html_preview = $sync_system->sincronizar_plantilla_para_mpdf($plantilla, $cotizacion_id, true);
+        
+        wp_send_json_success(array(
+            'html' => $html_preview,
+            'message' => 'Preview sincronizado generado exitosamente',
+            'plantilla_id' => $plantilla_id,
+            'debug_info' => array(
+                'plantilla_nombre' => $plantilla->nombre,
+                'cotizacion_id' => $cotizacion_id,
+                'html_length' => strlen($html_preview)
+            )
+        ));
+        
+    } catch (Exception $e) {
+        error_log('Error en preview sincronizado: ' . $e->getMessage());
+        wp_send_json_error(array(
+            'message' => 'Error generando preview: ' . $e->getMessage(),
+            'plantilla_id' => $plantilla_id
+        ));
+    }
+});
+
+/**
+ * SOLUCIÓN 2: Verificar que el sistema de sincronización esté cargado
+ * Añadir esta verificación en modulo-ventas.php al cargar las clases:
+ */
+function mv_cargar_sistema_sincronizacion() {
+    $sync_file = MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-mpdf-visual-sync.php';
+    
+    if (file_exists($sync_file)) {
+        require_once $sync_file;
+        
+        // Verificar que la clase se cargó
+        if (class_exists('Modulo_Ventas_mPDF_Visual_Sync')) {
+            //error_log('MODULO_VENTAS: Sistema de sincronización mPDF cargado');
+            return true;
+        } else {
+            error_log('MODULO_VENTAS: Error - Clase de sincronización no se cargó');
+            return false;
+        }
+    } else {
+        error_log('MODULO_VENTAS: Archivo de sincronización no encontrado: ' . $sync_file);
+        return false;
+    }
+}
+
+// Cargar el sistema de sincronización
+add_action('init', 'mv_cargar_sistema_sincronizacion');
+
+
+/**
+ * PASO 6: Test de comparación visual
+ * Añadir endpoint para comparar preview vs PDF:
+ */
+add_action('wp_ajax_mv_test_mpdf_visual_comparison', function() {
+    if (!current_user_can('manage_options')) {
+        wp_die('Sin permisos');
+    }
+    
+    echo '<h1>🔍 Test de Comparación Visual mPDF</h1>';
+    
+    try {
+        // Obtener primera cotización
+        global $wpdb;
+        $tabla_cotizaciones = $wpdb->prefix . 'mv_cotizaciones';
+        $cotizacion = $wpdb->get_row("SELECT * FROM $tabla_cotizaciones ORDER BY id DESC LIMIT 1");
+        
+        if (!$cotizacion) {
+            echo '<p style="color: orange;">⚠️ No hay cotizaciones para probar. Crea una cotización primero.</p>';
+            wp_die();
+        }
+        
+        echo '<div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0;">';
+        echo '<h3>📋 Probando con Cotización: ' . esc_html($cotizacion->folio ?? $cotizacion->id) . '</h3>';
+        echo '<p>ID: ' . $cotizacion->id . ' | Cliente: ' . esc_html($cotizacion->cliente_nombre ?? 'N/A') . '</p>';
+        echo '</div>';
+        
+        // 1. Generar Preview Sincronizado
+        echo '<h3>1. 👁️ Generando Preview Sincronizado</h3>';
+        
+        $pdf_templates = Modulo_Ventas_PDF_Templates::get_instance();
+        $plantilla = $pdf_templates->obtener_plantilla_activa('cotizacion');
+        
+        if (!$plantilla) {
+            echo '<p style="color: red;">❌ No hay plantilla activa</p>';
+            wp_die();
+        }
+        
+        $html_preview = $pdf_templates->generar_preview_sincronizado($plantilla->id, $cotizacion->id);
+        
+        // Guardar preview temporal
+        $upload_dir = wp_upload_dir();
+        $preview_path = $upload_dir['basedir'] . '/modulo-ventas-pdf/preview-sync-' . time() . '.html';
+        
+        if (!file_exists(dirname($preview_path))) {
+            wp_mkdir_p(dirname($preview_path));
+        }
+        
+        file_put_contents($preview_path, $html_preview);
+        $preview_url = str_replace($upload_dir['basedir'], $upload_dir['baseurl'], $preview_path);
+        
+        echo '<p>✅ Preview sincronizado generado</p>';
+        echo '<p><a href="' . esc_url($preview_url) . '" target="_blank" class="button">👁️ Ver Preview Sincronizado</a></p>';
+        
+        // 2. Generar PDF
+        echo '<h3>2. 📄 Generando PDF con mPDF</h3>';
+        
+        $mpdf_generator = new Modulo_Ventas_mPDF();
+        $resultado_pdf = $mpdf_generator->generar_pdf_desde_plantilla($cotizacion->id);
+        
+        if (is_wp_error($resultado_pdf)) {
+            echo '<p style="color: red;">❌ Error generando PDF: ' . $resultado_pdf->get_error_message() . '</p>';
+        } else {
+            $pdf_url = str_replace(ABSPATH, home_url('/'), $resultado_pdf);
+            echo '<p>✅ PDF generado exitosamente</p>';
+            echo '<p><a href="' . esc_url($pdf_url) . '" target="_blank" class="button button-primary">📄 Ver PDF</a></p>';
+        }
+        
+        // 3. Comparación
+        echo '<h3>3. ⚖️ Instrucciones de Comparación</h3>';
+        echo '<div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 5px;">';
+        echo '<h4>🎯 Cómo verificar la sincronización:</h4>';
+        echo '<ol>';
+        echo '<li><strong>Abre ambos enlaces</strong> en pestañas separadas</li>';
+        echo '<li><strong>Compara visualmente:</strong>';
+        echo '<ul>';
+        echo '<li>Colores y tipografías</li>';
+        echo '<li>Espaciado y márgenes</li>';
+        echo '<li>Posición de elementos</li>';
+        echo '<li>Tabla de productos</li>';
+        echo '<li>Sección de totales</li>';
+        echo '</ul></li>';
+        echo '<li><strong>Deberían ser prácticamente idénticos</strong> (solo diferencias menores de renderizado)</li>';
+        echo '</ol>';
+        echo '</div>';
+        
+        // 4. Opciones de mejora
+        echo '<h3>4. 🔧 Opciones Adicionales</h3>';
+        echo '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">';
+        
+        echo '<div style="background: white; border: 1px solid #ddd; padding: 15px; border-radius: 5px;">';
+        echo '<h4>🎨 Personalización</h4>';
+        echo '<p>Si hay diferencias visuales, puedes:</p>';
+        echo '<ul>';
+        echo '<li>Ajustar colores en la plantilla</li>';
+        echo '<li>Modificar espaciado</li>';
+        echo '<li>Cambiar tipografías</li>';
+        echo '</ul>';
+        echo '<p><a href="' . admin_url('admin.php?page=mv-pdf-templates') . '" class="button">🎨 Editar Plantillas</a></p>';
+        echo '</div>';
+        
+        echo '<div style="background: white; border: 1px solid #ddd; padding: 15px; border-radius: 5px;">';
+        echo '<h4>📊 Más Tests</h4>';
+        echo '<p>Puedes probar con:</p>';
+        echo '<ul>';
+        echo '<li>Diferentes cotizaciones</li>';
+        echo '<li>Más productos</li>';
+        echo '<li>Datos de cliente variados</li>';
+        echo '</ul>';
+        echo '<p><a href="' . admin_url('admin.php?page=modulo-ventas-cotizaciones') . '" class="button">📋 Ver Cotizaciones</a></p>';
+        echo '</div>';
+        
+        echo '</div>';
+        
+        // Programar limpieza del preview temporal
+        wp_schedule_single_event(time() + 3600, 'mv_limpiar_preview_temporal', array($preview_path));
+        
+    } catch (Exception $e) {
+        echo '<div style="background: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; border-radius: 5px;">';
+        echo '<h4 style="color: #721c24;">❌ Error en el test</h4>';
+        echo '<p style="color: #721c24;">' . esc_html($e->getMessage()) . '</p>';
+        echo '</div>';
+    }
+    
+    wp_die();
+});
+
+/**
+ * SOLUCIÓN 5: Debug adicional - Endpoint para verificar plantillas
+ */
+add_action('wp_ajax_mv_debug_plantillas', function() {
+    if (!current_user_can('manage_options')) {
+        wp_die('Sin permisos');
+    }
+    
+    echo '<h2>🔍 Debug: Estado de Plantillas</h2>';
+    
+    global $wpdb;
+    $tabla = $wpdb->prefix . 'mv_pdf_templates';
+    
+    // Verificar tabla
+    $tabla_existe = $wpdb->get_var("SHOW TABLES LIKE '$tabla'") === $tabla;
+    echo '<p><strong>Tabla existe:</strong> ' . ($tabla_existe ? '✅ Sí' : '❌ No') . '</p>';
+    
+    if ($tabla_existe) {
+        // Listar plantillas
+        $plantillas = $wpdb->get_results("SELECT * FROM $tabla ORDER BY id DESC");
+        echo '<h3>📋 Plantillas encontradas: ' . count($plantillas) . '</h3>';
+        
+        if ($plantillas) {
+            echo '<table class="wp-list-table widefat fixed striped">';
+            echo '<thead><tr><th>ID</th><th>Nombre</th><th>Tipo</th><th>Activa</th><th>Fecha</th></tr></thead>';
+            echo '<tbody>';
+            
+            foreach ($plantillas as $plantilla) {
+                echo '<tr>';
+                echo '<td><strong>' . $plantilla->id . '</strong></td>';
+                echo '<td>' . esc_html($plantilla->nombre) . '</td>';
+                echo '<td>' . esc_html($plantilla->tipo) . '</td>';
+                echo '<td>' . ($plantilla->activa ? '✅' : '❌') . '</td>';
+                echo '<td>' . $plantilla->fecha_creacion . '</td>';
+                echo '</tr>';
+            }
+            
+            echo '</tbody>';
+            echo '</table>';
+            
+            // Obtener plantilla activa
+            $plantilla_activa = $wpdb->get_row("SELECT * FROM $tabla WHERE tipo = 'cotizacion' AND activa = 1 LIMIT 1");
+            
+            if ($plantilla_activa) {
+                echo '<h3>✅ Plantilla activa para cotizaciones:</h3>';
+                echo '<p><strong>ID:</strong> ' . $plantilla_activa->id . '</p>';
+                echo '<p><strong>Nombre:</strong> ' . esc_html($plantilla_activa->nombre) . '</p>';
+            } else {
+                echo '<h3>⚠️ No hay plantilla activa para cotizaciones</h3>';
+            }
+        }
+    }
+    
+    wp_die();
+});
+
+// Función para crear campos de empresa (SOLO EN modulo-ventas.php)
+function mv_agregar_campos_empresa_configuracion() {
+    // Solo ejecutar una vez
+    if (get_option('mv_campos_empresa_agregados')) {
+        return;
+    }
+    
+    // Valores por defecto para campos de empresa
+    add_option('modulo_ventas_direccion_empresa', '');
+    add_option('modulo_ventas_ciudad_empresa', '');
+    add_option('modulo_ventas_region_empresa', '');
+    add_option('modulo_ventas_telefono_empresa', '');
+    add_option('modulo_ventas_rut_empresa', '');
+    
+    // Marcar como completado
+    add_option('mv_campos_empresa_agregados', true);
+}
+
+// Ejecutar al cargar el plugin
+add_action('init', 'mv_agregar_campos_empresa_configuracion');
+
+/**
+ * PASO 5: Crear función de debug para verificar variables
+ * 
+ * Añadir en modulo-ventas.php para debug:
+ */
+add_action('wp_ajax_mv_debug_variables_empresa', function() {
+    if (!current_user_can('manage_options')) {
+        wp_die('Sin permisos');
+    }
+    
+    echo '<h1>🔍 Debug: Variables de Empresa</h1>';
+    
+    echo '<h3>Valores Actuales en Base de Datos:</h3>';
+    echo '<table border="1" cellpadding="5" style="border-collapse: collapse;">';
+    echo '<tr><th>Campo</th><th>Opción</th><th>Valor</th></tr>';
+    
+    $campos_empresa = array(
+        'Nombre de Empresa' => 'modulo_ventas_nombre_empresa',
+        'Info Empresa' => 'modulo_ventas_info_empresa',
+        'RUT Empresa' => 'modulo_ventas_rut_empresa',
+        'Dirección Empresa' => 'modulo_ventas_direccion_empresa',
+        'Ciudad Empresa' => 'modulo_ventas_ciudad_empresa',
+        'Región Empresa' => 'modulo_ventas_region_empresa',
+        'Teléfono Empresa' => 'modulo_ventas_telefono_empresa',
+        'Email Empresa' => 'modulo_ventas_email_empresa'
+    );
+    
+    foreach ($campos_empresa as $nombre => $opcion) {
+        $valor = get_option($opcion, '');
+        $estado = empty($valor) ? '❌ Vacío' : '✅ Configurado';
+        echo '<tr>';
+        echo '<td><strong>' . $nombre . '</strong></td>';
+        echo '<td><code>' . $opcion . '</code></td>';
+        echo '<td>' . $estado . ': ' . esc_html(substr($valor, 0, 50)) . (strlen($valor) > 50 ? '...' : '') . '</td>';
+        echo '</tr>';
+    }
+    echo '</table>';
+    
+    echo '<h3>Test de obtener_datos_empresa():</h3>';
+    
+    try {
+        if (class_exists('Modulo_Ventas_mPDF_Visual_Sync')) {
+            $sync = Modulo_Ventas_mPDF_Visual_Sync::get_instance();
+            
+            // Usar reflection para acceder al método privado
+            $reflection = new ReflectionClass($sync);
+            $method = $reflection->getMethod('obtener_datos_empresa');
+            $method->setAccessible(true);
+            $datos_empresa = $method->invoke($sync);
+            
+            echo '<pre style="background: #f5f5f5; padding: 10px; border: 1px solid #ddd;">';
+            print_r($datos_empresa);
+            echo '</pre>';
+        } else {
+            echo '<p style="color: red;">❌ Clase Modulo_Ventas_mPDF_Visual_Sync no disponible</p>';
+        }
+    } catch (Exception $e) {
+        echo '<p style="color: red;">❌ Error: ' . esc_html($e->getMessage()) . '</p>';
+    }
+    
+    echo '<h3>Acciones:</h3>';
+    echo '<p><a href="' . admin_url('admin.php?page=modulo-ventas-configuracion&tab=pdf') . '" class="button button-primary">Ir a Configuración PDF</a></p>';
+    
+    wp_die();
+});
+
+/**
+ * PASO 6: Crear endpoint para test de variables en plantilla
+ */
+add_action('wp_ajax_mv_test_variables_plantilla', function() {
+    if (!current_user_can('manage_options')) {
+        wp_die('Sin permisos');
+    }
+    
+    echo '<h1>🧪 Test de Variables en Plantilla</h1>';
+    
+    try {
+        // Test con datos de prueba
+        $sync = Modulo_Ventas_mPDF_Visual_Sync::get_instance();
+        
+        // HTML de prueba con variables
+        $html_test = '
+        <h1>{{empresa.nombre}}</h1>
+        <p>{{info_empresa}}</p>
+        <p>RUT: {{empresa.rut}}</p>
+        <p>Dirección: {{empresa.direccion}}</p>
+        <p>Ciudad: {{empresa.ciudad}}, {{empresa.region}}</p>
+        <p>Teléfono: {{empresa.telefono}}</p>
+        <p>Email: {{empresa.email}}</p>
+        <hr>
+        <p>Términos: {{terminos_condiciones}}</p>
+        ';
+        
+        // Usar reflection para probar el método
+        $reflection = new ReflectionClass($sync);
+        $method = $reflection->getMethod('obtener_datos_empresa');
+        $method->setAccessible(true);
+        $datos_empresa = $method->invoke($sync);
+        
+        $datos_completos = array(
+            'empresa' => $datos_empresa,
+            'cotizacion' => (object) array('folio' => 'TEST-001'),
+            'cliente' => (object) array('nombre' => 'Cliente Test'),
+            'items' => array(),
+            'totales' => (object) array('total' => 0)
+        );
+        
+        $method_replace = $reflection->getMethod('reemplazar_variables');
+        $method_replace->setAccessible(true);
+        $html_procesado = $method_replace->invoke($sync, $html_test, $datos_completos);
+        
+        echo '<h3>HTML Original:</h3>';
+        echo '<textarea rows="10" cols="80" readonly>' . esc_textarea($html_test) . '</textarea>';
+        
+        echo '<h3>HTML Procesado:</h3>';
+        echo '<textarea rows="10" cols="80" readonly>' . esc_textarea($html_procesado) . '</textarea>';
+        
+        echo '<h3>Vista Previa:</h3>';
+        echo '<div style="border: 1px solid #ddd; padding: 20px; background: white;">';
+        echo $html_procesado;
+        echo '</div>';
+        
+    } catch (Exception $e) {
+        echo '<p style="color: red;">❌ Error: ' . esc_html($e->getMessage()) . '</p>';
+    }
+    
+    wp_die();
+});
+
+/**
+ * URLs de debug que puedes usar:
+ * 
+ * /wp-admin/admin-ajax.php?action=mv_debug_variables_empresa
+ * /wp-admin/admin-ajax.php?action=mv_test_variables_plantilla
+ */
