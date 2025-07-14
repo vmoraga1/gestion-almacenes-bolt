@@ -608,3 +608,26 @@ Stack trace:
 [2025-07-12 22:46:52] INFO: PDF_TEMPLATES: Preview generado exitosamente: http://localhost/gestion-almacenes-bolt/wp-admin/admin-ajax.php?action=mv_servir_preview&file=preview_cdc3adf41149961420763dbb087d6bb2.html&nonce=613d8e806e | Usuario: hostpanish (ID: 1) | IP: ::1
 [2025-07-12 22:47:20] INFO: MPDF_SYNC: Sincronizando plantilla para preview | Usuario: hostpanish (ID: 1) | IP: ::1
 [2025-07-12 22:47:20] INFO: MPDF_SYNC: Documento sincronizado generado (16910 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-12 23:17:32] INFO: PDF_TEMPLATES: Generando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-12 23:17:32] INFO: PDF_TEMPLATES: Processor disponible, procesando contenido... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-12 23:17:32] INFO: PDF_TEMPLATES: Usando datos de cotización real: 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-12 23:17:32] INFO: TEMPLATE_PROCESSOR: Procesando plantilla ID  para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-12 23:17:32] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: empresa.logo | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-12 23:17:32] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: empresa.info | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-12 23:17:32] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-12 23:17:32] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.fecha_expiracion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-12 23:17:32] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: sistema.usuario | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-12 23:17:32] INFO: TEMPLATE_PROCESSOR: Plantilla procesada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-12 23:17:32] INFO: PDF_TEMPLATES: Contenido procesado, preparando directorio... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-12 23:17:32] INFO: PDF_TEMPLATES: Guardando archivo: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/previews/preview_c52f5e8d941da6bc7614811b3188eab3.html | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-12 23:17:32] INFO: PDF_TEMPLATES: Preview generado exitosamente: http://localhost/gestion-almacenes-bolt/wp-admin/admin-ajax.php?action=mv_servir_preview&file=preview_c52f5e8d941da6bc7614811b3188eab3.html&nonce=89c31c986a | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-12 23:18:20] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method Modulo_Ventas_PDF_Template_Processor::formatear_productos_desde_items() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php:1027
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php(894): Modulo_Ventas_PDF_Template_Processor->obtener_ultima_cotizacion_para_preview()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php(1792): Modulo_Ventas_PDF_Template_Processor->obtener_datos_preview('cotizacion')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Ajax->ajax_obtener_preview_real('')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(192): do_action('wp_ajax_mv_obte...')
+#6 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-template-processor.php","line":1027,"type":1}

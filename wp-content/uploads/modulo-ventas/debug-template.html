@@ -1,457 +1,324 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documento PDF</title>
-    <style>
-        * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Documento PDF</title>
+        <style>
+    /* CSS BASE PARA COMPATIBILIDAD */
+    body { 
+        font-family: Arial, sans-serif; 
+        margin: 20px; 
+        color: #333;
+        line-height: 1.4;
+        font-size: 12px;
+    }
 
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    line-height: 1.4;
-    color: #333;
-    background-color: #fff;
-}
-
-.documento {
-    max-width: 210mm;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: white;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 3px solid #2c5aa0;
-}
-
-.logo-empresa {
-    flex: 0 0 120px;
-    text-align: center;
-}
-
-.logo-empresa img {
-    max-width: 100px;
-    max-height: 80px;
-    object-fit: contain;
-}
-
-.empresa-info {
-    flex: 1;
-    margin-left: 20px;
-}
-
-.empresa-info h1 {
-    color: #2c5aa0;
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-}
-
-.empresa-datos p {
-    margin: 3px 0;
-    font-size: 11px;
-    color: #666;
-}
-
-.cotizacion-info {
-    flex: 0 0 200px;
-    background-color: #f8f9fa;
-    border: 2px solid #2c5aa0;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.cotizacion-header {
-    background-color: #2c5aa0;
-    color: white;
-    padding: 12px;
-    text-align: center;
-}
-
-.cotizacion-header h2 {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0;
-}
-
-.cotizacion-datos {
-    padding: 15px;
-}
-
-.dato-linea {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-    font-size: 11px;
-}
-
-.dato-linea .label {
-    font-weight: bold;
-    color: #555;
-}
-
-.dato-linea .valor {
-    color: #333;
-    text-align: right;
-}
-
-.estado-pendiente { color: #e67e22; }
-.estado-enviada { color: #27ae60; }
-.estado-aceptada { color: #2980b9; }
-.estado-rechazada { color: #e74c3c; }
-.estado-expirada { color: #95a5a6; }
-
-.cliente-seccion {
-    margin-bottom: 25px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 20px;
-}
-
-.cliente-seccion h3 {
-    color: #2c5aa0;
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-    border-bottom: 2px solid #2c5aa0;
-    padding-bottom: 5px;
-}
-
-.cliente-datos {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-}
-
-.cliente-principal,
-.cliente-contacto,
-.cliente-direccion {
-    flex: 1;
-}
-
-.cliente-datos p {
-    margin: 4px 0;
-    font-size: 11px;
-}
-
-.cliente-datos strong {
-    color: #2c5aa0;
-}
-
-.productos-seccion {
-    margin-bottom: 25px;
-}
-
-.productos-seccion h3 {
-    color: #2c5aa0;
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-    border-bottom: 2px solid #2c5aa0;
-    padding-bottom: 5px;
-}
-
-.productos-tabla {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.productos-tabla th {
-    background-color: #2c5aa0;
-    color: white;
-    padding: 12px 8px;
-    text-align: left;
-    font-size: 11px;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-.productos-tabla td {
-    padding: 10px 8px;
-    border-bottom: 1px solid #dee2e6;
-    font-size: 11px;
-    vertical-align: top;
-}
-
-.productos-tabla tr:nth-child(even) {
-    background-color: #f8f9fa;
-}
-
-.productos-tabla tr:hover {
-    background-color: #e3f2fd;
-}
-
-.productos-tabla td:last-child,
-.productos-tabla th:last-child {
-    text-align: right;
-}
-
-.totales-seccion {
-    margin-bottom: 25px;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.totales-container {
-    width: 350px;
-    border: 2px solid #dee2e6;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.total-fila {
-    display: flex;
-    justify-content: space-between;
-    padding: 12px 20px;
-    border-bottom: 1px solid #dee2e6;
-}
-
-.total-fila:last-child {
-    border-bottom: none;
-}
-
-.total-fila.subtotal {
-    background-color: #f8f9fa;
-}
-
-.total-fila.descuento {
-    background-color: #fff3cd;
-    color: #856404;
-}
-
-.total-fila.impuestos {
-    background-color: #f8f9fa;
-}
-
-.total-fila.total-final {
-    background-color: #2c5aa0;
-    color: white;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.total-fila .label {
-    font-weight: 600;
-}
-
-.total-fila .valor {
-    font-weight: bold;
-    text-align: right;
-    min-width: 120px;
-}
-
-.observaciones-seccion {
-    margin-bottom: 25px;
-}
-
-.observaciones-seccion h3 {
-    color: #2c5aa0;
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    border-bottom: 2px solid #2c5aa0;
-    padding-bottom: 5px;
-}
-
-.observaciones-contenido {
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    border-left: 4px solid #2c5aa0;
-}
-
-.observaciones-contenido p {
-    font-size: 11px;
-    line-height: 1.5;
-    margin: 0;
-}
-
-.terminos-seccion {
-    margin-bottom: 25px;
-}
-
-.terminos-seccion h3 {
-    color: #2c5aa0;
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    border-bottom: 2px solid #2c5aa0;
-    padding-bottom: 5px;
-}
-
-.terminos-contenido {
-    background-color: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-}
-
-.terminos-contenido p {
-    font-size: 11px;
-    margin-bottom: 10px;
-}
-
-.terminos-contenido ul {
-    list-style-type: disc;
-    margin-left: 20px;
-}
-
-.terminos-contenido li {
-    font-size: 10px;
-    margin-bottom: 4px;
-    line-height: 1.4;
-}
-
-.footer {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 2px solid #2c5aa0;
-    text-align: center;
-}
-
-.footer-contenido p {
-    font-size: 10px;
-    color: #666;
-    margin: 3px 0;
-}
-
-.footer-contenido p:first-child {
-    font-weight: bold;
-    color: #2c5aa0;
-    font-size: 12px;
-}
-
-@media print {
     .documento {
-        max-width: none;
-        margin: 0;
-        padding: 15px;
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 20px;
     }
-    
+
+    /* Estilos base para tablas */
+    .tabla-productos { 
+        width: 100%; 
+        border-collapse: collapse; 
+        margin: 15px 0;
+    }
+    .tabla-productos th, .tabla-productos td { 
+        border: 1px solid #ddd; 
+        padding: 8px; 
+        text-align: left;
+    }
+    .tabla-productos th { 
+        background: #f5f5f5; 
+        font-weight: bold;
+    }
+
+    /* Header básico */
     .header {
-        page-break-inside: avoid;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #2c5aa0;
+        padding-bottom: 15px;
     }
-    
-    .productos-tabla {
-        page-break-inside: auto;
+
+    /* Cliente section */
+    .cliente-seccion {
+        background: #f8f9fa;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
     }
-    
-    .productos-tabla tr {
-        page-break-inside: avoid;
-    }
-    
+
+    /* Totales */
     .totales-seccion {
-        page-break-inside: avoid;
+        margin-top: 20px;
+        text-align: right;
     }
-}
 
-@page {
-    size: A4;
-    margin: 15mm;
-}
-
-.no-break {
-    page-break-inside: avoid;
-}
+    /* AGREGAR CSS PERSONALIZADO DEL USUARIO */
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.4;
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #2c5aa0;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .empresa-nombre {
+            color: #2c5aa0;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 0 10px 0;
+        }
+        
+        .empresa-datos {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .cotizacion-titulo {
+            color: #2c5aa0;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 15px 0 5px 0;
+        }
+        
+        .cotizacion-numero {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .fecha-cotizacion {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .cliente-section {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        
+        .cliente-titulo {
+            color: #2c5aa0;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0 0 15px 0;
+            border-bottom: 2px solid #2c5aa0;
+            padding-bottom: 8px;
+        }
+        
+        .cliente-nombre {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .cliente-datos {
+            font-size: 11px;
+            line-height: 1.6;
+        }
+        
+        .productos-titulo {
+            color: #2c5aa0;
+            font-size: 16px;
+            font-weight: bold;
+            margin: 30px 0 15px 0;
+        }
+        
+        .productos-tabla {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0 30px 0;
+            font-size: 11px;
+        }
+        
+        .productos-tabla th {
+            background-color: #2c5aa0;
+            color: white;
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            border: 1px solid #2c5aa0;
+        }
+        
+        .productos-tabla td {
+            padding: 10px 8px;
+            border: 1px solid #dee2e6;
+            vertical-align: top;
+        }
+        
+        .productos-tabla tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .productos-tabla tr:nth-child(odd) {
+            background-color: white;
+        }
+        
+        .col-descripcion { width: 45%; }
+        .col-cantidad { width: 15%; text-align: center; }
+        .col-precio { width: 20%; text-align: right; }
+        .col-total { width: 20%; text-align: right; font-weight: bold; }
+        
+        .totales-section {
+            text-align: right;
+            margin-top: 30px;
+        }
+        
+        .totales-box {
+            display: inline-block;
+            background-color: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            min-width: 280px;
+            font-size: 12px;
+        }
+        
+        .total-line {
+            padding: 5px 0;
+            border-bottom: 1px dotted #ccc;
+            margin-bottom: 5px;
+        }
+        
+        .total-line:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .total-final {
+            border-top: 3px solid #2c5aa0;
+            margin-top: 15px;
+            padding-top: 15px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #fff;
+        }
+        
+        .observaciones {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .observaciones-titulo {
+            color: #856404;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0 0 12px 0;
+        }
+        
+        .observaciones-texto {
+            color: #856404;
+            font-size: 11px;
+            line-height: 1.5;
+            margin: 0;
+        }
+        
+        .terminos {
+            background-color: #e3f2fd;
+            border: 1px solid #90caf9;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 25px 0;
+            font-size: 10px;
+        }
+        
+        .terminos-titulo {
+            color: #1976d2;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .terminos-lista {
+            margin: 0;
+            padding-left: 15px;
+            color: #1976d2;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+        }
+        
+        .footer-empresa {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .footer-fecha {
+            font-style: italic;
+        }
+        
+        /* Utilidades */
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .font-bold { font-weight: bold; }
+        .mb-0 { margin-bottom: 0; }
+        .mt-20 { margin-top: 20px; }
     </style>
-</head>
-<body>
-    <div class="documento">
-        <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotización COT-2025-001</title>
-</head>
-<body>
-    <div class="documento">
-        <!-- ENCABEZADO -->
-        <div class="header">
-            <div class="logo-empresa">
-                
-            </div>
-            <div class="empresa-info">
-                <h1>Desabolt</h1>
-                <div class="empresa-datos">
-                    <p>Dirección no configurada</p>
-                    <p>Tel:  | Email: v.moraga1990@gmail.com</p>
-                    <p>RUT: 77.777.777-7</p>
-                    <p>http://localhost/gestion-almacenes-bolt</p>
-                </div>
-            </div>
-            <div class="cotizacion-info">
-                <div class="cotizacion-header">
-                    <h2>COTIZACIÓN</h2>
-                </div>
-                <div class="cotizacion-datos">
-                    <div class="dato-linea">
-                        <span class="label">N°:</span>
-                        <span class="valor">COT-2025-001</span>
-                    </div>
-                    <div class="dato-linea">
-                        <span class="label">Fecha:</span>
-                        <span class="valor">11/07/2025</span>
-                    </div>
-                    <div class="dato-linea">
-                        <span class="label">Válida hasta:</span>
-                        <span class="valor">10/08/2025</span>
-                    </div>
-                    <div class="dato-linea">
-                        <span class="label">Estado:</span>
-                        <span class="valor estado-pendiente">pendiente</span>
-                    </div>
-                </div>
-            </div>
+        </style>
+    </head>
+    <body>
+        <div class="documento">
+            <body>
+	<div class="container-empresa">
+	<div class="logo">
+		
+	</div>
+    <div class="header">
+        <h1 class="empresa-nombre">Desabolt</h1>
+		<p>RUT: 98.765.432-1</p>
+        <div class="empresa-datos">
+			<br>
+            Av. Empresarial 456, Santiago<br>
+            Santiago, Región Metropolitana<br>
+            Teléfono: +56 2 2345 6789 | Email: v.moraga1990@gmail.com<br>
+            
         </div>
-
-        <!-- INFORMACIÓN DEL CLIENTE -->
-        <div class="cliente-seccion">
-            <h3>INFORMACIÓN DEL CLIENTE</h3>
-            <div class="cliente-datos">
-                <div class="cliente-principal">
-                    <p><strong>Tecnología y Servicios Empresariales Ltda.</strong></p>
-                    <p>RUT: 76.543.210-K</p>
-                    <p>Giro: Servicios de tecnología y consultoría</p>
-                </div>
-                <div class="cliente-contacto">
-                    <p><strong>Contacto:</strong></p>
-                    <p>Email: contacto@techservicios.cl</p>
-                    <p>Teléfono: +56 2 2345 6789</p>
-                </div>
-                <div class="cliente-direccion">
-                    <p><strong>Dirección:</strong></p>
-                    <p>Av. Providencia 1234, Oficina 567</p>
-                    <p>Providencia, Santiago</p>
-                    <p>Región Metropolitana</p>
-                </div>
-            </div>
+        <h2 class="cotizacion-titulo">COTIZACIÓN</h2>
+        <div class="cotizacion-numero">N° </div>
+        <div class="fecha-cotizacion">Fecha: 2025-07-14 01:20:25 | Válida hasta: </div>
+    </div>
+	</div>
+    
+    <div class="cliente-section">
+        <h3 class="cliente-titulo">INFORMACIÓN DEL CLIENTE</h3>
+        <div class="cliente-nombre">Tecnología y Servicios Empresariales Ltda.</div>
+        <div class="cliente-datos">
+            <strong>RUT:</strong> 76.543.210-K<br>
+            <strong>Dirección:</strong> Av. Providencia 1234, Oficina 567<br>
+            <strong>Ciudad:</strong> Santiago, Región Metropolitana<br>
+            <strong>Teléfono:</strong> +56 2 2345 6789<br>
+            <strong>Email:</strong> contacto@techservicios.cl
         </div>
-
-        <!-- TABLA DE PRODUCTOS -->
-        <div class="productos-seccion">
-            <h3>DETALLE DE PRODUCTOS/SERVICIOS</h3>
-            <table class="productos-tabla" style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 11px; border: 1px solid #ddd;">
+    </div>
+    
+    <h3 class="productos-titulo">PRODUCTOS Y SERVICIOS</h3>
+    
+    <table class="productos-tabla" style="width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 11px; border: 1px solid #ddd;">
                     <thead>
                         <tr style="background-color: #2c5aa0;">
                             <th style="color: white; border: 1px solid #2c5aa0; padding: 10px 8px; text-align: left; font-weight: bold;">Código</th>
@@ -467,83 +334,66 @@ body {
                         <td style="border: 1px solid #ddd; padding: 8px; vertical-align: top;">
                             <strong>Laptop HP Pavilion 15</strong><br><small style="color: #666; line-height: 1.2;">Laptop HP Pavilion 15 con procesador Intel Core i5</small></td>
                         <td style="border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: top; font-weight: bold;">2</td>
-                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-family: monospace;">$650.000</td>
-                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-family: monospace; color: #d63384;">$0</td>
-                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-weight: bold; font-family: monospace;">$1.300.000</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-family: monospace;">$$650.000</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-family: monospace; color: #d63384;">$$0</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-weight: bold; font-family: monospace;">$$1.300.000</td>
                     </tr><tr style="background-color: #f9f9f9;">
                         <td style="border: 1px solid #ddd; padding: 8px; vertical-align: top; font-family: monospace;">SERV001</td>
                         <td style="border: 1px solid #ddd; padding: 8px; vertical-align: top;">
                             <strong>Instalación y Configuración</strong><br><small style="color: #666; line-height: 1.2;">Servicio de instalación y configuración de software</small></td>
                         <td style="border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: top; font-weight: bold;">1</td>
-                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-family: monospace;">$75.000</td>
-                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-family: monospace; color: #d63384;">$5.000</td>
-                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-weight: bold; font-family: monospace;">$70.000</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-family: monospace;">$$75.000</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-family: monospace; color: #d63384;">$$5.000</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-weight: bold; font-family: monospace;">$$70.000</td>
                     </tr><tr style="background-color: #ffffff;">
                         <td style="border: 1px solid #ddd; padding: 8px; vertical-align: top; font-family: monospace;">ACC001</td>
                         <td style="border: 1px solid #ddd; padding: 8px; vertical-align: top;">
                             <strong>Mouse Inalámbrico</strong><br><small style="color: #666; line-height: 1.2;">Mouse inalámbrico ergonómico</small></td>
                         <td style="border: 1px solid #ddd; padding: 8px; text-align: center; vertical-align: top; font-weight: bold;">2</td>
-                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-family: monospace;">$25.000</td>
-                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-family: monospace; color: #d63384;">$0</td>
-                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-weight: bold; font-family: monospace;">$50.000</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-family: monospace;">$$25.000</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-family: monospace; color: #d63384;">$$0</td>
+                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right; vertical-align: top; font-weight: bold; font-family: monospace;">$$50.000</td>
                     </tr></tbody></table>
-        </div>
-
-        <!-- TOTALES -->
-        <div class="totales-seccion">
-            <div class="totales-container">
-                <div class="total-fila subtotal">
-                    <span class="label">Subtotal:</span>
-                    <span class="valor">$1.420.000</span>
-                </div>
-                <div class="total-fila descuento">
-                    <span class="label">Descuento (10%):</span>
-                    <span class="valor">-$142.000</span>
-                </div>
-                <div class="total-fila impuestos">
-                    <span class="label">IVA (19%):</span>
-                    <span class="valor">$242.820</span>
-                </div>
-                <div class="total-fila total-final">
-                    <span class="label">TOTAL:</span>
-                    <span class="valor">$1.520.820</span>
-                </div>
+    
+    <div class="totales-section">
+        <div class="totales-box">
+            <div class="total-line">
+                <strong>Subtotal:</strong> 1.420.000
             </div>
-        </div>
-
-        <!-- OBSERVACIONES -->
-        <div class="observaciones-seccion">
-            <h3>OBSERVACIONES</h3>
-            <div class="observaciones-contenido">
-                <p>Esta es una cotización de ejemplo generada automáticamente para mostrar el diseño de la plantilla PDF.</p>
+            <div class="total-line">
+                <strong>Descuento (10%):</strong> 142.000
             </div>
-        </div>
-
-        <!-- TÉRMINOS Y CONDICIONES -->
-        <div class="terminos-seccion">
-            <h3>TÉRMINOS Y CONDICIONES</h3>
-            <div class="terminos-contenido">
-                <p>Términos y condiciones estándar de la empresa.</p>
-                <ul>
-                    <li>Esta cotización tiene una validez de 30 días desde la fecha de emisión.</li>
-                    <li>Los precios incluyen IVA y están expresados en pesos chilenos (CLP).</li>
-                    <li>Plazo de pago: 30_dias</li>
-                    <li>Los productos estarán sujetos a disponibilidad de stock.</li>
-                </ul>
+            <div class="total-line">
+                <strong>IVA (19%):</strong> 242.820
             </div>
-        </div>
-
-        <!-- PIE DE PÁGINA -->
-        <div class="footer">
-            <div class="footer-contenido">
-                <p>¡Gracias por confiar en nosotros!</p>
-                <p>Para aceptar esta cotización, por favor contáctenos a v.moraga1990@gmail.com o </p>
-                <p>Documento generado el 11/07/2025 por Juan Pérez - Ejecutivo de Ventas</p>
+            <div class="total-line total-final">
+                <strong>TOTAL FINAL:</strong> 1.520.820
             </div>
         </div>
     </div>
-</body>
-</html>
+    
+    <div class="observaciones">
+        <h4 class="observaciones-titulo">OBSERVACIONES</h4>
+        <p class="observaciones-texto">Esta es una cotización de ejemplo generada automáticamente para mostrar el diseño de la plantilla PDF.</p>
+    </div>
+    
+    <div class="terminos">
+        <div class="terminos-titulo">TÉRMINOS Y CONDICIONES</div>
+        <ul class="terminos-lista">
+            <li>Validez de la oferta: 30 días desde la fecha de emisión</li>
+            <li>Forma de pago: Según acuerdo comercial</li>
+            <li>Tiempo de entrega: Según especificaciones del producto</li>
+            <li>Garantía: Según condiciones del fabricante</li>
+            <li>Los precios incluyen IVA y están sujetos a cambios sin previo aviso</li>
+        </ul>
+    </div>
+    
+    <div class="footer">
+        <div class="footer-empresa">Desabolt</div>
+        <div class="footer-fecha">Documento generado el 14/07/2025 por </div>
+        <div>http://localhost/gestion-almacenes-bolt</div>
     </div>
 </body>
-</html>
+        </div>
+    </body>
+    </html>

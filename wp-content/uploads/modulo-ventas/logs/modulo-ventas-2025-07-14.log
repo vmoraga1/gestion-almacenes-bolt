@@ -1,0 +1,331 @@
+[2025-07-14 04:42:24] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method Modulo_Ventas_PDF_Template_Processor::formatear_productos_desde_items() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php:1027
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php(894): Modulo_Ventas_PDF_Template_Processor->obtener_ultima_cotizacion_para_preview()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php(1792): Modulo_Ventas_PDF_Template_Processor->obtener_datos_preview('cotizacion')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Ajax->ajax_obtener_preview_real('')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(192): do_action('wp_ajax_mv_obte...')
+#6 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-template-processor.php","line":1027,"type":1}
+[2025-07-14 04:47:09] INFO: PDF_TEMPLATES: Generando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:47:09] INFO: PDF_TEMPLATES: Processor disponible, procesando contenido... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:47:09] INFO: PDF_TEMPLATES: Usando datos de cotización real: 27 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:47:09] INFO: TEMPLATE_PROCESSOR: Procesando plantilla ID  para cotización 27 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:47:09] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: empresa.logo | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:47:09] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: empresa.info | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:47:09] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:47:09] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.fecha_expiracion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:47:09] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: sistema.usuario | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:47:09] INFO: TEMPLATE_PROCESSOR: Plantilla procesada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:47:09] INFO: PDF_TEMPLATES: Contenido procesado, preparando directorio... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:47:09] INFO: PDF_TEMPLATES: Guardando archivo: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/previews/preview_c4add8b80340d7361a9a11a2dd01613b.html | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:47:09] INFO: PDF_TEMPLATES: Preview generado exitosamente: http://localhost/gestion-almacenes-bolt/wp-admin/admin-ajax.php?action=mv_servir_preview&file=preview_c4add8b80340d7361a9a11a2dd01613b.html&nonce=5c15ea28ea | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:49:34] INFO: PDF_TEMPLATES: Generando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:49:34] INFO: PDF_TEMPLATES: Processor disponible, procesando contenido... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:49:34] INFO: PDF_TEMPLATES: Usando datos de cotización real: 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:49:34] INFO: TEMPLATE_PROCESSOR: Procesando plantilla ID  para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:49:34] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: empresa.logo | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:49:34] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: empresa.info | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:49:34] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:49:34] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.fecha_expiracion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:49:34] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: sistema.usuario | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:49:34] INFO: TEMPLATE_PROCESSOR: Plantilla procesada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:49:34] INFO: PDF_TEMPLATES: Contenido procesado, preparando directorio... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:49:34] INFO: PDF_TEMPLATES: Guardando archivo: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/previews/preview_7964137e4e2074ff8dafb162648527cc.html | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:49:34] INFO: PDF_TEMPLATES: Preview generado exitosamente: http://localhost/gestion-almacenes-bolt/wp-admin/admin-ajax.php?action=mv_servir_preview&file=preview_7964137e4e2074ff8dafb162648527cc.html&nonce=f3dd30056b | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:58:09] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 04:58:28] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:20:03] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:20:25] INFO: TEMPLATE_PROCESSOR: Procesando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:20:25] INFO: TEMPLATE_PROCESSOR: Generando datos de prueba para: cotizacion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:20:25] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: empresa.logo | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:20:25] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: empresa.info | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:20:25] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:20:25] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.fecha_expiracion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:20:25] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: sistema.usuario | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:21:16] INFO: PDF_TEMPLATES: Generando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:21:16] INFO: PDF_TEMPLATES: Processor disponible, procesando contenido... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:21:16] INFO: PDF_TEMPLATES: Usando datos de cotización real: 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:21:16] INFO: TEMPLATE_PROCESSOR: Procesando plantilla ID  para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:21:16] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: empresa.logo | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:21:16] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: empresa.info | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:21:16] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.folio | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:21:16] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: cotizacion.fecha_expiracion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:21:16] WARNING: TEMPLATE_PROCESSOR: Variable no encontrada: sistema.usuario | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:21:16] INFO: TEMPLATE_PROCESSOR: Plantilla procesada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:21:16] INFO: PDF_TEMPLATES: Contenido procesado, preparando directorio... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:21:16] INFO: PDF_TEMPLATES: Guardando archivo: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/previews/preview_12668bddfbccc65cf098f9a56789c1de.html | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:21:16] INFO: PDF_TEMPLATES: Preview generado exitosamente: http://localhost/gestion-almacenes-bolt/wp-admin/admin-ajax.php?action=mv_servir_preview&file=preview_12668bddfbccc65cf098f9a56789c1de.html&nonce=f916951606 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:25:45] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:46:06] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method Modulo_Ventas_PDF_Template_Processor::formatear_productos_desde_items() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php:1163
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php(1030): Modulo_Ventas_PDF_Template_Processor->obtener_ultima_cotizacion_para_preview()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php(3231): Modulo_Ventas_PDF_Template_Processor->obtener_datos_preview('cotizacion')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Ajax->ajax_vista_previa_datos_reales('')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(192): do_action('wp_ajax_mv_vist...')
+#6 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-template-processor.php","line":1163,"type":1}
+[2025-07-14 05:51:05] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:59:10] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:59:10] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 05:59:10] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:08:32] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:08:32] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:08:32] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:20:16] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:20:16] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:20:16] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:20:16] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:20:16] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:20:16] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:20:16] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:22:52] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:22:58] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:22:58] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:22:58] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:22:58] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:22:58] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:22:58] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:22:58] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:23:28] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:23:31] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:23:31] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:23:31] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:23:31] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:23:31] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:23:31] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:23:31] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:25:45] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:25:45] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:25:45] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:25:45] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:25:45] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:25:45] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:25:45] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:33:41] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:33:41] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:33:41] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:33:41] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:33:41] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:33:41] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:33:41] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:33:41] INFO: PREVIEW: Generando documento final... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:33:41] INFO: PREVIEW: CSS agregado al documento (3562 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:33:41] INFO: PREVIEW: Documento final - Longitud: 13048, CSS: SI, Contenido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:33:41] INFO: PREVIEW: ADVERTENCIA - Variables sin procesar: {{empresa.logo}}, {{empresa.info}}, {{cotizacion.folio}}, {{cotizacion.fecha_expiracion}}, {{totales.descuento_porcentaje}}, {{sistema.usuario}} | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:34:42] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:34:42] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:34:42] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:34:42] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:34:42] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:34:42] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:34:43] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:34:43] INFO: PREVIEW: Generando documento final... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:34:43] INFO: PREVIEW: CSS agregado al documento (3562 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:34:43] INFO: PREVIEW: Documento final - Longitud: 13048, CSS: SI, Contenido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:34:43] INFO: PREVIEW: ADVERTENCIA - Variables sin procesar: {{empresa.logo}}, {{empresa.info}}, {{cotizacion.folio}}, {{cotizacion.fecha_expiracion}}, {{totales.descuento_porcentaje}}, {{sistema.usuario}} | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:36:19] INFO: PDF_TEMPLATES: Generando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:36:19] INFO: PDF_TEMPLATES: Processor disponible, procesando contenido... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:36:19] INFO: PDF_TEMPLATES: Usando datos de cotización real: 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:36:19] INFO: TEMPLATE_PROCESSOR: Procesando plantilla ID  para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:36:19] INFO: PREVIEW: Generando documento final... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:36:19] INFO: PREVIEW: CSS agregado al documento (3593 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:36:19] INFO: PREVIEW: Documento final - Longitud: 13101, CSS: SI, Contenido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:36:19] INFO: PREVIEW: ADVERTENCIA - Variables sin procesar: {{empresa.logo}}, {{empresa.info}}, {{cotizacion.folio}}, {{cotizacion.fecha_expiracion}}, {{sistema.usuario}} | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:36:19] INFO: TEMPLATE_PROCESSOR: Plantilla procesada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:36:19] INFO: PDF_TEMPLATES: Contenido procesado, preparando directorio... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:36:19] INFO: PDF_TEMPLATES: Guardando archivo: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/previews/preview_63a442945640af156d2e9d47b0ddb890.html | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:36:19] INFO: PDF_TEMPLATES: Preview generado exitosamente: http://localhost/gestion-almacenes-bolt/wp-admin/admin-ajax.php?action=mv_servir_preview&file=preview_63a442945640af156d2e9d47b0ddb890.html&nonce=22660d591e | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:37:25] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:37:25] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:37:25] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:37:25] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:37:25] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:37:25] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:37:25] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:37:25] INFO: PREVIEW: Generando documento final... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:37:25] INFO: PREVIEW: CSS agregado al documento (3562 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:37:25] INFO: PREVIEW: Documento final - Longitud: 13048, CSS: SI, Contenido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:37:25] INFO: PREVIEW: ADVERTENCIA - Variables sin procesar: {{empresa.logo}}, {{empresa.info}}, {{cotizacion.folio}}, {{cotizacion.fecha_expiracion}}, {{totales.descuento_porcentaje}}, {{sistema.usuario}} | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:46:42] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method Modulo_Ventas_PDF_Template_Processor::formatear_rut() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php:1175
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php(1086): Modulo_Ventas_PDF_Template_Processor->obtener_ultima_cotizacion_para_preview()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php(3228): Modulo_Ventas_PDF_Template_Processor->obtener_datos_preview('cotizacion')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Ajax->ajax_vista_previa_datos_reales('')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(192): do_action('wp_ajax_mv_vist...')
+#6 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-template-processor.php","line":1175,"type":1}
+[2025-07-14 06:48:13] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method Modulo_Ventas_PDF_Template_Processor::formatear_rut() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php:1197
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php(1108): Modulo_Ventas_PDF_Template_Processor->obtener_ultima_cotizacion_para_preview()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php(3228): Modulo_Ventas_PDF_Template_Processor->obtener_datos_preview('cotizacion')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Ajax->ajax_vista_previa_datos_reales('')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(192): do_action('wp_ajax_mv_vist...')
+#6 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-template-processor.php","line":1197,"type":1}
+[2025-07-14 06:52:04] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:04] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:04] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:04] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:04] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:04] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:04] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:04] INFO: PREVIEW: Generando documento final... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:04] INFO: PREVIEW: CSS agregado al documento (3562 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:04] INFO: PREVIEW: Documento final - Longitud: 7205, CSS: SI, Contenido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:45] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:45] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:45] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:45] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:45] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:45] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:45] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:45] INFO: PREVIEW: Generando documento final... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:45] INFO: PREVIEW: CSS agregado al documento (4244 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:45] INFO: PREVIEW: Documento final - Longitud: 7762, CSS: NO, Contenido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:52:45] INFO: PREVIEW: ADVERTENCIA - Variables sin procesar: {{cotizacion.numero}}, {{fechas.fecha_vencimiento_formateada}}, {{cotizacion.vendedor}}, {{sistema.hora_actual}} | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:56:44] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:56:44] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:56:44] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:56:44] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:56:44] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:56:44] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:56:44] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:56:44] INFO: PREVIEW: Generando documento final... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:56:44] INFO: PREVIEW: CSS agregado al documento (4244 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:56:44] INFO: PREVIEW: Documento final - Longitud: 7762, CSS: NO, Contenido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 06:56:44] INFO: PREVIEW: ADVERTENCIA - Variables sin procesar: {{cotizacion.numero}}, {{fechas.fecha_vencimiento_formateada}}, {{cotizacion.vendedor}}, {{sistema.hora_actual}} | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:11] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:11] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:11] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:11] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:11] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:11] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:11] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:11] INFO: PREVIEW: Generando documento final... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:11] INFO: PREVIEW: CSS agregado al documento (4244 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:11] INFO: PREVIEW: Documento final - Longitud: 7762, CSS: NO, Contenido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:11] INFO: PREVIEW: ADVERTENCIA - Variables sin procesar: {{cotizacion.numero}}, {{fechas.fecha_vencimiento_formateada}}, {{cotizacion.vendedor}}, {{sistema.hora_actual}} | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:45] INFO: Plantilla ID 3 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:48] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:48] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:48] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:48] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:48] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:48] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:48] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:48] INFO: PREVIEW: Generando documento final... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:48] INFO: PREVIEW: CSS agregado al documento (4244 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:48] INFO: PREVIEW: Documento final - Longitud: 7762, CSS: NO, Contenido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:10:48] INFO: PREVIEW: ADVERTENCIA - Variables sin procesar: {{cotizacion.numero}}, {{fechas.fecha_vencimiento_formateada}}, {{cotizacion.vendedor}}, {{sistema.hora_actual}} | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:11:41] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:11:41] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:11:41] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:11:41] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:11:41] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:11:41] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:11:41] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:11:41] INFO: PREVIEW: Generando documento final... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:11:41] INFO: PREVIEW: CSS agregado al documento (3562 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:11:41] INFO: PREVIEW: Documento final - Longitud: 7205, CSS: SI, Contenido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:02] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:05] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:05] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:05] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:05] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:05] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:05] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:05] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:05] INFO: PREVIEW: Generando documento final... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:05] INFO: PREVIEW: CSS agregado al documento (3562 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:05] INFO: PREVIEW: Documento final - Longitud: 7205, CSS: SI, Contenido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:56] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:56] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:56] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:56] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:56] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:56] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:56] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:56] INFO: PREVIEW: Generando documento final... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:56] INFO: PREVIEW: CSS agregado al documento (4261 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:12:56] INFO: PREVIEW: Documento final - Longitud: 7904, CSS: SI, Contenido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:13:45] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:13:45] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:13:45] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:13:45] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:13:45] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:13:45] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:13:45] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:13:45] INFO: PREVIEW: Generando documento final... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:13:45] INFO: PREVIEW: CSS agregado al documento (4261 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:13:45] INFO: PREVIEW: Documento final - Longitud: 7904, CSS: SI, Contenido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:25:19] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method Modulo_Ventas_PDF_Template_Processor::obtener_items_cotizacion() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php:1217
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php(1142): Modulo_Ventas_PDF_Template_Processor->obtener_ultima_cotizacion_para_preview()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-ajax.php(3228): Modulo_Ventas_PDF_Template_Processor->obtener_datos_preview('cotizacion')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Ajax->ajax_vista_previa_datos_reales('')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(192): do_action('wp_ajax_mv_vist...')
+#6 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-template-processor.php","line":1217,"type":1}
+[2025-07-14 07:28:05] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:28:05] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:28:05] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:28:05] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:28:05] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:28:05] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:28:05] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:28:05] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:28:05] INFO: PROCESSOR: CSS contenía tags <style>, removidos para evitar anidamiento | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:28:05] INFO: PREVIEW: Generando documento final... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:28:05] INFO: PREVIEW: CSS agregado al documento (4242 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:28:05] INFO: PREVIEW: Documento final - Longitud: 14249, CSS: NO, Contenido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: PROCESSOR: Procesando CSS de 4259 caracteres | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: PROCESSOR: Removidos tags <style> anidados | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: PROCESSOR: CSS procesado - 4242 caracteres finales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: PREVIEW: Generando documento final... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: PREVIEW: HTML recibido: 9700 caracteres | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: PREVIEW: CSS recibido: 4242 caracteres | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: PREVIEW: Tiene HTML válido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: PREVIEW: Tiene CSS válido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: PREVIEW: CSS agregado al documento | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:35:11] INFO: PREVIEW: Documento final - Longitud: 14264, CSS: NO, Contenido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PROCESSOR: Procesando CSS de 4259 caracteres | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PROCESSOR: Removidos tags <style> anidados | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PROCESSOR: CSS procesado - 4242 caracteres finales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PREVIEW: === INICIO GENERAR_DOCUMENTO_FINAL === | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PREVIEW: HTML recibido: 9700 caracteres | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PREVIEW: CSS recibido: 4242 caracteres | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PREVIEW: HTML válido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PREVIEW: CSS válido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PREVIEW: CSS de plantilla agregado (4242 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PREVIEW: === RESULTADO FINAL === | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PREVIEW: Longitud total: 14301 caracteres | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PREVIEW: Contiene <style>: NO | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PREVIEW: Contiene </style>: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PREVIEW: Estructura body válida: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:49:03] INFO: PREVIEW: Documento final - Longitud: 14301, CSS: NO, Contenido: SI | Usuario: hostpanish (ID: 1) | IP: ::1

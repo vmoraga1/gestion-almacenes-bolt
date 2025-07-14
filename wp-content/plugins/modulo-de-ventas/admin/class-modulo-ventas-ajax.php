@@ -51,6 +51,7 @@ class Modulo_Ventas_Ajax {
         add_action('wp_ajax_mv_obtener_preview_real', array($this, 'ajax_obtener_preview_real'));
         add_action('wp_ajax_mv_vista_previa_datos_reales', array($this, 'ajax_vista_previa_datos_reales'));
         add_action('wp_ajax_mv_preview_mpdf_sincronizado_datos_reales', array($this, 'ajax_preview_mpdf_sincronizado_datos_reales'));
+        add_action('wp_ajax_mv_generar_pdf_plantilla', array($this, 'ajax_generar_pdf_plantilla'));
 
         // Si necesitas soporte para usuarios no logueados (no recomendado para PDFs)
         // add_action('wp_ajax_nopriv_mv_generar_pdf_cotizacion', array($this, 'generar_pdf_cotizacion'));
@@ -1001,6 +1002,109 @@ class Modulo_Ventas_Ajax {
             } else {
                 wp_die($mensaje, 'Error PDF', array('response' => 500));
             }
+        }
+    }
+
+    /**
+     * Generar Plantilla PDF
+     */
+    public function ajax_generar_pdf_plantilla() {
+        // Verificar permisos
+        if (!current_user_can('manage_options')) {
+            wp_die('Sin permisos', 'Error', array('response' => 403));
+        }
+        
+        // Verificar nonce de manera flexible
+        $nonce_valido = false;
+        if (isset($_GET['nonce'])) {
+            $nonces_posibles = array('mv_pdf_templates_nonce', 'mv_pdf_templates', 'mv_nonce');
+            foreach ($nonces_posibles as $nonce_name) {
+                if (wp_verify_nonce($_GET['nonce'], $nonce_name)) {
+                    $nonce_valido = true;
+                    break;
+                }
+            }
+        }
+        
+        if (!$nonce_valido) {
+            wp_die('Nonce inválido', 'Error de Seguridad', array('response' => 403));
+        }
+        
+        $plantilla_id = isset($_GET['plantilla_id']) ? intval($_GET['plantilla_id']) : 0;
+        $usar_datos_reales = isset($_GET['usar_datos_reales']) ? (bool)$_GET['usar_datos_reales'] : true;
+        
+        if (!$plantilla_id) {
+            wp_die('ID de plantilla inválido', 'Error', array('response' => 400));
+        }
+        
+        try {
+            // Obtener plantilla
+            global $wpdb;
+            $tabla_plantillas = $wpdb->prefix . 'mv_pdf_templates';
+            
+            $plantilla = $wpdb->get_row($wpdb->prepare(
+                "SELECT * FROM $tabla_plantillas WHERE id = %d",
+                $plantilla_id
+            ));
+            
+            if (!$plantilla) {
+                wp_die('Plantilla no encontrada', 'Error', array('response' => 404));
+            }
+            
+            // Crear procesador
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-template-processor.php';
+            $processor = new Modulo_Ventas_PDF_Template_Processor();
+            
+            // Obtener datos
+            if ($usar_datos_reales) {
+                try {
+                    $tipo_documento = isset($plantilla->tipo_documento) ? $plantilla->tipo_documento : 'cotizacion';
+                    $datos = $processor->obtener_datos_preview($tipo_documento);
+                } catch (Exception $e) {
+                    $processor->generar_datos_prueba($plantilla->tipo_documento);
+                    $datos = $processor->cotizacion_data;
+                }
+            } else {
+                $processor->generar_datos_prueba($plantilla->tipo_documento);
+                $datos = $processor->cotizacion_data;
+            }
+            
+            // Procesar plantilla
+            $html_procesado = $processor->procesar_template($plantilla->contenido_html);
+            $css_procesado = $processor->procesar_css($plantilla->contenido_css);
+            $documento_final = $processor->generar_documento_final($html_procesado, $css_procesado);
+            
+            // Generar PDF usando TCPDF
+            if (!class_exists('TCPDF')) {
+                require_once MODULO_VENTAS_PLUGIN_DIR . 'vendor/tcpdf/tcpdf.php';
+            }
+            
+            $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+            
+            // Configuración del PDF
+            $pdf->SetCreator('Módulo de Ventas');
+            $pdf->SetAuthor('Sistema de Gestión');
+            $pdf->SetTitle('Preview de Plantilla - ' . $plantilla->nombre);
+            
+            // Configuración de márgenes
+            $pdf->SetMargins(15, 15, 15);
+            $pdf->SetAutoPageBreak(true, 15);
+            
+            // Agregar página
+            $pdf->AddPage();
+            
+            // Escribir HTML
+            $pdf->writeHTML($documento_final, true, false, true, false, '');
+            
+            // Enviar PDF al navegador
+            $filename = 'preview_plantilla_' . $plantilla_id . '_' . date('Y-m-d_H-i-s') . '.pdf';
+            
+            $pdf->Output($filename, 'I'); // 'I' = inline en navegador
+            exit;
+            
+        } catch (Exception $e) {
+            error_log('Error generando PDF: ' . $e->getMessage());
+            wp_die('Error al generar PDF: ' . $e->getMessage(), 'Error PDF', array('response' => 500));
         }
     }
 
@@ -3057,20 +3161,35 @@ class Modulo_Ventas_Ajax {
             wp_send_json_error(array('message' => 'Sin permisos'));
         }
         
-        // CORREGIDO: Usar el mismo nonce que el resto del sistema
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mv_pdf_templates_nonce')) {
+        // Verificar nonce
+        $nonce_valido = false;
+        if (isset($_POST['nonce'])) {
+            $nonces_posibles = array('mv_pdf_templates_nonce', 'mv_pdf_templates', 'mv_nonce');
+            foreach ($nonces_posibles as $nonce_name) {
+                if (wp_verify_nonce($_POST['nonce'], $nonce_name)) {
+                    $nonce_valido = true;
+                    break;
+                }
+            }
+        }
+        
+        if (!$nonce_valido) {
             wp_send_json_error(array('message' => 'Nonce inválido'));
         }
         
         $plantilla_id = isset($_POST['plantilla_id']) ? intval($_POST['plantilla_id']) : 0;
         $usar_datos_reales = isset($_POST['usar_datos_reales']) ? (bool)$_POST['usar_datos_reales'] : true;
         
+        // Contenido personalizado del editor
+        $html_content = isset($_POST['html_content']) ? $_POST['html_content'] : '';
+        $css_content = isset($_POST['css_content']) ? $_POST['css_content'] : '';
+        
         if (!$plantilla_id) {
             wp_send_json_error(array('message' => 'ID de plantilla inválido'));
         }
         
         try {
-            // Obtener plantilla
+            // Obtener plantilla de la base de datos
             global $wpdb;
             $tabla_plantillas = $wpdb->prefix . 'mv_pdf_templates';
             
@@ -3083,44 +3202,110 @@ class Modulo_Ventas_Ajax {
                 wp_send_json_error(array('message' => 'Plantilla no encontrada'));
             }
             
+            // CORREGIDO: Usar el campo correcto
+            $tipo_documento = isset($plantilla->tipo) ? $plantilla->tipo : 'cotizacion';
+            error_log('PREVIEW: Tipo de documento detectado: ' . $tipo_documento);
+            
+            // Decidir qué contenido usar
+            $html_final = !empty($html_content) ? $html_content : $plantilla->contenido_html;
+            $css_final = !empty($css_content) ? $css_content : $plantilla->contenido_css;
+            
+            if (empty($html_final)) {
+                wp_send_json_error(array('message' => 'No hay contenido HTML para procesar'));
+            }
+            
             // Crear procesador
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-template-processor.php';
             $processor = new Modulo_Ventas_PDF_Template_Processor();
             
-            // CORREGIDO: Obtener datos según el tipo
+            // MÉTODO MEJORADO: Cargar datos con fallback robusto
+            $datos = null;
+            $tipo_datos = 'prueba';
+            $mensaje = '';
+            
             if ($usar_datos_reales) {
-                $datos = $processor->obtener_datos_preview($plantilla->tipo_documento);
+                $tipo_documento = isset($plantilla->tipo_documento) ? $plantilla->tipo_documento : 'cotizacion';
+                $datos = $processor->obtener_datos_preview($tipo_documento);
             } else {
-                // CORREGIDO: Usar método que sabemos que existe
                 $datos = $this->obtener_datos_prueba_fallback($plantilla->tipo_documento);
             }
             
-            // Procesar plantilla
-            $processor->cargar_datos($datos);
-            $html_procesado = $processor->procesar_template($plantilla->contenido_html);
-            $css_procesado = $processor->procesar_css($plantilla->contenido_css);
+            // Verificar que tenemos datos válidos
+            if (empty($datos)) {
+                wp_send_json_error(array('message' => 'No se pudieron obtener datos para el preview'));
+            }
+
+            // VERIFICAR: Cargar datos en el procesador ANTES de procesar
+            $this->logger->log("PREVIEW: Datos cargados en processor correctamente");
+            $carga_exitosa = $processor->cargar_datos($datos);
             
-            // Generar documento final
+            if (!$carga_exitosa) {
+                $this->logger->log("PREVIEW: ERROR - No se pudieron cargar datos en el processor", 'error');
+                wp_send_json_error(array('message' => 'Error cargando datos en el procesador'));
+            }
+
+            // AGREGAR: Verificar que los datos están disponibles en el processor
+            if (!$processor->tiene_datos()) {
+                $this->logger->log("PREVIEW: ERROR - Processor no tiene datos después de cargar", 'error');
+                wp_send_json_error(array('message' => 'Los datos no se cargaron correctamente en el procesador'));
+            }
+            
+            error_log('PREVIEW: Datos cargados en processor correctamente');
+            error_log('PREVIEW: Empresa en datos: ' . 
+                    (isset($datos['empresa']['nombre']) ? $datos['empresa']['nombre'] : 'NO_DEFINIDA'));
+            
+            // Procesar plantilla
+            error_log('PREVIEW: Procesando HTML...');
+            $html_procesado = $processor->procesar_template($html_final);
+            
+            error_log('PREVIEW: Procesando CSS...');
+            $css_procesado = $processor->procesar_css($css_final);
+            
+            error_log('PREVIEW: Generando documento final...');
             $documento_final = $processor->generar_documento_final($html_procesado, $css_procesado);
             
-            // Agregar información adicional para debugging
-            $info_datos = $usar_datos_reales ? 'datos reales' : 'datos de prueba';
-            $documento_con_info = str_replace(
-                '</body>',
-                '<div style="position: fixed; bottom: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 5px 10px; border-radius: 3px; font-size: 12px; z-index: 9999;">
-                    Preview con ' . $info_datos . '
-                </div></body>',
-                $documento_final
-            );
+            // Verificación final
+            $variables_sin_procesar = preg_match_all('/\{\{[^}]+\}\}/', $documento_final, $matches);
+            if ($variables_sin_procesar > 0) {
+                error_log('PREVIEW: ADVERTENCIA - Variables sin procesar: ' . implode(', ', array_slice($matches[0], 0, 5)));
+            }
             
+            $tiene_css = strpos($documento_final, '<style>') !== false;
+            $tiene_contenido = strpos($documento_final, 'class="documento"') !== false;
+            
+            error_log('PREVIEW: Documento final - Longitud: ' . strlen($documento_final) . 
+                    ', CSS: ' . ($tiene_css ? 'SI' : 'NO') . 
+                    ', Contenido: ' . ($tiene_contenido ? 'SI' : 'NO'));
+            
+            // Respuesta exitosa
             wp_send_json_success(array(
-                'html' => $documento_con_info,
-                'tipo_datos' => $usar_datos_reales ? 'real' : 'prueba',
-                'mensaje' => 'Vista previa generada con ' . $info_datos
+                'html' => $documento_final,
+                'tipo_datos' => $tipo_datos,
+                'mensaje' => $mensaje,
+                'debug' => array(
+                    'plantilla_id' => $plantilla_id,
+                    'tipo_documento' => $tipo_documento,
+                    'usar_datos_reales' => $usar_datos_reales,
+                    'datos_cargados' => !empty($datos),
+                    'variables_sin_procesar' => $variables_sin_procesar,
+                    'tiene_css' => $tiene_css,
+                    'longitud_html' => strlen($documento_final),
+                    'empresa_nombre' => isset($datos['empresa']['nombre']) ? $datos['empresa']['nombre'] : 'NO_DEFINIDA'
+                )
             ));
             
         } catch (Exception $e) {
-            error_log('Error en vista previa: ' . $e->getMessage());
-            wp_send_json_error(array('message' => 'Error al generar vista previa: ' . $e->getMessage()));
+            error_log('PREVIEW: Error general: ' . $e->getMessage());
+            error_log('PREVIEW: Stack trace: ' . $e->getTraceAsString());
+            
+            wp_send_json_error(array(
+                'message' => 'Error al generar vista previa: ' . $e->getMessage(),
+                'debug' => array(
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'error_completo' => $e->getMessage()
+                )
+            ));
         }
     }
 
@@ -3133,7 +3318,7 @@ class Modulo_Ventas_Ajax {
             wp_send_json_error(array('message' => 'Sin permisos'));
         }
         
-        // CORREGIDO: Usar el mismo nonce que el resto del sistema
+        // Verificar nonce
         if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mv_pdf_templates_nonce')) {
             wp_send_json_error(array('message' => 'Nonce inválido'));
         }
@@ -3162,127 +3347,253 @@ class Modulo_Ventas_Ajax {
             // Crear procesador
             $processor = new Modulo_Ventas_PDF_Template_Processor();
             
-            // CORREGIDO: Obtener datos según el tipo
+            // CORREGIDO: Obtener datos según el tipo SIN BUCLES
             if ($usar_datos_reales) {
+                // Intentar obtener datos reales
                 $datos = $processor->obtener_datos_preview($plantilla->tipo_documento);
+                
+                // Verificar si son realmente datos reales
+                $es_datos_reales = false;
+                if (isset($datos['cotizacion']['numero']) && $datos['cotizacion']['numero'] !== 'COT-001') {
+                    $es_datos_reales = true;
+                }
+                
+                $tipo_datos_usado = $es_datos_reales ? 'real' : 'prueba';
+                $mensaje_datos = $es_datos_reales 
+                    ? 'Preview generado con datos de cotización real (' . $datos['cotizacion']['numero'] . ')'
+                    : 'Preview generado con datos de prueba (no hay cotizaciones reales)';
+                    
             } else {
-                // CORREGIDO: Usar método que sabemos que existe
-                $datos = $this->obtener_datos_prueba_fallback($plantilla->tipo_documento);
+                // Usar datos de prueba directamente
+                $processor->generar_datos_prueba($plantilla->tipo_documento);
+                $datos = $processor->cotizacion_data;
+                $tipo_datos_usado = 'prueba';
+                $mensaje_datos = 'Preview generado con datos de prueba';
             }
             
             // Procesar plantilla
-            $processor->cargar_datos($datos);
             $html_procesado = $processor->procesar_template($plantilla->contenido_html);
             $css_procesado = $processor->procesar_css($plantilla->contenido_css);
             
             // Generar documento final
             $documento_final = $processor->generar_documento_final($html_procesado, $css_procesado);
             
-            // Agregar marca de agua con tipo de datos
-            $marca_agua = $usar_datos_reales ? 'PREVIEW - DATOS REALES' : 'PREVIEW - DATOS DE PRUEBA';
-            $html_con_marca = str_replace(
-                '<body',
-                '<body data-preview-type="' . ($usar_datos_reales ? 'real' : 'prueba') . '"',
+            // Agregar marca de agua informativa
+            $documento_con_info = str_replace(
+                '</body>',
+                '<div style="position: fixed; bottom: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 5px 10px; border-radius: 3px; font-size: 12px; z-index: 9999;">
+                    ' . $mensaje_datos . '
+                </div></body>',
                 $documento_final
             );
             
             wp_send_json_success(array(
-                'html' => $html_con_marca,
-                'tipo_datos' => $usar_datos_reales ? 'real' : 'prueba',
-                'mensaje' => 'Preview mPDF generado con ' . ($usar_datos_reales ? 'datos reales' : 'datos de prueba')
+                'html' => $documento_con_info,
+                'tipo_datos' => $tipo_datos_usado,
+                'mensaje' => $mensaje_datos
             ));
             
         } catch (Exception $e) {
-            error_log('Error en preview mPDF: ' . $e->getMessage());
-            wp_send_json_error(array('message' => 'Error al generar preview mPDF: ' . $e->getMessage()));
+            error_log('Error en vista previa: ' . $e->getMessage());
+            wp_send_json_error(array('message' => 'Error al generar vista previa: ' . $e->getMessage()));
         }
+    }
+
+    /**
+     * Datos de prueba independientes del processor
+     */
+    private function generar_datos_prueba_fallback($tipo_documento = 'cotizacion') {
+        error_log('AJAX: Generando datos de prueba fallback para: ' . $tipo_documento);
+        
+        // Datos de empresa básicos
+        $empresa = array(
+            'nombre' => get_option('blogname', 'Mi Empresa S.A.'),
+            'direccion' => 'Av. Principal 123, Santiago',
+            'ciudad' => 'Santiago',
+            'region' => 'Región Metropolitana',
+            'telefono' => '+56 2 2345 6789',
+            'email' => get_option('admin_email', 'empresa@ejemplo.com'),
+            'rut' => '98.765.432-1',
+            'sitio_web' => get_option('siteurl')
+        );
+        
+        // Datos de cliente
+        $cliente = array(
+            'nombre' => 'Empresa Cliente de Prueba S.A.',
+            'rut' => '12.345.678-9',
+            'email' => 'cliente@ejemplo.com',
+            'telefono' => '+56 9 1234 5678',
+            'direccion' => 'Av. Cliente 456, Santiago',
+            'ciudad' => 'Santiago',
+            'region' => 'Región Metropolitana',
+            'giro' => 'Servicios Comerciales'
+        );
+        
+        // Productos de prueba
+        $productos = array(
+            array(
+                'codigo' => 'PROD-001',
+                'nombre' => 'Producto de Prueba 1',
+                'descripcion' => 'Descripción del producto de prueba',
+                'cantidad' => 2,
+                'precio_unitario' => 50000,
+                'precio_unitario_formateado' => '50.000',
+                'subtotal' => 100000,
+                'subtotal_formateado' => '100.000',
+                'descuento' => 0,
+                'descuento_formateado' => '0'
+            ),
+            array(
+                'codigo' => 'SERV-001',
+                'nombre' => 'Servicio de Prueba',
+                'descripcion' => 'Descripción del servicio de prueba',
+                'cantidad' => 1,
+                'precio_unitario' => 150000,
+                'precio_unitario_formateado' => '150.000',
+                'subtotal' => 150000,
+                'subtotal_formateado' => '150.000',
+                'descuento' => 0,
+                'descuento_formateado' => '0'
+            )
+        );
+        
+        // Totales
+        $subtotal = 250000;
+        $descuento = 0;
+        $iva = 47500;
+        $total = 297500;
+        
+        $totales = array(
+            'subtotal' => $subtotal,
+            'subtotal_formateado' => '$' . number_format($subtotal, 0, ',', '.'),
+            'descuento' => $descuento,
+            'descuento_formateado' => '$' . number_format($descuento, 0, ',', '.'),
+            'iva' => $iva,
+            'iva_formateado' => '$' . number_format($iva, 0, ',', '.'),
+            'total' => $total,
+            'total_formateado' => '$' . number_format($total, 0, ',', '.')
+        );
+        
+        // Datos específicos según tipo de documento
+        $documento = array(
+            'numero' => 'COT-001',
+            'fecha' => date('d/m/Y'),
+            'fecha_vencimiento' => date('d/m/Y', strtotime('+30 days')),
+            'estado' => 'Borrador',
+            'observaciones' => 'Esta es una cotización de prueba para visualizar la plantilla',
+            'vendedor' => 'Juan Pérez',
+            'validez' => '30 días'
+        );
+        
+        // Fechas
+        $fechas = array(
+            'hoy' => date('d/m/Y'),
+            'fecha_cotizacion' => date('d/m/Y'),
+            'fecha_vencimiento_formateada' => date('d/m/Y', strtotime('+30 days')),
+            'mes_actual' => date('m'),
+            'año_actual' => date('Y')
+        );
+        
+        // Estructura final
+        $datos = array(
+            'cotizacion' => $documento,
+            'cliente' => $cliente,
+            'empresa' => $empresa,
+            'productos' => $productos,
+            'totales' => $totales,
+            'fechas' => $fechas
+        );
+        
+        error_log('AJAX: Datos de prueba fallback generados exitosamente');
+        
+        return $datos;
     }
 
     /**
      * AGREGAR: Método fallback para datos de prueba
      */
-    private function obtener_datos_prueba_fallback($tipo_documento = 'cotizacion') {
-        // Datos de prueba básicos
+    private function obtener_datos_prueba_fallback($tipo_documento) {
         return array(
             'cotizacion' => array(
                 'numero' => 'COT-001',
                 'fecha' => date('d/m/Y'),
                 'fecha_vencimiento' => date('d/m/Y', strtotime('+30 days')),
                 'estado' => 'Borrador',
-                'observaciones' => 'Datos de prueba para preview',
-                'vendedor' => 'Vendedor de Prueba',
+                'observaciones' => 'Esta es una cotización de prueba para visualizar la plantilla',
+                'vendedor' => 'Juan Pérez',
                 'validez' => '30 días',
-                'condiciones_pago' => 'Contado'
+                'condiciones_pago' => 'Contado contra entrega'
             ),
             
             'cliente' => array(
-                'nombre' => 'Cliente de Prueba S.A.',
+                'nombre' => 'Empresa Cliente de Prueba S.A.',
                 'rut' => '12.345.678-9',
-                'email' => 'cliente@prueba.cl',
+                'email' => 'cliente@ejemplo.com',
                 'telefono' => '+56 9 1234 5678',
-                'direccion' => 'Calle de Prueba 123',
+                'direccion' => 'Av. Principal 123',
                 'ciudad' => 'Santiago',
-                'region' => 'Metropolitana',
-                'giro' => 'Actividad de Prueba'
+                'region' => 'Región Metropolitana',
+                'giro' => 'Servicios Generales'
             ),
             
             'empresa' => array(
-                'nombre' => get_option('modulo_ventas_nombre_empresa', 'Empresa de Prueba'),
-                'direccion' => get_option('modulo_ventas_direccion_empresa', 'Dirección de Prueba'),
-                'ciudad' => get_option('modulo_ventas_ciudad_empresa', 'Ciudad'),
-                'region' => get_option('modulo_ventas_region_empresa', 'Región'),
-                'telefono' => get_option('modulo_ventas_telefono_empresa', '+56 2 1234 5678'),
-                'email' => get_option('modulo_ventas_email_empresa', 'contacto@empresa.cl'),
-                'rut' => get_option('modulo_ventas_rut_empresa', '98.765.432-1'),
-                'sitio_web' => home_url()
+                'nombre' => get_option('blogname', 'Mi Empresa'),
+                'direccion' => 'Av. Empresarial 456',
+                'ciudad' => 'Santiago',
+                'region' => 'Región Metropolitana',
+                'telefono' => '+56 2 2345 6789',
+                'email' => get_option('admin_email', 'empresa@ejemplo.com'),
+                'rut' => '98.765.432-1',
+                'sitio_web' => get_option('siteurl')
             ),
             
             'productos' => array(
                 array(
+                    'codigo' => 'PROD-001',
                     'nombre' => 'Producto de Prueba 1',
                     'descripcion' => 'Descripción del producto de prueba',
                     'cantidad' => 2,
-                    'precio_unitario' => 10000,
-                    'precio_unitario_formateado' => '$10.000',
-                    'subtotal' => 20000,
-                    'subtotal_formateado' => '$20.000',
+                    'precio_unitario' => 50000,
+                    'precio_unitario_formateado' => '50.000',
+                    'subtotal' => 100000,
+                    'subtotal_formateado' => '100.000',
                     'descuento' => 0,
-                    'descuento_formateado' => '$0'
+                    'descuento_formateado' => '0'
                 ),
                 array(
-                    'nombre' => 'Producto de Prueba 2',
-                    'descripcion' => 'Otra descripción de prueba',
+                    'codigo' => 'SERV-001',
+                    'nombre' => 'Servicio de Prueba',
+                    'descripcion' => 'Descripción del servicio de prueba',
                     'cantidad' => 1,
-                    'precio_unitario' => 15000,
-                    'precio_unitario_formateado' => '$15.000',
-                    'subtotal' => 15000,
-                    'subtotal_formateado' => '$15.000',
+                    'precio_unitario' => 150000,
+                    'precio_unitario_formateado' => '150.000',
+                    'subtotal' => 150000,
+                    'subtotal_formateado' => '150.000',
                     'descuento' => 0,
-                    'descuento_formateado' => '$0'
+                    'descuento_formateado' => '0'
                 )
             ),
             
             'totales' => array(
-                'subtotal' => 35000,
-                'subtotal_formateado' => '35.000',
+                'subtotal' => 250000,
+                'subtotal_formateado' => '250.000',
                 'descuento' => 0,
                 'descuento_formateado' => '0',
-                'impuestos' => 6650,
-                'impuestos_formateado' => '6.650',
-                'total' => 41650,
-                'total_formateado' => '41.650',
-                'descuento_porcentaje' => 0
+                'descuento_porcentaje' => 0,
+                'iva' => 47500,
+                'iva_formateado' => '47.500',
+                'iva_porcentaje' => 19,
+                'total' => 297500,
+                'total_formateado' => '297.500'
             ),
             
             'fechas' => array(
                 'hoy' => date('d/m/Y'),
                 'fecha_cotizacion' => date('d/m/Y'),
-                'fecha_vencimiento_formateada' => date('d/m/Y', strtotime('+30 days'))
-            ),
-            
-            'logo_empresa' => '',
-            'info_empresa' => 'Información adicional de prueba',
-            'terminos_condiciones' => 'Términos y condiciones de prueba'
+                'fecha_vencimiento_formateada' => date('d/m/Y', strtotime('+30 days')),
+                'mes_actual' => date('m'),
+                'año_actual' => date('Y')
+            )
         );
     }
 }

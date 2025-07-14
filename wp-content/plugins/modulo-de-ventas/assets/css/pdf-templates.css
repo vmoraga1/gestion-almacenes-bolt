@@ -321,8 +321,15 @@ CONTENIDO DE TABS
     position: relative;
 }
 
-.mv-editor-content .CodeMirror {
+.mv-editor-content {
     height: 100% !important;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.CodeMirror {
+    height: 90% !important;
     font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
     font-size: 13px;
     line-height: 1.4;

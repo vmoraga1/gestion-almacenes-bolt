@@ -56,14 +56,117 @@ $datos = array(
         </div>
     </div>
 
-    <!-- Sección de botones de preview actualizada -->
+    <!-- Vista Previa Mejorada - CON TOGGLE -->
+    <div class="mv-panel">
+        <h3 style="display: flex; align-items: center; gap: 8px;">
+            <span class="dashicons dashicons-visibility" style="color: #0073aa;"></span>
+            <?php _e('Vista Previa de Plantilla', 'modulo-ventas'); ?>
+        </h3>
+        
+        <!-- Controles Unificados CON TOGGLE -->
+        <div class="mv-preview-controls" style="margin-bottom: 15px; padding: 15px; background: #fff; border-radius: 4px; border-left: 4px solid #0073aa;">
+            
+            <!-- TOGGLE PARA TIPO DE DATOS - AGREGADO -->
+            <div style="margin-bottom: 15px; padding: 12px; background: #f8f9fa; border-radius: 4px; border: 1px solid #dee2e6;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; margin-bottom: 8px;">
+                    <input type="checkbox" id="usar-datos-reales" checked> 
+                    <span class="dashicons dashicons-database" style="color: #0073aa;"></span>
+                    <span>Usar datos de cotizaciones reales</span>
+                    <small style="color: #666; margin-left: 10px;">(última cotización creada)</small>
+                </label>
+                <div id="info-tipo-datos" style="margin-top: 8px; font-size: 12px; padding: 8px; border-radius: 3px; background: #d4edda; color: #155724; border: 1px solid #c3e6cb;">
+                    <span id="mensaje-tipo-datos">✓ Mostrando datos de la última cotización real</span>
+                </div>
+            </div>
+            
+            <!-- Botones de Acción -->
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                
+                <!-- Actualizar Preview -->
+                <button type="button" 
+                        id="actualizar-preview" 
+                        class="button button-primary"
+                        style="display: flex; align-items: center; gap: 8px;">
+                    <span class="dashicons dashicons-update"></span>
+                    Actualizar Preview
+                </button>
+                
+                <!-- Abrir en Nueva Ventana -->
+                <button type="button" 
+                        id="vista-previa-nueva-ventana" 
+                        class="button button-secondary"
+                        style="display: flex; align-items: center; gap: 8px;">
+                    <span class="dashicons dashicons-external"></span>
+                    Abrir en Nueva Ventana
+                </button>
+                
+                <!-- Generar PDF -->
+                <button type="button" 
+                        id="generar-pdf-preview" 
+                        class="button button-secondary"
+                        style="display: flex; align-items: center; gap: 8px;">
+                    <span class="dashicons dashicons-pdf"></span>
+                    Generar PDF
+                </button>
+                
+                <!-- Botón de Debug CSS (temporal) -->
+                <button type="button" 
+                        id="debug-css-preview" 
+                        class="button button-link"
+                        style="display: flex; align-items: center; gap: 8px; color: #666;">
+                    <span class="dashicons dashicons-admin-tools"></span>
+                    Debug CSS
+                </button>
+            </div>
+        </div>
+        
+        <!-- Área de Preview -->
+        <div id="preview-container" style="border: 1px solid #ccc; border-radius: 4px; min-height: 400px; background: #fff; position: relative;">
+            
+            <!-- Estado de Carga -->
+            <div id="preview-loading" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 10;">
+                <span class="dashicons dashicons-update-alt spin" style="font-size: 24px; color: #0073aa;"></span>
+                <p style="margin-top: 10px; color: #666;">Generando vista previa...</p>
+            </div>
+            
+            <!-- Contenido del Preview -->
+            <iframe id="preview-iframe" 
+                    style="width: 100%; height: 600px; border: none; border-radius: 4px;"
+                    srcdoc="<div style='padding: 40px; text-align: center; color: #666; font-family: Arial, sans-serif;'>
+                        <span class='dashicons dashicons-visibility' style='font-size: 48px; color: #ddd; display: block; margin-bottom: 20px;'></span>
+                        <h3>Vista Previa de Plantilla</h3>
+                        <p>Haz clic en 'Actualizar Preview' para ver la plantilla renderizada</p>
+                        <p><small>El CSS se aplicará correctamente en esta vista</small></p>
+                    </div>">
+            </iframe>
+            
+            <!-- Indicador de Tipo de Datos -->
+            <div id="preview-data-badge" 
+                style="position: absolute; top: 10px; right: 10px; padding: 5px 10px; background: rgba(0,123,0,0.8); color: white; border-radius: 3px; font-size: 12px; z-index: 20;">
+                <span id="badge-text">Datos reales</span>
+            </div>
+            
+            <!-- Indicador de CSS -->
+            <div id="css-status-badge" 
+                style="position: absolute; top: 10px; left: 10px; padding: 5px 10px; background: rgba(0,0,255,0.8); color: white; border-radius: 3px; font-size: 12px; z-index: 20;">
+                <span id="css-status-text">CSS: ✓</span>
+            </div>
+        </div>
+        
+        <!-- Información adicional -->
+        <div id="preview-info" style="margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 4px; font-size: 13px; display: none;">
+            <div id="preview-info-content"></div>
+        </div>
+    </div>
+
+    <!-- Sección de botones de preview actualizada --
     <div class="mv-botones-preview" style="margin: 20px 0; padding: 15px; background: #f1f1f1; border-radius: 8px;">
         <h3 style="margin-bottom: 15px;">
             <span class="dashicons dashicons-visibility" style="margin-top: 3px;"></span>
             Opciones de Preview
-        </h3>
+        </h3>-->
         
-        <!-- Toggle global para todos los previews -->
+        <!-- Toggle global para todos los previews --
         <div class="mv-preview-mode-control" style="margin-bottom: 15px; padding: 10px; background: #fff; border-radius: 4px; border-left: 4px solid #0073aa;">
             <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600;">
                 <input type="checkbox" id="usar-datos-reales-global" checked> 
@@ -72,12 +175,12 @@ $datos = array(
                 <small style="color: #666; margin-left: 10px;">(última cotización creada)</small>
             </label>
             <div id="info-datos-preview" style="margin-top: 8px; font-size: 12px; color: #666;"></div>
-        </div>
+        </div>-->
 
-        <!-- Botones de preview -->
+        <!-- Botones de preview --
         <div class="mv-botones-container" style="display: flex; gap: 10px; flex-wrap: wrap;">
             
-            <!-- Vista Previa en Nueva Ventana -->
+            <!- Vista Previa en Nueva Ventana --
             <button type="button" 
                     id="vista-previa-ventana" 
                     class="button button-secondary"
@@ -88,7 +191,7 @@ $datos = array(
                 <small class="preview-data-indicator">(datos reales)</small>
             </button>
 
-            <!-- Preview Sincronizado con mPDF -->
+            <!- Preview Sincronizado con mPDF --
             <button type="button" 
                     id="preview-sincronizado-mpdf" 
                     class="button button-secondary"
@@ -99,7 +202,7 @@ $datos = array(
                 <small class="preview-data-indicator">(datos reales)</small>
             </button>
 
-            <!-- Test de Comparación Visual -->
+            <!- Test de Comparación Visual --
             <button type="button" 
                     id="test-comparison" 
                     class="button button-secondary"
@@ -109,13 +212,13 @@ $datos = array(
             </button>
         </div>
 
-        <!-- Información sobre el estado actual -->
+        <!- Información sobre el estado actual --
         <div class="mv-preview-info" style="margin-top: 10px; padding: 8px; background: #e7f3ff; border-radius: 4px; font-size: 13px;">
             <span class="dashicons dashicons-info"></span>
             <strong>Estado actual:</strong> 
             <span id="estado-datos-preview">Todos los previews usarán datos de la última cotización real</span>
         </div>
-    </div>
+    </div>-->
 
     <form id="form-plantilla" method="post">
         <?php wp_nonce_field('mv_pdf_templates', 'nonce'); ?>
@@ -326,15 +429,15 @@ $datos = array(
 .mv-editor-layout {
     display: flex;
     gap: 20px;
-    height: 600px;
+    height: auto;
 }
 
 .mv-editor-sidebar {
-    flex: 0 0 300px;
+    flex: initial;
     background: white;
     border: 1px solid #ccd0d4;
     border-radius: 4px;
-    overflow-y: auto;
+    overflow-y: visible;
 }
 
 .mv-editor-content {
@@ -344,6 +447,7 @@ $datos = array(
     border-radius: 4px;
     display: flex;
     flex-direction: column;
+    height: 1280px !important;
 }
 
 .mv-panel {
@@ -424,7 +528,7 @@ $datos = array(
 .mv-tab-content {
     flex: 1;
     padding: 20px;
-    overflow: auto;
+    overflow: clip;
 }
 
 .mv-editor-header {
@@ -614,722 +718,708 @@ $datos = array(
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
-    console.log('Editor plantilla: JavaScript cargado');
     
     // Variables globales
     var usarDatosReales = true;
-    var previewTimeout;
-    var hasUnsavedChanges = false;
+    var previewActualizandose = false;
+    var cambioTimeout;
     
-    // Definir función mostrarNotificacion si no existe
-    if (typeof window.mostrarNotificacion === 'undefined') {
-        window.mostrarNotificacion = function(mensaje, tipo) {
-            tipo = tipo || 'info';
-            
-            var claseWordPress = 'notice-info';
-            switch(tipo) {
-                case 'success':
-                    claseWordPress = 'notice-success';
-                    break;
-                case 'error':
-                    claseWordPress = 'notice-error';
-                    break;
-                case 'warning':
-                    claseWordPress = 'notice-warning';
-                    break;
-            }
-            
-            var $notice = $('<div class="notice ' + claseWordPress + ' is-dismissible"><p>' + mensaje + '</p></div>');
-            
-            if ($('.wp-header-end').length) {
-                $notice.insertAfter('.wp-header-end');
-            } else if ($('.wrap h1').length) {
-                $notice.insertAfter('.wrap h1');
-            } else {
-                $notice.prependTo('.wrap');
-            }
-            
-            setTimeout(function() {
-                $notice.fadeOut(function() {
-                    $(this).remove();
-                });
-            }, 5000);
-            
-            $('html, body').animate({ scrollTop: 0 }, 500);
-        };
-    }
-
     /**
-     * Función principal de preview - determina qué tipo usar
+     * Función mejorada para escribir HTML en iframe
+     */
+    function escribirHtmlEnIframe(htmlContent) {
+        var iframe = document.getElementById('preview-iframe');
+        
+        if (!iframe) {
+            console.error('❌ Iframe no encontrado');
+            return false;
+        }
+        
+        // Método 1: Usar srcdoc (preferido)
+        try {
+            iframe.srcdoc = htmlContent;
+            console.log('✅ HTML cargado usando srcdoc');
+            return true;
+        } catch (e) {
+            console.log('⚠️ srcdoc falló, intentando método alternativo');
+        }
+        
+        // Método 2: Escribir directamente en el documento del iframe
+        try {
+            var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            iframeDoc.open();
+            iframeDoc.write(htmlContent);
+            iframeDoc.close();
+            console.log('✅ HTML cargado usando write()');
+            return true;
+        } catch (e) {
+            console.error('❌ Error escribiendo en iframe:', e);
+            return false;
+        }
+    }
+    
+    /**
+     * Validar y limpiar HTML antes de cargar en iframe
+     */
+    function validarHtmlParaIframe(htmlResponse) {
+        console.log('🔍 Validando HTML recibido...');
+        
+        // Verificar que es HTML válido
+        if (!htmlResponse || typeof htmlResponse !== 'string') {
+            console.error('❌ Respuesta no es una cadena válida');
+            return null;
+        }
+        
+        // Verificar estructura básica
+        var tieneDoctype = htmlResponse.toLowerCase().indexOf('<!doctype') !== -1;
+        var tieneHtml = htmlResponse.toLowerCase().indexOf('<html') !== -1;
+        var tieneHead = htmlResponse.toLowerCase().indexOf('<head>') !== -1;
+        var tieneBody = htmlResponse.toLowerCase().indexOf('<body>') !== -1;
+        var tieneStyle = htmlResponse.toLowerCase().indexOf('<style>') !== -1;
+        
+        console.log('📋 Estructura del HTML:', {
+            doctype: tieneDoctype,
+            html: tieneHtml,
+            head: tieneHead,
+            body: tieneBody,
+            style: tieneStyle,
+            longitud: htmlResponse.length
+        });
+        
+        // Si no tiene estructura básica, envolver
+        if (!tieneHtml || !tieneHead || !tieneBody) {
+            console.log('🔧 HTML incompleto, envolviendo...');
+            
+            var htmlLimpio = htmlResponse;
+            
+            // Si es solo contenido del body, envolver correctamente
+            if (!tieneHtml) {
+                htmlLimpio = `<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vista Previa</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.4; }
+        table { border-collapse: collapse; width: 100%; }
+        td, th { padding: 8px; border: 1px solid #ddd; }
+        .documento { max-width: 800px; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    <div class="documento">
+        ${htmlResponse}
+    </div>
+</body>
+</html>`;
+            }
+            
+            return htmlLimpio;
+        }
+        
+        return htmlResponse;
+    }
+    
+    /**
+     * NUEVA: Combinar HTML y CSS para asegurar que los estilos se apliquen
+     */
+    function combinarHtmlYCss(htmlContent, cssContent) {
+        console.log('🎨 Combinando HTML y CSS...');
+        
+        // Si no hay CSS, devolver HTML tal como está
+        if (!cssContent || cssContent.trim() === '') {
+            console.log('⚠️ No hay CSS para combinar');
+            return htmlContent;
+        }
+        
+        // Si el HTML ya tiene estilos, no duplicar
+        if (htmlContent.indexOf('<style>') !== -1) {
+            console.log('ℹ️ HTML ya contiene estilos, no agregando CSS adicional');
+            return htmlContent;
+        }
+        
+        var htmlFinal = htmlContent;
+        
+        // Buscar donde insertar el CSS
+        var headEnd = htmlFinal.indexOf('</head>');
+        if (headEnd !== -1) {
+            // Insertar antes del cierre de head
+            var cssTag = '\n<style type="text/css">\n' + cssContent + '\n</style>\n';
+            htmlFinal = htmlFinal.substring(0, headEnd) + cssTag + htmlFinal.substring(headEnd);
+            console.log('✅ CSS insertado en <head>');
+        } else {
+            // Si no hay head, buscar body y agregar al inicio
+            var bodyStart = htmlFinal.indexOf('<body>');
+            if (bodyStart !== -1) {
+                var cssTag = '\n<style type="text/css">\n' + cssContent + '\n</style>\n';
+                htmlFinal = htmlFinal.substring(0, bodyStart + 6) + cssTag + htmlFinal.substring(bodyStart + 6);
+                console.log('✅ CSS insertado al inicio de <body>');
+            } else {
+                // Como último recurso, agregar al inicio del documento
+                var cssTag = '<style type="text/css">\n' + cssContent + '\n</style>\n';
+                htmlFinal = cssTag + htmlFinal;
+                console.log('✅ CSS insertado al inicio del documento');
+            }
+        }
+        
+        return htmlFinal;
+    }
+    
+    /**
+     * Actualizar vista previa - VERSIÓN CORREGIDA CON CSS
      */
     function actualizarPreview() {
-        if (previewTimeout) {
-            clearTimeout(previewTimeout);
+        if (previewActualizandose) {
+            console.log('⏳ Preview ya actualizándose, ignorando solicitud');
+            return;
         }
         
-        previewTimeout = setTimeout(function() {
-            if (usarDatosReales) {
-                actualizarPreviewConDatosReales();
-            } else {
-                actualizarPreviewConDatosPrueba();
-            }
-        }, 1000);
-    }
-
-    /**
-     * Preview con datos reales (función actual modificada)
-     */
-    function actualizarPreviewConDatosReales() {
-        var $iframe = $('#preview-iframe');
-        var $loading = $('#preview-loading');
-        
-        // Mostrar loading
-        $loading.show();
-        $iframe.hide();
-        
-        // CORREGIDO: Obtener contenido con verificaciones
-        var htmlContent = '';
-        var cssContent = '';
-        
-        // Verificar si los editores están disponibles
-        if (typeof editorHtml !== 'undefined' && editorHtml && typeof editorHtml.getValue === 'function') {
-            htmlContent = editorHtml.getValue();
-        } else {
-            // Fallback: obtener desde textarea o input
-            htmlContent = $('#contenido_html').val() || $('textarea[name="contenido_html"]').val() || '';
-        }
-        
-        if (typeof editorCSS !== 'undefined' && editorCSS && typeof editorCSS.getValue === 'function') {
-            cssContent = editorCSS.getValue();
-        } else {
-            // Fallback: obtener desde textarea o input
-            cssContent = $('#contenido_css').val() || $('textarea[name="contenido_css"]').val() || '';
-        }
-        
-        var tipoDocumento = $('#tipo-documento').val() || $('#tipo_documento').val() || 'cotizacion';
-        
-        $.ajax({
-            url: mvPdfTemplates.ajaxurl,
-            type: 'POST',
-            data: {
-                action: 'mv_obtener_preview_real',
-                html: htmlContent,
-                css: cssContent,
-                tipo_documento: tipoDocumento,
-                nonce: mvPdfTemplates.nonce
-            },
-            success: function(response) {
-                if (response.success) {
-                    // Escribir contenido en iframe
-                    var iframe = $iframe[0];
-                    iframe.contentWindow.document.open();
-                    iframe.contentWindow.document.write(response.data.html);
-                    iframe.contentWindow.document.close();
-                    
-                    // Mostrar mensaje de tipo de datos
-                    if (response.data.datos_usados) {
-                        mostrarInfoPreview(response.data.datos_usados);
-                    }
-                } else {
-                    console.error('Error en preview real:', response.data.message);
-                    mostrarErrorPreview('Error al cargar datos reales: ' + response.data.message);
-                    // Fallback automático a datos de prueba
-                    setTimeout(function() {
-                        usarDatosReales = false;
-                        $('#usar-datos-reales').prop('checked', false);
-                        actualizarPreviewConDatosPrueba();
-                    }, 1000);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error AJAX en preview real:', error);
-                mostrarErrorPreview('Error de conexión al obtener datos reales');
-                // Fallback automático a datos de prueba
-                setTimeout(function() {
-                    usarDatosReales = false;
-                    $('#usar-datos-reales').prop('checked', false);
-                    actualizarPreviewConDatosPrueba();
-                }, 1000);
-            },
-            complete: function() {
-                $loading.hide();
-                $iframe.show();
-                
-                // Marcar como guardado si hay cambios
-                if (typeof hasUnsavedChanges !== 'undefined' && hasUnsavedChanges) {
-                    marcarComoGuardado();
-                }
-            }
-        });
-    }
-
-    /**
-     * NUEVA FUNCIÓN: Preview con datos de prueba (funcionalidad original)
-     */
-    function actualizarPreviewConDatosPrueba() {
-        var $iframe = $('#preview-iframe');
-        var $loading = $('#preview-loading');
-        
-        // Mostrar loading
-        $loading.show();
-        $iframe.hide();
-        
-        // CORREGIDO: Obtener contenido con verificaciones
-        var htmlContent = '';
-        var cssContent = '';
-        
-        // Verificar si los editores están disponibles
-        if (typeof editorHtml !== 'undefined' && editorHtml && typeof editorHtml.getValue === 'function') {
-            htmlContent = editorHtml.getValue();
-        } else {
-            // Fallback: obtener desde textarea o input
-            htmlContent = $('#contenido_html').val() || $('textarea[name="contenido_html"]').val() || '';
-        }
-        
-        if (typeof editorCSS !== 'undefined' && editorCSS && typeof editorCSS.getValue === 'function') {
-            cssContent = editorCSS.getValue();
-        } else {
-            // Fallback: obtener desde textarea o input
-            cssContent = $('#contenido_css').val() || $('textarea[name="contenido_css"]').val() || '';
-        }
-        
-        var tipoDocumento = $('#tipo-documento').val() || $('#tipo_documento').val() || 'cotizacion';
-        
-        $.ajax({
-            url: mvPdfTemplates.ajaxurl,
-            type: 'POST',
-            data: {
-                action: 'mv_obtener_preview',  // Acción ORIGINAL para datos de prueba
-                html: htmlContent,
-                css: cssContent,
-                tipo_documento: tipoDocumento,
-                nonce: mvPdfTemplates.nonce
-            },
-            success: function(response) {
-                if (response.success) {
-                    // Escribir contenido en iframe
-                    var iframe = $iframe[0];
-                    iframe.contentWindow.document.open();
-                    iframe.contentWindow.document.write(response.data.html);
-                    iframe.contentWindow.document.close();
-                    
-                    // Mostrar mensaje indicando datos de prueba
-                    mostrarInfoPreview({
-                        tipo: 'prueba',
-                        mensaje: 'Preview generado con datos de prueba'
-                    });
-                } else {
-                    console.error('Error en preview de prueba:', response.data.message);
-                    mostrarErrorPreview('Error al generar preview: ' + (response.data.message || 'Error desconocido'));
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error AJAX en preview de prueba:', error);
-                mostrarErrorPreview('Error de conexión al generar preview');
-            },
-            complete: function() {
-                $loading.hide();
-                $iframe.show();
-                
-                // Marcar como guardado si hay cambios
-                if (typeof hasUnsavedChanges !== 'undefined' && hasUnsavedChanges) {
-                    marcarComoGuardado();
-                }
-            }
-        });
-    }
-
-    /**
-     * Mostrar información del preview
-     */
-    function mostrarInfoPreview(datosUsados) {
-        var $info = $('#preview-info');
-        if ($info.length === 0) {
-            $info = $('<div id="preview-info" class="mv-preview-info"></div>');
-            $('#preview-container').prepend($info);
-        }
-        
-        var iconClass = datosUsados.tipo === 'real' ? 'dashicons-yes-alt' : 'dashicons-info';
-        var colorClass = datosUsados.tipo === 'real' ? 'success' : 'info';
-        
-        $info.html(
-            '<span class="dashicons ' + iconClass + '"></span> ' +
-            '<strong>Preview:</strong> ' + datosUsados.mensaje
-        ).attr('class', 'mv-preview-info ' + colorClass).show();
-    }
-
-    /**
-     * Mostrar error en el preview
-     */
-    function mostrarErrorPreview(mensaje) {
-        var $info = $('#preview-info');
-        if ($info.length === 0) {
-            $info = $('<div id="preview-info" class="mv-preview-info"></div>');
-            $('#preview-container').prepend($info);
-        }
-        
-        $info.html(
-            '<span class="dashicons dashicons-warning"></span> ' +
-            '<strong>Error:</strong> ' + mensaje
-        ).attr('class', 'mv-preview-info error').show();
-    }
-
-    var mvPdfTemplates = {
-        ajaxurl: '<?php echo admin_url('admin-ajax.php'); ?>',
-        nonce: '<?php echo wp_create_nonce('mv_pdf_templates_nonce'); ?>',
-        i18n: {
-            guardando: '<?php _e('Guardando...', 'modulo-ventas'); ?>',
-            guardado: '<?php _e('Guardado', 'modulo-ventas'); ?>',
-            error: '<?php _e('Error', 'modulo-ventas'); ?>',
-            cargando: '<?php _e('Cargando...', 'modulo-ventas'); ?>'
-        }
-    };
-
-    // Variables para prevenir múltiples actualizaciones
-    var previewTimeout;
-    var hasUnsavedChanges = false;
-
-    // Debug: Verificar nonce
-    console.log('mvPdfTemplates nonce:', mvPdfTemplates.nonce);
-    console.log('mvPdfTemplates ajaxurl:', mvPdfTemplates.ajaxurl);
-        
-    // Preview sincronizado con mPDF - CORREGIDO
-    $(document).on('click', '#preview-sincronizado-mpdf', function(e) {
-        e.preventDefault();
-        
-        // Obtener ID de plantilla de diferentes formas posibles
-        var plantillaId = $('#plantilla_id').val() || 
-                        $('#plantilla-id').val() || 
-                        $('input[name="plantilla_id"]').val() ||
-                        $('input[name="id"]').val() ||
-                        getUrlParameter('plantilla_id');
-        
-        console.log('Plantilla ID obtenido:', plantillaId);
+        var plantillaId = obtenerPlantillaId();
         
         if (!plantillaId) {
-            mostrarNotificacion('Error: No se pudo obtener el ID de la plantilla', 'error');
-            console.error('Campos de ID encontrados:', {
-                'plantilla_id': $('#plantilla_id').val(),
-                'plantilla-id': $('#plantilla-id').val(),
-                'input_plantilla_id': $('input[name="plantilla_id"]').val(),
-                'input_id': $('input[name="id"]').val(),
-                'url_param': getUrlParameter('plantilla_id')
-            });
+            mostrarError('No se pudo obtener el ID de la plantilla');
             return;
         }
         
-        var $btn = $(this);
-        var textoOriginal = $btn.text();
+        previewActualizandose = true;
+        mostrarCargando(true);
         
-        $btn.text('🔄 Generando preview sincronizado...').prop('disabled', true);
+        console.log('🔄 Iniciando actualización de preview:', {
+            plantillaId: plantillaId,
+            usarDatosReales: usarDatosReales
+        });
         
-        // Obtener nonce
-        var nonce = '<?php echo wp_create_nonce("mv_nonce"); ?>';
+        // Obtener contenido actual de los editores
+        var htmlContent = '';
+        var cssContent = '';
+        
+        // Intentar múltiples métodos para obtener el contenido HTML
+        if (typeof window.codemirrorHTML !== 'undefined' && window.codemirrorHTML) {
+            htmlContent = window.codemirrorHTML.getValue();
+        } else if (typeof editorHtml !== 'undefined' && editorHtml && typeof editorHtml.getValue === 'function') {
+            htmlContent = editorHtml.getValue();
+        } else if ($('#html-editor').length > 0) {
+            htmlContent = $('#html-editor').val();
+        } else if ($('#contenido_html').length > 0) {
+            htmlContent = $('#contenido_html').val();
+        } else if ($('textarea[name="contenido_html"]').length > 0) {
+            htmlContent = $('textarea[name="contenido_html"]').val();
+        }
+        
+        // Intentar múltiples métodos para obtener el contenido CSS
+        if (typeof window.codemirrorCSS !== 'undefined' && window.codemirrorCSS) {
+            cssContent = window.codemirrorCSS.getValue();
+        } else if (typeof editorCSS !== 'undefined' && editorCSS && typeof editorCSS.getValue === 'function') {
+            cssContent = editorCSS.getValue();
+        } else if ($('#css-editor').length > 0) {
+            cssContent = $('#css-editor').val();
+        } else if ($('#contenido_css').length > 0) {
+            cssContent = $('#contenido_css').val();
+        } else if ($('textarea[name="contenido_css"]').length > 0) {
+            cssContent = $('textarea[name="contenido_css"]').val();
+        }
+        
+        console.log('📝 Contenido capturado:', {
+            htmlLength: htmlContent.length,
+            cssLength: cssContent.length,
+            htmlPreview: htmlContent.substring(0, 100) + '...',
+            cssPreview: cssContent.substring(0, 100) + '...'
+        });
+        
+        var datosAjax = {
+            action: 'mv_vista_previa_datos_reales',
+            plantilla_id: plantillaId,
+            usar_datos_reales: usarDatosReales,
+            nonce: obtenerNonce()
+        };
+        
+        // Agregar contenido del editor
+        if (htmlContent.trim()) {
+            datosAjax.html_content = htmlContent;
+        }
+        if (cssContent.trim()) {
+            datosAjax.css_content = cssContent;
+        }
+        
+        console.log('📤 Enviando petición AJAX...');
         
         $.ajax({
-            url: ajaxurl,
+            url: obtenerAjaxUrl(),
             method: 'POST',
-            data: {
-                action: 'mv_preview_mpdf_sincronizado',
-                plantilla_id: plantillaId,
-                nonce: nonce
-            },
+            data: datosAjax,
+            timeout: 30000,
             success: function(response) {
-                console.log('Respuesta del servidor:', response);
+                console.log('📥 Respuesta AJAX recibida:', {
+                    success: response.success,
+                    hasData: !!response.data,
+                    hasHtml: !!(response.data && response.data.html),
+                    htmlLength: response.data && response.data.html ? response.data.html.length : 0
+                });
                 
-                if (response.success) {
-                    // Abrir preview en nueva ventana
-                    var ventana = window.open('', 'preview-mpdf-sync', 'width=900,height=700,scrollbars=yes,resizable=yes');
-                    if (ventana) {
-                        ventana.document.write(response.data.html);
-                        ventana.document.close();
-                        mostrarNotificacion('Preview sincronizado con mPDF generado exitosamente', 'success');
+                if (response.success && response.data && response.data.html) {
+                    var htmlRecibido = response.data.html;
+                    
+                    // NUEVO: Combinar con CSS si es necesario
+                    var htmlConCss = combinarHtmlYCss(htmlRecibido, cssContent);
+                    
+                    // Validar HTML final
+                    var htmlValidado = validarHtmlParaIframe(htmlConCss);
+                    
+                    if (htmlValidado) {
+                        // Verificar procesamiento de variables
+                        var tieneVariablesSinProcesar = htmlValidado.indexOf('{{') !== -1;
+                        if (tieneVariablesSinProcesar) {
+                            console.warn('⚠️ Se detectaron variables sin procesar en el HTML');
+                            var variablesEncontradas = htmlValidado.match(/\{\{[^}]+\}\}/g);
+                            console.log('Variables sin procesar:', variablesEncontradas);
+                        }
+                        
+                        // Cargar en iframe
+                        var cargaExitosa = escribirHtmlEnIframe(htmlValidado);
+                        
+                        if (cargaExitosa) {
+                            setTimeout(function() {
+                                var iframe = document.getElementById('preview-iframe');
+                                if (iframe && iframe.contentWindow) {
+                                    try {
+                                        // Forzar re-renderizado
+                                        iframe.contentWindow.document.body.style.display = 'none';
+                                        iframe.contentWindow.document.body.offsetHeight; // trigger reflow
+                                        iframe.contentWindow.document.body.style.display = '';
+                                        
+                                        console.log('🔄 Forzado re-renderizado del iframe');
+                                    } catch (e) {
+                                        console.log('⚠️ No se pudo forzar re-renderizado:', e);
+                                    }
+                                }
+                            }, 100);
+                            
+                            // Verificar si los estilos se aplicaron
+                            var tieneCss = htmlValidado.indexOf('<style>') !== -1;
+                            console.log('🎨 CSS detectado en HTML final:', tieneCss);
+                            
+                            // Actualizar indicadores visuales si existen
+                            if ($('#css-status-text').length > 0) {
+                                $('#css-status-text').text('CSS: ' + (tieneCss ? '✓' : '❌'));
+                            }
+                            if ($('#css-status-badge').length > 0) {
+                                $('#css-status-badge').css('background', tieneCss ? 'rgba(0,128,0,0.8)' : 'rgba(255,0,0,0.8)');
+                            }
+                            
+                            // Mostrar información de éxito
+                            var mensaje = response.data.mensaje || 'Preview actualizado correctamente';
+                            if (tieneVariablesSinProcesar) {
+                                mensaje += ' (⚠ Variables sin procesar detectadas)';
+                            }
+                            if (!tieneCss) {
+                                mensaje += ' (⚠ CSS no detectado en HTML final)';
+                            } else {
+                                mensaje += ' (✓ CSS aplicado)';
+                            }
+                            
+                            mostrarInfoPreview(mensaje, 'success');
+                            console.log('✅ Preview actualizado exitosamente');
+                            
+                        } else {
+                            mostrarError('Error cargando HTML en iframe');
+                        }
                     } else {
-                        mostrarNotificacion('Error: No se pudo abrir la ventana de preview. Verifica que los popups estén habilitados.', 'warning');
+                        mostrarError('HTML recibido no es válido');
                     }
                 } else {
-                    mostrarNotificacion('Error: ' + (response.data.message || 'Error desconocido'), 'error');
+                    var errorMsg = 'Error en la respuesta del servidor';
+                    if (response.data && response.data.message) {
+                        errorMsg = response.data.message;
+                    }
+                    
+                    console.error('❌ Error en respuesta:', response);
+                    mostrarError(errorMsg);
+                    
+                    // Mostrar debug si está disponible
+                    if (response.data && response.data.debug) {
+                        console.log('🐛 Debug info:', response.data.debug);
+                    }
                 }
             },
             error: function(xhr, status, error) {
-                console.error('Error AJAX:', {xhr: xhr, status: status, error: error});
-                mostrarNotificacion('Error de conexión: ' + error, 'error');
+                console.error('❌ Error AJAX completo:', {
+                    status: status,
+                    error: error,
+                    responseText: xhr.responseText ? xhr.responseText.substring(0, 500) : 'Sin respuesta',
+                    statusCode: xhr.status
+                });
+                
+                var errorMsg = 'Error de conexión: ';
+                if (xhr.status === 0) {
+                    errorMsg += 'Sin conexión al servidor';
+                } else if (xhr.status === 403) {
+                    errorMsg += 'Sin permisos (403)';
+                } else if (xhr.status === 404) {
+                    errorMsg += 'Acción no encontrada (404)';
+                } else if (xhr.status === 500) {
+                    errorMsg += 'Error interno del servidor (500)';
+                    // Mostrar parte de la respuesta para debug
+                    if (xhr.responseText) {
+                        console.log('📄 Respuesta del servidor (500):', xhr.responseText.substring(0, 1000));
+                    }
+                } else {
+                    errorMsg += error + ' (' + xhr.status + ')';
+                }
+                
+                mostrarError(errorMsg);
+                
+                // Mostrar mensaje específico en el iframe
+                var errorHtml = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 0; padding: 40px; background: #f8f9fa; }
+                            .error-container { 
+                                text-align: center; 
+                                color: #721c24; 
+                                background: #f8d7da; 
+                                border: 1px solid #f5c6cb; 
+                                border-radius: 5px; 
+                                padding: 40px; 
+                                max-width: 500px; 
+                                margin: 0 auto; 
+                            }
+                            h3 { margin-top: 0; color: #721c24; }
+                            p { margin: 10px 0; }
+                            small { color: #6c757d; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="error-container">
+                            <h3>❌ Error cargando vista previa</h3>
+                            <p><strong>Error:</strong> ${errorMsg}</p>
+                            <p><small>Revisa la consola del navegador (F12) para más detalles</small></p>
+                        </div>
+                    </body>
+                    </html>
+                `;
+                escribirHtmlEnIframe(errorHtml);
             },
             complete: function() {
-                $btn.text(textoOriginal).prop('disabled', false);
+                previewActualizandose = false;
+                mostrarCargando(false);
+                console.log('🏁 Petición AJAX completada');
             }
         });
-    });
-
+    }
+    
     /**
-     * Agregar toggle para alternar entre datos reales y de prueba
+     * Función de test para verificar iframe
      */
-    function agregarToggleTipoDatos() {
-        // Verificar si ya existe el toggle
-        if ($('#usar-datos-reales').length > 0) {
-            return;
+    function testIframe() {
+        var htmlTest = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Test del iframe</title>
+                <style>
+                    body { 
+                        font-family: Arial, sans-serif; 
+                        margin: 20px; 
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        min-height: 400px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                    .test { 
+                        background: rgba(255,255,255,0.1);
+                        border: 2px solid rgba(255,255,255,0.3); 
+                        padding: 30px; 
+                        border-radius: 15px; 
+                        text-align: center;
+                        backdrop-filter: blur(10px);
+                        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+                    }
+                    h1 { 
+                        color: #fff; 
+                        margin-top: 0;
+                        font-size: 2em;
+                        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+                    }
+                    p { 
+                        font-size: 1.1em; 
+                        line-height: 1.6;
+                        margin: 15px 0;
+                    }
+                    .success { 
+                        color: #90EE90; 
+                        font-weight: bold; 
+                    }
+                    .time {
+                        background: rgba(255,255,255,0.2);
+                        padding: 10px;
+                        border-radius: 8px;
+                        margin-top: 20px;
+                        font-family: monospace;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="test">
+                    <h1>🧪 Test del iframe</h1>
+                    <p class="success">✅ Si puedes ver este mensaje con estilos, el iframe funciona correctamente.</p>
+                    <p>🎨 Los estilos CSS se están aplicando apropiadamente.</p>
+                    <p>📱 El iframe puede cargar HTML completo con CSS embebido.</p>
+                    <div class="time">
+                        <strong>⏰ Hora de test:</strong> ${new Date().toLocaleString()}
+                    </div>
+                </div>
+            </body>
+            </html>
+        `;
+        
+        var cargaExitosa = escribirHtmlEnIframe(htmlTest);
+        if (cargaExitosa) {
+            mostrarInfoPreview('🧪 Test del iframe ejecutado exitosamente', 'success');
+        } else {
+            mostrarError('❌ Error ejecutando test del iframe');
+        }
+        console.log('🧪 Test HTML cargado en iframe');
+    }
+    
+    /**
+     * NUEVA: Función para actualizar preview con debounce en cambios del editor
+     */
+    function programarActualizacionPreview() {
+        if (cambioTimeout) {
+            clearTimeout(cambioTimeout);
         }
         
-        var toggleHtml = 
-            '<div class="mv-preview-controls" style="margin-bottom: 15px; padding: 10px; background: #f9f9f9; border-radius: 4px;">' +
-                '<label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">' +
-                    '<input type="checkbox" id="usar-datos-reales" ' + (usarDatosReales ? 'checked' : '') + '> ' +
-                    '<span class="dashicons dashicons-database" style="margin-top: 3px;"></span>' +
-                    '<strong>Usar datos reales</strong> ' +
-                    '<small style="color: #666;">(última cotización creada)</small>' +
-                '</label>' +
-            '</div>';
+        cambioTimeout = setTimeout(function() {
+            console.log('⏰ Auto-actualizando preview por cambio en editor...');
+            actualizarPreview();
+        }, 2000); // Esperar 2 segundos después del último cambio
+    }
+    
+    // Funciones auxiliares (mantenidas del código original)
+    function obtenerNonce() {
+        var nonce = '';
+        if ($('input[name="nonce"]').length > 0) {
+            nonce = $('input[name="nonce"]').val();
+        } else if (typeof mvPdfTemplates !== 'undefined' && mvPdfTemplates.nonce) {
+            nonce = mvPdfTemplates.nonce;
+        } else {
+            nonce = '<?php echo wp_create_nonce("mv_pdf_templates_nonce"); ?>';
+        }
+        return nonce;
+    }
+    
+    function obtenerAjaxUrl() {
+        if (typeof mvPdfTemplates !== 'undefined' && mvPdfTemplates.ajaxurl) {
+            return mvPdfTemplates.ajaxurl;
+        } else if (typeof ajaxurl !== 'undefined') {
+            return ajaxurl;
+        } else {
+            return '<?php echo admin_url("admin-ajax.php"); ?>';
+        }
+    }
+    
+    function obtenerPlantillaId() {
+        return $('#plantilla-id').val() || 
+               $('input[name="id"]').val() || 
+               $('#plantilla_id').val() ||
+               $('input[name="plantilla_id"]').val() ||
+               new URLSearchParams(window.location.search).get('plantilla_id') ||
+               (typeof plantillaId !== 'undefined' ? plantillaId : null);
+    }
+    
+    function mostrarCargando(mostrar) {
+        if (mostrar) {
+            $('#preview-loading').show();
+            if ($('#actualizar-preview').length > 0) {
+                $('#actualizar-preview').prop('disabled', true)
+                    .html('<span class="dashicons dashicons-update-alt spin"></span> Actualizando...');
+            }
+        } else {
+            $('#preview-loading').hide();
+            if ($('#actualizar-preview').length > 0) {
+                $('#actualizar-preview').prop('disabled', false)
+                    .html('<span class="dashicons dashicons-update"></span> Actualizar Preview');
+            }
+        }
+    }
+    
+    function mostrarInfoPreview(mensaje, tipo) {
+        tipo = tipo || 'info';
         
-        $('#preview-container').prepend(toggleHtml);
+        var $info = $('#preview-info');
+        var $content = $('#preview-info-content');
         
-        // Manejar cambio en el toggle
+        // Si no existe el contenedor, crearlo
+        if ($info.length === 0) {
+            $info = $('<div id="preview-info" style="display: none;"><div id="preview-info-content"></div></div>');
+            if ($('#preview-container').length > 0) {
+                $('#preview-container').prepend($info);
+            } else {
+                $('.wrap').append($info);
+            }
+            $content = $('#preview-info-content');
+        }
+        
+        var clases = {
+            'success': 'background: #d4edda; color: #155724; border-left: 4px solid #28a745;',
+            'error': 'background: #f8d7da; color: #721c24; border-left: 4px solid #dc3545;',
+            'warning': 'background: #fff3cd; color: #856404; border-left: 4px solid #ffc107;',
+            'info': 'background: #d1ecf1; color: #0c5460; border-left: 4px solid #17a2b8;'
+        };
+        
+        var iconos = {
+            'success': 'yes',
+            'error': 'no',
+            'warning': 'warning',
+            'info': 'info'
+        };
+        
+        $content.html('<span class="dashicons dashicons-' + iconos[tipo] + '"></span> ' + mensaje);
+        
+        $info.attr('style', 'margin: 10px 0; padding: 12px; border-radius: 4px; font-size: 14px; ' + 
+                           (clases[tipo] || clases['info']) + ' display: block;');
+        
+        $info.show();
+        
+        // Auto-ocultar mensajes de éxito después de 8 segundos
+        if (tipo === 'success') {
+            setTimeout(function() {
+                $info.fadeOut();
+            }, 8000);
+        }
+    }
+    
+    function mostrarError(mensaje) {
+        mostrarInfoPreview(mensaje, 'error');
+    }
+    
+    function inicializarPreview() {
+        // Manejar cambio en el toggle de datos reales/prueba
         $(document).on('change', '#usar-datos-reales', function() {
             usarDatosReales = $(this).is(':checked');
+            actualizarIndicadores();
             
-            // Actualizar preview inmediatamente
-            actualizarPreview();
+            console.log('🔄 Tipo de datos cambiado a:', usarDatosReales ? 'reales' : 'prueba');
             
-            // Mostrar feedback visual
-            if (usarDatosReales) {
-                $(this).closest('label').addClass('active');
-            } else {
-                $(this).closest('label').removeClass('active');
+            // Auto-actualizar preview si hay contenido cargado
+            var iframe = document.getElementById('preview-iframe');
+            if (iframe && (iframe.srcdoc || iframe.src)) {
+                setTimeout(actualizarPreview, 500);
             }
         });
-    }
-
-    /**
-     * Agregar estilos CSS para los controles
-     */
-    function agregarEstilosPreview() {
-        if ($('#mv-preview-styles').length > 0) {
-            return; // Ya se agregaron los estilos
-        }
         
-        var estilos = 
-            '<style id="mv-preview-styles">' +
-            '.mv-preview-info { ' +
-                'padding: 8px 12px; ' +
-                'margin-bottom: 10px; ' +
-                'border-radius: 4px; ' +
-                'font-size: 13px; ' +
-                'display: none; ' +
-            '} ' +
-            '.mv-preview-info.success { ' +
-                'background: #d4edda; ' +
-                'color: #155724; ' +
-                'border: 1px solid #c3e6cb; ' +
-            '} ' +
-            '.mv-preview-info.info { ' +
-                'background: #d1ecf1; ' +
-                'color: #0c5460; ' +
-                'border: 1px solid #bee5eb; ' +
-            '} ' +
-            '.mv-preview-info.error { ' +
-                'background: #f8d7da; ' +
-                'color: #721c24; ' +
-                'border: 1px solid #f5c6cb; ' +
-            '} ' +
-            '.mv-preview-controls label.active { ' +
-                'color: #0073aa; ' +
-                'font-weight: 600; ' +
-            '} ' +
-            '</style>';
+        // Manejar botones
+        $(document).on('click', '#actualizar-preview', function(e) {
+            e.preventDefault();
+            actualizarPreview();
+        });
         
-        $('head').append(estilos);
-    }
-    
-    // Test de comparación visual
-    $(document).on('click', '#test-comparison', function(e) {
-        e.preventDefault();
-        var ventana = window.open('/wp-admin/admin-ajax.php?action=mv_test_mpdf_visual_comparison', 'test-comparison', 'width=1000,height=800,scrollbars=yes,resizable=yes');
-        if (!ventana) {
-            mostrarNotificacion('Error: No se pudo abrir la ventana de test. Verifica que los popups estén habilitados.', 'warning');
-        }
-    });
-    
-    // Función auxiliar para obtener parámetros de URL
-    function getUrlParameter(name) {
-        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-        var results = regex.exec(location.search);
-        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-    }
-    
-    // Función auxiliar para marcar como guardado (si existe)
-    function marcarComoGuardado() {
-        if (typeof window.marcarComoGuardado === 'function') {
-            window.marcarComoGuardado();
-        }
-        hasUnsavedChanges = false;
-    }
-    
-    // Inicialización
-    function inicializarEditor() {
-        // Agregar estilos y controles existentes
-        agregarEstilosPreview();
-        agregarToggleTipoDatos();
+        $(document).on('click', '#test-iframe', function(e) {
+            e.preventDefault();
+            testIframe();
+        });
         
-        // Nuevas funcionalidades
-        agregarEstilosAnimacion();
-        inicializarControlesPreview();
-        
-        // CORREGIDO: Inicializar con verificaciones
+        // NUEVO: Detectar cambios en editores CodeMirror para auto-actualizar
         setTimeout(function() {
-            // Verificar que los elementos necesarios existan antes de actualizar
-            if ($('#preview-iframe').length > 0) {
-                actualizarPreview();
+            // Para HTML
+            if (typeof window.codemirrorHTML !== 'undefined' && window.codemirrorHTML) {
+                window.codemirrorHTML.on('change', programarActualizacionPreview);
+                console.log('📝 Auto-actualización conectada al editor HTML');
+            } else if (typeof editorHtml !== 'undefined' && editorHtml && editorHtml.on) {
+                editorHtml.on('change', programarActualizacionPreview);
+                console.log('📝 Auto-actualización conectada al editor HTML (alternativo)');
             }
-        }, 500);
+            
+            // Para CSS
+            if (typeof window.codemirrorCSS !== 'undefined' && window.codemirrorCSS) {
+                window.codemirrorCSS.on('change', programarActualizacionPreview);
+                console.log('🎨 Auto-actualización conectada al editor CSS');
+            } else if (typeof editorCSS !== 'undefined' && editorCSS && editorCSS.on) {
+                editorCSS.on('change', programarActualizacionPreview);
+                console.log('🎨 Auto-actualización conectada al editor CSS (alternativo)');
+            }
+        }, 1000);
+        
+        // Actualizar indicadores iniciales
+        actualizarIndicadores();
+        
+        console.log('✅ Sistema de preview con CSS mejorado inicializado');
     }
     
-    // Inicializar cuando el documento esté listo
-    inicializarEditor();
-    
-    // Debug: Mostrar información del editor
-    console.log('Información del editor:', {
-        'plantilla_id disponible': $('#plantilla_id').length > 0,
-        'plantilla-id disponible': $('#plantilla-id').length > 0,
-        'input plantilla_id': $('input[name="plantilla_id"]').length > 0,
-        'ajaxurl': typeof ajaxurl !== 'undefined' ? ajaxurl : 'NO DEFINIDO',
-        'URL actual': window.location.href,
-        'usarDatosReales': usarDatosReales
-    });
-
-    // Variable global para el estado de datos reales en todos los previews
-    var usarDatosRealesGlobal = true;
-
-    /**
-     * Inicializar controles de preview con datos reales
-     */
-    function inicializarControlesPreview() {
-        // Manejar toggle global
-        $(document).on('change', '#usar-datos-reales-global', function() {
-            usarDatosRealesGlobal = $(this).is(':checked');
-            
-            // Actualizar indicadores en botones
-            actualizarIndicadoresBotones();
-            
-            // Actualizar estado del toggle del preview en tiempo real
-            $('#usar-datos-reales').prop('checked', usarDatosRealesGlobal);
-            usarDatosReales = usarDatosRealesGlobal;
-            
-            // Actualizar preview inmediatamente
-            actualizarPreview();
-            
-            // Mostrar información del estado
-            actualizarInfoEstadoDatos();
-        });
+    function actualizarIndicadores() {
+        var $infoContainer = $('#info-tipo-datos');
+        var $badge = $('#badge-text');
+        var $mensaje = $('#mensaje-tipo-datos');
         
-        // Sincronizar con el toggle del preview en tiempo real
-        $(document).on('change', '#usar-datos-reales', function() {
-            var nuevoEstado = $(this).is(':checked');
-            $('#usar-datos-reales-global').prop('checked', nuevoEstado);
-            usarDatosRealesGlobal = nuevoEstado;
-            actualizarIndicadoresBotones();
-            actualizarInfoEstadoDatos();
-        });
-        
-        // Inicializar indicadores
-        actualizarIndicadoresBotones();
-        actualizarInfoEstadoDatos();
-    }
-
-    /**
-     * Actualizar indicadores visuales en los botones
-     */
-    function actualizarIndicadoresBotones() {
-        $('.preview-data-indicator').each(function() {
-            var $indicator = $(this);
-            if (usarDatosRealesGlobal) {
-                $indicator.text('(datos reales)')
-                        .removeClass('prueba')
-                        .css({
-                            'background': '#d4edda',
-                            'color': '#155724'
-                        });
+        if ($infoContainer.length > 0) {
+            if (usarDatosReales) {
+                $infoContainer.css({
+                    'background': '#d4edda',
+                    'color': '#155724',
+                    'border': '1px solid #c3e6cb'
+                });
+                if ($mensaje.length > 0) {
+                    $mensaje.text('✓ Mostrando datos de la última cotización real');
+                }
+                if ($badge.length > 0) {
+                    $badge.text('Datos reales').parent().css('background', 'rgba(0,123,0,0.8)');
+                }
             } else {
-                $indicator.text('(datos de prueba)')
-                        .addClass('prueba')
-                        .css({
-                            'background': '#d1ecf1',
-                            'color': '#0c5460'
-                        });
-            }
-        });
-        
-        // Actualizar atributo data en botones
-        $('button[data-usar-reales]').attr('data-usar-reales', usarDatosRealesGlobal);
-    }
-
-    /**
-     * Actualizar información del estado de datos
-     */
-    function actualizarInfoEstadoDatos() {
-        var mensaje = usarDatosRealesGlobal 
-            ? 'Todos los previews usarán datos de la última cotización real'
-            : 'Todos los previews usarán datos de prueba generados automáticamente';
-            
-        $('#estado-datos-preview').text(mensaje);
-        
-        var $infoContainer = $('#info-datos-preview');
-        if (usarDatosRealesGlobal) {
-            $infoContainer.html('<span style="color: #155724;">✓ Usando datos reales de la última cotización</span>');
-        } else {
-            $infoContainer.html('<span style="color: #0c5460;">ℹ Usando datos de prueba predefinidos</span>');
-        }
-    }
-
-    /**
-     * Botón Vista Previa en Nueva Ventana - ACTUALIZADO
-     */
-    $(document).on('click', '#vista-previa-ventana', function(e) {
-        e.preventDefault();
-        
-        // Obtener ID de plantilla
-        var plantillaId = obtenerPlantillaId();
-        
-        if (!plantillaId) {
-            mostrarNotificacion('Error: No se pudo obtener el ID de la plantilla', 'error');
-            return;
-        }
-        
-        var $btn = $(this);
-        var textoOriginal = $btn.html();
-        
-        $btn.html('<span class="dashicons dashicons-update-alt spin"></span> Generando vista previa...').prop('disabled', true);
-        
-        $.ajax({
-            url: mvPdfTemplates.ajaxurl,
-            method: 'POST',
-            data: {
-                action: 'mv_vista_previa_datos_reales',
-                plantilla_id: plantillaId,
-                usar_datos_reales: usarDatosRealesGlobal,
-                nonce: mvPdfTemplates.nonce  // CORREGIDO: usar el mismo nonce
-            },
-            success: function(response) {
-                console.log('Respuesta vista previa:', response);
-                
-                if (response.success) {
-                    // Abrir preview en nueva ventana
-                    var ventana = window.open('', 'vista-previa-plantilla', 'width=900,height=700,scrollbars=yes,resizable=yes');
-                    if (ventana) {
-                        ventana.document.write(response.data.html);
-                        ventana.document.close();
-                        
-                        var tipoMsg = response.data.tipo_datos === 'real' ? 'datos reales' : 'datos de prueba';
-                        mostrarNotificacion('Vista previa generada exitosamente con ' + tipoMsg, 'success');
-                    } else {
-                        mostrarNotificacion('Error: No se pudo abrir la ventana de preview. Verifica que los popups estén habilitados.', 'warning');
-                    }
-                } else {
-                    mostrarNotificacion('Error: ' + (response.data.message || 'Error desconocido'), 'error');
+                $infoContainer.css({
+                    'background': '#d1ecf1', 
+                    'color': '#0c5460',
+                    'border': '1px solid #bee5eb'
+                });
+                if ($mensaje.length > 0) {
+                    $mensaje.text('ℹ Mostrando datos de prueba predefinidos');
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error AJAX vista previa:', {xhr: xhr, status: status, error: error});
-                mostrarNotificacion('Error de conexión: ' + error, 'error');
-            },
-            complete: function() {
-                $btn.html(textoOriginal).prop('disabled', false);
-            }
-        });
-    });
-
-    /**
-     * Preview Sincronizado con mPDF - ACTUALIZADO
-     */
-    $(document).on('click', '#preview-sincronizado-mpdf', function(e) {
-        e.preventDefault();
-        
-        var plantillaId = obtenerPlantillaId();
-        
-        if (!plantillaId) {
-            mostrarNotificacion('Error: No se pudo obtener el ID de la plantilla', 'error');
-            return;
-        }
-        
-        var $btn = $(this);
-        var textoOriginal = $btn.html();
-        
-        $btn.html('<span class="dashicons dashicons-update-alt spin"></span> Generando preview mPDF...').prop('disabled', true);
-        
-        $.ajax({
-            url: mvPdfTemplates.ajaxurl,  // CORREGIDO: usar la misma URL
-            method: 'POST',
-            data: {
-                action: 'mv_preview_mpdf_sincronizado_datos_reales',
-                plantilla_id: plantillaId,
-                usar_datos_reales: usarDatosRealesGlobal,
-                nonce: mvPdfTemplates.nonce  // CORREGIDO: usar el mismo nonce
-            },
-            success: function(response) {
-                console.log('Respuesta preview mPDF:', response);
-                
-                if (response.success) {
-                    // Abrir preview en nueva ventana
-                    var ventana = window.open('', 'preview-mpdf-sync', 'width=900,height=700,scrollbars=yes,resizable=yes');
-                    if (ventana) {
-                        ventana.document.write(response.data.html);
-                        ventana.document.close();
-                        
-                        var tipoMsg = response.data.tipo_datos === 'real' ? 'datos reales' : 'datos de prueba';
-                        mostrarNotificacion('Preview mPDF generado exitosamente con ' + tipoMsg, 'success');
-                    } else {
-                        mostrarNotificacion('Error: No se pudo abrir la ventana de preview. Verifica que los popups estén habilitados.', 'warning');
-                    }
-                } else {
-                    mostrarNotificacion('Error: ' + (response.data.message || 'Error desconocido'), 'error');
+                if ($badge.length > 0) {
+                    $badge.text('Datos de prueba').parent().css('background', 'rgba(255,193,7,0.8)');
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error AJAX preview mPDF:', {xhr: xhr, status: status, error: error});
-                mostrarNotificacion('Error de conexión: ' + error, 'error');
-            },
-            complete: function() {
-                $btn.html(textoOriginal).prop('disabled', false);
             }
-        });
-    });
-
-    /**
-     * Función auxiliar para obtener ID de plantilla
-     */
-    function obtenerPlantillaId() {
-        return $('#plantilla_id').val() || 
-            $('#plantilla-id').val() || 
-            $('input[name="plantilla_id"]').val() ||
-            $('input[name="id"]').val() ||
-            getUrlParameter('plantilla_id');
-    }
-
-    /**
-     * Agregar CSS para animación de carga
-     */
-    function agregarEstilosAnimacion() {
-        if ($('#mv-animation-styles').length > 0) {
-            return;
         }
-        
-        var estilos = 
-            '<style id="mv-animation-styles">' +
-            '.spin { animation: spin 1s linear infinite; } ' +
-            '@keyframes spin { ' +
-                '0% { transform: rotate(0deg); } ' +
-                '100% { transform: rotate(360deg); } ' +
-            '} ' +
-            '.mv-botones-preview button { ' +
-                'transition: all 0.3s ease; ' +
-            '} ' +
-            '.mv-botones-preview button:hover:not(:disabled) { ' +
-                'transform: translateY(-1px); ' +
-                'box-shadow: 0 2px 8px rgba(0,0,0,0.15); ' +
-            '} ' +
-            '</style>';
-        
-        $('head').append(estilos);
     }
+    
+    // Inicializar el sistema
+    inicializarPreview();
+    
+    // Agregar botón de test si no existe
+    setTimeout(function() {
+        if ($('#test-iframe').length === 0 && $('#actualizar-preview').length > 0) {
+            $('#actualizar-preview').after(
+                '<button type="button" id="test-iframe" class="button button-secondary" style="margin-left: 10px;" title="Probar funcionamiento del iframe">' +
+                '<span class="dashicons dashicons-admin-tools"></span> Test iframe' +
+                '</button>'
+            );
+        }
+    }, 500);
+    
+    // Exponer funciones para debugging
+    window.mvPreviewDebug = {
+        actualizarPreview: actualizarPreview,
+        testIframe: testIframe,
+        escribirHtmlEnIframe: escribirHtmlEnIframe,
+        validarHtmlParaIframe: validarHtmlParaIframe,
+        combinarHtmlYCss: combinarHtmlYCss,
+        programarActualizacionPreview: programarActualizacionPreview,
+        usarDatosReales: function() { return usarDatosReales; },
+        estado: function() {
+            return {
+                usarDatosReales: usarDatosReales,
+                previewActualizandose: previewActualizandose,
+                plantillaId: obtenerPlantillaId()
+            };
+        }
+    };
+    
+    console.log('🔧 Debug del preview disponible en: window.mvPreviewDebug');
+    console.log('ℹ️ Usa window.mvPreviewDebug.estado() para ver el estado actual');
 });
 </script>
 

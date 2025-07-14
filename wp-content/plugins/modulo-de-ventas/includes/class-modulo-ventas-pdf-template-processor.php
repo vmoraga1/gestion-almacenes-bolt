@@ -38,60 +38,116 @@ class Modulo_Ventas_PDF_Template_Processor {
     }
 
     /**
-     * Cargar datos para procesar template
+     * Cargar datos en el procesador - VERSIÓN CORREGIDA
      */
     public function cargar_datos($datos) {
+        $this->logger->log("PROCESSOR: Iniciando carga de datos");
+        
+        // Verificar que $datos no esté vacío
+        if (empty($datos)) {
+            $this->logger->log("PROCESSOR: ERROR - Datos vacíos recibidos", 'error');
+            return false;
+        }
+        
+        // Verificar si es array u objeto
         if (is_array($datos)) {
-            $this->cotizacion_data = (object) $datos;
+            $this->datos = $datos;
+            $this->logger->log("PROCESSOR: Datos cargados desde array");
         } elseif (is_object($datos)) {
-            $this->cotizacion_data = $datos;
+            $this->datos = (array) $datos;
+            $this->logger->log("PROCESSOR: Datos cargados desde objeto convertido a array");
         } else {
-            $this->cotizacion_data = new stdClass();
+            $this->logger->log("PROCESSOR: ERROR - Tipo de datos no válido: " . gettype($datos), 'error');
+            return false;
         }
         
-        // Asegurar que tenga las propiedades básicas
-        if (!isset($this->cotizacion_data->id)) {
-            $this->cotizacion_data->id = 0;
+        // AGREGAR: Verificar estructura de datos
+        $claves_principales = array('cotizacion', 'cliente', 'empresa', 'productos', 'totales', 'fechas');
+        $claves_encontradas = array_intersect($claves_principales, array_keys($this->datos));
+        
+        $this->logger->log("PROCESSOR: Datos cargados exitosamente. Claves principales: " . implode(', ', $claves_encontradas));
+        
+        // AGREGAR: Debug de contenido de empresa
+        if (isset($this->datos['empresa'])) {
+            $this->logger->log("PROCESSOR: Datos de empresa disponibles - nombre: " . (isset($this->datos['empresa']['nombre']) ? $this->datos['empresa']['nombre'] : 'NO_DISPONIBLE'));
+        } else {
+            $this->logger->log("PROCESSOR: ERROR - No hay datos de empresa", 'error');
         }
         
-        if (!isset($this->cotizacion_data->tipo_documento)) {
-            $this->cotizacion_data->tipo_documento = 'cotizacion';
-        }
-        
-        return $this;
+        return true;
     }
 
     /**
      * Procesar template HTML con los datos cargados
      */
-    public function procesar_template($html_template) {
-        if (!$this->cotizacion_data) {
-            return $html_template;
+    public function procesar_template($html_content) {
+        // AGREGAR: Verificar que hay datos cargados
+        if (empty($this->datos)) {
+            $this->logger->log("PROCESSOR: ERROR - No hay datos cargados para procesar template", 'error');
+            return $html_content; // Devolver contenido sin procesar
         }
         
-        // Convertir objeto a array para fácil acceso
-        $datos = is_object($this->cotizacion_data) ? (array) $this->cotizacion_data : $this->cotizacion_data;
+        $this->logger->log("PROCESSOR: Procesando template con datos disponibles");
         
-        // Procesar variables simples
-        $html_procesado = $this->procesar_variables_simples($html_template, $datos);
-        
-        // Procesar variables complejas
-        $html_procesado = $this->procesar_variables_complejas($html_procesado, $datos);
-        
-        return $html_procesado;
+        // Continuar con el procesamiento normal...
+        return $this->procesar_contenido($html_content);
     }
 
     /**
      * Procesar CSS con los datos cargados
      */
-    public function procesar_css($css_template) {
-        if (!$this->cotizacion_data) {
-            return $css_template;
+    public function procesar_css($css_content) {
+        if (empty($css_content)) {
+            $this->logger->log("PROCESSOR: CSS vacío recibido");
+            return '';
         }
         
-        // Por ahora, CSS no necesita procesamiento de variables
-        // Pero podemos agregar funcionalidad aquí en el futuro
-        return $css_template;
+        $this->logger->log("PROCESSOR: Procesando CSS de " . strlen($css_content) . " caracteres");
+        
+        // Remover tags <style> si están presentes (evitar anidamiento)
+        $css_limpio = $css_content;
+        if (strpos($css_limpio, '<style>') !== false) {
+            $css_limpio = preg_replace('/<style[^>]*>/', '', $css_limpio);
+            $css_limpio = str_replace('</style>', '', $css_limpio);
+            $this->logger->log("PROCESSOR: Removidos tags <style> anidados");
+        }
+        
+        // Procesar variables si las hay
+        $css_procesado = $this->procesar_contenido($css_limpio);
+        
+        $resultado = trim($css_procesado);
+        $this->logger->log("PROCESSOR: CSS procesado - " . strlen($resultado) . " caracteres finales");
+        
+        return $resultado;
+    }
+
+    /**
+     * Limpia CSS
+     */
+    private function limpiar_css_para_pdf($css) {
+        // Remover @import y @media queries problemáticas
+        $css = preg_replace('/@import[^;]+;/', '', $css);
+        $css = preg_replace('/@media[^{]+\{[^{}]*\{[^{}]*\}[^{}]*\}/', '', $css);
+        
+        // Convertir flexbox problemático a display: block
+        $css = str_replace('display: flex', 'display: block', $css);
+        $css = str_replace('display:flex', 'display:block', $css);
+        
+        // Remover propiedades CSS problemáticas para PDF
+        $propiedades_problematicas = array(
+            'transform:',
+            'transition:',
+            'animation:',
+            'box-shadow:',
+            'filter:',
+            'backdrop-filter:'
+        );
+        
+        foreach ($propiedades_problematicas as $prop) {
+            $css = preg_replace('/' . preg_quote($prop) . '[^;]+;/', '', $css);
+        }
+        
+        return $css;
     }
 
     /**
@@ -140,6 +196,13 @@ class Modulo_Ventas_PDF_Template_Processor {
             self::$instance = new self();
         }
         return self::$instance;
+    }
+
+    /**
+     * Verificar si el procesador tiene datos cargados
+     */
+    public function tiene_datos() {
+        return !empty($this->datos);
     }
     
     /**
@@ -333,6 +396,8 @@ class Modulo_Ventas_PDF_Template_Processor {
      * Generar datos de prueba para preview
      */
     private function generar_datos_prueba($tipo = 'cotizacion') {
+        $this->logger->log("TEMPLATE_PROCESSOR: Generando datos de prueba para: {$tipo}");
+        
         $productos_demo = array(
             array(
                 'codigo' => 'PROD001',
@@ -341,8 +406,11 @@ class Modulo_Ventas_PDF_Template_Processor {
                 'descripcion' => 'Laptop HP Pavilion 15 con procesador Intel Core i5',
                 'cantidad' => 2,
                 'precio_unitario' => 650000,
+                'precio_unitario_formateado' => '$650.000',
                 'descuento' => 0,
-                'subtotal' => 1300000
+                'descuento_formateado' => '$0',
+                'subtotal' => 1300000,
+                'subtotal_formateado' => '$1.300.000'
             ),
             array(
                 'codigo' => 'SERV001',
@@ -351,8 +419,11 @@ class Modulo_Ventas_PDF_Template_Processor {
                 'descripcion' => 'Servicio de instalación y configuración de software',
                 'cantidad' => 1,
                 'precio_unitario' => 75000,
+                'precio_unitario_formateado' => '$75.000',
                 'descuento' => 5000,
-                'subtotal' => 70000
+                'descuento_formateado' => '$5.000',
+                'subtotal' => 70000,
+                'subtotal_formateado' => '$70.000'
             ),
             array(
                 'codigo' => 'ACC001',
@@ -361,8 +432,11 @@ class Modulo_Ventas_PDF_Template_Processor {
                 'descripcion' => 'Mouse inalámbrico ergonómico',
                 'cantidad' => 2,
                 'precio_unitario' => 25000,
+                'precio_unitario_formateado' => '$25.000',
                 'descuento' => 0,
-                'subtotal' => 50000
+                'descuento_formateado' => '$0',
+                'subtotal' => 50000,
+                'subtotal_formateado' => '$50.000'
             )
         );
         
@@ -371,6 +445,7 @@ class Modulo_Ventas_PDF_Template_Processor {
         $impuestos = 242820; // 19% sobre (subtotal - descuento)
         $total = 1520820;
         
+        // CRÍTICO: ASIGNAR INMEDIATAMENTE sin llamar a métodos que puedan causar bucles
         $this->cotizacion_data = array(
             // Datos de la cotización - MISMA ESTRUCTURA que cargar_datos_cotizacion()
             'cotizacion' => array(
@@ -405,11 +480,20 @@ class Modulo_Ventas_PDF_Template_Processor {
                 'giro' => 'Servicios de tecnología y consultoría'
             ),
             
-            // Datos de la empresa
-            'empresa' => $this->obtener_datos_empresa(),
+            // Datos de la empresa - DIRECTO sin llamar métodos que puedan fallar
+            'empresa' => array(
+                'nombre' => get_option('blogname', 'Mi Empresa'),
+                'direccion' => 'Av. Empresarial 456, Santiago',
+                'ciudad' => 'Santiago',
+                'region' => 'Región Metropolitana',
+                'telefono' => '+56 2 2345 6789',
+                'email' => get_option('admin_email', 'empresa@ejemplo.com'),
+                'rut' => '98.765.432-1',
+                'sitio_web' => get_option('siteurl')
+            ),
             
-            // Productos - usar $es_demo = true para procesar productos demo
-            'productos' => $this->procesar_detalles_productos($productos_demo, true),
+            // Productos - DIRECTAMENTE procesados, sin llamar a métodos externos
+            'productos' => $productos_demo,
             
             // Fechas formateadas
             'fechas' => array(
@@ -422,7 +506,9 @@ class Modulo_Ventas_PDF_Template_Processor {
             
             // Totales formateados
             'totales' => array(
+                'subtotal' => $subtotal,
                 'subtotal_formateado' => number_format($subtotal, 0, ',', '.'),
+                'descuento' => $descuento,
                 'descuento_formateado' => number_format($descuento, 0, ',', '.'),
                 'impuestos_formateado' => number_format($impuestos, 0, ',', '.'),
                 'total_formateado' => number_format($total, 0, ',', '.'),
@@ -511,19 +597,27 @@ class Modulo_Ventas_PDF_Template_Processor {
             return '';
         }
         
+        if (!$this->cotizacion_data) {
+            error_log('PROCESSOR: ERROR - procesar_contenido llamado sin datos');
+            return $contenido;
+        }
+        
+        // Log inicial
+        $variables_iniciales = preg_match_all('/\{\{[^}]+\}\}/', $contenido, $matches_iniciales);
+        error_log('PROCESSOR: Variables encontradas inicialmente: ' . $variables_iniciales);
+        if ($variables_iniciales > 0) {
+            error_log('PROCESSOR: Variables a procesar: ' . implode(', ', array_slice($matches_iniciales[0], 0, 5)));
+        }
+        
         // 1. Procesar condicionales {{#if variable}}...{{/if}}
         $contenido = preg_replace_callback('/\{\{#if\s+([^}]+)\}\}(.*?)\{\{\/if\}\}/s', function($matches) {
             $variable = trim($matches[1]);
             $contenido_condicional = $matches[2];
             
-            $valor = $this->obtener_valor_variable_handlebars($variable);
+            $valor = $this->obtener_valor_variable($variable);
             
-            // Mostrar contenido si la variable existe y no está vacía
-            if (!empty($valor) && $valor !== '0' && $valor !== 0 && $valor !== 'false') {
-                return $this->procesar_contenido($contenido_condicional);
-            }
-            
-            return '';
+            // Considerar como "true" si no está vacío
+            return !empty($valor) ? $contenido_condicional : '';
         }, $contenido);
         
         // 2. Procesar bucles {{#each array}}...{{/each}}
@@ -531,7 +625,7 @@ class Modulo_Ventas_PDF_Template_Processor {
             $variable = trim($matches[1]);
             $template_item = $matches[2];
             
-            $array = $this->obtener_valor_variable_handlebars($variable);
+            $array = $this->obtener_valor_variable($variable);
             
             if (!is_array($array) || empty($array)) {
                 return '';
@@ -567,10 +661,22 @@ class Modulo_Ventas_PDF_Template_Processor {
         // 3. Procesar variables simples {{variable}}
         $patron = '/\{\{([^}]+)\}\}/';
         
-        return preg_replace_callback($patron, function($matches) {
+        $contenido_procesado = preg_replace_callback($patron, function($matches) {
             $variable = trim($matches[1]);
-            return $this->obtener_valor_variable($variable);
+            $valor = $this->obtener_valor_variable($variable);
+            
+            // Debug de cada variable procesada
+            error_log('PROCESSOR: Procesando variable: ' . $variable . ' = ' . 
+                    (is_string($valor) ? substr($valor, 0, 50) : gettype($valor)));
+            
+            return $valor;
         }, $contenido);
+        
+        // Log final
+        $variables_finales = preg_match_all('/\{\{[^}]+\}\}/', $contenido_procesado, $matches_finales);
+        error_log('PROCESSOR: Variables restantes después del procesamiento: ' . $variables_finales);
+        
+        return $contenido_procesado;
     }
 
     /**
@@ -593,7 +699,8 @@ class Modulo_Ventas_PDF_Template_Processor {
      */
     private function obtener_valor_variable($variable, $tipo = 'cotizacion') {
         if (!$this->cotizacion_data) {
-            return '{{' . $variable . '}}'; // Devolver la variable sin procesar si no hay datos
+            error_log('PROCESSOR: obtener_valor_variable - No hay datos cargados');
+            return '{{' . $variable . '}}'; // Devolver sin procesar
         }
         
         // Variables especiales que necesitan procesamiento inmediato
@@ -601,16 +708,14 @@ class Modulo_Ventas_PDF_Template_Processor {
             'tabla_productos',
             'logo_empresa', 
             'fecha_actual',
-            'hora_actual',
-            'sistema.fecha_actual',
-            'sistema.hora_actual'
+            'hora_actual'
         );
         
         if (in_array($variable, $variables_especiales)) {
             return $this->procesar_variable_especial($variable, null);
         }
         
-        // Manejar variables con puntos (ej: cotizacion.numero)
+        // Manejar variables con puntos (ej: empresa.nombre)
         $partes = explode('.', $variable);
         $valor = $this->cotizacion_data;
         
@@ -621,13 +726,7 @@ class Modulo_Ventas_PDF_Template_Processor {
                 $valor = $valor->$parte;
             } else {
                 // Variable no encontrada
-                $this->logger->log("TEMPLATE_PROCESSOR: Variable no encontrada: {$variable}", 'warning');
-                
-                // Intentar como variable especial antes de devolver sin procesar
-                if (strpos($variable, '.') !== false) {
-                    return $this->procesar_variable_especial($variable, null);
-                }
-                
+                error_log('PROCESSOR: Variable no encontrada: ' . $variable);
                 return '{{' . $variable . '}}';
             }
         }
@@ -648,14 +747,16 @@ class Modulo_Ventas_PDF_Template_Processor {
                 return $this->procesar_logo_empresa($valor);
                 
             case 'fecha_actual':
-            case 'sistema.fecha_actual':
                 return current_time('d/m/Y');
                 
             case 'hora_actual':
-            case 'sistema.hora_actual':
                 return current_time('H:i');
                 
             default:
+                // Para valores normales, asegurar que sean strings
+                if (is_array($valor) || is_object($valor)) {
+                    return json_encode($valor);
+                }
                 return is_string($valor) || is_numeric($valor) ? $valor : '';
         }
     }
@@ -724,33 +825,171 @@ class Modulo_Ventas_PDF_Template_Processor {
         
         return '';
     }
+
+    /**
+     * NUEVO: Generar HTML del logo de la empresa
+     */
+    private function generar_logo_empresa($datos_empresa) {
+        $logo_id = get_option('modulo_ventas_logo_empresa', '');
+        
+        if ($logo_id) {
+            $logo_url = wp_get_attachment_url($logo_id);
+            if ($logo_url) {
+                $nombre_empresa = isset($datos_empresa->nombre) ? $datos_empresa->nombre : 'Empresa';
+                return '<img src="' . esc_url($logo_url) . '" alt="Logo ' . esc_attr($nombre_empresa) . '" style="max-height: 80px; max-width: 200px; width: auto; height: auto;" />';
+            }
+        }
+        
+        // Fallback: placeholder del logo
+        $nombre_empresa = isset($datos_empresa->nombre) ? $datos_empresa->nombre : 'Empresa';
+        return '<div style="width: 150px; height: 80px; background: #f5f5f5; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #666; text-align: center;">
+            <div>
+                <div style="font-weight: bold;">' . esc_html($nombre_empresa) . '</div>
+                <div style="font-size: 10px; margin-top: 5px;">Logo</div>
+            </div>
+        </div>';
+    }
     
     /**
      * Generar documento HTML final
      */
     public function generar_documento_final($html_procesado, $css_procesado) {
+        $this->logger->log("PREVIEW: === INICIO GENERAR_DOCUMENTO_FINAL ===");
+        $this->logger->log("PREVIEW: HTML recibido: " . strlen($html_procesado) . " caracteres");
+        $this->logger->log("PREVIEW: CSS recibido: " . strlen($css_procesado) . " caracteres");
+        
+        // Verificar contenido recibido
+        $html_valido = !empty($html_procesado) && strlen(trim($html_procesado)) > 10;
+        $css_valido = !empty($css_procesado) && strlen(trim($css_procesado)) > 10;
+        
+        $this->logger->log("PREVIEW: HTML válido: " . ($html_valido ? 'SI' : 'NO'));
+        $this->logger->log("PREVIEW: CSS válido: " . ($css_valido ? 'SI' : 'NO'));
+        
+        // Si no hay HTML válido, usar contenido de prueba
+        if (!$html_valido) {
+            $html_procesado = '<div class="documento"><h1>Error: No hay contenido HTML para mostrar</h1></div>';
+            $this->logger->log("PREVIEW: USANDO HTML DE FALLBACK");
+        }
+        
+        // Limpiar CSS de posibles tags anidados
+        $css_limpio = $css_procesado;
+        if (strpos($css_limpio, '<style>') !== false) {
+            $css_limpio = preg_replace('/<style[^>]*>/', '', $css_limpio);
+            $css_limpio = str_replace('</style>', '', $css_limpio);
+            $this->logger->log("PREVIEW: CSS contenía tags <style> anidados - removidos");
+        }
+        
+        // Construir documento HTML completo
         $documento = '<!DOCTYPE html>
     <html lang="es">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Documento PDF</title>
-        <style>
-            body { font-family: Arial, sans-serif; margin: 20px; }
-            .tabla-productos { width: 100%; border-collapse: collapse; }
-            .tabla-productos th, .tabla-productos td { border: 1px solid #ddd; padding: 8px; }
-            .tabla-productos th { background: #f5f5f5; }
-            ' . $css_procesado . '
-        </style>
+        <title>Vista Previa - Plantilla PDF</title>';
+        
+        // SIEMPRE agregar CSS (con fallback si no existe)
+        if ($css_valido && !empty(trim($css_limpio))) {
+            $documento .= '
+        <style type="text/css">
+    /* CSS de la plantilla */
+    ' . trim($css_limpio) . '
+        </style>';
+            $this->logger->log("PREVIEW: CSS de plantilla agregado (" . strlen(trim($css_limpio)) . " caracteres)");
+        } else {
+            // CSS básico de fallback
+            $documento .= '
+        <style type="text/css">
+    /* CSS de fallback */
+    body { 
+        font-family: Arial, sans-serif; 
+        margin: 20px; 
+        line-height: 1.4; 
+        color: #333; 
+    }
+    .documento { 
+        max-width: 800px; 
+        margin: 0 auto; 
+        padding: 20px; 
+        background: white; 
+    }
+    table { 
+        border-collapse: collapse; 
+        width: 100%; 
+        margin: 10px 0; 
+    }
+    td, th { 
+        padding: 8px; 
+        border: 1px solid #ddd; 
+        text-align: left; 
+    }
+    .header { 
+        background: #f5f5f5; 
+        padding: 20px; 
+        margin-bottom: 20px; 
+        border-bottom: 2px solid #ccc; 
+    }
+    .productos-tabla { 
+        width: 100%; 
+        border-collapse: collapse; 
+    }
+    .productos-tabla th { 
+        background: #f0f0f0; 
+        font-weight: bold; 
+    }
+        </style>';
+            $this->logger->log("PREVIEW: CSS de fallback aplicado (no había CSS válido)");
+        }
+        
+        $documento .= '
     </head>
     <body>
-        <div class="documento">
-            ' . $html_procesado . '
-        </div>
+    ' . $html_procesado . '
     </body>
     </html>';
         
+        // Verificaciones finales
+        $longitud_total = strlen($documento);
+        $contiene_style = strpos($documento, '<style>') !== false;
+        $contiene_style_close = strpos($documento, '</style>') !== false;
+        $contiene_body = strpos($documento, '<body>') !== false && strpos($documento, '</body>') !== false;
+        
+        $this->logger->log("PREVIEW: === RESULTADO FINAL ===");
+        $this->logger->log("PREVIEW: Longitud total: {$longitud_total} caracteres");
+        $this->logger->log("PREVIEW: Contiene <style>: " . ($contiene_style ? 'SI' : 'NO'));
+        $this->logger->log("PREVIEW: Contiene </style>: " . ($contiene_style_close ? 'SI' : 'NO'));
+        $this->logger->log("PREVIEW: Estructura body válida: " . ($contiene_body ? 'SI' : 'NO'));
+        
+        // Log final para el debug principal
+        $css_final = $contiene_style && $contiene_style_close ? 'SI' : 'NO';
+        $contenido_final = $html_valido ? 'SI' : 'NO';
+        $this->logger->log("PREVIEW: Documento final - Longitud: {$longitud_total}, CSS: {$css_final}, Contenido: {$contenido_final}");
+        
         return $documento;
+    }
+
+    /**
+     * NUEVO: Formatear RUT chileno
+     */
+    private function formatear_rut($rut) {
+        if (empty($rut)) {
+            return '';
+        }
+        
+        // Limpiar el RUT (solo números y K/k)
+        $rut_limpio = preg_replace('/[^0-9Kk]/', '', $rut);
+        
+        if (strlen($rut_limpio) < 2) {
+            return $rut; // Devolver original si es muy corto
+        }
+        
+        // Separar dígito verificador
+        $dv = substr($rut_limpio, -1);
+        $numero = substr($rut_limpio, 0, -1);
+        
+        // Formatear con puntos
+        $numero_formateado = number_format($numero, 0, '', '.');
+        
+        return $numero_formateado . '-' . strtoupper($dv);
     }
     
     /**
@@ -817,6 +1056,77 @@ class Modulo_Ventas_PDF_Template_Processor {
     public function debug_datos_prueba() {
         $this->generar_datos_prueba('cotizacion');
         return $this->cotizacion_data;
+    }
+
+    /**
+     * MÉTODO DE VERIFICACIÓN: debug_datos_cargados
+     */
+    public function debug_datos_cargados() {
+        if (empty($this->cotizacion_data)) {
+            return 'No hay datos cargados';
+        }
+        
+        $info = array();
+        $info[] = 'Claves principales: ' . implode(', ', array_keys($this->cotizacion_data));
+        
+        if (isset($this->cotizacion_data['empresa'])) {
+            $info[] = 'Empresa: ' . (isset($this->cotizacion_data['empresa']['nombre']) ? 
+                                    $this->cotizacion_data['empresa']['nombre'] : 'Sin nombre');
+        }
+        
+        if (isset($this->cotizacion_data['cliente'])) {
+            $info[] = 'Cliente: ' . (isset($this->cotizacion_data['cliente']['nombre']) ? 
+                                    $this->cotizacion_data['cliente']['nombre'] : 'Sin nombre');
+        }
+        
+        if (isset($this->cotizacion_data['productos'])) {
+            $info[] = 'Productos: ' . count($this->cotizacion_data['productos']) . ' items';
+        }
+        
+        return implode(' | ', $info);
+    }
+
+    /**
+     * Formatear productos desde items de cotización - MÉTODO REQUERIDO
+     */
+    public function formatear_productos_desde_items($items) {
+        $productos = array();
+        
+        if (!is_array($items) && !is_object($items)) {
+            return $productos;
+        }
+        
+        if (is_object($items)) {
+            $items = (array) $items;
+        }
+        
+        foreach ($items as $item) {
+            if (is_array($item)) {
+                $item = (object) $item;
+            }
+            
+            $cantidad = isset($item->cantidad) ? intval($item->cantidad) : 0;
+            $precio_unitario = isset($item->precio_unitario) ? floatval($item->precio_unitario) : 0;
+            $subtotal = $cantidad * $precio_unitario;
+            
+            $productos[] = array(
+                'codigo' => isset($item->codigo) ? $item->codigo : 'N/A', // CORREGIR: campo faltante
+                'nombre' => isset($item->nombre_producto) ? $item->nombre_producto : (isset($item->nombre) ? $item->nombre : 'Producto sin nombre'),
+                'descripcion' => isset($item->descripcion) ? $item->descripcion : '',
+                'cantidad' => $cantidad,
+                'unidad' => isset($item->unidad) ? $item->unidad : 'uds',
+                'precio_unitario' => $precio_unitario,
+                'precio_unitario_formateado' => '$' . number_format($precio_unitario, 0, ',', '.'),
+                'subtotal' => $subtotal,
+                'subtotal_formateado' => '$' . number_format($subtotal, 0, ',', '.'),
+                'descuento' => isset($item->descuento) ? floatval($item->descuento) : 0,
+                'descuento_formateado' => '$' . number_format(isset($item->descuento) ? $item->descuento : 0, 0, ',', '.'),
+                'total' => $subtotal - (isset($item->descuento) ? $item->descuento : 0),
+                'total_formateado' => '$' . number_format($subtotal - (isset($item->descuento) ? $item->descuento : 0), 0, ',', '.')
+            );
+        }
+        
+        return $productos;
     }
 
     /**
@@ -904,132 +1214,159 @@ class Modulo_Ventas_PDF_Template_Processor {
         );
         
         if (!$cotizacion) {
-            // Si no hay cotizaciones, usar datos de prueba
-            return $this->obtener_datos_prueba('cotizacion');
+            // CORREGIDO: GENERAR datos de prueba sin recursión
+            $this->logger->log("TEMPLATE_PROCESSOR: No hay cotizaciones reales, usando datos de prueba");
+            
+            // DIRECTAMENTE generar y asignar datos de prueba
+            $datos_empresa = $this->obtener_datos_empresa_fallback();
+            $datos_prueba = $this->obtener_datos_prueba_cotizacion($datos_empresa);
+            
+            // ASIGNAR directamente sin llamar a métodos que pueden causar bucles
+            $this->cotizacion_data = $datos_prueba;
+            
+            return $datos_prueba;
         }
         
         // Verificar que la cotización tenga ID
         if (!isset($cotizacion->id) || empty($cotizacion->id)) {
             error_log('MODULO_VENTAS: Cotización sin ID encontrada');
-            return $this->obtener_datos_prueba('cotizacion');
+            
+            // CORREGIDO: Generar datos de prueba directamente
+            $datos_empresa = $this->obtener_datos_empresa_fallback();
+            $datos_prueba = $this->obtener_datos_prueba_cotizacion($datos_empresa);
+            $this->cotizacion_data = $datos_prueba;
+            
+            return $datos_prueba;
         }
         
-        // Obtener items de la cotización - AQUÍ SÍ usar prepare() porque hay parámetro dinámico
+        // Obtener items de la cotización - USAR prepare() porque hay parámetro dinámico
         $items = $wpdb->get_results($wpdb->prepare(
             "SELECT * FROM {$tabla_items} WHERE cotizacion_id = %d ORDER BY orden ASC",
             $cotizacion->id
         ));
         
-        // CORREGIDO: Verificar que la función existe antes de llamarla
+        // Obtener datos de empresa
         if (function_exists('obtener_datos_empresa')) {
             $datos_empresa = obtener_datos_empresa();
         } else {
-            // Fallback: obtener datos directamente
             $datos_empresa = $this->obtener_datos_empresa_fallback();
         }
+
+        // AGREGAR: Obtener y procesar productos ANTES de crear $datos_formatted
+        $items = $this->obtener_items_cotizacion($cotizacion->id);
+        $productos = $this->formatear_productos_desde_items($items);
         
-        // Formatear datos para el template
+        // AGREGAR: Calcular totales ANTES de crear $datos_formatted
+        $subtotal = isset($cotizacion->subtotal) ? floatval($cotizacion->subtotal) : 0;
+        $descuento = isset($cotizacion->descuento_monto) ? floatval($cotizacion->descuento_monto) : 0;
+        $impuestos = isset($cotizacion->impuesto_monto) ? floatval($cotizacion->impuesto_monto) : 0;
+        $total = isset($cotizacion->total) ? floatval($cotizacion->total) : 0;
+        
+        // AGREGAR: Obtener datos de empresa ANTES de crear $datos_formatted
+        $datos_empresa = $this->obtener_datos_empresa_fallback();
+        
+        // Formatear datos reales para el template
         $datos_formatted = array(
             'cotizacion' => array(
-                'numero' => isset($cotizacion->folio) ? $cotizacion->folio : 'SIN-FOLIO',
-                'fecha' => date('d/m/Y', strtotime($cotizacion->fecha_creacion)),
-                'fecha_vencimiento' => isset($cotizacion->fecha_vencimiento) && $cotizacion->fecha_vencimiento 
-                    ? date('d/m/Y', strtotime($cotizacion->fecha_vencimiento)) 
-                    : date('d/m/Y', strtotime('+30 days')),
-                'estado' => isset($cotizacion->estado) ? ucfirst($cotizacion->estado) : 'Sin estado',
-                'observaciones' => isset($cotizacion->observaciones) && $cotizacion->observaciones 
-                    ? $cotizacion->observaciones 
-                    : 'Sin observaciones',
-                'vendedor' => isset($cotizacion->vendedor) && $cotizacion->vendedor 
-                    ? $cotizacion->vendedor 
-                    : 'Sin asignar',
-                'validez' => isset($cotizacion->validez) && $cotizacion->validez 
-                    ? $cotizacion->validez 
-                    : '30 días',
-                'condiciones_pago' => isset($cotizacion->condiciones_pago) && $cotizacion->condiciones_pago 
-                    ? $cotizacion->condiciones_pago 
-                    : 'Contado'
+                'id' => $cotizacion->id,
+                'folio' => $cotizacion->folio,
+                'fecha' => date('d/m/Y', strtotime($cotizacion->fecha)),
+                'fecha_expiracion' => isset($cotizacion->fecha_expiracion) ? date('d/m/Y', strtotime($cotizacion->fecha_expiracion)) : date('d/m/Y', strtotime('+30 days')), // AGREGAR: variable faltante
+                'plazo_pago' => $cotizacion->plazo_pago,
+                'moneda' => $cotizacion->moneda,
+                'observaciones' => !empty($cotizacion->observaciones) ? $cotizacion->observaciones : 'Sin observaciones',
+                'estado' => $cotizacion->estado
             ),
             
             'cliente' => array(
-                'nombre' => isset($cotizacion->razon_social) && $cotizacion->razon_social 
-                    ? $cotizacion->razon_social 
-                    : 'Cliente sin nombre',
-                'rut' => isset($cotizacion->rut) && $cotizacion->rut 
-                    ? $this->formatear_rut_fallback($cotizacion->rut) 
-                    : 'Sin RUT',
-                'email' => isset($cotizacion->email) && $cotizacion->email 
-                    ? $cotizacion->email 
-                    : 'Sin email',
-                'telefono' => isset($cotizacion->telefono) && $cotizacion->telefono 
-                    ? $cotizacion->telefono 
-                    : 'Sin teléfono',
-                'direccion' => isset($cotizacion->direccion_facturacion) && $cotizacion->direccion_facturacion 
-                    ? $cotizacion->direccion_facturacion 
-                    : 'Sin dirección',
-                'ciudad' => isset($cotizacion->ciudad_facturacion) && $cotizacion->ciudad_facturacion 
-                    ? $cotizacion->ciudad_facturacion 
-                    : 'Sin ciudad',
-                'region' => isset($cotizacion->region_facturacion) && $cotizacion->region_facturacion 
-                    ? $cotizacion->region_facturacion 
-                    : 'Sin región',
-                'giro' => isset($cotizacion->giro_comercial) && $cotizacion->giro_comercial 
-                    ? $cotizacion->giro_comercial 
-                    : 'Sin giro comercial'
+                'nombre' => $cotizacion->razon_social ?? 'Cliente sin nombre',
+                'rut' => $this->formatear_rut($cotizacion->rut ?? ''),
+                'email' => $cotizacion->email ?? '',
+                'telefono' => $cotizacion->telefono ?? '',
+                'direccion' => $cotizacion->direccion_facturacion ?? '',
+                'ciudad' => $cotizacion->ciudad_facturacion ?? '',
+                'region' => $cotizacion->region_facturacion ?? '',
+                'giro' => $cotizacion->giro_comercial ?? ''
             ),
-            
+
             'empresa' => array(
-                'nombre' => isset($datos_empresa->nombre) ? $datos_empresa->nombre : 'Sin nombre',
-                'direccion' => isset($datos_empresa->direccion) ? $datos_empresa->direccion : 'Sin dirección',
-                'ciudad' => isset($datos_empresa->ciudad) ? $datos_empresa->ciudad : 'Sin ciudad',
-                'region' => isset($datos_empresa->region) ? $datos_empresa->region : 'Sin región',
-                'telefono' => isset($datos_empresa->telefono) ? $datos_empresa->telefono : 'Sin teléfono',
-                'email' => isset($datos_empresa->email) ? $datos_empresa->email : 'Sin email',
-                'rut' => isset($datos_empresa->rut) ? $datos_empresa->rut : 'Sin RUT',
-                'sitio_web' => isset($datos_empresa->sitio_web) ? $datos_empresa->sitio_web : home_url()
+                'nombre' => $datos_empresa->nombre ?? 'Empresa',
+                'rut' => $datos_empresa->rut ?? '',
+                'direccion' => $datos_empresa->direccion ?? '',
+                'ciudad' => $datos_empresa->ciudad ?? '',
+                'region' => $datos_empresa->region ?? '',
+                'telefono' => $datos_empresa->telefono ?? '',
+                'email' => $datos_empresa->email ?? '',
+                'sitio_web' => $datos_empresa->sitio_web ?? home_url(),
+                'logo' => $this->generar_logo_empresa($datos_empresa), 
+                'info' => get_option('modulo_ventas_info_empresa', 'Información adicional de la empresa')
             ),
             
-            'productos' => $this->formatear_productos_cotizacion($items),
-            
+            'productos' => $productos, 
+        
             'totales' => array(
-                'subtotal' => isset($cotizacion->subtotal) ? floatval($cotizacion->subtotal) : 0,
-                'subtotal_formateado' => number_format(
-                    isset($cotizacion->subtotal) ? floatval($cotizacion->subtotal) : 0, 
-                    0, ',', '.'
-                ),
-                'descuento' => isset($cotizacion->descuento) ? floatval($cotizacion->descuento) : 0,
-                'descuento_formateado' => number_format(
-                    isset($cotizacion->descuento) ? floatval($cotizacion->descuento) : 0, 
-                    0, ',', '.'
-                ),
-                'impuestos' => isset($cotizacion->impuestos) ? floatval($cotizacion->impuestos) : 0,
-                'impuestos_formateado' => number_format(
-                    isset($cotizacion->impuestos) ? floatval($cotizacion->impuestos) : 0, 
-                    0, ',', '.'
-                ),
-                'total' => isset($cotizacion->total) ? floatval($cotizacion->total) : 0,
-                'total_formateado' => number_format(
-                    isset($cotizacion->total) ? floatval($cotizacion->total) : 0, 
-                    0, ',', '.'
-                ),
-                'descuento_porcentaje' => isset($cotizacion->descuento_porcentaje) ? floatval($cotizacion->descuento_porcentaje) : 0
+                'subtotal' => $subtotal, 
+                'subtotal_formateado' => '$' . number_format($subtotal, 0, ',', '.'),
+                'descuento' => $descuento, 
+                'descuento_formateado' => '$' . number_format($descuento, 0, ',', '.'),
+                'descuento_porcentaje' => isset($cotizacion->descuento_porcentaje) ? $cotizacion->descuento_porcentaje : 0,
+                'impuestos' => $impuestos, 
+                'impuestos_formateado' => '$' . number_format($impuestos, 0, ',', '.'),
+                'total' => $total,
+                'total_formateado' => '$' . number_format($total, 0, ',', '.'),
+                'moneda' => $cotizacion->moneda ?? 'CLP'
             ),
             
             'fechas' => array(
                 'hoy' => date('d/m/Y'),
-                'fecha_cotizacion' => date('d/m/Y', strtotime($cotizacion->fecha_creacion)),
-                'fecha_vencimiento_formateada' => isset($cotizacion->fecha_vencimiento) && $cotizacion->fecha_vencimiento 
-                    ? date('d/m/Y', strtotime($cotizacion->fecha_vencimiento)) 
-                    : date('d/m/Y', strtotime('+30 days'))
+                'fecha_cotizacion' => date('d/m/Y', strtotime($cotizacion->fecha)),
+                'fecha_vencimiento' => isset($cotizacion->fecha_expiracion) ? 
+                    date('d/m/Y', strtotime($cotizacion->fecha_expiracion)) : 
+                    date('d/m/Y', strtotime('+30 days')),
+                'mes_actual' => date('F'),
+                'año_actual' => date('Y')
             ),
             
-            // Variables adicionales
-            'logo_empresa' => isset($datos_empresa->logo) ? $datos_empresa->logo : '',
-            'info_empresa' => isset($datos_empresa->info_adicional) ? $datos_empresa->info_adicional : '',
-            'terminos_condiciones' => get_option('modulo_ventas_terminos_condiciones', 'Términos y condiciones de configuración')
+            'sistema' => array(
+                'usuario' => wp_get_current_user()->display_name,
+                'fecha_generacion' => date('d/m/Y H:i:s'),
+                'version' => '1.0'
+            )
         );
         
+        // ASIGNAR los datos formateados
+        $this->cotizacion_data = $datos_formatted;
+        
+        $this->logger->log("TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: {$cotizacion->id})");
+        
         return $datos_formatted;
+    }
+
+    /**
+     * Calcular totales desde cotización real
+     */
+    private function calcular_totales_desde_cotizacion($cotizacion) {
+        // CORREGIR: Inicializar todas las variables necesarias
+        $subtotal = isset($cotizacion->subtotal) ? floatval($cotizacion->subtotal) : 0;
+        $descuento = isset($cotizacion->descuento_monto) ? floatval($cotizacion->descuento_monto) : 0;
+        $impuestos = isset($cotizacion->impuesto_monto) ? floatval($cotizacion->impuesto_monto) : 0; // AGREGAR ESTA LÍNEA
+        $costo_envio = isset($cotizacion->costo_envio) ? floatval($cotizacion->costo_envio) : 0;
+        $total = isset($cotizacion->total) ? floatval($cotizacion->total) : 0;
+        
+        return array(
+            'subtotal' => $subtotal,
+            'subtotal_formateado' => '$' . number_format($subtotal, 0, ',', '.'),
+            'descuento' => $descuento,
+            'descuento_formateado' => '$' . number_format($descuento, 0, ',', '.'),
+            'impuestos' => $impuestos,
+            'impuestos_formateado' => '$' . number_format($impuestos, 0, ',', '.'),
+            'costo_envio' => $costo_envio,
+            'costo_envio_formateado' => '$' . number_format($costo_envio, 0, ',', '.'),
+            'total' => $total,
+            'total_formateado' => '$' . number_format($total, 0, ',', '.'),
+            'porcentaje_impuesto' => isset($cotizacion->impuesto_porcentaje) ? floatval($cotizacion->impuesto_porcentaje) : 19,
+            'incluye_iva' => isset($cotizacion->incluye_iva) ? (bool)$cotizacion->incluye_iva : true
+        );
     }
 
     /**
@@ -1047,17 +1384,21 @@ class Modulo_Ventas_PDF_Template_Processor {
         $datos_empresa->rut = get_option('modulo_ventas_rut_empresa', '');
         $datos_empresa->sitio_web = home_url();
         
-        // Logo
+        // CORREGIR: Logo con HTML img tag
         $logo_id = get_option('modulo_ventas_logo_empresa', '');
         if ($logo_id) {
             $logo_url = wp_get_attachment_url($logo_id);
-            $datos_empresa->logo = $logo_url ? $logo_url : '';
+            if ($logo_url) {
+                $datos_empresa->logo = '<img src="' . esc_url($logo_url) . '" alt="Logo empresa" style="max-height: 80px; width: auto;" />';
+            } else {
+                $datos_empresa->logo = '<div style="width: 100px; height: 80px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #666;">Sin logo</div>';
+            }
         } else {
-            $datos_empresa->logo = '';
+            $datos_empresa->logo = '<div style="width: 100px; height: 80px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #666;">Sin logo</div>';
         }
         
-        // Info adicional
-        $datos_empresa->info_adicional = get_option('modulo_ventas_info_empresa', '');
+        // AGREGAR: Info adicional
+        $datos_empresa->info = get_option('modulo_ventas_info_empresa', 'Información adicional de la empresa');
         
         return $datos_empresa;
     }
@@ -1277,5 +1618,60 @@ class Modulo_Ventas_PDF_Template_Processor {
         $numero = ltrim($numero, '.');
         
         return $numero . '-' . $dv;
+    }
+
+    /**
+     * NUEVO: Obtener items/productos de una cotización
+     */
+    private function obtener_items_cotizacion($cotizacion_id) {
+        global $wpdb;
+        
+        $tabla_items = $wpdb->prefix . 'mv_cotizaciones_items';
+        
+        // CORREGIR: Obtener items con JOIN a productos para obtener el código
+        $items = $wpdb->get_results($wpdb->prepare(
+            "SELECT 
+                ci.*,
+                p.post_title as nombre_producto,
+                pm1.meta_value as codigo_producto,
+                pm2.meta_value as descripcion_producto
+            FROM $tabla_items ci
+            LEFT JOIN {$wpdb->posts} p ON ci.producto_id = p.ID
+            LEFT JOIN {$wpdb->postmeta} pm1 ON p.ID = pm1.post_id AND pm1.meta_key = '_sku'
+            LEFT JOIN {$wpdb->postmeta} pm2 ON p.ID = pm2.post_id AND pm2.meta_key = '_product_short_description'
+            WHERE ci.cotizacion_id = %d 
+            ORDER BY ci.orden ASC",
+            $cotizacion_id
+        ));
+        
+        if (!$items) {
+            $this->logger->log("PROCESSOR: No se encontraron items para cotización {$cotizacion_id}");
+            return array();
+        }
+        
+        // Agregar campos faltantes a cada item
+        foreach ($items as $item) {
+            // Agregar código del producto
+            if (empty($item->codigo_producto)) {
+                $item->codigo = 'PROD-' . str_pad($item->producto_id, 3, '0', STR_PAD_LEFT);
+            } else {
+                $item->codigo = $item->codigo_producto;
+            }
+            
+            // Asegurar que tenga nombre
+            if (empty($item->nombre_producto)) {
+                $item->nombre_producto = 'Producto ID ' . $item->producto_id;
+            }
+            
+            // Agregar descripción si existe
+            if (!empty($item->descripcion_producto)) {
+                $item->descripcion = $item->descripcion_producto;
+            } elseif (empty($item->descripcion)) {
+                $item->descripcion = '';
+            }
+        }
+        
+        $this->logger->log("PROCESSOR: Encontrados " . count($items) . " items para cotización {$cotizacion_id}");
+        return $items;
     }
 }
