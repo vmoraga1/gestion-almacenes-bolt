@@ -1,0 +1,17 @@
+[2025-08-05 20:28:30] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | IP: ::1
+[2025-08-05 20:28:30] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | IP: ::1
+[2025-08-05 20:28:30] INFO: PROCESSOR: Procesando template con datos disponibles | IP: ::1
+[2025-08-05 20:28:30] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | IP: ::1
+[2025-08-05 20:28:30] INFO: PROCESSOR: Procesando CSS para visualización web | IP: ::1
+[2025-08-05 20:28:39] INFO: 3 cotizaciones marcadas como expiradas | IP: ::1
+[2025-08-05 20:28:39] INFO: Verificación automática: 3 cotizaciones marcadas como expiradas | IP: ::1
+[2025-08-05 20:28:44] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | IP: ::1
+[2025-08-05 20:28:44] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | IP: ::1
+[2025-08-05 20:28:44] INFO: PROCESSOR: Procesando template con datos disponibles | IP: ::1
+[2025-08-05 20:28:44] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | IP: ::1
+[2025-08-05 20:28:44] INFO: PROCESSOR: Procesando CSS para visualización web | IP: ::1
+[2025-08-05 20:29:44] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | IP: ::1
+[2025-08-05 20:29:44] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | IP: ::1
+[2025-08-05 20:29:44] INFO: PROCESSOR: Procesando template con datos disponibles | IP: ::1
+[2025-08-05 20:29:44] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | IP: ::1
+[2025-08-05 20:29:44] INFO: PROCESSOR: Procesando CSS para visualización web | IP: ::1

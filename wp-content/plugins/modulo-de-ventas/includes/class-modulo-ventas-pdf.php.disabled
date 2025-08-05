@@ -350,7 +350,7 @@ class Modulo_Ventas_PDF {
             $pdf->SetTitle('Cotización ' . $cotizacion->folio);
             
             $pdf->SetMargins(15, 27, 15);
-            $pdf->SetAutoPageBreak(TRUE, 25);
+            $pdf->SetAutoPageBreak(FALSE);
             $pdf->setPrintHeader(false);
             $pdf->setPrintFooter(false);
             
@@ -439,7 +439,7 @@ class Modulo_Ventas_PDF {
             $this->config['margen_derecho']
         );
         $pdf->SetHeaderMargin(5);
-        $pdf->SetFooterMargin(10);
+        $pdf->SetFooterMargin(5);
         $pdf->SetAutoPageBreak(TRUE, $this->config['margen_inferior']);
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
         
@@ -1043,7 +1043,7 @@ class Modulo_Ventas_PDF {
             // Configurar página para mejor rendering de HTML
             $pdf->SetMargins(10, 10, 10);  // Márgenes más pequeños
             $pdf->SetHeaderMargin(5);
-            $pdf->SetFooterMargin(10);
+            $pdf->SetFooterMargin(5);
             $pdf->SetAutoPageBreak(TRUE, 15);
             $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
             

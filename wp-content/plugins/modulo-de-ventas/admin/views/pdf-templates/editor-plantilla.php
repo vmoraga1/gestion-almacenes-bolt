@@ -56,17 +56,17 @@ $datos = array(
         </div>
     </div>
 
-    <!-- Vista Previa Mejorada - CON TOGGLE -->
+    <!-- Vista Previa Mejorada - CON TOGGLE --
     <div class="mv-panel">
         <h3 style="display: flex; align-items: center; gap: 8px;">
             <span class="dashicons dashicons-visibility" style="color: #0073aa;"></span>
             <?php _e('Vista Previa de Plantilla', 'modulo-ventas'); ?>
         </h3>
         
-        <!-- Controles Unificados CON TOGGLE -->
+        <-- Controles Unificados CON TOGGLE --
         <div class="mv-preview-controls" style="margin-bottom: 15px; padding: 15px; background: #fff; border-radius: 4px; border-left: 4px solid #0073aa;">
             
-            <!-- TOGGLE PARA TIPO DE DATOS - AGREGADO -->
+            <-- TOGGLE PARA TIPO DE DATOS - AGREGADO --
             <div style="margin-bottom: 15px; padding: 12px; background: #f8f9fa; border-radius: 4px; border: 1px solid #dee2e6;">
                 <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; margin-bottom: 8px;">
                     <input type="checkbox" id="usar-datos-reales" checked> 
@@ -79,10 +79,10 @@ $datos = array(
                 </div>
             </div>
             
-            <!-- Botones de Acción -->
+            <-- Botones de Acción --
             <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
                 
-                <!-- Actualizar Preview -->
+                <-- Actualizar Preview --
                 <button type="button" 
                         id="actualizar-preview" 
                         class="button button-primary"
@@ -91,7 +91,7 @@ $datos = array(
                     Actualizar Preview
                 </button>
                 
-                <!-- Abrir en Nueva Ventana -->
+                <-- Abrir en Nueva Ventana --
                 <button type="button" 
                         id="vista-previa-nueva-ventana" 
                         class="button button-secondary"
@@ -100,7 +100,7 @@ $datos = array(
                     Abrir en Nueva Ventana
                 </button>
                 
-                <!-- Generar PDF -->
+                <-- Generar PDF --
                 <button type="button" 
                         id="generar-pdf-preview" 
                         class="button button-secondary"
@@ -109,7 +109,7 @@ $datos = array(
                     Generar PDF
                 </button>
                 
-                <!-- Botón de Debug CSS (temporal) -->
+                <-- Botón de Debug CSS (temporal) --
                 <button type="button" 
                         id="debug-css-preview" 
                         class="button button-link"
@@ -120,16 +120,16 @@ $datos = array(
             </div>
         </div>
         
-        <!-- Área de Preview -->
+        <-- Área de Preview --
         <div id="preview-container" style="border: 1px solid #ccc; border-radius: 4px; min-height: 400px; background: #fff; position: relative;">
             
-            <!-- Estado de Carga -->
+            <-- Estado de Carga --
             <div id="preview-loading" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 10;">
                 <span class="dashicons dashicons-update-alt spin" style="font-size: 24px; color: #0073aa;"></span>
                 <p style="margin-top: 10px; color: #666;">Generando vista previa...</p>
             </div>
             
-            <!-- Contenido del Preview -->
+            <-- Contenido del Preview --
             <iframe id="preview-iframe" 
                     style="width: 100%; height: 600px; border: none; border-radius: 4px;"
                     srcdoc="<div style='padding: 40px; text-align: center; color: #666; font-family: Arial, sans-serif;'>
@@ -140,26 +140,26 @@ $datos = array(
                     </div>">
             </iframe>
             
-            <!-- Indicador de Tipo de Datos -->
+            <-- Indicador de Tipo de Datos --
             <div id="preview-data-badge" 
                 style="position: absolute; top: 10px; right: 10px; padding: 5px 10px; background: rgba(0,123,0,0.8); color: white; border-radius: 3px; font-size: 12px; z-index: 20;">
                 <span id="badge-text">Datos reales</span>
             </div>
             
-            <!-- Indicador de CSS -->
+            <-- Indicador de CSS --
             <div id="css-status-badge" 
                 style="position: absolute; top: 10px; left: 10px; padding: 5px 10px; background: rgba(0,0,255,0.8); color: white; border-radius: 3px; font-size: 12px; z-index: 20;">
                 <span id="css-status-text">CSS: ✓</span>
             </div>
         </div>
         
-        <!-- Información adicional -->
+        <-- Información adicional --
         <div id="preview-info" style="margin-top: 10px; padding: 10px; background: #f8f9fa; border-radius: 4px; font-size: 13px; display: none;">
             <div id="preview-info-content"></div>
         </div>
     </div>
 
-    <!-- Sección de botones de preview actualizada --
+    <-- Sección de botones de preview actualizada --
     <div class="mv-botones-preview" style="margin: 20px 0; padding: 15px; background: #f1f1f1; border-radius: 8px;">
         <h3 style="margin-bottom: 15px;">
             <span class="dashicons dashicons-visibility" style="margin-top: 3px;"></span>
@@ -735,26 +735,25 @@ jQuery(document).ready(function($) {
             return false;
         }
         
-        // Método 1: Usar srcdoc (preferido)
         try {
+            // Método simple y directo
             iframe.srcdoc = htmlContent;
             console.log('✅ HTML cargado usando srcdoc');
             return true;
         } catch (e) {
             console.log('⚠️ srcdoc falló, intentando método alternativo');
-        }
-        
-        // Método 2: Escribir directamente en el documento del iframe
-        try {
-            var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-            iframeDoc.open();
-            iframeDoc.write(htmlContent);
-            iframeDoc.close();
-            console.log('✅ HTML cargado usando write()');
-            return true;
-        } catch (e) {
-            console.error('❌ Error escribiendo en iframe:', e);
-            return false;
+            
+            try {
+                var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                iframeDoc.open();
+                iframeDoc.write(htmlContent);
+                iframeDoc.close();
+                console.log('✅ HTML cargado usando write()');
+                return true;
+            } catch (e2) {
+                console.error('❌ Error escribiendo en iframe:', e2);
+                return false;
+            }
         }
     }
     
@@ -825,45 +824,28 @@ jQuery(document).ready(function($) {
      * NUEVA: Combinar HTML y CSS para asegurar que los estilos se apliquen
      */
     function combinarHtmlYCss(htmlContent, cssContent) {
-        console.log('🎨 Combinando HTML y CSS...');
+        console.log('🎨 Aplicando fallback de combinación HTML+CSS');
         
-        // Si no hay CSS, devolver HTML tal como está
         if (!cssContent || cssContent.trim() === '') {
-            console.log('⚠️ No hay CSS para combinar');
             return htmlContent;
         }
         
-        // Si el HTML ya tiene estilos, no duplicar
-        if (htmlContent.indexOf('<style>') !== -1) {
-            console.log('ℹ️ HTML ya contiene estilos, no agregando CSS adicional');
-            return htmlContent;
-        }
+        var htmlCompleto = `<!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Vista Previa</title>
+        <style type="text/css">
+    ${cssContent}
+        </style>
+    </head>
+    <body>
+    ${htmlContent}
+    </body>
+    </html>`;
         
-        var htmlFinal = htmlContent;
-        
-        // Buscar donde insertar el CSS
-        var headEnd = htmlFinal.indexOf('</head>');
-        if (headEnd !== -1) {
-            // Insertar antes del cierre de head
-            var cssTag = '\n<style type="text/css">\n' + cssContent + '\n</style>\n';
-            htmlFinal = htmlFinal.substring(0, headEnd) + cssTag + htmlFinal.substring(headEnd);
-            console.log('✅ CSS insertado en <head>');
-        } else {
-            // Si no hay head, buscar body y agregar al inicio
-            var bodyStart = htmlFinal.indexOf('<body>');
-            if (bodyStart !== -1) {
-                var cssTag = '\n<style type="text/css">\n' + cssContent + '\n</style>\n';
-                htmlFinal = htmlFinal.substring(0, bodyStart + 6) + cssTag + htmlFinal.substring(bodyStart + 6);
-                console.log('✅ CSS insertado al inicio de <body>');
-            } else {
-                // Como último recurso, agregar al inicio del documento
-                var cssTag = '<style type="text/css">\n' + cssContent + '\n</style>\n';
-                htmlFinal = cssTag + htmlFinal;
-                console.log('✅ CSS insertado al inicio del documento');
-            }
-        }
-        
-        return htmlFinal;
+        return htmlCompleto;
     }
     
     /**
@@ -954,80 +936,45 @@ jQuery(document).ready(function($) {
                     success: response.success,
                     hasData: !!response.data,
                     hasHtml: !!(response.data && response.data.html),
+                    hasPreviewUrl: !!(response.data && response.data.preview_url),
                     htmlLength: response.data && response.data.html ? response.data.html.length : 0
                 });
                 
-                if (response.success && response.data && response.data.html) {
-                    var htmlRecibido = response.data.html;
+                if (response.success && response.data) {
                     
-                    // NUEVO: Combinar con CSS si es necesario
-                    var htmlConCss = combinarHtmlYCss(htmlRecibido, cssContent);
-                    
-                    // Validar HTML final
-                    var htmlValidado = validarHtmlParaIframe(htmlConCss);
-                    
-                    if (htmlValidado) {
-                        // Verificar procesamiento de variables
-                        var tieneVariablesSinProcesar = htmlValidado.indexOf('{{') !== -1;
-                        if (tieneVariablesSinProcesar) {
-                            console.warn('⚠️ Se detectaron variables sin procesar en el HTML');
-                            var variablesEncontradas = htmlValidado.match(/\{\{[^}]+\}\}/g);
-                            console.log('Variables sin procesar:', variablesEncontradas);
-                        }
+                    // NUEVA LÓGICA: Usar URL si está disponible
+                    if (response.data.preview_url) {
+                        console.log('🎯 Usando URL del archivo generado:', response.data.preview_url);
                         
-                        // Cargar en iframe
-                        var cargaExitosa = escribirHtmlEnIframe(htmlValidado);
+                        var iframe = document.getElementById('preview-iframe');
+                        if (iframe) {
+                            // Cargar URL directamente en iframe
+                            iframe.src = response.data.preview_url;
+                            console.log('✅ URL cargada en iframe via src');
+                            
+                            // Limpiar srcdoc para evitar conflictos
+                            iframe.removeAttribute('srcdoc');
+                            
+                            mostrarInfoPreview('✅ Preview actualizado usando archivo temporal', 'success');
+                            
+                            return; // Salir aquí, no procesar HTML
+                        }
+                    }
+                    
+                    // FALLBACK: Usar HTML si no hay URL
+                    if (response.data.html) {
+                        console.log('⚠️ Fallback: Usando HTML directamente');
+                        var cargaExitosa = escribirHtmlEnIframe(response.data.html);
                         
                         if (cargaExitosa) {
-                            setTimeout(function() {
-                                var iframe = document.getElementById('preview-iframe');
-                                if (iframe && iframe.contentWindow) {
-                                    try {
-                                        // Forzar re-renderizado
-                                        iframe.contentWindow.document.body.style.display = 'none';
-                                        iframe.contentWindow.document.body.offsetHeight; // trigger reflow
-                                        iframe.contentWindow.document.body.style.display = '';
-                                        
-                                        console.log('🔄 Forzado re-renderizado del iframe');
-                                    } catch (e) {
-                                        console.log('⚠️ No se pudo forzar re-renderizado:', e);
-                                    }
-                                }
-                            }, 100);
-                            
-                            // Verificar si los estilos se aplicaron
-                            var tieneCss = htmlValidado.indexOf('<style>') !== -1;
-                            console.log('🎨 CSS detectado en HTML final:', tieneCss);
-                            
-                            // Actualizar indicadores visuales si existen
-                            if ($('#css-status-text').length > 0) {
-                                $('#css-status-text').text('CSS: ' + (tieneCss ? '✓' : '❌'));
-                            }
-                            if ($('#css-status-badge').length > 0) {
-                                $('#css-status-badge').css('background', tieneCss ? 'rgba(0,128,0,0.8)' : 'rgba(255,0,0,0.8)');
-                            }
-                            
-                            // Mostrar información de éxito
-                            var mensaje = response.data.mensaje || 'Preview actualizado correctamente';
-                            if (tieneVariablesSinProcesar) {
-                                mensaje += ' (⚠ Variables sin procesar detectadas)';
-                            }
-                            if (!tieneCss) {
-                                mensaje += ' (⚠ CSS no detectado en HTML final)';
-                            } else {
-                                mensaje += ' (✓ CSS aplicado)';
-                            }
-                            
-                            mostrarInfoPreview(mensaje, 'success');
-                            console.log('✅ Preview actualizado exitosamente');
-                            
+                            mostrarInfoPreview('✅ Preview actualizado (fallback HTML)', 'success');
                         } else {
                             mostrarError('Error cargando HTML en iframe');
                         }
-                    } else {
-                        mostrarError('HTML recibido no es válido');
                     }
+                    
                 } else {
+                    // AGREGAR: Manejo de error cuando response no es exitoso
                     var errorMsg = 'Error en la respuesta del servidor';
                     if (response.data && response.data.message) {
                         errorMsg = response.data.message;
@@ -1040,8 +987,8 @@ jQuery(document).ready(function($) {
                     if (response.data && response.data.debug) {
                         console.log('🐛 Debug info:', response.data.debug);
                     }
-                }
-            },
+                } // CERRAR el else del if principal
+            }, // CERRAR success
             error: function(xhr, status, error) {
                 console.error('❌ Error AJAX completo:', {
                     status: status,
@@ -1070,43 +1017,41 @@ jQuery(document).ready(function($) {
                 mostrarError(errorMsg);
                 
                 // Mostrar mensaje específico en el iframe
-                var errorHtml = `
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <style>
-                            body { font-family: Arial, sans-serif; margin: 0; padding: 40px; background: #f8f9fa; }
-                            .error-container { 
-                                text-align: center; 
-                                color: #721c24; 
-                                background: #f8d7da; 
-                                border: 1px solid #f5c6cb; 
-                                border-radius: 5px; 
-                                padding: 40px; 
-                                max-width: 500px; 
-                                margin: 0 auto; 
-                            }
-                            h3 { margin-top: 0; color: #721c24; }
-                            p { margin: 10px 0; }
-                            small { color: #6c757d; }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="error-container">
-                            <h3>❌ Error cargando vista previa</h3>
-                            <p><strong>Error:</strong> ${errorMsg}</p>
-                            <p><small>Revisa la consola del navegador (F12) para más detalles</small></p>
-                        </div>
-                    </body>
-                    </html>
-                `;
+                var errorHtml = `<!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 0; padding: 40px; background: #f8f9fa; }
+                .error-container { 
+                    text-align: center; 
+                    color: #721c24; 
+                    background: #f8d7da; 
+                    border: 1px solid #f5c6cb; 
+                    border-radius: 5px; 
+                    padding: 40px; 
+                    max-width: 500px; 
+                    margin: 0 auto; 
+                }
+                h3 { margin-top: 0; color: #721c24; }
+                p { margin: 10px 0; }
+                small { color: #6c757d; }
+            </style>
+        </head>
+        <body>
+            <div class="error-container">
+                <h3>❌ Error cargando vista previa</h3>
+                <p><strong>Error:</strong> ${errorMsg}</p>
+                <p><small>Revisa la consola del navegador (F12) para más detalles</small></p>
+            </div>
+        </body>
+        </html>`;
                 escribirHtmlEnIframe(errorHtml);
-            },
+            }, // CERRAR error
             complete: function() {
                 previewActualizandose = false;
                 mostrarCargando(false);
                 console.log('🏁 Petición AJAX completada');
-            }
+            } // CERRAR complete
         });
     }
     

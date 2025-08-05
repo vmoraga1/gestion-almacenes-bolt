@@ -81,13 +81,22 @@ class Modulo_Ventas_PDF_Template_Processor {
      * Procesar template HTML con los datos cargados
      */
     public function procesar_template($html_content) {
+        // CORREGIR: Verificar que hay datos cargados
+        if (empty($this->datos) && !empty($this->cotizacion_data)) {
+            $this->datos = $this->cotizacion_data;
+            $this->logger->log("PROCESSOR: Sincronizando datos desde cotizacion_data");
+        }
+
         // AGREGAR: Verificar que hay datos cargados
         if (empty($this->datos)) {
-            $this->logger->log("PROCESSOR: ERROR - No hay datos cargados para procesar template", 'error');
+            error_log("PROCESSOR: ERROR - No hay datos cargados para procesar template");
             return $html_content; // Devolver contenido sin procesar
         }
         
+        error_log("PROCESSOR: Procesando template con datos disponibles");
+
         $this->logger->log("PROCESSOR: Procesando template con datos disponibles");
+        $this->logger->log("PROCESSOR: Claves principales: " . implode(', ', array_keys($this->datos)));
         
         // Continuar con el procesamiento normal...
         return $this->procesar_contenido($html_content);
@@ -98,25 +107,25 @@ class Modulo_Ventas_PDF_Template_Processor {
      */
     public function procesar_css($css_content) {
         if (empty($css_content)) {
-            $this->logger->log("PROCESSOR: CSS vacío recibido");
+            error_log("PROCESSOR: CSS vacío recibido");
             return '';
         }
         
-        $this->logger->log("PROCESSOR: Procesando CSS de " . strlen($css_content) . " caracteres");
+        error_log("PROCESSOR: Procesando CSS de " . strlen($css_content) . " caracteres");
         
         // Remover tags <style> si están presentes (evitar anidamiento)
         $css_limpio = $css_content;
         if (strpos($css_limpio, '<style>') !== false) {
             $css_limpio = preg_replace('/<style[^>]*>/', '', $css_limpio);
             $css_limpio = str_replace('</style>', '', $css_limpio);
-            $this->logger->log("PROCESSOR: Removidos tags <style> anidados");
+            error_log("PROCESSOR: Removidos tags <style> anidados");
         }
         
         // Procesar variables si las hay
         $css_procesado = $this->procesar_contenido($css_limpio);
         
         $resultado = trim($css_procesado);
-        $this->logger->log("PROCESSOR: CSS procesado - " . strlen($resultado) . " caracteres finales");
+        error_log("PROCESSOR: CSS procesado - " . strlen($resultado) . " caracteres finales");
         
         return $resultado;
     }
@@ -206,8 +215,40 @@ class Modulo_Ventas_PDF_Template_Processor {
     }
     
     /**
-     * Procesar plantilla completa con datos de cotización
+     * Procesar plantilla completa para visualización web
      */
+    public function procesar_plantilla($html_content, $datos, $tipo = 'cotizacion') {
+        $this->logger->log("PROCESSOR: Procesando plantilla para visualización web - tipo: {$tipo}");
+        
+        // Cargar datos
+        if (is_numeric($datos)) {
+            // Si es un ID, cargar datos de la base de datos
+            $this->cargar_datos_documento($tipo, $datos);
+        } elseif (is_array($datos) || is_object($datos)) {
+            // Si son datos directos, cargarlos
+            $this->cargar_datos($datos);
+        } else {
+            throw new Exception('Datos inválidos para procesar plantilla');
+        }
+        
+        if (!$this->tiene_datos()) {
+            throw new Exception('No se pudieron cargar los datos para la plantilla');
+        }
+        
+        // Procesar contenido HTML
+        $html_procesado = $this->procesar_contenido($html_content);
+        
+        // Optimizar para web
+        $html_optimizado = $this->optimizar_html_para_web($html_procesado);
+        
+        $this->logger->log("PROCESSOR: Plantilla procesada exitosamente para web");
+        
+        return $html_optimizado;
+    }
+
+    /*
+     * Procesar plantilla completa con datos de cotización
+     *
     public function procesar_plantilla($plantilla, $cotizacion_id, $tipo = 'cotizacion') {
         $this->logger->log("TEMPLATE_PROCESSOR: Procesando plantilla ID {$plantilla->id} para cotización {$cotizacion_id}");
         
@@ -230,7 +271,7 @@ class Modulo_Ventas_PDF_Template_Processor {
         $this->logger->log("TEMPLATE_PROCESSOR: Plantilla procesada exitosamente");
         
         return $documento_final;
-    }
+    }*/
     
     /**
      * Procesar plantilla con datos de prueba para preview
@@ -252,12 +293,17 @@ class Modulo_Ventas_PDF_Template_Processor {
     /**
      * Cargar datos reales de cotización
      */
-    private function cargar_datos_cotizacion($cotizacion_id) {
+    public function cargar_datos_cotizacion($cotizacion_id) {
         global $wpdb;
         
         $tabla_cotizaciones = $wpdb->prefix . 'mv_cotizaciones';
         $tabla_detalles = $wpdb->prefix . 'mv_cotizaciones_items'; // ← NOMBRE CORRECTO
         $tabla_clientes = $wpdb->prefix . 'mv_clientes';
+
+        $empresa_data = array(
+            'nombre' => get_option('blogname', 'Mi Empresa'),
+            'logo' => get_option('modulo_ventas_logo_empresa', '')
+        );
         
         // Cargar cotización principal con nombres de columnas REALES
         $cotizacion = $wpdb->get_row($wpdb->prepare(
@@ -305,9 +351,12 @@ class Modulo_Ventas_PDF_Template_Processor {
             // Datos de la cotización
             'cotizacion' => array(
                 'id' => $cotizacion->id,
+                'folio' => isset($cotizacion->folio) ? $cotizacion->folio : 'COT-' . str_pad($cotizacion->id, 6, '0', STR_PAD_LEFT),
                 'numero' => isset($cotizacion->folio) ? $cotizacion->folio : $cotizacion->id,
                 'fecha' => isset($cotizacion->fecha) ? $cotizacion->fecha : $cotizacion->fecha_creacion,
-                'fecha_vencimiento' => isset($cotizacion->fecha_expiracion) ? $cotizacion->fecha_expiracion : null,
+                'fecha_expiracion' => isset($cotizacion->fecha_expiracion) && $cotizacion->fecha_expiracion ? 
+                                    date('d/m/Y', strtotime($cotizacion->fecha_expiracion)) : 
+                                    date('d/m/Y', strtotime('+30 days')),
                 'estado' => $cotizacion->estado,
                 'observaciones' => isset($cotizacion->observaciones) ? $cotizacion->observaciones : '',
                 'notas_internas' => isset($cotizacion->notas_internas) ? $cotizacion->notas_internas : '',
@@ -336,7 +385,20 @@ class Modulo_Ventas_PDF_Template_Processor {
             ),
             
             // Datos de la empresa
-            'empresa' => $this->obtener_datos_empresa(),
+            'empresa' => array(
+                'nombre' => get_option('blogname', 'Mi Empresa'),
+                'rut' => get_option('modulo_ventas_rut_empresa', '12.345.678-9'),
+                'direccion' => get_option('modulo_ventas_direccion_empresa', 'Dirección de la empresa'),
+                'ciudad' => get_option('modulo_ventas_ciudad_empresa', 'Santiago'),
+                'region' => get_option('modulo_ventas_region_empresa', 'Región Metropolitana'),
+                'telefono' => get_option('modulo_ventas_telefono_empresa', '+56 2 1234 5678'),
+                'email' => get_option('modulo_ventas_email_empresa', 'contacto@empresa.cl'),
+                'sitio_web' => get_option('home', home_url()),
+                
+                // USAR función existente:
+                'logo_empresa' => '',
+                'info' => get_option('modulo_ventas_info_empresa', 'Información adicional de la empresa')
+            ),
             
             // Productos/servicios - usar $es_demo = false para procesar productos reales
             'productos' => $this->procesar_detalles_productos($detalles, false),
@@ -349,6 +411,13 @@ class Modulo_Ventas_PDF_Template_Processor {
                 'mes_actual' => current_time('F'),
                 'año_actual' => current_time('Y')
             ),
+
+            'sistema' => array(
+                'version' => '1.0',
+                'usuario' => wp_get_current_user()->display_name ?: 'Sistema',
+                'fecha_generacion' => current_time('d/m/Y H:i'),
+                'host' => $_SERVER['HTTP_HOST'] ?? 'localhost'
+            ),
             
             // Totales formateados
             'totales' => array(
@@ -359,7 +428,12 @@ class Modulo_Ventas_PDF_Template_Processor {
                 'descuento_porcentaje' => $subtotal > 0 ? round(($descuento / $subtotal) * 100, 1) : 0
             )
         );
+        // CORREGIR: Sincronizar las dos propiedades
+        $this->datos = $this->cotizacion_data;
         
+        $this->logger->log("TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos");
+        $this->logger->log("TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: " . ($this->tiene_datos() ? 'TRUE' : 'FALSE'));
+                
         return true;
     }
 
@@ -449,10 +523,15 @@ class Modulo_Ventas_PDF_Template_Processor {
         $this->cotizacion_data = array(
             // Datos de la cotización - MISMA ESTRUCTURA que cargar_datos_cotizacion()
             'cotizacion' => array(
-                'id' => 1001,
-                'numero' => 'COT-2025-001',
+                'id' => $cotizacion->id,
+                'numero' => isset($cotizacion->folio) ? $cotizacion->folio : $cotizacion->id,
+                'folio' => isset($cotizacion->folio) ? $cotizacion->folio : 'COT-' . str_pad($cotizacion->id, 6, '0', STR_PAD_LEFT),
                 'fecha' => current_time('Y-m-d H:i:s'),
-                'fecha_vencimiento' => date('Y-m-d', strtotime('+30 days')),
+                'fecha_expiracion' => isset($cotizacion->fecha_vencimiento) && $cotizacion->fecha_vencimiento ? 
+                        date('d/m/Y', strtotime($cotizacion->fecha_vencimiento)) : 
+                        (isset($cotizacion->fecha_expiracion) && $cotizacion->fecha_expiracion ? 
+                        date('d/m/Y', strtotime($cotizacion->fecha_expiracion)) : 
+                        date('d/m/Y', strtotime('+30 days'))), // Fallback: 30 días desde hoy
                 'estado' => 'pendiente',
                 'observaciones' => 'Esta es una cotización de ejemplo generada automáticamente para mostrar el diseño de la plantilla PDF.',
                 'notas_internas' => 'Notas internas solo para uso del equipo de ventas.',
@@ -483,13 +562,15 @@ class Modulo_Ventas_PDF_Template_Processor {
             // Datos de la empresa - DIRECTO sin llamar métodos que puedan fallar
             'empresa' => array(
                 'nombre' => get_option('blogname', 'Mi Empresa'),
-                'direccion' => 'Av. Empresarial 456, Santiago',
-                'ciudad' => 'Santiago',
-                'region' => 'Región Metropolitana',
-                'telefono' => '+56 2 2345 6789',
-                'email' => get_option('admin_email', 'empresa@ejemplo.com'),
-                'rut' => '98.765.432-1',
-                'sitio_web' => get_option('siteurl')
+                'rut' => get_option('mv_empresa_rut', '12.345.678-9'),
+                'direccion' => get_option('mv_empresa_direccion', 'Dirección de la empresa'),
+                'ciudad' => get_option('mv_empresa_ciudad', 'Santiago'),
+                'region' => get_option('mv_empresa_region', 'Región Metropolitana'),
+                'telefono' => get_option('mv_empresa_telefono', '+56 2 1234 5678'),
+                'email' => get_option('admin_email', 'contacto@empresa.cl'),
+                'sitio_web' => get_option('home', home_url()),
+                'logo' => $this->procesar_logo_empresa(),
+                'info' => get_option('modulo_ventas_info_empresa')
             ),
             
             // Productos - DIRECTAMENTE procesados, sin llamar a métodos externos
@@ -502,6 +583,13 @@ class Modulo_Ventas_PDF_Template_Processor {
                 'fecha_vencimiento_formateada' => date('d/m/Y', strtotime('+30 days')),
                 'mes_actual' => date_i18n('F'),
                 'año_actual' => current_time('Y')
+            ),
+
+            'sistema' => array(
+                'version' => '1.0',
+                'usuario' => wp_get_current_user()->display_name ? wp_get_current_user()->display_name : 'Sistema',
+                'fecha_generacion' => current_time('d/m/Y H:i'),
+                'host' => $_SERVER['HTTP_HOST'] ?? 'localhost'
             ),
             
             // Totales formateados
@@ -744,7 +832,8 @@ class Modulo_Ventas_PDF_Template_Processor {
                 return $this->generar_tabla_productos();
                 
             case 'logo_empresa':
-                return $this->procesar_logo_empresa($valor);
+                $datos_empresa = (object)array('nombre' => get_option('blogname', 'Mi Empresa'));
+                return $this->generar_logo_empresa($datos_empresa);
                 
             case 'fecha_actual':
                 return current_time('d/m/Y');
@@ -830,14 +919,29 @@ class Modulo_Ventas_PDF_Template_Processor {
      * NUEVO: Generar HTML del logo de la empresa
      */
     private function generar_logo_empresa($datos_empresa) {
-        $logo_id = get_option('modulo_ventas_logo_empresa', '');
+        $logo_url = '';
         
-        if ($logo_id) {
-            $logo_url = wp_get_attachment_url($logo_id);
-            if ($logo_url) {
-                $nombre_empresa = isset($datos_empresa->nombre) ? $datos_empresa->nombre : 'Empresa';
-                return '<img src="' . esc_url($logo_url) . '" alt="Logo ' . esc_attr($nombre_empresa) . '" style="max-height: 80px; max-width: 200px; width: auto; height: auto;" />';
+        // Buscar logo en el sistema nuevo primero
+        $config = get_option('mv_pdf_config', array());
+        if (isset($config['empresa_logo']) && !empty($config['empresa_logo'])) {
+            $logo_url = $config['empresa_logo'];
+        } else {
+            // Fallback al sistema antiguo
+            $logo_id = get_option('modulo_ventas_logo_empresa', '');
+            if ($logo_id) {
+                // Si es un ID de attachment
+                if (is_numeric($logo_id)) {
+                    $logo_url = wp_get_attachment_url($logo_id);
+                } else {
+                    // Si es una URL directa
+                    $logo_url = $logo_id;
+                }
             }
+        }
+        
+        if ($logo_url) {
+            $nombre_empresa = isset($datos_empresa->nombre) ? $datos_empresa->nombre : 'Empresa';
+            return '<img src="' . esc_url($logo_url) . '" alt="Logo ' . esc_attr($nombre_empresa) . '" style="max-height: 80px; max-width: 200px; width: auto; height: auto;" />';
         }
         
         // Fallback: placeholder del logo
@@ -854,117 +958,113 @@ class Modulo_Ventas_PDF_Template_Processor {
      * Generar documento HTML final
      */
     public function generar_documento_final($html_procesado, $css_procesado) {
-        $this->logger->log("PREVIEW: === INICIO GENERAR_DOCUMENTO_FINAL ===");
-        $this->logger->log("PREVIEW: HTML recibido: " . strlen($html_procesado) . " caracteres");
-        $this->logger->log("PREVIEW: CSS recibido: " . strlen($css_procesado) . " caracteres");
+        error_log("PREVIEW: === INICIO GENERAR_DOCUMENTO_FINAL ===");
+        error_log("PREVIEW: HTML recibido: " . strlen($html_procesado) . " caracteres");
+        error_log("PREVIEW: CSS recibido: " . strlen($css_procesado) . " caracteres");
         
         // Verificar contenido recibido
         $html_valido = !empty($html_procesado) && strlen(trim($html_procesado)) > 10;
         $css_valido = !empty($css_procesado) && strlen(trim($css_procesado)) > 10;
         
-        $this->logger->log("PREVIEW: HTML válido: " . ($html_valido ? 'SI' : 'NO'));
-        $this->logger->log("PREVIEW: CSS válido: " . ($css_valido ? 'SI' : 'NO'));
-        
-        // Si no hay HTML válido, usar contenido de prueba
-        if (!$html_valido) {
-            $html_procesado = '<div class="documento"><h1>Error: No hay contenido HTML para mostrar</h1></div>';
-            $this->logger->log("PREVIEW: USANDO HTML DE FALLBACK");
-        }
+        error_log("PREVIEW: HTML válido: " . ($html_valido ? 'SI' : 'NO'));
+        error_log("PREVIEW: CSS válido: " . ($css_valido ? 'SI' : 'NO'));
         
         // Limpiar CSS de posibles tags anidados
-        $css_limpio = $css_procesado;
-        if (strpos($css_limpio, '<style>') !== false) {
-            $css_limpio = preg_replace('/<style[^>]*>/', '', $css_limpio);
-            $css_limpio = str_replace('</style>', '', $css_limpio);
-            $this->logger->log("PREVIEW: CSS contenía tags <style> anidados - removidos");
+        $css_limpio = '';
+        if ($css_valido) {
+            $css_limpio = $css_procesado;
+            if (strpos($css_limpio, '<style>') !== false) {
+                $css_limpio = preg_replace('/<style[^>]*>/', '', $css_limpio);
+                $css_limpio = str_replace('</style>', '', $css_limpio);
+                error_log("PREVIEW: CSS contenía tags <style> anidados - removidos");
+            }
+            $css_limpio = trim($css_limpio);
         }
         
-        // Construir documento HTML completo
-        $documento = '<!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Vista Previa - Plantilla PDF</title>';
+        // CONSTRUIR DOCUMENTO PASO A PASO
+        $partes_documento = array();
         
-        // SIEMPRE agregar CSS (con fallback si no existe)
-        if ($css_valido && !empty(trim($css_limpio))) {
-            $documento .= '
-        <style type="text/css">
-    /* CSS de la plantilla */
-    ' . trim($css_limpio) . '
-        </style>';
-            $this->logger->log("PREVIEW: CSS de plantilla agregado (" . strlen(trim($css_limpio)) . " caracteres)");
+        // 1. DOCTYPE y apertura HTML
+        $partes_documento[] = '<!DOCTYPE html>';
+        $partes_documento[] = '<html lang="es">';
+        $partes_documento[] = '<head>';
+        $partes_documento[] = '    <meta charset="UTF-8">';
+        $partes_documento[] = '    <meta name="viewport" content="width=device-width, initial-scale=1.0">';
+        $partes_documento[] = '    <title>Vista Previa - Plantilla PDF</title>';
+        
+        // 2. Agregar CSS
+        if ($css_valido && !empty($css_limpio)) {
+            $partes_documento[] = '    <style type="text/css">';
+            $partes_documento[] = '/* CSS de la plantilla */';
+            $partes_documento[] = $css_limpio;
+            $partes_documento[] = '    </style>';
+            error_log("PREVIEW: CSS agregado como partes separadas (" . strlen($css_limpio) . " caracteres)");
         } else {
             // CSS básico de fallback
-            $documento .= '
-        <style type="text/css">
-    /* CSS de fallback */
-    body { 
-        font-family: Arial, sans-serif; 
-        margin: 20px; 
-        line-height: 1.4; 
-        color: #333; 
-    }
-    .documento { 
-        max-width: 800px; 
-        margin: 0 auto; 
-        padding: 20px; 
-        background: white; 
-    }
-    table { 
-        border-collapse: collapse; 
-        width: 100%; 
-        margin: 10px 0; 
-    }
-    td, th { 
-        padding: 8px; 
-        border: 1px solid #ddd; 
-        text-align: left; 
-    }
-    .header { 
-        background: #f5f5f5; 
-        padding: 20px; 
-        margin-bottom: 20px; 
-        border-bottom: 2px solid #ccc; 
-    }
-    .productos-tabla { 
-        width: 100%; 
-        border-collapse: collapse; 
-    }
-    .productos-tabla th { 
-        background: #f0f0f0; 
-        font-weight: bold; 
-    }
-        </style>';
-            $this->logger->log("PREVIEW: CSS de fallback aplicado (no había CSS válido)");
+            $partes_documento[] = '    <style type="text/css">';
+            $partes_documento[] = '/* CSS de fallback */';
+            $partes_documento[] = 'body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.4; color: #333; background: #f9f9f9; }';
+            $partes_documento[] = '.documento { max-width: 800px; margin: 0 auto; padding: 20px; background: white; border: 1px solid #ddd; border-radius: 5px; }';
+            $partes_documento[] = 'table { border-collapse: collapse; width: 100%; margin: 10px 0; }';
+            $partes_documento[] = 'td, th { padding: 8px; border: 1px solid #ddd; text-align: left; }';
+            $partes_documento[] = '.header { background: #f5f5f5; padding: 20px; margin-bottom: 20px; border-bottom: 2px solid #ccc; }';
+            $partes_documento[] = '.productos-tabla { width: 100%; border-collapse: collapse; }';
+            $partes_documento[] = '.productos-tabla th { background: #f0f0f0; font-weight: bold; }';
+            $partes_documento[] = '    </style>';
+            error_log("PREVIEW: CSS de fallback agregado como partes separadas");
         }
         
-        $documento .= '
-    </head>
-    <body>
-    ' . $html_procesado . '
-    </body>
-    </html>';
+        // 3. Cerrar head y abrir body
+        $partes_documento[] = '</head>';
+        $partes_documento[] = '<body>';
         
-        // Verificaciones finales
+        // 4. Agregar contenido HTML
+        if ($html_valido) {
+            $partes_documento[] = $html_procesado;
+        } else {
+            $partes_documento[] = '<div class="documento">';
+            $partes_documento[] = '    <h1>Error: No hay contenido HTML para mostrar</h1>';
+            $partes_documento[] = '    <p>HTML recibido: ' . strlen($html_procesado) . ' caracteres</p>';
+            $partes_documento[] = '</div>';
+            error_log("PREVIEW: USANDO HTML DE FALLBACK");
+        }
+        
+        // 5. Cerrar body y html
+        $partes_documento[] = '</body>';
+        $partes_documento[] = '</html>';
+        
+        // 6. ENSAMBLAR DOCUMENTO FINAL
+        $documento = implode("\n", $partes_documento);
+        
+        // Verificaciones finales CORREGIDAS
         $longitud_total = strlen($documento);
-        $contiene_style = strpos($documento, '<style>') !== false;
+        $contiene_style = strpos($documento, '<style') !== false;  // CORREGIDO: sin >
         $contiene_style_close = strpos($documento, '</style>') !== false;
         $contiene_body = strpos($documento, '<body>') !== false && strpos($documento, '</body>') !== false;
-        
-        $this->logger->log("PREVIEW: === RESULTADO FINAL ===");
-        $this->logger->log("PREVIEW: Longitud total: {$longitud_total} caracteres");
-        $this->logger->log("PREVIEW: Contiene <style>: " . ($contiene_style ? 'SI' : 'NO'));
-        $this->logger->log("PREVIEW: Contiene </style>: " . ($contiene_style_close ? 'SI' : 'NO'));
-        $this->logger->log("PREVIEW: Estructura body válida: " . ($contiene_body ? 'SI' : 'NO'));
-        
-        // Log final para el debug principal
+
+        error_log("PREVIEW: === RESULTADO FINAL ===");
+        error_log("PREVIEW: Longitud total: {$longitud_total} caracteres");
+        error_log("PREVIEW: Contiene <style: " . ($contiene_style ? 'SI' : 'NO'));
+        error_log("PREVIEW: Contiene </style>: " . ($contiene_style_close ? 'SI' : 'NO'));
+        error_log("PREVIEW: Estructura body válida: " . ($contiene_body ? 'SI' : 'NO'));
+
+        // DEBUG ADICIONAL: Mostrar primeros 500 caracteres del documento
+        error_log("PREVIEW: Primeros 500 caracteres del documento:");
+        error_log(substr($documento, 0, 500));
+
+        // Log final para el debug principal - SOLO UNA VEZ
         $css_final = $contiene_style && $contiene_style_close ? 'SI' : 'NO';
         $contenido_final = $html_valido ? 'SI' : 'NO';
-        $this->logger->log("PREVIEW: Documento final - Longitud: {$longitud_total}, CSS: {$css_final}, Contenido: {$contenido_final}");
-        
+        error_log("PREVIEW: DOCUMENTO FINAL DEFINITIVO - Longitud: {$longitud_total}, CSS: {$css_final}, Contenido: {$contenido_final}");
+
         return $documento;
+
+        // TEST TEMPORAL: Guardar archivo para inspección directa
+        $upload_dir = wp_upload_dir();
+        $test_path = $upload_dir['basedir'] . '/debug-documento.html';
+        file_put_contents($test_path, $documento);
+        $test_url = $upload_dir['baseurl'] . '/debug-documento.html';
+        error_log("PREVIEW: Documento guardado para test en: {$test_url}");
     }
 
     /**
@@ -1299,7 +1399,7 @@ class Modulo_Ventas_PDF_Template_Processor {
                 'email' => $datos_empresa->email ?? '',
                 'sitio_web' => $datos_empresa->sitio_web ?? home_url(),
                 'logo' => $this->generar_logo_empresa($datos_empresa), 
-                'info' => get_option('modulo_ventas_info_empresa', 'Información adicional de la empresa')
+                'info' => get_option('modulo_ventas_info_empresa')
             ),
             
             'productos' => $productos, 
@@ -1673,5 +1773,559 @@ class Modulo_Ventas_PDF_Template_Processor {
         
         $this->logger->log("PROCESSOR: Encontrados " . count($items) . " items para cotización {$cotizacion_id}");
         return $items;
+    }
+
+    /**
+     * Procesar CSS específicamente para visualización web
+     */
+    public function procesar_css_para_web($css_content) {
+        $this->logger->log("PROCESSOR: Procesando CSS para visualización web");
+        
+        // Limpiar CSS básico
+        $css_limpio = $this->limpiar_css_base($css_content);
+        
+        // Aplicar optimizaciones web
+        $css_web = $this->aplicar_optimizaciones_web($css_limpio);
+        
+        // Agregar estilos responsivos
+        $css_responsivo = $this->agregar_estilos_responsivos($css_web);
+        
+        return $css_responsivo;
+    }
+
+    /**
+     * Procesar CSS para impresión desde navegador
+     */
+    public function procesar_css_para_impresion($css_content) {
+        $this->logger->log("PROCESSOR: Procesando CSS para impresión");
+        
+        // Procesar primero para web
+        $css_web = $this->procesar_css_para_web($css_content);
+        
+        // Agregar optimizaciones de impresión
+        $css_impresion = $this->agregar_estilos_impresion($css_web);
+        
+        return $css_impresion;
+    }
+
+    /**
+     * Limpiar CSS básico (versión mejorada)
+     */
+    private function limpiar_css_base($css) {
+        // Remover comentarios
+        $css = preg_replace('/\/\*.*?\*\//s', '', $css);
+        
+        // Normalizar espacios
+        $css = preg_replace('/\s+/', ' ', $css);
+        
+        // Remover espacios alrededor de llaves y dos puntos
+        $css = str_replace(array(' {', '{ ', '} ', ' }', ' :', ': ', ' ;', '; '), 
+                        array('{', '{', '}', '}', ':', ':', ';', ';'), $css);
+        
+        return trim($css);
+    }
+
+    /**
+     * Aplicar optimizaciones específicas para web
+     */
+    private function aplicar_optimizaciones_web($css) {
+        $optimizaciones = array(
+            // Mejorar renderizado de fuentes
+            'body' => 'font-display: swap; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;',
+            
+            // Optimizar imágenes
+            'img' => 'max-width: 100%; height: auto; display: block;',
+            
+            // Mejorar tablas
+            'table' => 'border-collapse: collapse; width: 100%;',
+            '.productos-tabla' => 'border-collapse: collapse; width: 100%;',
+            
+            // Flexbox con prefijos para compatibilidad
+            '.d-flex, .flex' => 'display: -webkit-box; display: -ms-flexbox; display: flex;',
+            '.flex-column' => '-webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column;',
+            '.justify-content-between' => '-webkit-box-pack: justify; -ms-flex-pack: justify; justify-content: space-between;',
+            '.align-items-center' => '-webkit-box-align: center; -ms-flex-align: center; align-items: center;'
+        );
+        
+        // Aplicar optimizaciones
+        foreach ($optimizaciones as $selector => $propiedades) {
+            if (strpos($css, $selector) !== false) {
+                // Si existe, agregar propiedades
+                $css = preg_replace(
+                    '/(' . preg_quote($selector, '/') . '\s*\{[^}]*)/i',
+                    '$1 ' . $propiedades,
+                    $css
+                );
+            } else {
+                // Si no existe, agregar selector completo
+                $css .= " {$selector} { {$propiedades} }";
+            }
+        }
+        
+        return $css;
+    }
+
+    /**
+     * Agregar estilos responsivos
+     */
+    private function agregar_estilos_responsivos($css) {
+        $responsive_css = "
+        
+        /* Estilos responsivos */
+        @media screen and (max-width: 768px) {
+            .mv-document-container {
+                margin: 10px !important;
+                border-radius: 4px !important;
+            }
+            
+            .mv-document-content {
+                padding: 15px !important;
+            }
+            
+            .mv-action-bar {
+                padding: 10px 15px !important;
+                flex-direction: column !important;
+                gap: 10px !important;
+            }
+            
+            .mv-action-buttons {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+            
+            .mv-btn {
+                padding: 10px 12px !important;
+                font-size: 13px !important;
+            }
+            
+            /* Hacer tablas responsivas */
+            .productos-tabla,
+            table {
+                font-size: 11px !important;
+            }
+            
+            .productos-tabla th,
+            .productos-tabla td {
+                padding: 6px 4px !important;
+            }
+            
+            /* Ajustar encabezados */
+            h1 { font-size: 18px !important; }
+            h2 { font-size: 16px !important; }
+            h3 { font-size: 14px !important; }
+            
+            /* Ocultar elementos no esenciales en móvil */
+            .hide-mobile {
+                display: none !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .mv-document-container {
+                margin: 5px !important;
+                border-radius: 0 !important;
+            }
+            
+            .mv-document-content {
+                padding: 10px !important;
+            }
+            
+            /* Hacer las tablas aún más compactas */
+            .productos-tabla,
+            table {
+                font-size: 10px !important;
+            }
+            
+            /* Stack elementos en columna */
+            .header {
+                flex-direction: column !important;
+                text-align: center !important;
+            }
+            
+            .totales-seccion {
+                margin-top: 20px !important;
+            }
+        }";
+        
+        return $css . $responsive_css;
+    }
+
+    /**
+     * Agregar estilos específicos para impresión
+     */
+    private function agregar_estilos_impresion($css) {
+        $print_css = "
+        
+        /* Estilos específicos para impresión */
+        @media print {
+            /* Reset básico para impresión */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 11pt !important;
+                line-height: 1.3 !important;
+            }
+            
+            /* Ocultar elementos no imprimibles */
+            .mv-action-bar,
+            .mv-preview-badge,
+            .no-print,
+            button {
+                display: none !important;
+            }
+            
+            /* Optimizar contenedor para impresión */
+            .mv-document-container {
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+                border-radius: 0 !important;
+                max-width: none !important;
+                width: 100% !important;
+            }
+            
+            .mv-document-content {
+                padding: 0 !important;
+            }
+            
+            /* Configuración de página */
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+            
+            /* Evitar saltos de página problemáticos */
+            h1, h2, h3, h4, h5, h6 {
+                page-break-after: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            
+            table {
+                page-break-inside: avoid !important;
+            }
+            
+            tr {
+                page-break-inside: avoid !important;
+            }
+            
+            .page-break-before {
+                page-break-before: always !important;
+            }
+            
+            .page-break-after {
+                page-break-after: always !important;
+            }
+            
+            .no-page-break {
+                page-break-inside: avoid !important;
+            }
+            
+            /* Optimizar tablas para impresión */
+            .productos-tabla,
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                font-size: 9pt !important;
+            }
+            
+            .productos-tabla th,
+            .productos-tabla td,
+            table th,
+            table td {
+                border: 1px solid #333 !important;
+                padding: 4pt !important;
+                text-align: left !important;
+            }
+            
+            .productos-tabla th {
+                background: #f0f0f0 !important;
+                font-weight: bold !important;
+            }
+            
+            /* Asegurar que los colores se impriman */
+            .header {
+                border-bottom: 2pt solid #333 !important;
+            }
+            
+            /* Optimizar tipografía para impresión */
+            h1 { font-size: 16pt !important; }
+            h2 { font-size: 14pt !important; }
+            h3 { font-size: 12pt !important; }
+            h4 { font-size: 11pt !important; }
+            
+            /* Mejorar contraste para impresión */
+            .cliente-info,
+            .totales-seccion,
+            .observaciones {
+                border: 1pt solid #666 !important;
+                padding: 8pt !important;
+                margin: 8pt 0 !important;
+            }
+            
+            /* Asegurar que las imágenes se impriman bien */
+            img {
+                max-width: 100% !important;
+                height: auto !important;
+                page-break-inside: avoid !important;
+            }
+        }";
+        
+        return $css . $print_css;
+    }
+
+    /**
+     * Optimizar HTML para visualización web
+     */
+    public function optimizar_html_para_web($html) {
+        // Agregar clases responsivas
+        $html = $this->agregar_clases_responsivas($html);
+        
+        // Optimizar imágenes
+        $html = $this->optimizar_imagenes_html($html);
+        
+        // Agregar landmarks ARIA para accesibilidad
+        $html = $this->agregar_landmarks_aria($html);
+        
+        return $html;
+    }
+
+    /**
+     * Agregar clases responsivas al HTML
+     */
+    private function agregar_clases_responsivas($html) {
+        $reemplazos = array(
+            // Agregar clases responsivas a tablas
+            '<table' => '<table class="table-responsive"',
+            
+            // Agregar clases a elementos de totales
+            'class="totales-seccion"' => 'class="totales-seccion no-page-break"',
+            
+            // Agregar clases a observaciones
+            'class="observaciones"' => 'class="observaciones no-page-break"',
+            
+            // Mejorar header
+            'class="header"' => 'class="header no-page-break"'
+        );
+        
+        foreach ($reemplazos as $buscar => $reemplazar) {
+            $html = str_replace($buscar, $reemplazar, $html);
+        }
+        
+        return $html;
+    }
+
+    /**
+     * Optimizar imágenes en HTML
+     */
+    private function optimizar_imagenes_html($html) {
+        // Agregar loading="lazy" a imágenes
+        $html = preg_replace(
+            '/<img(?![^>]*loading=)([^>]*)/i',
+            '<img loading="lazy"$1',
+            $html
+        );
+        
+        // Asegurar alt text en imágenes
+        $html = preg_replace(
+            '/<img(?![^>]*alt=)([^>]*)/i',
+            '<img alt=""$1',
+            $html
+        );
+        
+        return $html;
+    }
+
+    /**
+     * Agregar landmarks ARIA para accesibilidad
+     */
+    private function agregar_landmarks_aria($html) {
+        $reemplazos = array(
+            // Header principal
+            '<div class="header"' => '<header class="header" role="banner"',
+            
+            // Información del cliente
+            '<div class="cliente-info"' => '<section class="cliente-info" aria-labelledby="cliente-heading"',
+            
+            // Tabla de productos
+            '<div class="productos"' => '<main class="productos" role="main" aria-labelledby="productos-heading"',
+            
+            // Totales
+            '<div class="totales-seccion"' => '<section class="totales-seccion" aria-labelledby="totales-heading"',
+            
+            // Observaciones
+            '<div class="observaciones"' => '<section class="observaciones" aria-labelledby="observaciones-heading"',
+            
+            // Footer
+            '<div class="footer"' => '<footer class="footer" role="contentinfo"'
+        );
+        
+        foreach ($reemplazos as $buscar => $reemplazar) {
+            $html = str_replace($buscar, $reemplazar, $html);
+        }
+        
+        // Agregar IDs a headings si no los tienen
+        $html = preg_replace(
+            '/<h([123])([^>]*?)>([^<]*cliente[^<]*)</i',
+            '<h$1$2 id="cliente-heading">$3</h$1>',
+            $html
+        );
+        
+        $html = preg_replace(
+            '/<h([123])([^>]*?)>([^<]*producto[^<]*)</i',
+            '<h$1$2 id="productos-heading">$3</h$1>',
+            $html
+        );
+        
+        return $html;
+    }
+
+    /**
+     * Cargar datos de documento según tipo
+     */
+    private function cargar_datos_documento($tipo, $id) {
+        switch ($tipo) {
+            case 'cotizacion':
+                $this->cargar_datos_cotizacion($id);
+                break;
+            case 'factura':
+                $this->cargar_datos_factura($id);
+                break;
+            case 'orden_compra':
+                $this->cargar_datos_orden_compra($id);
+                break;
+            default:
+                throw new Exception("Tipo de documento no soportado: {$tipo}");
+        }
+    }
+
+    /**
+     * Cargar datos de factura (placeholder para futuro)
+     */
+    private function cargar_datos_factura($factura_id) {
+        // TODO: Implementar cuando tengamos sistema de facturas
+        throw new Exception('Sistema de facturas no implementado aún');
+    }
+
+    /**
+     * Cargar datos de orden de compra (placeholder para futuro)
+     */
+    private function cargar_datos_orden_compra($orden_id) {
+        // TODO: Implementar cuando tengamos sistema de órdenes
+        throw new Exception('Sistema de órdenes de compra no implementado aún');
+    }
+
+    /**
+     * Generar URL para visualización web del documento
+     */
+    public function generar_url_documento($tipo, $id, $action = 'view') {
+        $base_url = home_url("documentos/{$tipo}/{$id}");
+        
+        if ($action !== 'view') {
+            $base_url .= "/{$action}";
+        }
+        
+        return $base_url;
+    }
+
+    /**
+     * Generar token de acceso para documento
+     */
+    public function generar_token_acceso($tipo, $id) {
+        $salt = defined('AUTH_SALT') ? AUTH_SALT : 'default-salt';
+        return hash('sha256', $tipo . $id . $salt . date('Y-m-d'));
+    }
+
+    /**
+     * Generar URL pública con token de acceso
+     */
+    public function generar_url_publica($tipo, $id, $con_token = true) {
+        $url = $this->generar_url_documento($tipo, $id);
+        
+        if ($con_token) {
+            $token = $this->generar_token_acceso($tipo, $id);
+            $url .= "?token={$token}";
+        }
+        
+        return $url;
+    }
+
+    /**
+     * Verificar token de acceso público
+     */
+    public function verificar_token($tipo, $id, $token) {
+        $expected_token = $this->generar_token_acceso($tipo, $id);
+        return hash_equals($expected_token, $token);
+    }
+
+    /**
+     * Generar documento HTML completo para web
+     */
+    public function generar_documento_web($html_procesado, $css_procesado, $titulo = '', $modo = 'view') {
+        $documento = '<!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>' . esc_html($titulo ?: 'Documento') . '</title>
+        
+        <!-- CSS base del sistema -->
+        <style type="text/css">
+            /* Reset y estilos base */
+            * { box-sizing: border-box; }
+            
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                background: #f5f5f5;
+                color: #333;
+            }
+            
+            .mv-document-container {
+                max-width: 210mm;
+                margin: 20px auto;
+                background: white;
+                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+                border-radius: 8px;
+                overflow: hidden;
+                min-height: 297mm;
+            }
+            
+            .mv-document-content {
+                padding: 20px;
+            }
+            
+            @media print {
+                body { background: white; }
+                .mv-document-container {
+                    margin: 0;
+                    box-shadow: none;
+                    border-radius: 0;
+                    max-width: none;
+                    width: 100%;
+                }
+                .mv-document-content { padding: 0; }
+            }
+        </style>
+        
+        <!-- CSS específico de la plantilla -->
+        <style type="text/css">' . $css_procesado . '</style>
+    </head>
+    <body class="mv-mode-' . esc_attr($modo) . '">
+        <div class="mv-document-container">
+            <div class="mv-document-content">' . 
+                $html_procesado . 
+            '</div>
+        </div>
+    </body>
+    </html>';
+        
+        return $documento;
     }
 }

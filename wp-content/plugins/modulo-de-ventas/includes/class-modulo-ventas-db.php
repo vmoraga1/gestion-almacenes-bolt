@@ -2019,10 +2019,7 @@ class Modulo_Ventas_DB {
             error_log("MODULO_VENTAS: Cotización {$cotizacion_id} no encontrada");
             return false;
         }
-        
-        // Debug: Log para ver qué cotización estamos evaluando
-        error_log("MODULO_VENTAS: Evaluando cotización {$cotizacion_id} - Estado: {$cotizacion->estado}, Cliente: {$cotizacion->cliente_id}, Total: {$cotizacion->total}");
-        
+                
         // Verificar que tenga items
         $tiene_items = $this->contar_items_cotizacion($cotizacion_id) > 0;
         
@@ -2030,9 +2027,7 @@ class Modulo_Ventas_DB {
             error_log("MODULO_VENTAS: Cotización {$cotizacion_id} no tiene items");
             return false;
         }
-        
-        error_log("MODULO_VENTAS: Cotización {$cotizacion_id} tiene " . $this->contar_items_cotizacion($cotizacion_id) . " items");
-        
+                
         // TODOS los estados válidos para generar PDF (incluyendo variaciones de nombres)
         $estados_validos = array(
             'borrador',

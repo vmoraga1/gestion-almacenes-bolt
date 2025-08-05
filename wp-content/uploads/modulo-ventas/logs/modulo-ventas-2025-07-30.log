@@ -1,0 +1,420 @@
+[2025-07-30 00:01:47] INFO: PDF_TEMPLATES: Iniciando generación con TCPDF para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:01:47] INFO: PDF_TEMPLATES: Usando método generar_pdf_desde_plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:01:47] INFO: PDF: Iniciando generación para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:01:48] INFO: MPDF: Librería cargada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:01:48] INFO: MPDF: Generando PDF sincronizado para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:01:48] INFO: MPDF_SYNC: Sincronizando plantilla para PDF | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:01:48] INFO: MPDF_SYNC: Documento sincronizado generado (15282 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:01:48] INFO: MPDF: HTML sincronizado generado (15282 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:01:54] INFO: MPDF: PDF guardado exitosamente en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000028.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:01:54] INFO: PDF: Generado exitosamente con mPDF: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000028.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:01:54] INFO: PDF_TEMPLATES: PDF generado exitosamente: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000028.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:03:02] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:03:02] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:03:02] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:03:02] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:03:02] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:03:02] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:03:02] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:03:29] INFO: PDF_TEMPLATES: Generando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:03:29] INFO: PDF_TEMPLATES: Processor disponible, procesando contenido... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:03:29] INFO: PDF_TEMPLATES: Usando datos de cotización real: 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:03:29] INFO: TEMPLATE_PROCESSOR: Procesando plantilla ID  para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:03:29] INFO: TEMPLATE_PROCESSOR: Plantilla procesada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:03:29] INFO: PDF_TEMPLATES: Contenido procesado, preparando directorio... | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:03:29] INFO: PDF_TEMPLATES: Guardando archivo: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas/previews/preview_4351417792f26e047742821e13124bf8.html | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 00:03:29] INFO: PDF_TEMPLATES: Preview generado exitosamente: http://localhost/gestion-almacenes-bolt/wp-admin/admin-ajax.php?action=mv_servir_preview&file=preview_4351417792f26e047742821e13124bf8.html&nonce=5509102160 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 01:25:04] INFO: Plugin desactivado | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 01:25:11] INFO: Tablas de base de datos creadas/actualizadas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 01:25:11] INFO: Plugin activado correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 01:41:28] EMERGENCY: Error Fatal: Uncaught Error: Call to a member function obtener_cotizacion() on null in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php:578
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(565): Modulo_Ventas_Document_Viewer->obtener_datos_cotizacion('28')
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(182): Modulo_Ventas_Document_Viewer->obtener_datos_documento('cotizacion', '28')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(115): Modulo_Ventas_Document_Viewer->render_document_view('cotizacion', '28')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Document_Viewer->handle_document_view('')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\template-loader.php(13): do_action('template_redire...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-blog-header.php(19): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\index.php(17): require('C:\\wamp64\\www\\g...')
+#9 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-document-viewer.php","line":578,"type":1}
+[2025-07-30 01:41:50] EMERGENCY: Error Fatal: Uncaught Error: Call to a member function obtener_cotizacion() on null in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php:578
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(565): Modulo_Ventas_Document_Viewer->obtener_datos_cotizacion('28')
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(182): Modulo_Ventas_Document_Viewer->obtener_datos_documento('cotizacion', '28')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(115): Modulo_Ventas_Document_Viewer->render_document_view('cotizacion', '28')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Document_Viewer->handle_document_view('')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\template-loader.php(13): do_action('template_redire...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-blog-header.php(19): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\index.php(17): require('C:\\wamp64\\www\\g...')
+#9 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-document-viewer.php","line":578,"type":1}
+[2025-07-30 01:59:09] INFO: PROCESSOR: Procesando plantilla para visualización web - tipo: cotizacion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 01:59:09] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 01:59:09] INFO: PROCESSOR: Datos cargados desde objeto convertido a array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 01:59:09] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cliente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 01:59:09] ERROR: PROCESSOR: ERROR - No hay datos de empresa | Usuario: hostpanish (ID: 1) | IP: ::1 | Trace: class-modulo-ventas-pdf-template-processor.php:74 log() <- class-modulo-ventas-pdf-template-processor.php:220 cargar_datos() <- class-modulo-ventas-document-viewer.php:211 procesar_plantilla() <- class-modulo-ventas-document-viewer.php:131 render_document_view()
+[2025-07-30 01:59:09] INFO: PROCESSOR: Plantilla procesada exitosamente para web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 01:59:09] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:09:42] INFO: PROCESSOR: Procesando plantilla para visualización web - tipo: cotizacion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:09:42] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:09:42] INFO: PROCESSOR: Datos cargados desde objeto convertido a array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:09:42] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cliente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:09:42] ERROR: PROCESSOR: ERROR - No hay datos de empresa | Usuario: hostpanish (ID: 1) | IP: ::1 | Trace: class-modulo-ventas-pdf-template-processor.php:74 log() <- class-modulo-ventas-pdf-template-processor.php:220 cargar_datos() <- class-modulo-ventas-document-viewer.php:210 procesar_plantilla() <- class-modulo-ventas-document-viewer.php:126 render_document_view()
+[2025-07-30 02:09:42] INFO: PROCESSOR: Plantilla procesada exitosamente para web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:09:42] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:14:49] INFO: PROCESSOR: Procesando plantilla para visualización web - tipo: cotizacion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:14:49] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:14:49] INFO: PROCESSOR: Datos cargados desde objeto convertido a array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:14:49] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cliente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:14:49] ERROR: PROCESSOR: ERROR - No hay datos de empresa | Usuario: hostpanish (ID: 1) | IP: ::1 | Trace: class-modulo-ventas-pdf-template-processor.php:74 log() <- class-modulo-ventas-pdf-template-processor.php:220 cargar_datos() <- class-modulo-ventas-document-viewer.php:210 procesar_plantilla() <- class-modulo-ventas-document-viewer.php:126 render_document_view()
+[2025-07-30 02:14:49] INFO: PROCESSOR: Plantilla procesada exitosamente para web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:14:49] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:15:04] INFO: PROCESSOR: Procesando plantilla para visualización web - tipo: cotizacion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:15:04] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:15:04] INFO: PROCESSOR: Datos cargados desde objeto convertido a array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:15:04] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cliente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:15:04] ERROR: PROCESSOR: ERROR - No hay datos de empresa | Usuario: hostpanish (ID: 1) | IP: ::1 | Trace: class-modulo-ventas-pdf-template-processor.php:74 log() <- class-modulo-ventas-pdf-template-processor.php:220 cargar_datos() <- class-modulo-ventas-document-viewer.php:210 procesar_plantilla() <- class-modulo-ventas-document-viewer.php:126 render_document_view()
+[2025-07-30 02:15:04] INFO: PROCESSOR: Plantilla procesada exitosamente para web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:15:04] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:20:08] INFO: PROCESSOR: Procesando plantilla para visualización web - tipo: cotizacion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:20:08] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:20:08] INFO: PROCESSOR: Datos cargados desde objeto convertido a array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:20:08] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cliente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:20:08] ERROR: PROCESSOR: ERROR - No hay datos de empresa | Usuario: hostpanish (ID: 1) | IP: ::1 | Trace: class-modulo-ventas-pdf-template-processor.php:74 log() <- class-modulo-ventas-pdf-template-processor.php:220 cargar_datos() <- class-modulo-ventas-document-viewer.php:210 procesar_plantilla() <- class-modulo-ventas-document-viewer.php:126 render_document_view()
+[2025-07-30 02:20:08] INFO: PROCESSOR: Plantilla procesada exitosamente para web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:20:08] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:20:28] INFO: PROCESSOR: Procesando plantilla para visualización web - tipo: cotizacion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:20:28] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:20:28] INFO: PROCESSOR: Datos cargados desde objeto convertido a array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:20:28] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cliente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:20:28] ERROR: PROCESSOR: ERROR - No hay datos de empresa | Usuario: hostpanish (ID: 1) | IP: ::1 | Trace: class-modulo-ventas-pdf-template-processor.php:74 log() <- class-modulo-ventas-pdf-template-processor.php:220 cargar_datos() <- class-modulo-ventas-document-viewer.php:210 procesar_plantilla() <- class-modulo-ventas-document-viewer.php:126 render_document_view()
+[2025-07-30 02:20:28] INFO: PROCESSOR: Plantilla procesada exitosamente para web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:20:28] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:28:19] EMERGENCY: Error Fatal: Uncaught Error: Call to private method Modulo_Ventas_PDF_Template_Processor::cargar_datos_cotizacion() from scope Modulo_Ventas_Document_Viewer in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php:224
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(126): Modulo_Ventas_Document_Viewer->render_document_view('cotizacion', '28')
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Document_Viewer->handle_document_view('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\template-loader.php(13): do_action('template_redire...')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-blog-header.php(19): require_once('C:\\wamp64\\www\\g...')
+#6 C:\wamp64\www\gestion-almacenes-bolt\index.php(17): require('C:\\wamp64\\www\\g...')
+#7 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-document-viewer.php","line":224,"type":1}
+[2025-07-30 02:31:01] EMERGENCY: Error Fatal: Uncaught Error: Call to private method Modulo_Ventas_PDF_Template_Processor::cargar_datos_cotizacion() from scope Modulo_Ventas_Document_Viewer in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php:230
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(126): Modulo_Ventas_Document_Viewer->render_document_view('cotizacion', '28')
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Document_Viewer->handle_document_view('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\template-loader.php(13): do_action('template_redire...')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-blog-header.php(19): require_once('C:\\wamp64\\www\\g...')
+#6 C:\wamp64\www\gestion-almacenes-bolt\index.php(17): require('C:\\wamp64\\www\\g...')
+#7 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-document-viewer.php","line":230,"type":1}
+[2025-07-30 02:34:42] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:34:48] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 02:36:06] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:03:20] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:03:20] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:03:20] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:03:20] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:03:20] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:22:19] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:22:19] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:22:19] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:22:19] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:22:19] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:25:16] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:25:16] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:25:16] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:25:16] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:25:16] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:25:36] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:25:36] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:25:36] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:25:36] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:25:36] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:25:40] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:25:40] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:25:40] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:25:40] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:25:40] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:26:16] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"pdf"}
+[2025-07-30 04:26:50] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:26:50] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:26:50] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:26:50] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:26:50] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:19] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:19] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:19] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:19] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:19] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:41] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:41] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:41] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:41] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:41] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:44] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:44] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:44] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:44] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:44] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:49] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:49] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:49] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:49] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:27:49] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:28:44] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:28:44] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:28:44] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:28:44] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:28:44] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:29:00] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:29:00] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:29:00] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:29:00] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:29:00] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:38:36] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:38:36] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:38:36] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:38:36] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:38:36] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:40:18] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:40:18] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:40:18] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:40:18] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:40:18] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:41:02] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:41:02] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:41:02] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:41:02] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:41:02] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:41:21] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:41:21] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:41:21] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:41:21] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:41:21] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:41:42] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:41:42] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:41:42] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:41:42] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:41:42] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:42:08] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:42:08] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:42:08] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:42:08] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:42:08] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:43:55] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"pdf"}
+[2025-07-30 04:44:02] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:44:02] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:44:02] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:44:02] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:44:02] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:44:48] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:44:48] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:44:48] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:44:48] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:44:48] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:52:39] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:52:39] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:52:39] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:52:39] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:52:39] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:56:59] EMERGENCY: Error Fatal: Uncaught ArgumentCountError: Too few arguments to function Modulo_Ventas_PDF_Template_Processor::procesar_logo_empresa(), 0 passed in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php on line 399 and exactly 1 expected in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php:901
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php(399): Modulo_Ventas_PDF_Template_Processor->procesar_logo_empresa()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(230): Modulo_Ventas_PDF_Template_Processor->cargar_datos_cotizacion('28')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(126): Modulo_Ventas_Document_Viewer->render_document_view('cotizacion', '28')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Document_Viewer->handle_document_view('')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\template-loader.php(13): do_action('template_redire...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-blog-header.php(19): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\index.php(17): require('C:\\wamp64\\www\\g...')
+#9 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-template-processor.php","line":901,"type":1}
+[2025-07-30 04:57:09] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:57:09] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:57:09] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:57:09] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:57:09] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:58:39] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:58:39] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:58:39] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:58:39] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:58:39] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:58:58] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:58:58] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:58:58] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:58:58] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 04:58:58] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:02:37] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:02:45] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:02:45] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:02:45] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:02:45] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:02:45] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:05:20] EMERGENCY: Error Fatal: Uncaught ArgumentCountError: Too few arguments to function Modulo_Ventas_PDF_Template_Processor::procesar_logo_empresa(), 0 passed in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php on line 399 and exactly 1 expected in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php:901
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php(399): Modulo_Ventas_PDF_Template_Processor->procesar_logo_empresa()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(230): Modulo_Ventas_PDF_Template_Processor->cargar_datos_cotizacion('28')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(126): Modulo_Ventas_Document_Viewer->render_document_view('cotizacion', '28')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Document_Viewer->handle_document_view('')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\template-loader.php(13): do_action('template_redire...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-blog-header.php(19): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\index.php(17): require('C:\\wamp64\\www\\g...')
+#9 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-template-processor.php","line":901,"type":1}
+[2025-07-30 05:06:09] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:06:09] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:06:09] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:06:09] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:06:09] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:06:22] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:06:22] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:06:22] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:06:22] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:06:22] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:06:52] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:06:52] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:06:52] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:06:52] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:06:52] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:07:44] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:07:44] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:07:44] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:07:44] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:07:44] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:13:38] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:13:38] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:13:38] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:13:38] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:13:38] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:16:19] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:16:19] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:16:19] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:16:19] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:16:19] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:17:20] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:17:20] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:17:20] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:17:20] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:17:20] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:17:20] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:17:20] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:17:20] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:17:20] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, totales, fechas, sistema | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:18:17] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:18:19] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:18:19] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:18:19] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:18:19] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:18:19] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:18:19] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:18:19] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:18:19] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:18:19] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, totales, fechas, sistema | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:27] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:27] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:27] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:27] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:27] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:27] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:27] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:27] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:27] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, totales, fechas, sistema | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:34] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:38] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:38] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:38] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:38] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:38] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:38] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:38] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:38] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:38] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, totales, fechas, sistema | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:45] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:45] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:45] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:45] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:19:45] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:26:11] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:26:13] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:26:13] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:26:13] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:26:13] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:26:13] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:26:13] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:26:13] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:26:13] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:26:13] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, totales, fechas, sistema | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:26:18] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:26:18] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:26:18] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:26:18] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:26:18] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:27:14] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:32:30] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:32:34] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:32:34] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:32:34] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:32:34] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:32:34] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:32:34] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:32:34] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:32:34] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:32:34] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, totales, fechas, sistema | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:32:39] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:32:39] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:32:39] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:32:39] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:32:39] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:35:22] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:35:26] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:35:26] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:35:26] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:35:26] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 05:35:26] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:14:06] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:14:10] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:14:10] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:14:10] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:14:10] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:14:10] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:16:50] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:16:54] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:16:54] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:16:54] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:16:54] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:16:54] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:16:58] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:16:58] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:16:58] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:16:58] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:16:58] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:17:17] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:17:21] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:17:21] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:17:21] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:17:21] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:17:21] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:18:27] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:18:30] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:18:30] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:18:30] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:18:30] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 07:18:30] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-30 14:44:56] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | IP: ::1
+[2025-07-30 14:44:56] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | IP: ::1
+[2025-07-30 14:44:56] INFO: PROCESSOR: Procesando template con datos disponibles | IP: ::1
+[2025-07-30 14:44:56] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | IP: ::1
+[2025-07-30 14:44:56] INFO: PROCESSOR: Procesando CSS para visualización web | IP: ::1

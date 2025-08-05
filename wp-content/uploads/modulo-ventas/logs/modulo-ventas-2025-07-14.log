@@ -329,3 +329,62 @@ Stack trace:
 [2025-07-14 07:49:03] INFO: PREVIEW: Contiene </style>: SI | Usuario: hostpanish (ID: 1) | IP: ::1
 [2025-07-14 07:49:03] INFO: PREVIEW: Estructura body válida: SI | Usuario: hostpanish (ID: 1) | IP: ::1
 [2025-07-14 07:49:03] INFO: PREVIEW: Documento final - Longitud: 14301, CSS: NO, Contenido: SI | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:57:21] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:57:21] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:57:21] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:57:21] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:57:21] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:57:21] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:57:21] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:57:21] INFO: PREVIEW: === INICIO GENERAR_DOCUMENTO_FINAL === | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:57:21] INFO: PREVIEW: HTML recibido: 9700 caracteres | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 07:57:21] INFO: PREVIEW: CSS recibido: 4242 caracteres | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:01:28] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:01:28] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:01:28] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:01:28] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:01:28] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:01:28] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:01:28] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:01:45] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:01:45] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:01:45] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:01:45] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:01:45] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:01:45] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:01:45] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:14:28] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:14:28] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:14:28] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:14:28] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:14:28] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:14:28] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:14:28] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:16:05] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:16:05] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:16:05] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:16:05] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:16:05] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:16:05] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:16:05] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:33:53] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:33:53] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:33:53] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:33:53] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:33:53] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:33:53] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:33:53] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:34:05] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:34:05] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:34:05] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:34:05] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:34:05] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:34:05] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:34:05] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:47:57] INFO: PROCESSOR: Encontrados 5 items para cotización 28 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:47:57] INFO: TEMPLATE_PROCESSOR: Datos reales de cotización cargados (ID: 28) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:47:57] INFO: PREVIEW: Datos cargados en processor correctamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:47:57] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:47:57] INFO: PROCESSOR: Datos cargados desde array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:47:57] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cotizacion, cliente, empresa, productos, totales, fechas | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-07-14 08:47:57] INFO: PROCESSOR: Datos de empresa disponibles - nombre: Desabolt | Usuario: hostpanish (ID: 1) | IP: ::1

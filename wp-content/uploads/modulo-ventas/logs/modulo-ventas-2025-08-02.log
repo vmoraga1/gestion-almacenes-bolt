@@ -1,0 +1,470 @@
+[2025-08-02 00:01:08] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:01:11] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:01:11] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:01:11] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:01:11] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:01:11] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:02:13] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:02:15] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:02:15] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:02:15] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:02:15] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:02:15] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:02:30] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:02:32] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:02:32] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:02:32] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:02:32] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:02:32] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:03:29] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:03:31] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:03:31] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:03:31] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:03:31] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:03:31] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:08:24] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:08:27] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:08:27] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:08:27] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:08:27] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:08:27] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:12:05] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:12:17] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:12:17] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:12:17] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:12:17] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:12:17] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:14:19] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:14:27] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:14:27] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:14:27] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:14:27] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:14:27] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:15:22] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:15:30] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:15:30] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:15:30] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:15:30] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:15:30] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:16:47] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:16:50] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:16:50] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:16:50] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:16:50] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:16:50] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:17:36] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:17:41] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:17:41] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:17:41] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:17:41] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:17:41] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:17:55] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:18:00] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:18:00] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:18:00] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:18:00] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:18:00] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:19:44] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:19:48] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:19:48] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:19:48] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:19:48] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:19:48] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:20:38] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:20:42] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:20:42] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:20:42] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:20:42] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:20:42] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:22:59] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:23:02] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:23:02] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:23:02] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:23:02] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:23:02] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:23:34] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:23:37] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:23:37] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:23:37] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:23:37] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:23:37] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:25:38] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:25:42] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:25:42] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:25:42] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:25:42] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:25:42] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:25:48] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:25:48] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:25:48] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:25:48] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:25:48] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:27:07] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:27:10] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:27:10] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:27:10] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:27:10] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:27:10] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:27:20] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:27:23] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:27:23] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:27:23] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:27:23] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:27:23] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:29:43] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:29:47] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:29:47] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:29:47] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:29:47] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:29:47] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:29:52] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:29:52] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:29:52] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:29:52] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:29:52] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:30:59] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:31:03] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:31:03] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:31:03] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:31:03] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:31:03] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:31:14] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:31:21] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:31:21] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:31:21] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:31:21] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:31:21] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:35:01] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:35:05] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:35:05] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:35:05] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:35:05] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:35:05] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:17] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:20] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:20] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:20] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:20] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:20] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:39] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:41] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:41] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:41] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:41] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:41] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:51] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:54] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:54] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:54] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:54] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:36:54] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:37:11] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:37:14] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:37:14] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:37:14] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:37:14] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:37:14] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:38:20] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:38:22] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:38:22] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:38:22] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:38:22] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:38:22] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:38:37] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:38:39] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:38:39] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:38:39] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:38:39] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 00:38:39] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:40:31] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:40:33] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:40:33] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:40:33] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:40:33] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:40:33] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:40:43] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:40:46] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:40:46] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:40:46] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:40:46] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:40:46] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:41:08] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:41:14] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:41:31] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:41:31] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:41:31] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:41:31] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:41:31] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:48:01] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:48:01] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:48:01] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:48:01] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 02:48:01] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:02:31] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:02:35] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:02:35] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:02:35] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:02:35] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:02:35] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:04:06] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:04:10] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:04:10] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:04:10] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:04:10] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:04:10] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:04:51] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:04:55] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:04:55] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:04:55] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:04:55] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:04:55] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:05:15] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:05:18] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:05:18] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:05:18] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:05:18] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:05:18] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:07:54] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:07:58] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:07:58] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:07:58] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:07:58] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:07:58] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:16] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:19] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:19] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:19] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:19] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:19] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:29] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:31] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:31] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:31] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:31] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:31] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:49] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:53] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:53] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:53] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:53] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:08:53] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:17:20] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:17:28] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:17:28] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:17:28] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:17:28] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:17:28] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:18:14] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:18:17] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:18:17] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:18:17] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:18:17] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:18:17] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:18:24] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:18:24] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:18:24] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:18:24] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:18:24] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:24:35] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:24:41] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:24:41] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:24:41] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:24:41] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:24:41] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:24:54] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:24:58] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:24:58] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:24:58] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:24:58] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:24:58] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:26:42] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:26:42] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:26:42] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:26:42] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:26:42] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:30:09] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:30:18] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:30:25] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:30:25] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:30:25] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:30:25] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:30:25] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:30:51] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:30:54] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:30:54] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:30:54] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:30:54] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:30:54] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:31:15] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:31:17] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:31:17] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:31:17] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:31:17] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:31:17] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:37:47] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:37:50] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:37:50] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:37:50] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:37:50] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:37:50] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:38:00] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:38:00] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:38:00] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:38:00] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:38:00] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:38:14] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:38:17] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:38:17] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:38:17] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:38:17] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:38:17] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:39:10] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:39:13] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:39:13] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:39:13] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:39:13] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:39:13] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:39:38] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:39:41] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:39:41] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:39:41] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:39:41] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:39:41] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:14] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:17] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:17] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:17] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:17] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:17] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:29] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:31] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:31] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:31] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:31] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:31] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:39] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:42] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:42] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:42] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:42] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:40:42] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:41:13] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:41:16] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:41:16] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:41:16] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:41:16] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:41:16] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:42:16] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:42:19] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:42:19] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:42:19] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:42:19] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:42:19] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:42:50] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:42:54] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:42:54] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:42:54] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:42:54] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:42:54] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:43:09] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:43:40] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:43:43] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:43:43] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:43:43] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:43:43] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:43:43] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:44:29] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:44:33] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:44:33] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:44:33] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:44:33] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:44:34] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:46:11] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:46:14] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:46:14] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:46:14] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:46:14] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:46:14] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:46:23] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:46:26] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:46:26] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:46:26] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:46:26] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:46:26] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:50:33] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:50:38] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:50:38] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:50:38] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:50:38] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:50:38] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:59:42] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:59:47] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:59:47] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:59:47] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:59:47] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 03:59:47] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:09:04] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:09:10] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:09:10] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:09:10] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:09:10] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:09:10] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:09:22] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:09:22] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:09:22] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:09:22] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:09:22] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:10:33] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:10:35] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:10:35] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:10:35] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:10:35] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:10:35] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:11:00] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:11:03] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:11:03] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:11:03] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:11:03] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:11:03] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:11:48] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:11:51] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:11:51] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:11:51] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:11:51] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:11:51] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:13:17] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:13:23] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:13:23] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:13:23] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:13:23] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:13:23] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:14:19] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:14:23] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:14:23] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:14:23] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:14:23] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:14:23] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:14:58] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:15:00] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:15:00] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:15:00] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:15:00] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:15:00] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:21:43] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:21:47] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:21:47] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:21:47] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:21:47] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:21:47] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:30:39] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:30:43] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:30:43] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:30:43] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:30:43] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:30:43] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:42:25] INFO: Plantilla ID 4 actualizada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:42:35] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:42:35] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:42:35] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:42:35] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-02 04:42:35] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1

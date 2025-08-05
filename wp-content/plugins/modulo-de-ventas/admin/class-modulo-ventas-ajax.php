@@ -3269,13 +3269,40 @@ class Modulo_Ventas_Ajax {
             if ($variables_sin_procesar > 0) {
                 error_log('PREVIEW: ADVERTENCIA - Variables sin procesar: ' . implode(', ', array_slice($matches[0], 0, 5)));
             }
-            
-            $tiene_css = strpos($documento_final, '<style>') !== false;
-            $tiene_contenido = strpos($documento_final, 'class="documento"') !== false;
-            
-            error_log('PREVIEW: Documento final - Longitud: ' . strlen($documento_final) . 
-                    ', CSS: ' . ($tiene_css ? 'SI' : 'NO') . 
-                    ', Contenido: ' . ($tiene_contenido ? 'SI' : 'NO'));
+
+            // CORREGIR: Buscar <style (con o sin atributos)
+            $tiene_css = strpos($documento_final, '<style') !== false;
+            $tiene_contenido = strpos($documento_final, 'class="documento"') !== false || strlen($documento_final) > 5000;
+
+            error_log('PREVIEW: VERIFICACIÓN AJAX FINAL - Longitud: ' . strlen($documento_final) . 
+                    ', CSS detectado: ' . ($tiene_css ? 'SI' : 'NO') . 
+                    ', Contenido válido: ' . ($tiene_contenido ? 'SI' : 'NO'));
+
+            // DEBUG TEMPORAL: Guardar archivo para inspección
+            $upload_dir = wp_upload_dir();
+            if (!file_exists($upload_dir['basedir'])) {
+                wp_mkdir_p($upload_dir['basedir']);
+            }
+
+            // GENERAR nombre único para evitar cache
+            $timestamp = date('H-i-s-') . wp_rand(100, 999);
+            $test_path = $upload_dir['basedir'] . '/preview-plantilla-' . $timestamp . '.html';
+            file_put_contents($test_path, $documento_final);
+            $test_url = $upload_dir['baseurl'] . '/preview-plantilla-' . $timestamp . '.html';
+            error_log('PREVIEW: Documento guardado para test en: ' . $test_url);
+
+            // Respuesta exitosa (MODIFICAR)
+            wp_send_json_success(array(
+                'html' => $documento_final,
+                'preview_url' => $test_url,  // AGREGAR ESTA LÍNEA
+                'tipo_datos' => $tipo_datos,
+                'mensaje' => $mensaje,
+                'test_url' => $test_url,  
+                'debug' => array(
+                    'tiene_css_corregido' => $tiene_css,
+                    'archivo_generado' => $test_path
+                )
+            ));
             
             // Respuesta exitosa
             wp_send_json_success(array(

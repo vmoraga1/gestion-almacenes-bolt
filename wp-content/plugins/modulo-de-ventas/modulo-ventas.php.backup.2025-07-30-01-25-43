@@ -176,7 +176,7 @@ class Modulo_Ventas {
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-clientes.php';
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-cotizaciones.php';
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-integration.php';
-        //require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf.php';
+        require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf.php';
 
         // Sistema de plantillas PDF personalizables (NUEVO)
         require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf-templates-db.php';
@@ -2682,7 +2682,7 @@ add_action('wp_ajax_mv_test_mpdf', function() {
         
         // Test 2: Cargar mPDF wrapper
         try {
-            //require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-mpdf.php';
+            require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-mpdf.php';
             echo '<p>✅ Wrapper class cargada</p>';
             
             $mpdf_generator = new Modulo_Ventas_mPDF();
@@ -2950,7 +2950,7 @@ add_action('wp_ajax_mv_optimize_mpdf_templates', function() {
             $cotizacion_test = $wpdb->get_row("SELECT id FROM $tabla_cotizaciones ORDER BY id DESC LIMIT 1");
             
             if ($cotizacion_test) {
-                //require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf.php';
+                require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf.php';
                 $pdf_generator = new Modulo_Ventas_PDF();
                 
                 $inicio = microtime(true);
@@ -3175,7 +3175,7 @@ add_action('wp_ajax_mv_optimize_mpdf_templates_fixed', function() {
             $cotizacion_test = $wpdb->get_row("SELECT id FROM $tabla_cotizaciones ORDER BY id DESC LIMIT 1");
             
             if ($cotizacion_test) {
-                //require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf.php';
+                require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf.php';
                 $pdf_generator = new Modulo_Ventas_PDF();
                 
                 echo '<p>🎯 Generando PDF de prueba con plantilla optimizada...</p>';
@@ -3358,7 +3358,7 @@ add_action('wp_ajax_mv_mpdf_system_status', function() {
             echo '<p>Cotización: ' . esc_html($cotizacion_test->folio) . ' (ID: ' . $cotizacion_test->id . ')</p>';
             
             try {
-                //require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf.php';
+                require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf.php';
                 $pdf_generator = new Modulo_Ventas_PDF();
                 
                 $inicio = microtime(true);
@@ -3656,7 +3656,7 @@ tr:nth-child(even) { background-color: #f9f9f9; }';
             if ($cotizacion_test) {
                 echo '<p>🎯 Probando cotización: ' . $cotizacion_test->folio . ' (ID: ' . $cotizacion_test->id . ')</p>';
                 
-                //require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf.php';
+                require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf.php';
                 $pdf_generator = new Modulo_Ventas_PDF();
                 
                 $inicio = microtime(true);
@@ -4120,7 +4120,7 @@ add_action('wp_ajax_mv_upgrade_safe_template', function() {
             if ($cotizacion_test) {
                 echo '<p>🎯 Probando PDF mejorado con cotización: ' . $cotizacion_test->folio . '</p>';
                 
-                //require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf.php';
+                require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-pdf.php';
                 $pdf_generator = new Modulo_Ventas_PDF();
                 
                 $inicio = microtime(true);
@@ -4668,5 +4668,3 @@ add_action('wp_ajax_mv_test_variables_plantilla', function() {
  * /wp-admin/admin-ajax.php?action=mv_debug_variables_empresa
  * /wp-admin/admin-ajax.php?action=mv_test_variables_plantilla
  */
-// Sistema de visualización web de documentos
-require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-document-viewer.php';

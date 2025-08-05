@@ -1139,3 +1139,170 @@ Line: 1217
 
 --------------------------------------------------------------------------------
 
+2025-07-30 01:41:28 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Call to a member function obtener_cotizacion() on null in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php:578
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(565): Modulo_Ventas_Document_Viewer->obtener_datos_cotizacion('28')
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(182): Modulo_Ventas_Document_Viewer->obtener_datos_documento('cotizacion', '28')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(115): Modulo_Ventas_Document_Viewer->render_document_view('cotizacion', '28')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Document_Viewer->handle_document_view('')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\template-loader.php(13): do_action('template_redire...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-blog-header.php(19): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\index.php(17): require('C:\\wamp64\\www\\g...')
+#9 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php
+Line: 578
+
+--------------------------------------------------------------------------------
+
+2025-07-30 01:41:50 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Call to a member function obtener_cotizacion() on null in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php:578
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(565): Modulo_Ventas_Document_Viewer->obtener_datos_cotizacion('28')
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(182): Modulo_Ventas_Document_Viewer->obtener_datos_documento('cotizacion', '28')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(115): Modulo_Ventas_Document_Viewer->render_document_view('cotizacion', '28')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Document_Viewer->handle_document_view('')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\template-loader.php(13): do_action('template_redire...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-blog-header.php(19): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\index.php(17): require('C:\\wamp64\\www\\g...')
+#9 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php
+Line: 578
+
+--------------------------------------------------------------------------------
+
+2025-07-30 02:28:19 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Call to private method Modulo_Ventas_PDF_Template_Processor::cargar_datos_cotizacion() from scope Modulo_Ventas_Document_Viewer in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php:224
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(126): Modulo_Ventas_Document_Viewer->render_document_view('cotizacion', '28')
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Document_Viewer->handle_document_view('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\template-loader.php(13): do_action('template_redire...')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-blog-header.php(19): require_once('C:\\wamp64\\www\\g...')
+#6 C:\wamp64\www\gestion-almacenes-bolt\index.php(17): require('C:\\wamp64\\www\\g...')
+#7 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php
+Line: 224
+
+--------------------------------------------------------------------------------
+
+2025-07-30 02:31:01 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Call to private method Modulo_Ventas_PDF_Template_Processor::cargar_datos_cotizacion() from scope Modulo_Ventas_Document_Viewer in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php:230
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(126): Modulo_Ventas_Document_Viewer->render_document_view('cotizacion', '28')
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Document_Viewer->handle_document_view('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\template-loader.php(13): do_action('template_redire...')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-blog-header.php(19): require_once('C:\\wamp64\\www\\g...')
+#6 C:\wamp64\www\gestion-almacenes-bolt\index.php(17): require('C:\\wamp64\\www\\g...')
+#7 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php
+Line: 230
+
+--------------------------------------------------------------------------------
+
+2025-07-30 04:56:59 - Error fatal detectado
+Type: 1
+Message: Uncaught ArgumentCountError: Too few arguments to function Modulo_Ventas_PDF_Template_Processor::procesar_logo_empresa(), 0 passed in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php on line 399 and exactly 1 expected in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php:901
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php(399): Modulo_Ventas_PDF_Template_Processor->procesar_logo_empresa()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(230): Modulo_Ventas_PDF_Template_Processor->cargar_datos_cotizacion('28')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(126): Modulo_Ventas_Document_Viewer->render_document_view('cotizacion', '28')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Document_Viewer->handle_document_view('')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\template-loader.php(13): do_action('template_redire...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-blog-header.php(19): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\index.php(17): require('C:\\wamp64\\www\\g...')
+#9 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php
+Line: 901
+
+--------------------------------------------------------------------------------
+
+2025-07-30 05:05:20 - Error fatal detectado
+Type: 1
+Message: Uncaught ArgumentCountError: Too few arguments to function Modulo_Ventas_PDF_Template_Processor::procesar_logo_empresa(), 0 passed in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php on line 399 and exactly 1 expected in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php:901
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php(399): Modulo_Ventas_PDF_Template_Processor->procesar_logo_empresa()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(230): Modulo_Ventas_PDF_Template_Processor->cargar_datos_cotizacion('28')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(126): Modulo_Ventas_Document_Viewer->render_document_view('cotizacion', '28')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Document_Viewer->handle_document_view('')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\template-loader.php(13): do_action('template_redire...')
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-blog-header.php(19): require_once('C:\\wamp64\\www\\g...')
+#8 C:\wamp64\www\gestion-almacenes-bolt\index.php(17): require('C:\\wamp64\\www\\g...')
+#9 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php
+Line: 901
+
+--------------------------------------------------------------------------------
+
+2025-08-01 21:37:20 - Error fatal detectado
+Type: 1
+Message: Maximum execution time of 120 seconds exceeded
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-admin\includes\class-core-upgrader.php
+Line: 417
+
+--------------------------------------------------------------------------------
+
+2025-08-03 03:17:48 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Failed opening required 'C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf.php' (include_path='.;C:\php\pear') in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php:179
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(372): Modulo_Ventas->cargar_archivos()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php(959): Modulo_Ventas->cargar_plugin()
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-settings.php(545): include_once('C:\\wamp64\\www\\g...')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-config.php(103): require_once('C:\\wamp64\\www\\g...')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-load.php(50): require_once('C:\\wamp64\\www\\g...')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin-ajax.php(22): require_once('C:\\wamp64\\www\\g...')
+#6 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\modulo-ventas.php
+Line: 179
+
+--------------------------------------------------------------------------------
+
+2025-08-04 03:47:40 - Error fatal detectado
+Type: 4
+Message: syntax error, unexpected token "}", expecting "elseif" or "else" or "endif"
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php
+Line: 719
+
+--------------------------------------------------------------------------------
+
+2025-08-04 05:47:43 - Error fatal detectado
+Type: 1
+Message: Uncaught Error: Call to undefined method Modulo_Ventas_Document_Viewer::render_complete_document() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php:284
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php(126): Modulo_Ventas_Document_Viewer->render_document_view('cotizacion', '29')
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Document_Viewer->handle_document_view('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\template-loader.php(13): do_action('template_redire...')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-blog-header.php(19): require_once('C:\\wamp64\\www\\g...')
+#6 C:\wamp64\www\gestion-almacenes-bolt\index.php(17): require('C:\\wamp64\\www\\g...')
+#7 {main}
+  thrown
+File: C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-document-viewer.php
+Line: 284
+
+--------------------------------------------------------------------------------
+
