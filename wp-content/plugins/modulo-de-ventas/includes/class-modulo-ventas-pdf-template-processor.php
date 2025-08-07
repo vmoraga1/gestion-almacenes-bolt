@@ -31,6 +31,14 @@ class Modulo_Ventas_PDF_Template_Processor {
     public function __construct() {
         $this->cotizacion_data = null;
         
+        // Cargar el logger si no está disponible
+        if (!class_exists('Modulo_Ventas_Logger')) {
+            $logger_file = MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-logger.php';
+            if (file_exists($logger_file)) {
+                require_once $logger_file;
+            }
+        }
+        
         // Inicializar logger si existe
         if (class_exists('Modulo_Ventas_Logger')) {
             $this->logger = Modulo_Ventas_Logger::get_instance();
@@ -376,7 +384,8 @@ class Modulo_Ventas_PDF_Template_Processor {
                 'razon_social' => $cotizacion->cliente_nombre ?: 'Cliente sin nombre',
                 'email' => $cotizacion->cliente_email ?: '',
                 'telefono' => $cotizacion->cliente_telefono ?: '',
-                'rut' => $cotizacion->cliente_rut ?: '',
+                'rut' => !empty($cotizacion->cliente_rut) ? $this->formatear_rut($cotizacion->cliente_rut) : '',
+                'rut_sin_formato' => $cotizacion->cliente_rut ?? '',
                 'direccion' => $cliente_direccion,
                 'ciudad' => $cliente_ciudad,
                 'region' => $cliente_region,
@@ -388,6 +397,7 @@ class Modulo_Ventas_PDF_Template_Processor {
             'empresa' => array(
                 'nombre' => get_option('blogname', 'Mi Empresa'),
                 'rut' => get_option('modulo_ventas_rut_empresa', '12.345.678-9'),
+                'rut_formateado' => $this->formatear_rut($empresa->rut ?? ''),
                 'direccion' => get_option('modulo_ventas_direccion_empresa', 'Dirección de la empresa'),
                 'ciudad' => get_option('modulo_ventas_ciudad_empresa', 'Santiago'),
                 'region' => get_option('modulo_ventas_region_empresa', 'Región Metropolitana'),
@@ -421,11 +431,26 @@ class Modulo_Ventas_PDF_Template_Processor {
             
             // Totales formateados
             'totales' => array(
+                'subtotal' => $subtotal,
                 'subtotal_formateado' => number_format($subtotal, 0, ',', '.'),
+                'descuento' => $descuento,
                 'descuento_formateado' => number_format($descuento, 0, ',', '.'),
+                'descuento_porcentaje' => $cotizacion->tipo_descuento === 'porcentaje' 
+                    ? (isset($cotizacion->descuento_porcentaje) ? $cotizacion->descuento_porcentaje : 0)
+                    : ($subtotal > 0 ? round(($descuento / $subtotal) * 100, 1) : 0),
+
+                'costo_envio' => isset($cotizacion->costo_envio) ? floatval($cotizacion->costo_envio) : 0,
+                'costo_envio_formateado' => '' . number_format(isset($cotizacion->costo_envio) ? floatval($cotizacion->costo_envio) : 0, 0, ',', '.'),
+                'subtotal_con_descuento' => $subtotal - $descuento,
+                'subtotal_con_descuento_formateado' => '' . number_format($subtotal - $descuento, 0, ',', '.'),
+                'subtotal_con_envio' => ($subtotal - $descuento) + (isset($cotizacion->costo_envio) ? floatval($cotizacion->costo_envio) : 0),
+                'subtotal_con_envio_formateado' => '' . number_format(($subtotal - $descuento) + (isset($cotizacion->costo_envio) ? floatval($cotizacion->costo_envio) : 0), 0, ',', '.'),
+                
+                'impuestos' => $impuestos,
                 'impuestos_formateado' => number_format($impuestos, 0, ',', '.'),
+                'total' => $total,
                 'total_formateado' => number_format($total, 0, ',', '.'),
-                'descuento_porcentaje' => $subtotal > 0 ? round(($descuento / $subtotal) * 100, 1) : 0
+                'moneda' => $cotizacion->moneda ?? 'CLP'
             )
         );
         // CORREGIR: Sincronizar las dos propiedades
@@ -542,7 +567,12 @@ class Modulo_Ventas_PDF_Template_Processor {
                 'vendedor' => 'Juan Pérez - Ejecutivo de Ventas',
                 'moneda' => 'CLP',
                 'plazo_pago' => '30_dias',
-                'terminos_condiciones' => 'Términos y condiciones estándar de la empresa.'
+                'terminos_condiciones' => 'Términos y condiciones estándar de la empresa.',
+                'costo_envio' => isset($cotizacion->costo_envio) ? floatval($cotizacion->costo_envio) : 0,
+                'costo_envio_formateado' => '$' . number_format(isset($cotizacion->costo_envio) ? floatval($cotizacion->costo_envio) : 0, 0, ',', '.'),
+                'condiciones_pago' => isset($cotizacion->condiciones_pago) ? $cotizacion->condiciones_pago : '',
+                'plazo_pago' => isset($cotizacion->plazo_pago) ? $cotizacion->plazo_pago : '',
+                'subtotal_con_envio' => ($subtotal - $descuento) + (isset($cotizacion->costo_envio) ? floatval($cotizacion->costo_envio) : 0),
             ),
             
             // Datos del cliente - MISMA ESTRUCTURA que cargar_datos_cotizacion()
@@ -1068,7 +1098,7 @@ class Modulo_Ventas_PDF_Template_Processor {
     }
 
     /**
-     * NUEVO: Formatear RUT chileno
+     * Formatear RUT chileno
      */
     private function formatear_rut($rut) {
         if (empty($rut)) {

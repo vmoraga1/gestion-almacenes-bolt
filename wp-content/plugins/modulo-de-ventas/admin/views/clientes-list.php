@@ -109,6 +109,14 @@ $estadisticas = $db->obtener_estadisticas_clientes();
 </div>
 
 <style>
+.wrap.mv-clientes-list {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
 /* Estilos para las estadísticas */
 .mv-stats-container {
     display: flex;
@@ -162,21 +170,41 @@ $estadisticas = $db->obtener_estadisticas_clientes();
 
 /* Ajustes para la tabla */
 .wp-list-table .column-razon_social {
-    width: 25%;
-}
-
-.wp-list-table .column-email {
     width: 20%;
 }
 
-.wp-list-table .column-cotizaciones,
-.wp-list-table .column-estado {
+th#rut {
+    width: 10%;
+}
+
+.wp-list-table .column-email {
+    width: 15%;
+}
+
+th#telefono {
+    width: 10%;
+}
+
+th#ciudad {
+    width: 10%;
+}
+
+.wp-list-table .column-cotizaciones {
     width: 10%;
     text-align: center;
 }
 
+th#notas {
+    width: 6%;
+}
+
 .wp-list-table .column-ultima_actividad {
-    width: 15%;
+    width: 10%;
+}
+
+.wp-list-table .column-estado {
+    width: 9%;
+    text-align: center;
 }
 
 /* Responsive */

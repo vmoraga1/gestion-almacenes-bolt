@@ -41,7 +41,7 @@ if (!current_user_can('manage_clientes_ventas')) {
                             <tr>
                                 <th scope="row">
                                     <label for="razon_social" class="required">
-                                        <?php _e('Razón Social', 'modulo-ventas'); ?>
+                                        <?php _e('Nombre / Razón Social', 'modulo-ventas'); ?>
                                     </label>
                                 </th>
                                 <td>
@@ -104,7 +104,7 @@ if (!current_user_can('manage_clientes_ventas')) {
                                         class="regular-text">
                                 </td>
                             </tr>
-                            <tr>
+                            <!--<tr>
                                 <th scope="row">
                                     <label for="email_dte">
                                         <?php _e('Email DTE', 'modulo-ventas'); ?>
@@ -115,7 +115,7 @@ if (!current_user_can('manage_clientes_ventas')) {
                                         class="regular-text">
                                     <span class="description"><?php _e('Email para recepción de documentos tributarios', 'modulo-ventas'); ?></span>
                                 </td>
-                            </tr>
+                            </tr>-->
                         </table>
                     </div>
                 </div>
@@ -249,6 +249,18 @@ if (!current_user_can('manage_clientes_ventas')) {
 </div>
 
 <style>
+.wrap.mv-nuevo-cliente {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+h2.hndle {
+    padding: 0 0 0 12px;
+}
+
 /* Estilos del formulario */
 .mv-form-container {
     display: flex;

@@ -4668,5 +4668,20 @@ add_action('wp_ajax_mv_test_variables_plantilla', function() {
  * /wp-admin/admin-ajax.php?action=mv_debug_variables_empresa
  * /wp-admin/admin-ajax.php?action=mv_test_variables_plantilla
  */
+
 // Sistema de visualización web de documentos
 require_once MODULO_VENTAS_PLUGIN_DIR . 'includes/class-modulo-ventas-document-viewer.php';
+// Inicializar el viewer y forzar flush de reglas si es necesario
+$document_viewer = new Modulo_Ventas_Document_Viewer();
+
+// Forzar actualización de permalinks si es necesario
+add_action('init', function() {
+    $version_actual = get_option('mv_document_viewer_version', '0');
+    $version_nueva = '1.2'; // Cambiar este número fuerza un nuevo flush
+    
+    if ($version_actual !== $version_nueva) {
+        flush_rewrite_rules();
+        update_option('mv_document_viewer_version', $version_nueva);
+        error_log('MODULO_VENTAS: Rewrite rules actualizadas para Document Viewer');
+    }
+}, 99);

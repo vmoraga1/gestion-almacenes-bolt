@@ -238,7 +238,7 @@ class Modulo_Ventas_Admin {
             array($this, 'pagina_ventas')
         );
 
-        // Configuración de PDFs
+        /* Configuración de PDFs
         add_submenu_page(
             'modulo-ventas',
             __('Configuración de PDFs', 'modulo-ventas'),
@@ -246,9 +246,9 @@ class Modulo_Ventas_Admin {
             'manage_options',
             'modulo-ventas-config-pdf',
             array($this, 'pagina_configuracion_pdf')
-        );
+        );*/
 
-        // Diagnóstico (solo en desarrollo o debug)
+        /* Diagnóstico (solo en desarrollo o debug)
         if (WP_DEBUG || current_user_can('manage_options')) {
             add_submenu_page(
                 'modulo-ventas',
@@ -268,7 +268,7 @@ class Modulo_Ventas_Admin {
                 'mv-test-plantillas',
                 array($this, 'pagina_test_plantillas')
             );
-        }
+        }*/
 
         // Configuración
         add_submenu_page(

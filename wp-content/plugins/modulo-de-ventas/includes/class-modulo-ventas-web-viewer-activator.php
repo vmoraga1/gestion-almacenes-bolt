@@ -484,13 +484,13 @@ add_action("admin_menu", function() {
                 
                 echo '<div style="background: #e7f3ff; border: 1px solid #bee5eb; border-radius: 4px; padding: 20px; margin-bottom: 25px;">';
                 echo '<h3 style="color: #0c5460; margin-top: 0;">🎯 Sistema de Visualización Web</h3>';
-                echo '<p style="color: #0c5460;">Transforma tu sistema de PDFs limitados a visualización web completa con CSS avanzado, responsive design y impresión optimizada.</p>';
+                echo '<p style="color: #0c5460;">Transformar sistema de PDFs limitados a visualización web completa con CSS avanzado, responsive design y impresión optimizada.</p>';
                 echo '</div>';
                 
                 echo '<div style="display: flex; gap: 30px; margin: 25px 0;">';
                 
                 echo '<div style="flex: 1;">';
-                echo '<h4>✅ Beneficios:</h4>';
+                echo '<h4>✅ Activando:</h4>';
                 echo '<ul style="line-height: 1.8;">';
                 echo '<li>CSS completo sin limitaciones</li>';
                 echo '<li>Diseño responsive automático</li>';
@@ -518,7 +518,7 @@ add_action("admin_menu", function() {
                 
                 if ($activated === "1") {
                     echo '<div style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 4px; padding: 15px;">';
-                    echo '<h4 style="color: #0c5460; margin-top: 0;">✅ Sistema Ya Activado</h4>';
+                    echo '<h4 style="color: #0c5460; margin-top: 0;">Estado: ✅ Sistema Ya Activado</h4>';
                     echo '<p style="color: #0c5460; margin-bottom: 10px;">El sistema está funcionando. Ve a la lista de cotizaciones para usar los botones "Ver Web".</p>';
                     echo '<a href="' . admin_url("admin.php?page=modulo-ventas-cotizaciones") . '" class="button button-primary">📋 Ir a Cotizaciones</a>';
                     echo '</div>';

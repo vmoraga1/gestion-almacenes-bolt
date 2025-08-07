@@ -47,8 +47,8 @@ class Cotizaciones_List_Table extends WP_List_Table {
             'cliente'          => __('Cliente', 'modulo-ventas'),
             'total'            => __('Total', 'modulo-ventas'),
             'estado'           => __('Estado', 'modulo-ventas'),
-            'fecha_vencimiento' => __('Vencimiento', 'modulo-ventas'),
-            'acciones'         => __('Acciones', 'modulo-ventas')
+            'fecha_vencimiento' => __('Vencimiento', 'modulo-ventas')
+            //'acciones'         => __('Acciones', 'modulo-ventas')
         );
     }
     
@@ -106,7 +106,7 @@ class Cotizaciones_List_Table extends WP_List_Table {
             )
         );
         
-        // Agregar acción PDF solo si tiene productos
+        /* Agregar acción PDF solo si tiene productos
         $tiene_productos = $this->db->contar_items_cotizacion($item['id']) > 0;
         if ($tiene_productos) {
             $actions['pdf'] = sprintf(
@@ -117,7 +117,7 @@ class Cotizaciones_List_Table extends WP_List_Table {
                 ),
                 __('Ver PDF', 'modulo-ventas')
             );
-        }
+        }*/
         
         // Otras acciones existentes
         $actions['duplicate'] = sprintf(

@@ -589,9 +589,9 @@ private function render_complete_document($html, $css, $documento, $modo = 'view
                 🖨️ Imprimir
             </button>
             
-            <button onclick="printWithPaging()" class="mv-btn">
+            <!--<button onclick="printWithPaging()" class="mv-btn">
                 💾 Guardar PDF
-            </button>
+            </button>-->
             
             <?php if ($modo === 'preview'): ?>
             <a href="javascript:history.back()" class="mv-btn">
@@ -787,8 +787,8 @@ private function render_paged_print_document($html, $css, $documento, $titulo) {
         left: 0 !important;
         right: 0 !important;
         height: 12mm !important;
-        background: white !important;
-        border-top: 1px solid #333 !important;
+        /*background: white !important;
+        border-top: 1px solid #333 !important;*/
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -1241,8 +1241,9 @@ private function render_paged_print_document($html, $css, $documento, $titulo) {
                             if ($actions.find('a[href*="/documentos/cotizacion/"]').length === 0) {
                                 // Agregar los botones
                                 $actions.append(
-                                    ' | <a href="' + viewUrl + '" target="_blank" title="Ver documento en navegador" style="color: #0073aa; text-decoration: none; font-weight: bold;">👁️ Ver Web</a>' +
-                                    ' | <a href="' + printUrl + '" target="_blank" title="Abrir vista de impresión" style="color: #135e96; text-decoration: none; font-weight: bold;">🖨️ Imprimir</a>'
+                                    ' | <a href="' + viewUrl + '" target="_blank" title="Ver documento en navegador" style="color: #0073aa; text-decoration: none; font-weight: bold;">🖨️ Imprimir</a>' 
+                                    /*+
+                                    ' | <a href="' + printUrl + '" target="_blank" title="Abrir vista de impresión" style="color: #135e96; text-decoration: none; font-weight: bold;">🖨️ Imprimir Directo</a>'*/
                                 );
                                 botonesAgregados++;
                                 console.log("DOCUMENT_VIEWER: Botones agregados para cotización", cotizacionId);

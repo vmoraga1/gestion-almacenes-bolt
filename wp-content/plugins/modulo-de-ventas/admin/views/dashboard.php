@@ -49,11 +49,11 @@ if (!defined('ABSPATH')) {
                                 <?php _e('Agregar nuevo cliente', 'modulo-ventas'); ?>
                             </a>
                         </li>
-                        <li>
+                        <!--<li>
                             <a href="<?php echo esc_url(mv_admin_url('reportes')); ?>" class="welcome-icon welcome-view-site">
                                 <?php _e('Ver reportes', 'modulo-ventas'); ?>
                             </a>
-                        </li>
+                        </li>-->
                         <li>
                             <a href="<?php echo esc_url(mv_admin_url('configuracion')); ?>" class="welcome-icon welcome-widgets-menus">
                                 <?php _e('Configuración', 'modulo-ventas'); ?>

@@ -1148,5 +1148,25 @@ jQuery(document).ready(function($) {
         
         return true;
     });
+
+    // Prevenir error de trim en campos undefined
+    $('.mv-config-form').on('submit', function(e) {
+        // Validar que todos los campos existan antes de enviar
+        $(this).find('input, select, textarea').each(function() {
+            if (typeof $(this).val() === 'undefined') {
+                $(this).val('');
+            }
+        });
+    });
+    
+    // Fix para el tab de stock específicamente
+    if (window.location.href.includes('tab=stock')) {
+        // Asegurar que todos los campos de stock existan
+        $('input[type="text"], input[type="number"], select').each(function() {
+            if (!$(this).val()) {
+                $(this).val('');
+            }
+        });
+    }
 });
 </script>

@@ -58,6 +58,104 @@ if (!empty($cotizacion->vendedor_id)) {
 ?>
 
 <div class="wrap mv-ver-cotizacion">
+    <!-- Acciones -->
+    <div class="postbox">
+        <h2 class="hndle">
+            <span><?php _e('', 'modulo-ventas'); ?></span>
+        </h2>
+        <div class="inside">
+            <div class="mv-actions">
+                <a href="<?php echo admin_url('admin.php?page=ventas-editar-cotizacion&id=' . $cotizacion_id); ?>" 
+                    class="button button-primary button-large mv-btn-full">
+                    <span class="dashicons dashicons-edit"></span>
+                    <?php _e('Editar Cotización', 'modulo-ventas'); ?>
+                </a>
+                
+                <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=ventas-cotizaciones&action=duplicate&id=' . $cotizacion_id), 'duplicate_cotizacion_' . $cotizacion_id); ?>" 
+                    class="button button-large mv-btn-full">
+                    <span class="dashicons dashicons-admin-page"></span>
+                    <?php _e('Duplicar', 'modulo-ventas'); ?>
+                </a>
+                
+                <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=ventas-cotizaciones&action=send&id=' . $cotizacion_id), 'send_cotizacion_' . $cotizacion_id); ?>" 
+                    class="button button-large mv-btn-full">
+                    <span class="dashicons dashicons-email"></span>
+                    <?php _e('Enviar por Email', 'modulo-ventas'); ?>
+                </a>
+                
+                <!--<a href="<?php echo wp_nonce_url(admin_url('admin.php?page=ventas-cotizaciones&action=pdf&id=' . $cotizacion_id), 'pdf_cotizacion_' . $cotizacion_id); ?>" 
+                    class="button button-large mv-btn-full" target="_blank">
+                    <span class="dashicons dashicons-pdf"></span>
+                    <?php _e('Descargar PDF', 'modulo-ventas'); ?>
+                </a>-->
+                
+                <?php if ($cotizacion->estado === 'pendiente' || $cotizacion->estado === 'enviada'): ?>
+                <hr class="mv-separator">
+                
+                <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=ventas-cotizaciones&action=accept&id=' . $cotizacion_id), 'accept_cotizacion_' . $cotizacion_id); ?>" 
+                    class="button button-large mv-btn-full mv-btn-success">
+                    <span class="dashicons dashicons-yes"></span>
+                    <?php _e('Marcar como Aceptada', 'modulo-ventas'); ?>
+                </a>
+                
+                <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=ventas-cotizaciones&action=reject&id=' . $cotizacion_id), 'reject_cotizacion_' . $cotizacion_id); ?>" 
+                    class="button button-large mv-btn-full mv-btn-danger">
+                    <span class="dashicons dashicons-no"></span>
+                    <?php _e('Marcar como Rechazada', 'modulo-ventas'); ?>
+                </a>
+                <?php endif; ?>
+                
+                <?php if ($cotizacion->estado === 'aprobada' || $cotizacion->estado === 'aceptada'): ?>
+                <hr class="mv-separator">
+                
+                <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=ventas-cotizaciones&action=convert&id=' . $cotizacion_id), 'convert_cotizacion_' . $cotizacion_id); ?>" 
+                    class="button button-large button-primary mv-btn-full">
+                    <span class="dashicons dashicons-cart"></span>
+                    <?php _e('Convertir a Venta', 'modulo-ventas'); ?>
+                </a>
+                <?php endif; ?>
+                
+                <hr class="mv-separator">
+                
+                <!-- Botón Imprimir -->
+                <a href="<?php echo home_url('/documentos/cotizacion/' . $cotizacion->id); ?>" 
+                target="_blank" 
+                class="button button-primary">
+                    <span class="dashicons dashicons-visibility"></span> Ver/Imprimir
+                </a>
+            </div>
+            
+            <!--<?php 
+            // Generar URLs para PDF
+            $pdf_handler = new Modulo_Ventas_PDF_Handler();
+            $preview_url = $pdf_handler->generar_url_preview($cotizacion_id);
+            $download_url = $pdf_handler->generar_url_descarga($cotizacion_id);
+            ?>
+
+            <div class="mv-pdf-actions">
+                <button type="button" class="button button-secondary mv-btn-pdf-preview" 
+                        data-cotizacion-id="<?php echo $cotizacion_id; ?>"
+                        data-preview-url="<?php echo esc_url($preview_url); ?>">
+                    <span class="dashicons dashicons-visibility"></span>
+                    <?php _e('Ver PDF', 'modulo-ventas'); ?>
+                </button>
+                
+                <button type="button" class="button button-secondary mv-btn-pdf-download" 
+                        data-cotizacion-id="<?php echo $cotizacion_id; ?>"
+                        data-download-url="<?php echo esc_url($download_url); ?>">
+                    <span class="dashicons dashicons-download"></span>
+                    <?php _e('Descargar PDF', 'modulo-ventas'); ?>
+                </button>
+                
+                <button type="button" class="button button-secondary mv-btn-email-pdf" 
+                        data-cotizacion-id="<?php echo $cotizacion_id; ?>">
+                    <span class="dashicons dashicons-email"></span>
+                    <?php _e('Enviar por Email', 'modulo-ventas'); ?>
+                </button>
+            </div>-->
+        </div>
+    </div>
+
     <h1>
         <span class="dashicons dashicons-visibility"></span>
         <?php echo sprintf(__('Cotización %s', 'modulo-ventas'), esc_html($cotizacion->folio)); ?>
@@ -434,7 +532,7 @@ if (!empty($cotizacion->vendedor_id)) {
                 <h2 class="hndle">
                     <span><?php _e('Resumen', 'modulo-ventas'); ?></span>
                 </h2>
-                <div class="inside">
+                <div class="mv-resumen-totales-table">
                     <table class="mv-totales-table">
                         <tbody>
                             <?php 
@@ -468,140 +566,46 @@ if (!empty($cotizacion->vendedor_id)) {
                             $total = $cotizacion->total ?? ($subtotal_con_envio + $iva);
                             ?>
                             
-                            <tr>
-                                <th><?php _e('Subtotal:', 'modulo-ventas'); ?></th>
-                                <td><?php echo wc_price($subtotal); ?></td>
-                            </tr>
-                            
-                            <?php if ($descuento_global > 0): ?>
-                            <tr>
-                                <th><?php _e('Descuento:', 'modulo-ventas'); ?></th>
-                                <td>-<?php echo wc_price($descuento_global); ?></td>
-                            </tr>
-                            <tr>
-                                <th><?php _e('Subtotal con descuento:', 'modulo-ventas'); ?></th>
-                                <td><?php echo wc_price($subtotal_con_descuento); ?></td>
-                            </tr>
-                            <?php endif; ?>
-                            
-                            <?php if ($costo_envio > 0): ?>
-                            <tr>
-                                <th><?php _e('Envío:', 'modulo-ventas'); ?></th>
-                                <td><?php echo wc_price($costo_envio); ?></td>
-                            </tr>
-                            <?php endif; ?>
-                            
-                            <?php if ($iva > 0): ?>
-                            <tr>
-                                <th><?php _e('IVA (19%):', 'modulo-ventas'); ?></th>
-                                <td><?php echo wc_price($iva); ?></td>
-                            </tr>
-                            <?php endif; ?>
-                            
-                            <tr class="total">
-                                <th><?php _e('Total:', 'modulo-ventas'); ?></th>
-                                <td><strong><?php echo wc_price($total); ?></strong></td>
-                            </tr>
+                            <div class="l-resumen-table">
+    <div class="col-izquierda"><?php _e('Subtotal:', 'modulo-ventas'); ?></div>
+    <div class="col-derecha"><?php echo wc_price($subtotal); ?></div>
+</div>
+
+<?php if ($descuento_global > 0): ?>
+    <div class="l-resumen-table">
+        <div class="col-izquierda"><?php _e('Descuento:', 'modulo-ventas'); ?></div>
+        <div class="col-derecha">-<?php echo wc_price($descuento_global); ?></div>
+    </div>
+    <div class="l-resumen-table">
+        <div class="col-izquierda"><?php _e('Subtotal con descuento:', 'modulo-ventas'); ?></div>
+        <div class="col-derecha"><?php echo wc_price($subtotal_con_descuento); ?></div>
+    </div>
+<?php endif; ?>
+
+<?php if ($costo_envio > 0): ?>
+    <div class="l-resumen-table">
+        <div class="col-izquierda"><?php _e('Envío:', 'modulo-ventas'); ?></div>
+        <div class="col-derecha"><?php echo wc_price($costo_envio); ?></div>
+    </div>
+<?php endif; ?>
+
+<?php if ($iva > 0): ?>
+    <div class="l-resumen-table">
+        <div class="col-izquierda"><?php _e('IVA (19%):', 'modulo-ventas'); ?></div>
+        <div class="col-derecha"><?php echo wc_price($iva); ?></div>
+    </div>
+<?php endif; ?>
+
+<div class="l-resumen-table">
+    <div class="col-izquierda"><?php _e('Total:', 'modulo-ventas'); ?></div>
+    <div class="col-derecha"><strong><?php echo wc_price($total); ?></strong></div>
+</div>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Acciones -->
-            <div class="postbox">
-                <h2 class="hndle">
-                    <span><?php _e('Acciones', 'modulo-ventas'); ?></span>
-                </h2>
-                <div class="inside">
-                    <div class="mv-actions">
-                        <a href="<?php echo admin_url('admin.php?page=ventas-editar-cotizacion&id=' . $cotizacion_id); ?>" 
-                           class="button button-primary button-large mv-btn-full">
-                            <span class="dashicons dashicons-edit"></span>
-                            <?php _e('Editar Cotización', 'modulo-ventas'); ?>
-                        </a>
-                        
-                        <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=ventas-cotizaciones&action=duplicate&id=' . $cotizacion_id), 'duplicate_cotizacion_' . $cotizacion_id); ?>" 
-                           class="button button-large mv-btn-full">
-                            <span class="dashicons dashicons-admin-page"></span>
-                            <?php _e('Duplicar', 'modulo-ventas'); ?>
-                        </a>
-                        
-                        <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=ventas-cotizaciones&action=send&id=' . $cotizacion_id), 'send_cotizacion_' . $cotizacion_id); ?>" 
-                           class="button button-large mv-btn-full">
-                            <span class="dashicons dashicons-email"></span>
-                            <?php _e('Enviar por Email', 'modulo-ventas'); ?>
-                        </a>
-                        
-                        <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=ventas-cotizaciones&action=pdf&id=' . $cotizacion_id), 'pdf_cotizacion_' . $cotizacion_id); ?>" 
-                           class="button button-large mv-btn-full" target="_blank">
-                            <span class="dashicons dashicons-pdf"></span>
-                            <?php _e('Descargar PDF', 'modulo-ventas'); ?>
-                        </a>
-                        
-                        <?php if ($cotizacion->estado === 'pendiente' || $cotizacion->estado === 'enviada'): ?>
-                        <hr class="mv-separator">
-                        
-                        <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=ventas-cotizaciones&action=accept&id=' . $cotizacion_id), 'accept_cotizacion_' . $cotizacion_id); ?>" 
-                           class="button button-large mv-btn-full mv-btn-success">
-                            <span class="dashicons dashicons-yes"></span>
-                            <?php _e('Marcar como Aceptada', 'modulo-ventas'); ?>
-                        </a>
-                        
-                        <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=ventas-cotizaciones&action=reject&id=' . $cotizacion_id), 'reject_cotizacion_' . $cotizacion_id); ?>" 
-                           class="button button-large mv-btn-full mv-btn-danger">
-                            <span class="dashicons dashicons-no"></span>
-                            <?php _e('Marcar como Rechazada', 'modulo-ventas'); ?>
-                        </a>
-                        <?php endif; ?>
-                        
-                        <?php if ($cotizacion->estado === 'aprobada' || $cotizacion->estado === 'aceptada'): ?>
-                        <hr class="mv-separator">
-                        
-                        <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=ventas-cotizaciones&action=convert&id=' . $cotizacion_id), 'convert_cotizacion_' . $cotizacion_id); ?>" 
-                           class="button button-large button-primary mv-btn-full">
-                            <span class="dashicons dashicons-cart"></span>
-                            <?php _e('Convertir a Venta', 'modulo-ventas'); ?>
-                        </a>
-                        <?php endif; ?>
-                        
-                        <hr class="mv-separator">
-                        
-                        <a href="#" onclick="window.print(); return false;" 
-                           class="button button-large mv-btn-full">
-                            <span class="dashicons dashicons-printer"></span>
-                            <?php _e('Imprimir', 'modulo-ventas'); ?>
-                        </a>
-                    </div>
-                    <?php 
-                    // Generar URLs para PDF
-                    $pdf_handler = new Modulo_Ventas_PDF_Handler();
-                    $preview_url = $pdf_handler->generar_url_preview($cotizacion_id);
-                    $download_url = $pdf_handler->generar_url_descarga($cotizacion_id);
-                    ?>
-
-                    <div class="mv-pdf-actions">
-                        <button type="button" class="button button-secondary mv-btn-pdf-preview" 
-                                data-cotizacion-id="<?php echo $cotizacion_id; ?>"
-                                data-preview-url="<?php echo esc_url($preview_url); ?>">
-                            <span class="dashicons dashicons-visibility"></span>
-                            <?php _e('Ver PDF', 'modulo-ventas'); ?>
-                        </button>
-                        
-                        <button type="button" class="button button-secondary mv-btn-pdf-download" 
-                                data-cotizacion-id="<?php echo $cotizacion_id; ?>"
-                                data-download-url="<?php echo esc_url($download_url); ?>">
-                            <span class="dashicons dashicons-download"></span>
-                            <?php _e('Descargar PDF', 'modulo-ventas'); ?>
-                        </button>
-                        
-                        <button type="button" class="button button-secondary mv-btn-email-pdf" 
-                                data-cotizacion-id="<?php echo $cotizacion_id; ?>">
-                            <span class="dashicons dashicons-email"></span>
-                            <?php _e('Enviar por Email', 'modulo-ventas'); ?>
-                        </button>
-                    </div>
-                </div>
-            </div>
+            
             
             <?php
             /*// ===== DEBUG TEMPORAL - REMOVER DESPUÉS =====
@@ -633,7 +637,7 @@ if (!empty($cotizacion->vendedor_id)) {
 
             ?>
 
-            <!-- Sección PDF -->
+            <!-- Sección PDF --
             <div class="postbox">
                 <div class="postbox-header">
                     <h2 class="hndle">
@@ -720,7 +724,7 @@ if (!empty($cotizacion->vendedor_id)) {
                         </div>
                     <?php endif; ?>
                 </div>
-            </div>
+            </div>-->
 
             <!-- Historial -->
             <div class="postbox">
@@ -789,6 +793,18 @@ if (!empty($cotizacion->vendedor_id)) {
 </div><!-- /wrap -->
 
 <style>
+.mv-ver-cotizacion {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+h2.hndle {
+    padding: 0 0 0 10px;
+}
+
 /* Layout principal */
 .mv-cotizacion-container {
     display: grid;
@@ -866,40 +882,40 @@ if (!empty($cotizacion->vendedor_id)) {
 }
 
 .column-item {
-    width: 50px;
+    width: 5%;
     text-align: center;
 }
 
 .column-descripcion {
-    width: 35%;
+    width: 30%;
 }
 
 .column-almacen {
-    width: 120px;
+    width: 10%;
 }
 
 .column-stock {
-    width: 80px;
+    width: 10%;
     text-align: center;
 }
 
 .column-cantidad {
-    width: 60px;
+    width: 10%;
     text-align: center;
 }
 
 .column-precio {
-    width: 100px;
+    width: 10%;
     text-align: right;
 }
 
 .column-descuento {
-    width: 80px;
+    width: 10%;
     text-align: right;
 }
 
 .column-subtotal {
-    width: 100px;
+    width: 15%;
     text-align: right;
 }
 
@@ -1008,63 +1024,48 @@ if (!empty($cotizacion->vendedor_id)) {
 }
 
 /* Resumen totales */
-.mv-resumen-totales .mv-total-row {
+.mv-resumen-totales-table {
+    margin: 0 12px 28px 12px;
+}
+
+.l-resumen-table {
     display: flex;
     justify-content: space-between;
-    padding: 6px 0;
+    padding: 8px 0 12px 0;
     border-bottom: 1px solid #f0f0f1;
 }
 
-.mv-resumen-totales .mv-total-final {
-    border-bottom: none;
-    border-top: 2px solid #dcdcde;
-    padding-top: 10px;
-    margin-top: 8px;
-    font-size: 16px;
-    font-weight: 600;
+.col-izquierda {
+    text-align: left;
+    flex: 1;
+}
+
+.col-derecha {
+    text-align: right;
+    flex: 1;
 }
 
 /* Acciones */
 .mv-actions {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    flex-wrap: wrap; /* Permite que se ajusten si hay muchos botones */
+    gap: 10px;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    background-color: #f9f9f9;
+    justify-content: flex-start;
+    align-items: center;
 }
 
-.mv-btn-full {
-    width: 100%;
-    justify-content: center;
+.mv-actions a.button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    font-size: 14px;
+    white-space: nowrap;
 }
 
-.mv-btn-success {
-    background-color: #5cb85c;
-    border-color: #4cae4c;
-    color: white;
-}
-
-.mv-btn-success:hover {
-    background-color: #449d44;
-    border-color: #398439;
-    color: white;
-}
-
-.mv-btn-danger {
-    background-color: #d9534f;
-    border-color: #d43f3a;
-    color: white;
-}
-
-.mv-btn-danger:hover {
-    background-color: #c9302c;
-    border-color: #ac2925;
-    color: white;
-}
-
-.mv-separator {
-    margin: 15px 0;
-    border: 0;
-    border-top: 1px solid #dcdcde;
-}
 
 /* Historial */
 .mv-historial-item {

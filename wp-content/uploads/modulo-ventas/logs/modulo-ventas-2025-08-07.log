@@ -1,0 +1,110 @@
+[2025-08-07 07:39:08] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"stock"}
+[2025-08-07 07:43:32] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"stock"}
+[2025-08-07 07:43:49] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"stock"}
+[2025-08-07 07:44:12] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"stock"}
+[2025-08-07 07:45:46] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"stock"}
+[2025-08-07 07:47:02] INFO: Configuración del plugin actualizada | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"usuario":1,"tab":"stock"}
+[2025-08-07 07:50:18] INFO: TEMPLATE_PROCESSOR: Procesando preview de plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 07:50:18] INFO: TEMPLATE_PROCESSOR: Generando datos de prueba para: cotizacion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 07:50:18] EMERGENCY: Error Fatal: Uncaught ArgumentCountError: Too few arguments to function Modulo_Ventas_PDF_Template_Processor::procesar_logo_empresa(), 0 passed in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php on line 602 and exactly 1 expected in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php:932
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php(602): Modulo_Ventas_PDF_Template_Processor->procesar_logo_empresa()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\includes\class-modulo-ventas-pdf-template-processor.php(291): Modulo_Ventas_PDF_Template_Processor->generar_datos_prueba('cotizacion')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\test-plantillas-integration.php(82): Modulo_Ventas_PDF_Template_Processor->procesar_plantilla_preview('<h1>Empresa: {{...', '')
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(3285): include('C:\\wamp64\\www\\g...')
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_test_plantillas('')
+#5 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#6 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#7 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mv-...')
+#8 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\includes\\class-modulo-ventas-pdf-template-processor.php","line":932,"type":1}
+[2025-08-07 07:50:42] EMERGENCY: Error Fatal: Uncaught Error: Class "Modulo_Ventas_PDF" not found in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\diagnostico-pdf.php:203
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(899): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_diagnostico_pdf('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\diagnostico-pdf.php","line":203,"type":1}
+[2025-08-07 07:51:42] EMERGENCY: Error Fatal: Uncaught Error: Failed opening required 'C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas/admin/views/configuracion-pdf.php' (include_path='.;C:\php\pear') in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php:892
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_configuracion_pdf('')
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#4 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-admin.php","line":892,"type":1}
+[2025-08-07 07:53:47] EMERGENCY: Error Fatal: syntax error, unexpected identifier "add_submenu_page", expecting "function" or "const" | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\class-modulo-ventas-admin.php","line":274,"type":4}
+[2025-08-07 07:54:40] EMERGENCY: Error Fatal: Uncaught Error: Class "Modulo_Ventas_PDF" not found in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\diagnostico-pdf.php:203
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(899): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_diagnostico_pdf('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('ventas_page_mod...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\diagnostico-pdf.php","line":203,"type":1}
+[2025-08-07 08:00:34] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:00:34] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:00:34] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:00:34] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:00:34] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:00:41] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:00:41] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:00:41] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:00:41] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:00:41] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:04:02] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method Modulo_Ventas_DB::get_instance() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\editar-cotizacion.php:28
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(743): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_editar_cotizacion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('admin_page_modu...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\editar-cotizacion.php","line":28,"type":1}
+[2025-08-07 08:04:23] INFO: PDF_TEMPLATES: Iniciando generación con TCPDF para cotización 29 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:04:23] INFO: PDF_TEMPLATES: Usando método generar_pdf_desde_plantilla | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:04:23] INFO: PDF: Iniciando generación para cotización 29 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:04:23] INFO: MPDF: Librería cargada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:04:23] INFO: MPDF: Generando PDF sincronizado para cotización 29 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:04:23] INFO: MPDF_SYNC: Sincronizando plantilla para PDF | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:04:23] INFO: MPDF_SYNC: Documento sincronizado generado (19198 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:04:23] INFO: MPDF: HTML sincronizado generado (19198 caracteres) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:04:23] INFO: MPDF: PDF guardado exitosamente en: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000029.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:04:23] INFO: PDF: Generado exitosamente con mPDF: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000029.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:04:23] INFO: PDF_TEMPLATES: PDF generado exitosamente: C:\wamp64\www\gestion-almacenes-bolt/wp-content/uploads/modulo-ventas-pdf/cotizacion_COT-2025-000029.pdf | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:09:22] INFO: PROCESSOR: Procesando plantilla para visualización web - tipo: cotizacion | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:09:22] INFO: PROCESSOR: Iniciando carga de datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:09:22] INFO: PROCESSOR: Datos cargados desde objeto convertido a array | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:09:22] INFO: PROCESSOR: Datos cargados exitosamente. Claves principales: cliente | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:09:22] ERROR: PROCESSOR: ERROR - No hay datos de empresa | Usuario: hostpanish (ID: 1) | IP: ::1 | Trace: class-modulo-ventas-pdf-template-processor.php:82 log() <- class-modulo-ventas-pdf-template-processor.php:237 cargar_datos() <- class-modulo-ventas-document-viewer.php:338 procesar_plantilla() <- class-modulo-ventas-document-viewer.php:133 render_document_print()
+[2025-08-07 08:09:22] INFO: PROCESSOR: Plantilla procesada exitosamente para web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:09:22] INFO: PROCESSOR: Procesando CSS para impresión | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:09:22] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:16:12] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method Modulo_Ventas_DB::get_instance() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\editar-cotizacion.php:28
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(743): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_editar_cotizacion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('admin_page_modu...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\editar-cotizacion.php","line":28,"type":1}
+[2025-08-07 08:17:24] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:17:24] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:17:24] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:17:24] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:17:24] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:17:36] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:17:36] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:17:36] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:17:36] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:17:36] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:26:41] INFO: Cliente creado: Luis Miguel (ID: 26) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:32:13] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:32:13] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:32:13] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:32:13] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-07 08:32:13] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
