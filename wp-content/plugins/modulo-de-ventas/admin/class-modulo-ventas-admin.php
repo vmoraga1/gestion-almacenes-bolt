@@ -118,16 +118,6 @@ class Modulo_Ventas_Admin {
             array($this, 'pagina_editar_cotizacion')
         );
         
-        // Separador
-        /*add_submenu_page(
-            'modulo-ventas',
-            '',
-            '<span class="mv-menu-separator">' . __('Gestión', 'modulo-ventas') . '</span>',
-            'view_cotizaciones',
-            '#',
-            ''
-        );*/
-        
         // Clientes
         add_submenu_page(
             'modulo-ventas',
@@ -724,13 +714,31 @@ class Modulo_Ventas_Admin {
         }
         
         // Verificar que se puede editar
-        if (in_array($cotizacion->estado, array('convertida', 'expirada'))) {
+        if (in_array($cotizacion->estado, array('convertida', 'cancelada'))) {
             wp_die(__('Esta cotización no se puede editar.', 'modulo-ventas'));
         }
+        
+        // Procesar el formulario si se envió
+        if (isset($_POST['mv_cotizacion_nonce']) && wp_verify_nonce($_POST['mv_cotizacion_nonce'], 'mv_editar_cotizacion')) {
+            $resultado = $this->procesar_editar_cotizacion($cotizacion_id);
+            
+            // Si hubo error y no se hizo redirect, mostrar el error
+            if ($resultado === false) {
+                // Recargar la cotización
+                $cotizacion = $this->db->obtener_cotizacion($cotizacion_id);
+            }
+            // Si fue exitoso, ya se hizo redirect en procesar_editar_cotizacion()
+        }
+        
+        // Mostrar mensajes de transient (para después de redirects)
+        $this->mostrar_mensajes_transient();
         
         // Obtener datos necesarios
         $clientes = new Modulo_Ventas_Clientes();
         $lista_clientes = $clientes->obtener_clientes_para_select();
+        
+        // Obtener items de la cotización
+        $items = $this->db->obtener_items_cotizacion($cotizacion_id);
         
         // Almacenes
         $almacenes = array();
@@ -739,8 +747,406 @@ class Modulo_Ventas_Admin {
             $almacenes = $gestion_almacenes_db->obtener_almacenes();
         }
         
+        // Configuración
+        $config = $this->obtener_configuracion();
+        
+        // Asegurar que todas las propiedades necesarias existen con valores por defecto
+        $cotizacion->tipo_descuento_global = $cotizacion->tipo_descuento_global ?? $cotizacion->tipo_descuento ?? 'monto';
+        $cotizacion->descuento_global = $cotizacion->descuento_global ?? 0;
+        $cotizacion->descuento_monto = $cotizacion->descuento_monto ?? 0;
+        $cotizacion->descuento_porcentaje = $cotizacion->descuento_porcentaje ?? 0;
+        $cotizacion->envio_monto = $cotizacion->envio_monto ?? $cotizacion->envio ?? 0;
+        $cotizacion->incluye_iva = $cotizacion->incluye_iva ?? 0;
+        $cotizacion->impuesto_monto = $cotizacion->impuesto_monto ?? 0;
+        
+        // Determinar el tipo de descuento basado en los valores existentes
+        if ($cotizacion->descuento_porcentaje > 0) {
+            $cotizacion->tipo_descuento_global = 'porcentaje';
+            $cotizacion->descuento_global = $cotizacion->descuento_porcentaje;
+        } elseif ($cotizacion->descuento_monto > 0) {
+            $cotizacion->tipo_descuento_global = 'monto';
+            $cotizacion->descuento_global = $cotizacion->descuento_monto;
+        }
+        
         // Cargar vista
         require_once MODULO_VENTAS_PLUGIN_DIR . 'admin/views/editar-cotizacion.php';
+    }
+
+    /**
+     * Mostrar notificaciones administrativas
+     */
+    private function mostrar_notificaciones_admin() {
+        $notice = get_transient('mv_admin_notice_' . get_current_user_id());
+        
+        if ($notice) {
+            $class = 'notice notice-' . $notice['type'];
+            printf('<div class="%1$s is-dismissible"><p>%2$s</p></div>', 
+                esc_attr($class), 
+                esc_html($notice['message'])
+            );
+            delete_transient('mv_admin_notice_' . get_current_user_id());
+        }
+    }
+
+    /**
+     * Procesar el formulario de editar cotización
+     */
+    private function procesar_editar_cotizacion($cotizacion_id) {
+        try {
+            // Verificar nonce - igual que nueva cotización pero con diferente action
+            if (!wp_verify_nonce($_POST['mv_cotizacion_nonce'], 'mv_editar_cotizacion')) {
+                throw new Exception(__('Error de seguridad. Por favor, intente nuevamente.', 'modulo-ventas'));
+            }
+            
+            // Recopilar datos - EXACTAMENTE igual que procesar_nueva_cotizacion pero con vendedor_id del POST
+            $datos_generales = array(
+                'cliente_id' => isset($_POST['cliente_id']) ? intval($_POST['cliente_id']) : 0,
+                'vendedor_id' => isset($_POST['vendedor_id']) ? intval($_POST['vendedor_id']) : get_current_user_id(),
+                'almacen_id' => isset($_POST['almacen_id']) ? intval($_POST['almacen_id']) : 0,
+                'fecha' => isset($_POST['fecha']) ? sanitize_text_field($_POST['fecha']) : date('Y-m-d'),
+                'fecha_expiracion' => isset($_POST['fecha_expiracion']) ? sanitize_text_field($_POST['fecha_expiracion']) : '',
+                'plazo_pago' => isset($_POST['plazo_pago']) ? sanitize_text_field($_POST['plazo_pago']) : '',
+                'condiciones_pago' => isset($_POST['condiciones_pago']) ? sanitize_textarea_field($_POST['condiciones_pago']) : '',
+                'observaciones' => isset($_POST['observaciones']) ? sanitize_textarea_field($_POST['observaciones']) : '',
+                'notas_internas' => isset($_POST['notas_internas']) ? sanitize_textarea_field($_POST['notas_internas']) : '',
+                'terminos_condiciones' => isset($_POST['terminos_condiciones']) ? sanitize_textarea_field($_POST['terminos_condiciones']) : '',
+                'incluye_iva' => isset($_POST['incluye_iva']) ? 1 : 0,
+                'descuento_monto' => isset($_POST['descuento_monto']) ? floatval($_POST['descuento_monto']) : 0,
+                'descuento_porcentaje' => isset($_POST['descuento_porcentaje']) ? floatval($_POST['descuento_porcentaje']) : 0,
+                'tipo_descuento' => isset($_POST['tipo_descuento_global']) ? sanitize_text_field($_POST['tipo_descuento_global']) : 'monto',
+                'costo_envio' => isset($_POST['costo_envio']) ? floatval($_POST['costo_envio']) : 0,
+                'subtotal' => isset($_POST['subtotal']) ? floatval($_POST['subtotal']) : 0,
+                'total' => isset($_POST['total']) ? floatval($_POST['total']) : 0,
+                'estado' => isset($_POST['estado']) ? sanitize_text_field($_POST['estado']) : 'borrador'
+            );
+            
+            // Manejar envío - compatible con ambos nombres de campo
+            if (isset($_POST['envio_monto'])) {
+                $datos_generales['costo_envio'] = floatval($_POST['envio_monto']);
+            }
+            
+            // Aplicar descuento global según tipo - IGUAL que nueva cotización
+            if ($datos_generales['tipo_descuento'] === 'porcentaje') {
+                $datos_generales['descuento_porcentaje'] = isset($_POST['descuento_global']) ? floatval($_POST['descuento_global']) : 0;
+                $datos_generales['descuento_monto'] = 0;
+            } else {
+                $datos_generales['descuento_monto'] = isset($_POST['descuento_global']) ? floatval($_POST['descuento_global']) : 0;
+                $datos_generales['descuento_porcentaje'] = 0;
+            }
+            
+            // Calcular impuestos - IGUAL que nueva cotización
+            if ($datos_generales['incluye_iva']) {
+                $subtotal_con_descuento = $datos_generales['subtotal'];
+                if ($datos_generales['tipo_descuento'] === 'porcentaje') {
+                    $subtotal_con_descuento -= ($datos_generales['subtotal'] * $datos_generales['descuento_porcentaje'] / 100);
+                } else {
+                    $subtotal_con_descuento -= $datos_generales['descuento_monto'];
+                }
+                $base_imponible = $subtotal_con_descuento + $datos_generales['costo_envio'];
+                $datos_generales['impuesto_monto'] = $base_imponible * 0.19;
+            } else {
+                $datos_generales['impuesto_monto'] = 0;
+            }
+            
+            // Validar cliente - IGUAL que nueva cotización
+            if (!$datos_generales['cliente_id']) {
+                throw new Exception(__('Debe seleccionar un cliente', 'modulo-ventas'));
+            }
+            
+            // Actualizar cotización en la base de datos
+            global $wpdb;
+            $tabla_cotizaciones = $wpdb->prefix . 'mv_cotizaciones';
+            
+            $resultado = $wpdb->update(
+                $tabla_cotizaciones,
+                $datos_generales,
+                array('id' => $cotizacion_id),
+                null,
+                array('%d')
+            );
+            
+            if ($resultado === false) {
+                throw new Exception($wpdb->last_error ?: __('Error al actualizar la cotización', 'modulo-ventas'));
+            }
+            
+            // Procesar items - SIMILAR a nueva cotización pero con actualización
+            $tabla_items = $wpdb->prefix . 'mv_cotizaciones_items';
+            
+            // Obtener items existentes
+            $items_existentes = $wpdb->get_col($wpdb->prepare(
+                "SELECT id FROM $tabla_items WHERE cotizacion_id = %d",
+                $cotizacion_id
+            ));
+            
+            $items_procesados = array();
+            
+            // Procesar items del POST
+            if (isset($_POST['items']) && is_array($_POST['items'])) {
+                foreach ($_POST['items'] as $index => $item_data) {
+                    $item = array(
+                        'cotizacion_id' => $cotizacion_id,
+                        'producto_id' => isset($item_data['producto_id']) ? intval($item_data['producto_id']) : 0,
+                        'variacion_id' => isset($item_data['variacion_id']) ? intval($item_data['variacion_id']) : 0,
+                        'sku' => isset($item_data['sku']) ? sanitize_text_field($item_data['sku']) : '',
+                        'nombre' => isset($item_data['nombre']) ? sanitize_text_field($item_data['nombre']) : '',
+                        'descripcion' => isset($item_data['descripcion']) ? sanitize_textarea_field($item_data['descripcion']) : '',
+                        'cantidad' => isset($item_data['cantidad']) ? floatval($item_data['cantidad']) : 1,
+                        'precio_unitario' => isset($item_data['precio_unitario']) ? floatval($item_data['precio_unitario']) : 0,
+                        'tipo_descuento' => isset($item_data['tipo_descuento']) ? sanitize_text_field($item_data['tipo_descuento']) : 'monto',
+                        'orden' => $index
+                    );
+                    
+                    // Manejar almacén si está disponible
+                    if (isset($item_data['almacen_id'])) {
+                        $item['almacen_id'] = intval($item_data['almacen_id']);
+                    }
+                    
+                    // Calcular descuentos - IGUAL que nueva cotización
+                    $descuento_valor = isset($item_data['descuento']) ? floatval($item_data['descuento']) : 0;
+                    if ($item['tipo_descuento'] === 'porcentaje') {
+                        $item['descuento_porcentaje'] = $descuento_valor;
+                        $item['descuento_monto'] = ($item['cantidad'] * $item['precio_unitario'] * $descuento_valor) / 100;
+                    } else {
+                        $item['descuento_monto'] = $descuento_valor;
+                        $item['descuento_porcentaje'] = 0;
+                    }
+                    
+                    // Calcular totales del item
+                    $item['subtotal'] = $item['cantidad'] * $item['precio_unitario'];
+                    $item['total'] = $item['subtotal'] - $item['descuento_monto'];
+                    
+                    // Si tiene ID, actualizar; si no, insertar
+                    if (isset($item_data['id']) && !empty($item_data['id'])) {
+                        $item_id = intval($item_data['id']);
+                        $items_procesados[] = $item_id;
+                        
+                        $wpdb->update(
+                            $tabla_items,
+                            $item,
+                            array('id' => $item_id),
+                            null,
+                            array('%d')
+                        );
+                    } else {
+                        $wpdb->insert($tabla_items, $item);
+                        if ($wpdb->insert_id) {
+                            $items_procesados[] = $wpdb->insert_id;
+                        }
+                    }
+                }
+            }
+            
+            // Eliminar items que ya no están
+            $items_a_eliminar = array_diff($items_existentes, $items_procesados);
+            if (!empty($items_a_eliminar)) {
+                foreach ($items_a_eliminar as $item_id) {
+                    $wpdb->delete($tabla_items, array('id' => $item_id), array('%d'));
+                }
+            }
+            
+            // Log - usar el mismo formato que nueva cotización
+            $this->logger->log("Cotización {$cotizacion_id} actualizada por usuario " . get_current_user_id(), 'info');
+            
+            // Manejar acciones especiales
+            if (isset($_POST['action']) && $_POST['action'] === 'update_and_send') {
+                // Cambiar estado a enviada
+                $wpdb->update(
+                    $tabla_cotizaciones,
+                    array('estado' => 'enviada'),
+                    array('id' => $cotizacion_id),
+                    array('%s'),
+                    array('%d')
+                );
+                
+                // TODO: Implementar envío de email
+                
+                // Mensaje usando el mismo transient que nueva cotización
+                set_transient('mv_admin_message', array(
+                    'tipo' => 'success',
+                    'mensaje' => __('Cotización actualizada y enviada exitosamente.', 'modulo-ventas')
+                ), 45);
+            } else {
+                // Mensaje de éxito simple
+                set_transient('mv_admin_message', array(
+                    'tipo' => 'success',
+                    'mensaje' => __('Cotización actualizada exitosamente.', 'modulo-ventas')
+                ), 45);
+            }
+            
+            // Redirect - igual que nueva cotización
+            wp_redirect(admin_url('admin.php?page=modulo-ventas-editar-cotizacion&id=' . $cotizacion_id));
+            exit;
+            
+        } catch (Exception $e) {
+            // Log del error
+            $this->logger->log('Error al actualizar cotización: ' . $e->getMessage(), 'error');
+            
+            // Usar el mismo método de mensaje de error que nueva cotización
+            $this->agregar_mensaje_error($e->getMessage());
+            
+            return false;
+        }
+    }
+
+    /*
+     * Procesar formulario de edición de cotización - Anterior (borrar si funciona el nuevo)
+     *
+    private function procesar_editar_cotizacion($cotizacion_id) {
+        try {
+            // Verificar nonce
+            if (!wp_verify_nonce($_POST['mv_cotizacion_nonce'], 'mv_editar_cotizacion')) {
+                throw new Exception(__('Error de seguridad. Por favor, intente nuevamente.', 'modulo-ventas'));
+            }
+            
+            // Verificar que la cotización existe
+            $cotizacion = $this->db->obtener_cotizacion($cotizacion_id);
+            if (!$cotizacion) {
+                throw new Exception(__('Cotización no encontrada.', 'modulo-ventas'));
+            }
+            
+            // Verificar que se puede editar
+            if (in_array($cotizacion->estado, array('convertida', 'cancelada'))) {
+                throw new Exception(__('Esta cotización no puede ser editada.', 'modulo-ventas'));
+            }
+            
+            // Recopilar datos generales
+            $datos_generales = array(
+                'cliente_id' => isset($_POST['cliente_id']) ? intval($_POST['cliente_id']) : 0,
+                'almacen_id' => isset($_POST['almacen_id']) ? intval($_POST['almacen_id']) : 0,
+                'fecha' => isset($_POST['fecha']) ? sanitize_text_field($_POST['fecha']) : date('Y-m-d'),
+                'fecha_expiracion' => isset($_POST['fecha_expiracion']) ? sanitize_text_field($_POST['fecha_expiracion']) : '',
+                'plazo_pago' => isset($_POST['plazo_pago']) ? sanitize_text_field($_POST['plazo_pago']) : '',
+                'condiciones_pago' => isset($_POST['condiciones_pago']) ? sanitize_textarea_field($_POST['condiciones_pago']) : '',
+                'observaciones' => isset($_POST['observaciones']) ? sanitize_textarea_field($_POST['observaciones']) : '',
+                'notas_internas' => isset($_POST['notas_internas']) ? sanitize_textarea_field($_POST['notas_internas']) : '',
+                'terminos_condiciones' => isset($_POST['terminos_condiciones']) ? sanitize_textarea_field($_POST['terminos_condiciones']) : '',
+                'incluye_iva' => isset($_POST['incluye_iva']) ? 1 : 0,
+                'tipo_descuento' => isset($_POST['tipo_descuento_global']) ? sanitize_text_field($_POST['tipo_descuento_global']) : 'monto',
+                'costo_envio' => isset($_POST['costo_envio']) ? floatval($_POST['costo_envio']) : 0,
+                'subtotal' => isset($_POST['subtotal']) ? floatval($_POST['subtotal']) : 0,
+                'total' => isset($_POST['total']) ? floatval($_POST['total']) : 0
+            );
+            
+            // Aplicar descuento global según tipo
+            if ($datos_generales['tipo_descuento'] === 'porcentaje') {
+                $datos_generales['descuento_porcentaje'] = isset($_POST['descuento_global']) ? floatval($_POST['descuento_global']) : 0;
+                $datos_generales['descuento_monto'] = 0;
+            } else {
+                $datos_generales['descuento_monto'] = isset($_POST['descuento_global']) ? floatval($_POST['descuento_global']) : 0;
+                $datos_generales['descuento_porcentaje'] = 0;
+            }
+            
+            // Recopilar items
+            $items = array();
+            if (isset($_POST['items']) && is_array($_POST['items'])) {
+                foreach ($_POST['items'] as $item_data) {
+                    // Validar que el item tenga datos mínimos
+                    if (empty($item_data['cantidad']) || empty($item_data['precio_unitario'])) {
+                        continue;
+                    }
+                    
+                    $item = array(
+                        'producto_id' => isset($item_data['producto_id']) ? intval($item_data['producto_id']) : 0,
+                        'nombre' => isset($item_data['nombre']) ? sanitize_text_field($item_data['nombre']) : '',
+                        'descripcion' => isset($item_data['descripcion']) ? sanitize_textarea_field($item_data['descripcion']) : '',
+                        'sku' => isset($item_data['sku']) ? sanitize_text_field($item_data['sku']) : '',
+                        'cantidad' => floatval($item_data['cantidad']),
+                        'precio_unitario' => floatval($item_data['precio_unitario']),
+                        'tipo_descuento' => isset($item_data['tipo_descuento']) ? sanitize_text_field($item_data['tipo_descuento']) : 'monto',
+                        'almacen_id' => isset($item_data['almacen_id']) ? intval($item_data['almacen_id']) : $datos_generales['almacen_id']
+                    );
+                    
+                    // Calcular descuentos
+                    if ($item['tipo_descuento'] === 'porcentaje') {
+                        $item['descuento_porcentaje'] = isset($item_data['descuento']) ? floatval($item_data['descuento']) : 0;
+                        $item['descuento_monto'] = 0;
+                    } else {
+                        $item['descuento_monto'] = isset($item_data['descuento']) ? floatval($item_data['descuento']) : 0;
+                        $item['descuento_porcentaje'] = 0;
+                    }
+                    
+                    // Calcular subtotal y total del item
+                    $subtotal_item = $item['cantidad'] * $item['precio_unitario'];
+                    
+                    if ($item['tipo_descuento'] === 'porcentaje' && $item['descuento_porcentaje'] > 0) {
+                        $descuento_aplicado = $subtotal_item * ($item['descuento_porcentaje'] / 100);
+                    } else {
+                        $descuento_aplicado = $item['descuento_monto'];
+                    }
+                    
+                    $item['subtotal'] = $subtotal_item;
+                    $item['total'] = max(0, $subtotal_item - $descuento_aplicado);
+                    
+                    $items[] = $item;
+                }
+            }
+            
+            // Validar que hay items
+            if (empty($items)) {
+                throw new Exception(__('Debe agregar al menos un producto a la cotización.', 'modulo-ventas'));
+            }
+            
+            // Actualizar cotización
+            $resultado = $this->db->actualizar_cotizacion($cotizacion_id, $datos_generales, $items);
+            
+            if (is_wp_error($resultado)) {
+                throw new Exception($resultado->get_error_message());
+            }
+            
+            // Determinar acción posterior
+            $accion = isset($_POST['action']) ? sanitize_text_field($_POST['action']) : 'update';
+            
+            if ($accion === 'update_and_send') {
+                // Enviar cotización por email
+                $cotizaciones = new Modulo_Ventas_Cotizaciones();
+                $cliente = $this->db->obtener_cliente($datos_generales['cliente_id']);
+                
+                if ($cliente && !empty($cliente->email)) {
+                    $resultado_envio = $cotizaciones->enviar_por_email($cotizacion_id, $cliente->email);
+                    
+                    if (is_wp_error($resultado_envio)) {
+                        $this->add_admin_notice(
+                            sprintf(__('Cotización actualizada pero no se pudo enviar: %s', 'modulo-ventas'), 
+                            $resultado_envio->get_error_message()),
+                            'warning'
+                        );
+                    } else {
+                        $this->add_admin_notice(
+                            __('Cotización actualizada y enviada exitosamente.', 'modulo-ventas'),
+                            'success'
+                        );
+                    }
+                } else {
+                    $this->add_admin_notice(
+                        __('Cotización actualizada. No se pudo enviar: cliente sin email.', 'modulo-ventas'),
+                        'warning'
+                    );
+                }
+            } else {
+                $this->add_admin_notice(
+                    __('Cotización actualizada exitosamente.', 'modulo-ventas'),
+                    'success'
+                );
+            }
+            
+            // Redirigir para evitar reenvío del formulario
+            wp_redirect(admin_url('admin.php?page=ventas-editar-cotizacion&id=' . $cotizacion_id));
+            exit;
+            
+        } catch (Exception $e) {
+            $this->add_admin_notice($e->getMessage(), 'error');
+            return false;
+        }
+    }*/
+
+    /**
+     * Método auxiliar para agregar notificaciones
+     */
+    private function add_admin_notice($message, $type = 'success') {
+        set_transient('mv_admin_notice_' . get_current_user_id(), array(
+            'message' => $message,
+            'type' => $type
+        ), 30);
     }
     
     /**

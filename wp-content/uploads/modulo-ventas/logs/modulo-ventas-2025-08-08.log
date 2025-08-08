@@ -1,0 +1,37 @@
+[2025-08-08 05:45:34] ERROR: Error al actualizar cotización: Unknown column 'envio' in 'field list' | Usuario: hostpanish (ID: 1) | IP: ::1 | Trace: class-modulo-ventas-db.php:2237 log() <- class-modulo-ventas-admin.php:865 actualizar_cotizacion() <- class-modulo-ventas-admin.php:711 procesar_editar_cotizacion() <- class-wp-hook.php:324 pagina_editar_cotizacion()
+[2025-08-08 06:45:47] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method Modulo_Ventas_DB::get_instance() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\editar-cotizacion.php:287
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(747): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_editar_cotizacion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('admin_page_modu...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\editar-cotizacion.php","line":287,"type":1}
+[2025-08-08 06:46:04] EMERGENCY: Error Fatal: Uncaught Error: Call to undefined method Modulo_Ventas_DB::get_instance() in C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\views\editar-cotizacion.php:67
+Stack trace:
+#0 C:\wamp64\www\gestion-almacenes-bolt\wp-content\plugins\modulo-de-ventas\admin\class-modulo-ventas-admin.php(747): require_once()
+#1 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(324): Modulo_Ventas_Admin->pagina_editar_cotizacion('')
+#2 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\class-wp-hook.php(348): WP_Hook->apply_filters('', Array)
+#3 C:\wamp64\www\gestion-almacenes-bolt\wp-includes\plugin.php(517): WP_Hook->do_action(Array)
+#4 C:\wamp64\www\gestion-almacenes-bolt\wp-admin\admin.php(260): do_action('admin_page_modu...')
+#5 {main}
+  thrown | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"file":"C:\\wamp64\\www\\gestion-almacenes-bolt\\wp-content\\plugins\\modulo-de-ventas\\admin\\views\\editar-cotizacion.php","line":67,"type":1}
+[2025-08-08 09:08:49] INFO: Iniciando creación de cotización | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cliente_id":11,"productos":3,"permitir_sin_stock":"yes"}
+[2025-08-08 09:08:49] INFO: Validación de stock omitida: configurado para permitir cotizaciones sin stock | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-08 09:08:49] INFO: Cotización creada: COT-2025-000030 (ID: 30) | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-08 09:08:49] INFO: Cotización creada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cotizacion_id":30}
+[2025-08-08 09:08:49] INFO: Cotización creada exitosamente | Usuario: hostpanish (ID: 1) | IP: ::1 | Contexto: {"cotizacion_id":30,"folio":"COT-2025-000030"}
+[2025-08-08 09:09:03] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-08 09:09:03] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-08 09:09:03] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-08 09:09:03] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-08 09:09:03] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-08 09:09:16] INFO: TEMPLATE_PROCESSOR: Datos sincronizados entre cotizacion_data y datos | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-08 09:09:16] INFO: TEMPLATE_PROCESSOR: tiene_datos() ahora devuelve: TRUE | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-08 09:09:16] INFO: PROCESSOR: Procesando template con datos disponibles | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-08 09:09:16] INFO: PROCESSOR: Claves principales: cotizacion, cliente, empresa, productos, fechas, sistema, totales | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-08 09:09:16] INFO: PROCESSOR: Procesando CSS para visualización web | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-08 10:05:18] INFO: Cotización 30 actualizada por usuario 1 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-08 10:06:27] INFO: Cotización 30 actualizada por usuario 1 | Usuario: hostpanish (ID: 1) | IP: ::1
+[2025-08-08 10:18:16] INFO: Cotización 30 actualizada por usuario 1 | Usuario: hostpanish (ID: 1) | IP: ::1

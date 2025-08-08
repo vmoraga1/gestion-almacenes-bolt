@@ -65,11 +65,15 @@ if (!empty($cotizacion->vendedor_id)) {
         </h2>
         <div class="inside">
             <div class="mv-actions">
-                <a href="<?php echo admin_url('admin.php?page=ventas-editar-cotizacion&id=' . $cotizacion_id); ?>" 
-                    class="button button-primary button-large mv-btn-full">
+                <?php if ($puede_editar): ?>
+                <a href="<?php echo admin_url('admin.php?page=modulo-ventas-editar-cotizacion&id=' . $cotizacion_id); ?>" 
+                class="button button-large button-primary mv-btn-full">
                     <span class="dashicons dashicons-edit"></span>
                     <?php _e('Editar Cotización', 'modulo-ventas'); ?>
                 </a>
+                
+                <hr class="mv-separator">
+                <?php endif; ?>
                 
                 <a href="<?php echo wp_nonce_url(admin_url('admin.php?page=ventas-cotizaciones&action=duplicate&id=' . $cotizacion_id), 'duplicate_cotizacion_' . $cotizacion_id); ?>" 
                     class="button button-large mv-btn-full">

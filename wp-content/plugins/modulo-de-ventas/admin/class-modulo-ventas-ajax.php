@@ -543,25 +543,127 @@ class Modulo_Ventas_Ajax {
     }
     
     /**
-     * Actualizar cotización
+     * Actualizar cotización vía AJAX
      */
     public function actualizar_cotizacion() {
-        mv_ajax_check_permissions('edit_cotizaciones', 'modulo_ventas_nonce');
-        
-        $cotizacion_id = isset($_POST['cotizacion_id']) ? intval($_POST['cotizacion_id']) : 0;
-        
-        if (!$cotizacion_id) {
-            wp_send_json_error(array('message' => __('ID de cotización inválido', 'modulo-ventas')));
+        try {
+            // Verificar permisos
+            mv_ajax_check_permissions('edit_cotizaciones', 'modulo_ventas_nonce');
+            
+            $cotizacion_id = isset($_POST['cotizacion_id']) ? intval($_POST['cotizacion_id']) : 0;
+            
+            if (!$cotizacion_id) {
+                wp_send_json_error(array('message' => __('ID de cotización inválido', 'modulo-ventas')));
+            }
+            
+            // Verificar que existe
+            $cotizacion = $this->db->obtener_cotizacion($cotizacion_id);
+            if (!$cotizacion) {
+                wp_send_json_error(array('message' => __('Cotización no encontrada', 'modulo-ventas')));
+            }
+            
+            // Verificar que se puede editar
+            if (in_array($cotizacion->estado, array('convertida', 'cancelada'))) {
+                wp_send_json_error(array('message' => __('Esta cotización no puede ser editada', 'modulo-ventas')));
+            }
+            
+            // Recopilar datos generales
+            $datos_generales = array(
+                'cliente_id' => isset($_POST['cliente_id']) ? intval($_POST['cliente_id']) : 0,
+                'almacen_id' => isset($_POST['almacen_id']) ? intval($_POST['almacen_id']) : 0,
+                'fecha' => isset($_POST['fecha']) ? sanitize_text_field($_POST['fecha']) : date('Y-m-d'),
+                'fecha_expiracion' => isset($_POST['fecha_expiracion']) ? sanitize_text_field($_POST['fecha_expiracion']) : '',
+                'plazo_pago' => isset($_POST['plazo_pago']) ? sanitize_text_field($_POST['plazo_pago']) : '',
+                'condiciones_pago' => isset($_POST['condiciones_pago']) ? sanitize_textarea_field($_POST['condiciones_pago']) : '',
+                'observaciones' => isset($_POST['observaciones']) ? sanitize_textarea_field($_POST['observaciones']) : '',
+                'notas_internas' => isset($_POST['notas_internas']) ? sanitize_textarea_field($_POST['notas_internas']) : '',
+                'terminos_condiciones' => isset($_POST['terminos_condiciones']) ? sanitize_textarea_field($_POST['terminos_condiciones']) : '',
+                'incluye_iva' => isset($_POST['incluye_iva']) ? 1 : 0,
+                'tipo_descuento' => isset($_POST['tipo_descuento_global']) ? sanitize_text_field($_POST['tipo_descuento_global']) : 'monto',
+                'costo_envio' => isset($_POST['costo_envio']) ? floatval($_POST['costo_envio']) : 0,
+                'subtotal' => isset($_POST['subtotal']) ? floatval($_POST['subtotal']) : 0,
+                'total' => isset($_POST['total']) ? floatval($_POST['total']) : 0
+            );
+            
+            // Aplicar descuento global
+            if ($datos_generales['tipo_descuento'] === 'porcentaje') {
+                $datos_generales['descuento_porcentaje'] = isset($_POST['descuento_global']) ? floatval($_POST['descuento_global']) : 0;
+                $datos_generales['descuento_monto'] = 0;
+            } else {
+                $datos_generales['descuento_monto'] = isset($_POST['descuento_global']) ? floatval($_POST['descuento_global']) : 0;
+                $datos_generales['descuento_porcentaje'] = 0;
+            }
+            
+            // Recopilar items
+            $items = array();
+            if (isset($_POST['items']) && is_array($_POST['items'])) {
+                foreach ($_POST['items'] as $item_data) {
+                    if (empty($item_data['cantidad']) || empty($item_data['precio_unitario'])) {
+                        continue;
+                    }
+                    
+                    $item = array(
+                        'producto_id' => isset($item_data['producto_id']) ? intval($item_data['producto_id']) : 0,
+                        'nombre' => isset($item_data['nombre']) ? sanitize_text_field($item_data['nombre']) : '',
+                        'descripcion' => isset($item_data['descripcion']) ? sanitize_textarea_field($item_data['descripcion']) : '',
+                        'sku' => isset($item_data['sku']) ? sanitize_text_field($item_data['sku']) : '',
+                        'cantidad' => floatval($item_data['cantidad']),
+                        'precio_unitario' => floatval($item_data['precio_unitario']),
+                        'tipo_descuento' => isset($item_data['tipo_descuento']) ? sanitize_text_field($item_data['tipo_descuento']) : 'monto',
+                        'almacen_id' => isset($item_data['almacen_id']) ? intval($item_data['almacen_id']) : $datos_generales['almacen_id']
+                    );
+                    
+                    // Calcular descuentos
+                    if ($item['tipo_descuento'] === 'porcentaje') {
+                        $item['descuento_porcentaje'] = isset($item_data['descuento']) ? floatval($item_data['descuento']) : 0;
+                        $item['descuento_monto'] = 0;
+                    } else {
+                        $item['descuento_monto'] = isset($item_data['descuento']) ? floatval($item_data['descuento']) : 0;
+                        $item['descuento_porcentaje'] = 0;
+                    }
+                    
+                    // Calcular totales
+                    $subtotal_item = $item['cantidad'] * $item['precio_unitario'];
+                    $descuento_aplicado = $item['tipo_descuento'] === 'porcentaje' 
+                        ? $subtotal_item * ($item['descuento_porcentaje'] / 100)
+                        : $item['descuento_monto'];
+                    
+                    $item['subtotal'] = $subtotal_item;
+                    $item['total'] = max(0, $subtotal_item - $descuento_aplicado);
+                    
+                    $items[] = $item;
+                }
+            }
+            
+            // Validar items
+            if (empty($items)) {
+                wp_send_json_error(array('message' => __('Debe agregar al menos un producto', 'modulo-ventas')));
+            }
+            
+            // Actualizar cotización
+            $resultado = $this->db->actualizar_cotizacion($cotizacion_id, $datos_generales, $items);
+            
+            if (is_wp_error($resultado)) {
+                wp_send_json_error(array('message' => $resultado->get_error_message()));
+            }
+            
+            // Obtener cotización actualizada
+            $cotizacion_actualizada = $this->db->obtener_cotizacion($cotizacion_id);
+            
+            $this->logger->log("Cotización {$cotizacion_id} actualizada exitosamente vía AJAX", 'info');
+            
+            // Respuesta exitosa
+            wp_send_json_success(array(
+                'cotizacion_id' => $cotizacion_id,
+                'folio' => $cotizacion_actualizada->folio,
+                'message' => sprintf(__('Cotización %s actualizada exitosamente', 'modulo-ventas'), $cotizacion_actualizada->folio),
+                'redirect_url' => admin_url('admin.php?page=ventas-ver-cotizacion&id=' . $cotizacion_id)
+            ));
+            
+        } catch (Exception $e) {
+            $this->logger->log('Error en actualizar_cotizacion AJAX: ' . $e->getMessage(), 'error');
+            wp_send_json_error(array('message' => $e->getMessage()));
         }
-        
-        // Verificar que existe
-        $cotizacion = $this->db->obtener_cotizacion($cotizacion_id);
-        if (!$cotizacion) {
-            wp_send_json_error(array('message' => __('Cotización no encontrada', 'modulo-ventas')));
-        }
-        
-        // Por implementar: actualización completa
-        wp_send_json_error(array('message' => __('Función en desarrollo', 'modulo-ventas')));
     }
     
     /**

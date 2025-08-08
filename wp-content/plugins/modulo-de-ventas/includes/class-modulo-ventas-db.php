@@ -337,7 +337,7 @@ class Modulo_Ventas_DB {
         // ACTUALIZAR TABLA DE COTIZACIONES
         // ========================================
         
-        // Tu estructura ya tiene fecha_modificacion, necesitamos crear un alias fecha_actualizacion
+        // La estructura ya tiene fecha_modificacion, necesitamos crear un alias fecha_actualizacion
         // para compatibilidad con el código que busca fecha_actualizacion
         $columnas_cotizaciones = $this->wpdb->get_col("SHOW COLUMNS FROM {$this->tabla_cotizaciones}");
         
@@ -358,7 +358,7 @@ class Modulo_Ventas_DB {
         // ACTUALIZAR TABLA DE ITEMS
         // ========================================
         
-        // Tu estructura usa 'nombre' en lugar de 'producto_nombre'
+        // Estructura usa 'nombre' en lugar de 'producto_nombre'
         // Necesitamos crear un alias o actualizar las consultas
         $columnas_items = $this->wpdb->get_col("SHOW COLUMNS FROM {$this->tabla_cotizaciones_items}");
         
@@ -2119,5 +2119,124 @@ class Modulo_Ventas_DB {
             'items_count' => $items_count,
             'puede_pdf' => $this->cotizacion_puede_generar_pdf($cotizacion_id)
         );
+    }
+
+    /**
+     * Actualizar cotización existente
+     */
+    public function actualizar_cotizacion($cotizacion_id, $datos_generales, $items) {
+        try {
+            // Iniciar transacción
+            $this->wpdb->query('START TRANSACTION');
+            
+            // Preparar datos para actualización
+            $datos_actualizacion = array(
+                'cliente_id' => $datos_generales['cliente_id'],
+                'almacen_id' => $datos_generales['almacen_id'],
+                'fecha' => $datos_generales['fecha'],
+                'fecha_expiracion' => $datos_generales['fecha_expiracion'],
+                'plazo_pago' => $datos_generales['plazo_pago'],
+                'condiciones_pago' => $datos_generales['condiciones_pago'],
+                'observaciones' => $datos_generales['observaciones'],
+                'notas_internas' => $datos_generales['notas_internas'],
+                'terminos_condiciones' => $datos_generales['terminos_condiciones'],
+                'incluye_iva' => $datos_generales['incluye_iva'],
+                'descuento_monto' => $datos_generales['descuento_monto'],
+                'descuento_porcentaje' => $datos_generales['descuento_porcentaje'],
+                'tipo_descuento' => $datos_generales['tipo_descuento'],
+                'envio' => $datos_generales['costo_envio'],
+                'subtotal' => $datos_generales['subtotal'],
+                'total' => $datos_generales['total'],
+                'modificado_por' => get_current_user_id()
+            );
+            
+            // Actualizar cotización principal
+            $resultado = $this->wpdb->update(
+                $this->tabla_cotizaciones,
+                $datos_actualizacion,
+                array('id' => $cotizacion_id),
+                array(
+                    '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%s',
+                    '%d', '%f', '%f', '%s', '%f', '%f', '%f', '%d'
+                ),
+                array('%d')
+            );
+            
+            if ($resultado === false) {
+                throw new Exception($this->wpdb->last_error ?: 'Error al actualizar la cotización');
+            }
+            
+            // Eliminar items anteriores
+            $this->wpdb->delete(
+                $this->tabla_cotizaciones_items,
+                array('cotizacion_id' => $cotizacion_id),
+                array('%d')
+            );
+            
+            // Insertar nuevos items
+            if (!empty($items) && is_array($items)) {
+                foreach ($items as $index => $item) {
+                    // Validar item
+                    if (empty($item['cantidad']) || $item['cantidad'] <= 0) {
+                        continue;
+                    }
+                    
+                    // Preparar datos del item
+                    $datos_item = array(
+                        'cotizacion_id' => $cotizacion_id,
+                        'producto_id' => isset($item['producto_id']) ? intval($item['producto_id']) : 0,
+                        'nombre' => isset($item['nombre']) ? sanitize_text_field($item['nombre']) : '',
+                        'descripcion' => isset($item['descripcion']) ? sanitize_textarea_field($item['descripcion']) : '',
+                        'sku' => isset($item['sku']) ? sanitize_text_field($item['sku']) : '',
+                        'cantidad' => floatval($item['cantidad']),
+                        'precio_unitario' => floatval($item['precio_unitario']),
+                        'descuento_monto' => isset($item['descuento_monto']) ? floatval($item['descuento_monto']) : 0,
+                        'descuento_porcentaje' => isset($item['descuento_porcentaje']) ? floatval($item['descuento_porcentaje']) : 0,
+                        'tipo_descuento' => isset($item['tipo_descuento']) ? sanitize_text_field($item['tipo_descuento']) : 'monto',
+                        'subtotal' => floatval($item['subtotal']),
+                        'total' => floatval($item['total']),
+                        'almacen_id' => isset($item['almacen_id']) ? intval($item['almacen_id']) : $datos_generales['almacen_id'],
+                        'orden' => $index
+                    );
+                    
+                    // Si no hay producto_id pero hay nombre, es un item personalizado
+                    if (empty($datos_item['producto_id']) && !empty($datos_item['nombre'])) {
+                        $datos_item['es_personalizado'] = 1;
+                    }
+                    
+                    // Insertar item
+                    $resultado_item = $this->wpdb->insert(
+                        $this->tabla_cotizaciones_items,
+                        $datos_item,
+                        array('%d', '%d', '%s', '%s', '%s', '%f', '%f', '%f', '%f', '%s', '%f', '%f', '%d', '%d')
+                    );
+                    
+                    if ($resultado_item === false) {
+                        throw new Exception('Error al insertar item: ' . $this->wpdb->last_error);
+                    }
+                }
+            }
+            
+            // Confirmar transacción
+            $this->wpdb->query('COMMIT');
+            
+            // Log
+            $logger = Modulo_Ventas_Logger::get_instance();
+            $logger->log("Cotización {$cotizacion_id} actualizada exitosamente", 'info');
+            
+            // Hook
+            do_action('modulo_ventas_cotizacion_actualizada', $cotizacion_id, $datos_generales, $items);
+            
+            return $cotizacion_id;
+            
+        } catch (Exception $e) {
+            // Revertir transacción
+            $this->wpdb->query('ROLLBACK');
+            
+            $logger = Modulo_Ventas_Logger::get_instance();
+            $logger->log('Error al actualizar cotización: ' . $e->getMessage(), 'error');
+            
+            return new WP_Error('error_actualizar', $e->getMessage());
+        }
     }
 }

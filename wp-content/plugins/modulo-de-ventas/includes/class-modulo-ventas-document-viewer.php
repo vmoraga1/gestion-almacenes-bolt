@@ -1157,11 +1157,11 @@ private function render_paged_print_document($html, $css, $documento, $titulo) {
             // Mostrar debug en la consola para páginas incorrectas
             ?>
             <script>
-            console.log("DOCUMENT_VIEWER DEBUG: NO es página de cotizaciones");
-            console.log("Screen ID:", "<?php echo $screen ? $screen->id : 'undefined'; ?>");
-            console.log("Screen base:", "<?php echo $screen ? $screen->base : 'undefined'; ?>");
-            console.log("GET page:", "<?php echo isset($_GET['page']) ? $_GET['page'] : 'undefined'; ?>");
-            console.log("URL actual:", window.location.href);
+            //console.log("DOCUMENT_VIEWER DEBUG: NO es página de cotizaciones");
+            //console.log("Screen ID:", "<?php echo $screen ? $screen->id : 'undefined'; ?>");
+            //console.log("Screen base:", "<?php echo $screen ? $screen->base : 'undefined'; ?>");
+            //console.log("GET page:", "<?php echo isset($_GET['page']) ? $_GET['page'] : 'undefined'; ?>");
+            //console.log("URL actual:", window.location.href);
             </script>
             <?php
             return;
@@ -1169,11 +1169,11 @@ private function render_paged_print_document($html, $css, $documento, $titulo) {
         
         ?>
         <script>
-        console.log("DOCUMENT_VIEWER: ✅ Página de cotizaciones detectada correctamente");
-        console.log("Screen ID:", "<?php echo $screen ? $screen->id : 'undefined'; ?>");
+        //console.log("DOCUMENT_VIEWER: ✅ Página de cotizaciones detectada correctamente");
+        //console.log("Screen ID:", "<?php echo $screen ? $screen->id : 'undefined'; ?>");
         
         jQuery(document).ready(function($) {
-            console.log("DOCUMENT_VIEWER: Iniciando búsqueda de filas de cotizaciones...");
+            //console.log("DOCUMENT_VIEWER: Iniciando búsqueda de filas de cotizaciones...");
             
             // Esperar a que la tabla se cargue
             setTimeout(function() {
@@ -1254,26 +1254,26 @@ private function render_paged_print_document($html, $css, $documento, $titulo) {
                             console.log("DOCUMENT_VIEWER: No se pudo encontrar/crear contenedor de acciones");
                         }
                     } else {
-                        console.log("DOCUMENT_VIEWER: No se pudo encontrar ID para esta fila");
+                        //console.log("DOCUMENT_VIEWER: No se pudo encontrar ID para esta fila");
                     }
                 });
                 
-                console.log("DOCUMENT_VIEWER: RESUMEN:");
-                console.log("- Filas encontradas:", filasEncontradas);
-                console.log("- Botones agregados:", botonesAgregados);
+                //console.log("DOCUMENT_VIEWER: RESUMEN:");
+                //console.log("- Filas encontradas:", filasEncontradas);
+                //console.log("- Botones agregados:", botonesAgregados);
                 
                 if (filasEncontradas === 0) {
-                    console.log("DOCUMENT_VIEWER: ⚠️ No se encontraron filas. Verificando estructura HTML...");
-                    console.log("- Tablas encontradas:", $('table').length);
-                    console.log("- Tablas WP:", $('.wp-list-table').length);
-                    console.log("- Tbody encontrados:", $('tbody').length);
+                    //console.log("DOCUMENT_VIEWER: ⚠️ No se encontraron filas. Verificando estructura HTML...");
+                    //console.log("- Tablas encontradas:", $('table').length);
+                    //console.log("- Tablas WP:", $('.wp-list-table').length);
+                    //console.log("- Tbody encontrados:", $('tbody').length);
                     
                     if ($('.wp-list-table').length > 0) {
                         console.log("HTML de la primera tabla:", $('.wp-list-table').first().html().substring(0, 300) + "...");
                     }
                 } else if (botonesAgregados === 0) {
-                    console.log("DOCUMENT_VIEWER: ⚠️ Se encontraron filas pero no se agregaron botones");
-                    console.log("Revisar estructura de las filas o selectors CSS");
+                    //console.log("DOCUMENT_VIEWER: ⚠️ Se encontraron filas pero no se agregaron botones");
+                    //console.log("Revisar estructura de las filas o selectors CSS");
                 } else {
                     console.log("DOCUMENT_VIEWER: ✅ Botones agregados exitosamente");
                 }
